@@ -37,6 +37,7 @@ article > * + * { margin-top: 12px; }
 /* ── Header: title + barcode ─────────────────────────────────────────────── */
 .header-flex {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: flex-start;
   gap: 16px;
@@ -58,6 +59,8 @@ article > * + * { margin-top: 12px; }
 
 .barcode {
   display: block;
+  max-width: 100%;
+  flex-shrink: 0;
   height: 64px;
   max-width: 640px;
   width: auto;
