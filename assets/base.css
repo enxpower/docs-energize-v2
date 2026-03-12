@@ -58,12 +58,17 @@ article > * + * { margin-top: 12px; }
 
 .barcode {
   display: block;
-  height: 64px;
   max-width: 640px;
   width: auto;
-  object-fit: contain;
   flex: 0 0 auto;
+  flex-shrink: 0;
+  height: 64px;
+  object-fit: contain;
   margin-top: 6px;
+}
+
+@media (max-width: 600px) {
+  .header-flex { flex-direction: column; }
 }
 
 /* ── Typography ──────────────────────────────────────────────────────────── */
