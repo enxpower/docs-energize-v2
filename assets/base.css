@@ -37,7 +37,6 @@ article > * + * { margin-top: 12px; }
 /* ── Header: title + barcode ─────────────────────────────────────────────── */
 .header-flex {
   display: flex;
-  flex-wrap: wrap;
   justify-content: space-between;
   align-items: flex-start;
   gap: 16px;
@@ -57,35 +56,14 @@ article > * + * { margin-top: 12px; }
 }
 .doc-id .version { font-style: italic; }
 
-.barcode-wrap {
-  flex: 0 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  margin-top: 6px;
-}
-
 .barcode {
   display: block;
   height: 64px;
+  max-width: 640px;
   width: auto;
-  max-width: 100%;
   object-fit: contain;
-}
-
-.barcode-label {
-  font-size: 11px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  color: var(--muted);
-  letter-spacing: .3px;
-  text-align: center;
-  white-space: nowrap;
-}
-
-@media (max-width: 600px) {
-  .header-flex { flex-direction: column; }
-  .barcode-wrap { align-self: flex-start; }
+  flex: 0 0 auto;
+  margin-top: 6px;
 }
 
 /* ── Typography ──────────────────────────────────────────────────────────── */
