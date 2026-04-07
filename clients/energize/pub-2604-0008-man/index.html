@@ -1,0 +1,979 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EMS 并离网切换单一功能开发文档</title>
+<link rel="canonical" href="https://docs.energizeos.com/clients/energize/pub-2604-0008-man/">
+<meta name="description" content="1. 文档目的 本文档用于定义 EMS…">
+<meta name="robots" content="index,follow">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="EnergizeOS Advisory">
+<meta property="og:title" content="EMS 并离网切换单一功能开发文档">
+<meta property="og:description" content="1. 文档目的 本文档用于定义 EMS…">
+<meta property="og:url" content="https://docs.energizeos.com/clients/energize/pub-2604-0008-man/">
+<meta property="og:image" content="https://docs.energizeos.com/assets/share/energize-default.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="EMS 并离网切换单一功能开发文档">
+<meta name="twitter:description" content="1. 文档目的 本文档用于定义 EMS…">
+<meta name="twitter:image" content="https://docs.energizeos.com/assets/share/energize-default.png">
+
+<link rel="stylesheet" href="/assets/base.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+SC:wght@400;600&display=swap" rel="stylesheet">
+<body>
+<main>
+  <div class="header-flex">
+    <div class="header-meta">
+      <h1>EMS 并离网切换单一功能开发文档</h1>
+      <p class="doc-id">PUB-2604-0008-MAN  <span class="version">· 1.0</span></p>
+    </div>
+    <img class="barcode" alt="Barcode ENX9F6K2BHES9" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA/gAAAFoCAYAAADjIlD9AAAAHnRFWHRTb2Z0d2FyZQBid2lwLWpzLm1ldGFmbG9vci5jb21Tnbi0AABmmElEQVR4nO2dCcx1Z1X9P41SNYBiUCxBsARRiYgQxCFAkTAaasFQQFMUGivQOAdBDK0opAiKjKHgkEohIgpVhoA1WlAihTIVjAhFFAGlFocKoojD/WffPx95v/Ped1h3P2vtfe5Zv+SNke5n73X28Hz3uffcc0+sjDHGGGOMMcYYM3tOVAswxhhjjDHGGGNMHh/wjTHGGGOMMcaYHcAHfGOMMcYYY4wxZgfwAd8YY4wxxhhjjNkBfMA3xhhjjDHGGGN2AB/wjTHGGGOMMcaYHcAHfGOMMcYYY4wxZgfwAd8YY4wxxhhjjNkBfMA3xhhjjDHGGGN2AB/wjTHGGGOMMcaYHcAHfGOMMcYYY4wxZgfwAd8YY4wxxhhjjNkBfMA3xhhjjDHGGGN2AB/wjTHGGGOMMcaYHcAHfGOMMcYYY4wxZgfwAd8YY4wxxhhjjNkBfMA3xhhjjDHGGGN2AB/wjTHGGGOMMcaYHcAHfGOMMcYYY4wxZgfwAd8YY4wxxhhjjNkBfMA3xhhjjDHGGGN2AB/wjTHGGGOMMcaYHcAHfGOMMcYYY4wxZgfwAd8YY4wxxhhjjNkBfMA3xhhjjDHGGGN2AB/wjTHGGGOMMcaYHcAHfGOMMcYYY4wxZgfwAd8YY4wxxhhjjNkBfMA3xhhjjDHGGGN2AB/wjTHGGGOMMcaYHcAHfGOMMcYYY4wxZgfwAd8YY4wxxhhjjNkBfMA3xhhjjDHGGGN2AB/wjTHGGGOMMcaYHcAHfGOMMcYYY4wxZgdY/AH/xIkTh/4dZY/6Z+tF9Y9ez7ZXr0cZnY9svGz8bD5Rver6d7t+NP5o/yjd+kHdX6Pz43nj2rPXo6jjd6un503b71m9Wf9qvez41f2b1c+Oz55/dr7mzuIzoB5Ytl72Blhtr16PUr2BovbsfKJ61fXvdv1o/NH+Ubr1g7q/RufH88a1Z69HUcfvVk/Pm7bfs3qz/tV62fGr+zernx2fPf/sfM2dxWdAPbBsvewNsNpevR6legNF7dn5RPWq69/t+tH4o/2jdOsHdX+Nzo/njWvPXo+ijt+tnp43bb9n9Wb9q/Wy41f3b1Y/Oz57/tn5mjuLz4B6YNl62Rtgtb16PUr1Boras/OJ6lXXv9v1o/FH+0fp1g/q/hqdH88b1569HkUdv1s9PW/afs/qzfpX62XHr+7frH52fPb8s/M1dxafAfXAsvWyN8Bqe/V6lOoNFLVn5xPVq65/t+tH44/2j9KtH9T9NTo/njeuPXs9ijp+t3p63rT9ntWb9a/Wy45f3b9Z/ez47Pln52vuLD4D6oFl62VvgNX26vUo1Rsoas/OJ6pXXf9u14/GH+0fpVs/qPtrdH48b1x79noUdfxu9fS8afs9qzfrX62XHb+6f7P62fHZ88/O19xZfAbUA8vWy94Aq+3V61GqN1DUnp1PVK+6/t2uH40/2j9Kt35Q99fo/HjeuPbs9Sjq+N3q6XnT9ntWb9a/Wi87fnX/ZvWz47Pnn52vubP4DKgHlq2XvQFW26vXo1RvoKg9O5+oXnX9u10/Gn+0f5Ru/aDur9H58bxx7dnrUdTxu9XT86bt96zerH+1Xnb86v7N6mfHZ88/O19zZ/EZUA8sWy97A6y2V69Hqd5AUXt2PlG96vp3u340/mj/KN36Qd1fo/PjeePas9ejqON3q6fnTdvvWb1Z/2q97PjV/ZvVz47Pnn92vubO4jOgHli2XvYGWG2vXo9SvYGi9ux8onrV9e92/Wj80f5RuvWDur9G58fzxrVnr0dRx+9WT8+btt+zerP+1XrZ8av7N6ufHZ89/+x8zZ3FZ0A9sGy97A2w2l69HqV6A0Xt2flE9arr3+360fij/aN06wd1f43Oj+eNa89ej6KO362enjdtv2f1Zv2r9bLjV/dvVj87Pnv+2fmaO4vPgHpg2XrZG2C1vXo9SvUGitqz84nqVde/2/Wj8Uf7R+nWD+r+Gp0fzxvXnr0eRR2/Wz09b9p+z+rN+lfrZcev7t+sfnZ89vyz8zV3Fp8B9cCy9bI3wGp79XqU6g0UtWfnE9Wrrn+360fjj/aP0q0f1P01Oj+eN649ez2KOn63enretP2e1Zv1r9bLjl/dv1n97Pjs+Wfna+4sPgPqgWXrZW+A1fbq9SjVGyhqz84nqldd/27Xj8Yf7R+lWz+o+2t0fjxvXHv2ehR1/G719Lxp+z2rN+tfrZcdv7p/s/rZ8dnzz87X3Fl8BtQDy9bL3gCr7dXrUao3UNSenU9Ur7r+3a4fjT/aP0q3flD31+j8eN649uz1KOr43erpedP2e1Zv1r9aLzt+df9m9bPjs+efna+5s/gMqAeWrZe9AVbbq9ejVG+gqD07n6hedf27XT8af7R/lG79oO6v0fnxvHHt2etR1PG71dPzpu33rN6sf7Vedvzq/s3qZ8dnzz87X3Nn8RlQDyxbL3sDrLZXr0ep3kBRe3Y+Ub3q+ne7fjT+aP8o3fpB3V+j8+N549qz16Oo43erp+dN2+9ZvVn/ar3s+NX9m9XPjs+ef3a+5s7iM6AeWLZe9gZYba9ej1K9gaL27HyietX173b9aPzR/lG69YO6v0bnx/PGtWevR1HH71ZPz5u237N6s/7Vetnxq/s3q58dnz3/7HzNncVnQD2wbL3sDbDaXr0epXoDRe3Z+UT1quvf7frR+KP9o3TrB3V/jc6P541rz16Poo7frZ6eN22/Z/Vm/av1suNX929WPzs+e/7Z+Zo7i8+AemDZetkbYLW9ej1K9QaK2rPziepV17/b9aPxR/tH6dYP6v4anR/PG9eevR5FHb9bPT1v2n7P6s36V+tlx6/u36x+dnz2/LPzNXcWnwH1wLL1sjfAanv1epTqDRS1Z+cT1auuf7frR+OP9o/SrR/U/TU6P543rj17PYo6frd6et60/Z7Vm/Wv1suOX92/Wf3s+Oz5Z+dr7iw+A+qBZetlb4DV9ur1KNUbKGrPzieqV13/btePxh/tH6VbP6j7a3R+PG9ce/Z6FHX8bvX0vGn7Pas361+tlx2/un+z+tnx2fPPztfcWXwG1APL1sveAKvt1etRqjdQ1J6dT1Svuv7drh+NP9o/Srd+UPfX6Px43rj27PUo6vjd6ul50/Z7Vm/Wv1ovO351/2b1s+Oz55+dr7mz+AyoB5atl70BVtur16NUb6CoPTufqF51/btdPxp/tH+Ubv2g7q/R+fG8ce3Z61HU8bvV0/Om7fes3qx/tV52/Or+zepnx2fPPztfc2fxGVAPLFsvewOstlevR6neQFF7dj5Rver6d7t+NP5o/yjd+kHdX6Pz43nj2rPXo6jjd6un503b71m9Wf9qvez41f2b1c+Oz55/dr7mzuIzoB5Ytl72Blhtr16PUr2BovbsfKJ61fXvdv1o/NH+Ubr1g7q/RufH88a1Z69HUcfvVk/Pm7bfs3qz/tV62fGr+zernx2fPf/sfM2dxWdAPbBsvewNsNpevR6legNF7dn5RPWq69/t+tH4o/2jdOsHdX+Nzo/njWvPXo+ijt+tnp43bb9n9Wb9q/Wy41f3b1Y/Oz57/tn5mjuLz4B6YNl62Rtgtb16PUr1Boras/OJ6lXXv9v1o/FH+0fp1g/q/hqdH88b1569HkUdv1s9PW/afs/qzfpX62XHr+7frH52fPb8s/M1dxafAfXAsvWyN8Bqe/V6lOoNFLVn5xPVq65/t+tH44/2j9KtH9T9NTo/njeuPXs9ijp+t3p63rT9ntWb9a/Wy45f3b9Z/ez47Pln52vuLD4D6oFl62VvgNX26vUo1Rsoas/OJ6pXXf9u14/GH+0fpVs/qPtrdH48b1x79noUdfxu9fS8afs9qzfrX62XHb+6f7P62fHZ88/O19xZfAbUA8vWy94Aq+3V61GqN1DUnp1PVK+6/t2uH40/2j9Kt35Q99fo/HjeuPbs9Sjq+N3q6XnT9ntWb9a/Wi87fnX/ZvWz47Pnn52vubP4DKgHlq2XvQFW26vXo1RvoKg9O5+oXnX9u10/Gn+0f5Ru/aDur9H58bxx7dnrUdTxu9XT86bt96zerH+1Xnb86v7N6mfHZ88/O19zZ/EZUA8sWy97A6y2V69Hqd5AUXt2PlG96vp3u340/mj/KN36Qd1fo/PjeePas9ejqON3q6fnTdvvWb1Z/2q97PjV/ZvVz47Pnn92vubO4jOgHli2XvYGWG2vXo9SvYGi9ux8onrV9e92/Wj80f5RuvWDur9G58fzxrVnr0dRx+9WT8+btt+zerP+1XrZ8av7N6ufHZ89/+x8zZ3FZ0A9sGy97A2w2l69HqV6A0Xt2flE9arr3+360fij/aN06wd1f43Oj+eNa89ej6KO362enjdtv2f1Zv2r9bLjV/dvVj87Pnv+2fmaO4vPgHpg2XrZG2C1vXo9SvUGitqz84nqVde/2/Wj8Uf7R+nWD+r+Gp0fzxvXnr0eRR2/Wz09b9p+z+rN+lfrZcev7t+sfnZ89vyz8zV3Fp8B9cCy9bI3wGp79XqU6g0UtWfnE9Wrrn+360fjj/aP0q0f1P01Oj+eN649ez2KOn63enretP2e1Zv1r9bLjl/dv1n97Pjs+Wfna+4sPgPqgWXrZW+A1fbq9SjVGyhqz84nqldd/27Xj8Yf7R+lWz+o+2t0fjxvXHv2ehR1/G719Lxp+z2rN+tfrZcdv7p/s/rZ8dnzz87X3Fl8BtQDy9bL3gCr7dXrUao3UNSenU9Ur7r+3a4fjT/aP0q3flD31+j8eN649uz1KOr43erpedP2e1Zv1r9aLzt+df9m9bPjs+efna+5s/gMqAeWrZe9AVbbq9ejVG+gqD07n6hedf27XT8af7R/lG79oO6v0fnxvHHt2etR1PG71dPzpu33rN6sf7Vedvzq/s3qZ8dnzz87X3Nn8RlQDyxbL3sDrLZXr0ep3kBRe3Y+Ub3q+ne7fjT+aP8o3fpB3V+j8+N549qz16Oo43erp+dN2+9ZvVn/ar3s+NX9m9XPjs+ef3a+5s7iM6AeWLZe9gZYba9ej1K9gaL27HyietX173b9aPzR/lG69YO6v0bnx/PGtWevR1HH71ZPz5u237N6s/7Vetnxq/s3q58dnz3/7HzNncVnQD2wbL3sDbDaXr0epXoDRe3Z+UT1quvf7frR+KP9o3TrB3V/jc6P541rz16Poo7frZ6eN22/Z/Vm/av1suNX929WPzs+e/7Z+Zo7i8+AemDZetkbYLW9ej1K9QaK2rPziepV17/b9aPxR/tH6dYP6v4anR/PG9eevR5FHb9bPT1v2n7P6s36V+tlx6/u36x+dnz2/LPzNXcWnwH1wLL1sjfAanv1epTqDRS1Z+cT1auuf7frR+OP9o/SrR/U/TU6P543rj17PYo6frd6et60/Z7Vm/Wv1suOX92/Wf3s+Oz5Z+dr7iw+A+qBZetlb4DV9ur1KNUbKGrPzieqV13/btePxh/tH6VbP6j7a3R+PG9ce/Z6FHX8bvX0vGn7Pas361+tlx2/un+z+tnx2fPPztfcWXwG1APL1sveAKvt1etRqjdQ1J6dT1Svuv7drh+NP9o/Srd+UPfX6Px43rj27PUo6vjd6ul50/Z7Vm/Wv1ovO351/2b1s+Oz55+dr7mz+AyoB5atl70BVtur16NUb6CoPTufqF51/btdPxp/tH+Ubv2g7q/R+fG8ce3Z61HU8bvV0/Om7fes3qx/tV52/Or+zepnx2fPPztfc2fxGVAPLFsvewOstlevR6neQFF7dj5Rver6d7t+NP5o/yjd+kHdX6Pz43nj2rPXo6jjd6un503b71m9Wf9qvez41f2b1c+Oz55/dr7mzuIzoB5Ytl72Blhtr16PUr2BovbsfKJ61fXvdv1o/NH+Ubr1g7q/RufH88a1Z69HUcfvVk/Pm7bfs3qz/tV62fGr+zernx2fPf/sfM2dxWdAPbBsvewNsNpevR6legNF7dn5RPWq69/t+tH4o/2jdOsHdX+Nzo/njWvPXo+ijt+tnp43bb9n9Wb9q/Wy41f3b1Y/Oz57/tn5mjuLz4B6YNl62Rtgtb16PUr1Boras/OJ6lXXv9v1o/FH+0fp1g/q/hqdH88b1569HkUdv1s9PW/afs/qzfpX62XHr+7frH52fPb8s/M1dxafAfXAsvWyN8Bqe/V6lOoNFLVn5xPVq65/t+tH44/2j9KtH9T9NTo/njeuPXs9ijp+t3p63rT9ntWb9a/Wy45f3b9Z/ez47Pln52vuLD4D6oFl62VvgNX26vUo1Rsoas/OJ6pXXf9u14/GH+0fpVs/qPtrdH48b1x79noUdfxu9fS8afs9qzfrX62XHb+6f7P62fHZ88/O19xZfAbUA8vWy94Aq+3V61GqN1DUnp1PVK+6/t2uH40/2j9Kt35Q99fo/HjeuPbs9Sjq+N3q6XnT9ntWb9a/Wi87fnX/ZvWz47Pnn52vubP4DKgHlq2XvQFW26vXo1RvoKg9O5+oXnX9u10/Gn+0f5Ru/aDur9H58bxx7dnrUdTxu9XT86bt96zerH+1Xnb86v7N6mfHZ88/O19zZ/EZUA8sWy97A6y2V69Hqd5AUXt2PlG96vp3u340/mj/KN36Qd1fo/PjeePas9ejqON3q6fnTdvvWb1Z/2q97PjV/ZvVz47Pnn92vubO4jOgHli2XvYGWG2vXo9SvYGi9ux8onrV9e92/Wj80f5RuvWDur9G58fzxrVnr0dRx+9WT8+btt+zerP+1XrZ8av7N6ufHZ89/+x8zZ3FZ0A9sGy97A2w2l69HqV6A0Xt2flE9arr3+360fij/aN06wd1f43Oj+eNa89ej6KO362enjdtv2f1Zv2r9bLjV/dvVj87Pnv+2fmaO4vPgHpg2XrZG2C1vXo9SvUGitqz84nqVde/2/Wj8Uf7R+nWD+r+Gp0fzxvXnr0eRR2/Wz09b9p+z+rN+lfrZcev7t+sfnZ89vyz8zV3Fp8B9cCy9bI3wGp79XqU6g0UtWfnE9Wrrn+360fjj/aP0q0f1P01Oj+eN649ez2KOn63enretP2e1Zv1r9bLjl/dv1n97Pjs+Wfna+4sPgPqgWXrZW+A1fbq9SjVGyhqz84nqldd/27Xj8Yf7R+lWz+o+2t0fjxvXHv2ehR1/G719Lxp+z2rN+tfrZcdv7p/s/rZ8dnzz87X3Fl8BtQDy9bL3gCr7dXrUao3UNSenU9Ur7r+3a4fjT/aP0q3flD31+j8eN649uz1KOr43erpedP2e1Zv1r9aLzt+df9m9bPjs+efna+5s/gMqAeWrZe9AVbbq9ejVG+gqD07n6hedf27XT8af7R/lG79oO6v0fnxvHHt2etR1PG71dPzpu33rN6sf7Vedvzq/s3qZ8dnzz87X3Nn8RlQDyxbL3sDrLZXr0ep3kBRe3Y+Ub3q+ne7fjT+aP8o3fpB3V+j8+N549qz16Oo43erp+dN2+9ZvVn/ar3s+NX9m9XPjs+ef3a+5s7iM6AeWLZe9gZYba9ej1K9gaL27HyietX173b9aPzR/lG69YO6v0bnx/PGtWevR1HH71ZPz5u237N6s/7Vetnxq/s3q58dnz3/7HzNncVnQD2wbL3sDbDaXr0epXoDRe3Z+UT1quvf7frR+KP9o3TrB3V/jc6P541rz16Poo7frZ6eN22/Z/Vm/av1suNX929WPzs+e/7Z+Zo7i8+AemDZetkbYLW9ej1K9QaK2rPziepV17/b9aPxR/tH6dYP6v4anR/PG9eevR5FHb9bPT1v2n7P6s36V+tlx6/u36x+dnz2/LPzNXcWnwH1wLL1sjfAanv1epTqDRS1Z+cT1auuf7frR+OP9o/SrR/U/TU6P543rj17PYo6frd6et60/Z7Vm/Wv1suOX92/Wf3s+Oz5Z+dr7iw+A+qBZetlb4DV9ur1KNUbKGrPzieqV13/btePxh/tH6VbP6j7a3R+PG9ce/Z6FHX8bvX0vGn7Pas361+tlx2/un+z+tnx2fPPztfcWXwG1APL1sveAKvt1etRqjdQ1J6dT1Svuv7drh+NP9o/Srd+UPfX6Px43rj27PUo6vjd6ul50/Z7Vm/Wv1ovO351/2b1s+Oz55+dr7mz+AyoB5atl70BVtur16NUb6CoPTufqF51/btdPxp/tH+Ubv2g7q/R+fG8ce3Z61HU8bvV0/Om7fes3qx/tV52/Or+zepnx2fPPztfc2fxGVAPLFsvewOstlevR6neQFF7dj5Rver6d7t+NP5o/yjd+kHdX6Pz43nj2rPXo6jjd6un503b71m9Wf9qvez41f2b1c+Oz55/dr7mzuIzoB5Ytl72Blhtr16PUr2BovbsfKJ61fXvdv1o/NH+Ubr1g7q/RufH88a1Z69HUcfvVk/Pm7bfs3qz/tV62fGr+zernx2fPf/sfM2dxWdAPbBsvewNsNpevR6legNF7dn5RPWq69/t+tH4o/2jdOsHdX+Nzo/njWvPXo+ijt+tnp43bb9n9Wb9q/Wy41f3b1Y/Oz57/tn5mjuLz4B6YNl62Rtgtb16PUr1Boras/OJ6lXXv9v1o/FH+0fp1g/q/hqdH88b1569HkUdv1s9PW/afs/qzfpX62XHr+7frH52fPb8s/M1dxafAfXAsvWyN8Bqe/V6lOoNFLVn5xPVq65/t+tH44/2j9KtH9T9NTo/njeuPXs9ijp+t3p63rT9ntWb9a/Wy45f3b9Z/ez47Pln52vuLD4D6oFl62VvgNX26vUo1Rsoas/OJ6pXXf9u14/GH+0fpVs/qPtrdH48b1x79noUdfxu9fS8afs9qzfrX62XHb+6f7P62fHZ88/O19xZfAbUA8vWy94Aq+3V61GqN1DUnp1PVK+6/t2uH40/2j9Kt35Q99fo/HjeuPbs9Sjq+N3q6XnT9ntWb9a/Wi87fnX/ZvWz47Pnn52vubP4DKgHlq2XvQFW26vXo1RvoKg9O5+oXnX9u10/Gn+0f5Ru/aDur9H58bxx7dnrUdTxu9XT86bt96zerH+1Xnb86v7N6mfHZ88/O19zZ/EZUA8sWy97A6y2V69Hqd5AUXt2PlG96vp3u340/mj/KN36Qd1fo/PjeePas9ejqON3q6fnTdvvWb1Z/2q97PjV/ZvVz47Pnn92vubO4jOgHli2XvYGWG2vXo9SvYGi9ux8onrV9e92/Wj80f5RuvWDur9G58fzxrVnr0dRx+9WT8+btt+zerP+1XrZ8av7N6ufHZ89/+x8zZ3FZ0A9sGy97A2w2l69HqV6A0Xt2flE9arr3+360fij/aN06wd1f43Oj+eNa89ej6KO362enjdtv2f1Zv2r9bLjV/dvVj87Pnv+2fmaO4vPgHpg2XrZG2C1vXo9SvUGitqz84nqVde/2/Wj8Uf7R+nWD+r+Gp0fzxvXnr0eRR2/Wz09b9p+z+rN+lfrZcev7t+sfnZ89vyz8zV3Fp8B9cCy9bI3wGp79XqU6g0UtWfnE9Wrrn+360fjj/aP0q0f1P01Oj+eN649ez2KOn63enretP2e1Zv1r9bLjl/dv1n97Pjs+Wfna+4sPgPqgWXrZW+A1fbq9SjVGyhqz84nqldd/27Xj8Yf7R+lWz+o+2t0fjxvXHv2ehR1/G719Lxp+z2rN+tfrZcdv7p/s/rZ8dnzz87X3Fl8BtQDy9bL3gCr7dXrUao3UNSenU9Ur7r+3a4fjT/aP0q3flD31+j8eN649uz1KOr43erpedP2e1Zv1r9aLzt+df9m9bPjs+efna+5s/gMqAeWrZe9AVbbq9ejVG+gqD07n6hedf27XT8af7R/lG79oO6v0fnxvHHt2etR1PG71dPzpu33rN6sf7Vedvzq/s3qZ8dnzz87X3Nn8RlQDyxbL3sDrLZXr0ep3kBRe3Y+Ub3q+ne7fjT+aP8o3fpB3V+j8+N549qz16Oo43erp+dN2+9ZvVn/ar3s+NX9m9XPjs+ef3a+5s7iM6AeWLZe9gZYba9ej1K9gaL27HyietX173b9aPzR/lG69YO6v0bnx/PGtWevR1HH71ZPz5u237N6s/7Vetnxq/s3q58dnz3/7HzNncVnQD2wbL3sDbDaXr0epXoDRe3Z+UT1quvf7frR+KP9o3TrB3V/jc6P541rz16Poo7frZ6eN22/Z/Vm/av1suNX929WPzs+e/7Z+Zo7i8+AemDZetkbYLW9ej1K9QaK2rPziepV17/b9aPxR/tH6dYP6v4anR/PG9eevR5FHb9bPT1v2n7P6s36V+tlx6/u36x+dnz2/LPzNXcWnwH1wLL1sjfAanv1epTqDRS1Z+cT1auuf7frR+OP9o/SrR/U/TU6P543rj17PYo6frd6et60/Z7Vm/Wv1suOX92/Wf3s+Oz5Z+dr7iw+A+qBZetlb4DV9ur1KNUbKGrPzieqV13/btePxh/tH6VbP6j7a3R+PG9ce/Z6FHX8bvX0vGn7Pas361+tlx2/un+z+tnx2fPPztfcWXwG1APL1sveAKvt1etRqjdQ1J6dT1Svuv7drh+NP9o/Srd+UPfX6Px43rj27PUo6vjd6ul50/Z7Vm/Wv1ovO351/2b1s+Oz55+dr7mz+AyoB5atl70BVtur16NUb6CoPTufqF51/btdPxp/tH+Ubv2g7q/R+fG8ce3Z61HU8bvV0/Om7fes3qx/tV52/Or+zepnx2fPPztfc2fxGVAPLFsvewOstlevR6neQFF7dj5Rver6d7t+NP5o/yjd+kHdX6Pz43nj2rPXo6jjd6un503b71m9Wf9qvez41f2b1c+Oz55/dr7mzuIzoB5Ytl72Blhtr16PUr2BovbsfKJ61fXvdv1o/NH+Ubr1g7q/RufH88a1Z69HUcfvVk/Pm7bfs3qz/tV62fGr+zernx2fPf/sfM2dxWdAPbBsvewNsNpevR6legNF7dn5RPWq69/t+tH4o/2jdOsHdX+Nzo/njWvPXo+ijt+tnp43bb9n9Wb9q/Wy41f3b1Y/Oz57/tn5mjuLz4B6YNl62Rtgtb16PUr1Boras/OJ6lXXv9v1o/FH+0fp1g/q/hqdH88b1569HkUdv1s9PW/afs/qzfpX62XHr+7frH52fPb8s/M1dxafAfXAsvWyN8Bqe/V6lOoNFLVn5xPVq65/t+tH44/2j9KtH9T9NTo/njeuPXs9ijp+t3p63rT9ntWb9a/Wy45f3b9Z/ez47Pln52vuLD4D6oFl62VvgNX26vUo1Rsoas/OJ6pXXf9u14/GH+0fpVs/qPtrdH48b1x79noUdfxu9fS8afs9qzfrX62XHb+6f7P62fHZ88/O19xZfAbUA8vWy94Aq+3V61GqN1DUnp1PVK+6/t2uH40/2j9Kt35Q99fo/HjeuPbs9Sjq+N3q6XnT9ntWb9a/Wi87fnX/ZvWz47Pnn52vubP4DKgHlq2XvQFW26vXo1RvoKg9O5+oXnX9u10/Gn+0f5Ru/aDur9H58bxx7dnrUdTxu9XT86bt96zerH+1Xnb86v7N6mfHZ88/O19zZ/EZUA8sWy97A6y2V69Hqd5AUXt2PlG96vp3u340/mj/KN36Qd1fo/PjeePas9ejqON3q6fnTdvvWb1Z/2q97PjV/ZvVz47Pnn92vubO4jOgHli2XvYGWG2vXo9SvYGi9ux8onrV9e92/Wj80f5RuvWDur9G58fzxrVnr0dRx+9WT8+btt+zerP+1XrZ8av7N6ufHZ89/+x8zZ3FZ0A9sGy97A2w2l69HqV6A0Xt2flE9arr3+360fij/aN06wd1f43Oj+eNa89ej6KO362enjdtv2f1Zv2r9bLjV/dvVj87Pnv+2fmaO4vPgHpg2XrZG2C1vXo9SvUGitqz84nqVde/2/Wj8Uf7R+nWD+r+Gp0fzxvXnr0eRR2/Wz09b9p+z+rN+lfrZcev7t+sfnZ89vyz8zV3Fp8B9cCy9bI3wGp79XqU6g0UtWfnE9Wrrn+360fjj/aP0q0f1P01Oj+eN649ez2KOn63enretP2e1Zv1r9bLjl/dv1n97Pjs+Wfna+4sPgPqgWXrZW+A1fbq9SjVGyhqz84nqldd/27Xj8Yf7R+lWz+o+2t0fjxvXHv2ehR1/G719Lxp+z2rN+tfrZcdv7p/s/rZ8dnzz87X3Fl8BtQDy9bL3gCr7dXrUao3UNSenU9Ur7r+3a4fjT/aP0q3flD31+j8eN649uz1KOr43erpedP2e1Zv1r9aLzt+df9m9bPjs+efna+5s/gMqAeWrZe9AVbbq9ejVG+gqD07n6hedf27XT8af7R/lG79oO6v0fnxvHHt2etR1PG71dPzpu33rN6sf7Vedvzq/s3qZ8dnzz87X3Nn8RlQDyxbL3sDrLZXr0ep3kBRe3Y+Ub3q+ne7fjT+aP8o3fpB3V+j8+N549qz16Oo43erp+dN2+9ZvVn/ar3s+NX9m9XPjs+ef3a+5s7iM6AeWLZe9gZYba9ej1K9gaL27HyietX173b9aPzR/lG69YO6v0bnx/PGtWevR1HH71ZPz5u237N6s/7Vetnxq/s3q58dnz3/7HzNncVnQD2wbL3sDbDaXr0epXoDRe3Z+UT1quvf7frR+KP9o3TrB3V/jc6P541rz16Poo7frZ6eN22/Z/Vm/av1suNX929WPzs+e/7Z+Zo7i8+AemDZetkbYLW9ej1K9QaK2rPziepV17/b9aPxR/tH6dYP6v4anR/PG9eevR5FHb9bPT1v2n7P6s36V+tlx6/u36x+dnz2/LPzNXcWnwH1wLL1sjfAanv1epTqDRS1Z+cT1auuf7frR+OP9o/SrR/U/TU6P543rj17PYo6frd6et60/Z7Vm/Wv1suOX92/Wf3s+Oz5Z+dr7iw+A+qBZetlb4DV9ur1KNUbKGrPzieqV13/btePxh/tH6VbP6j7a3R+PG9ce/Z6FHX8bvX0vGn7Pas361+tlx2/un+z+tnx2fPPztfcWXwG1APL1sveAKvt1etRqjdQ1J6dT1Svuv7drh+NP9o/Srd+UPfX6Px43rj27PUo6vjd6ul50/Z7Vm/Wv1ovO351/2b1s+Oz55+dr7mz+AyoB5atl70BVtur16NUb6CoPTufqF51/btdPxp/tH+Ubv2g7q/R+fG8ce3Z61HU8bvV0/Om7fes3qx/tV52/Or+zepnx2fPPztfc2fxGVAPLFsvewOstlevR6neQFF7dj5Rver6d7t+NP5o/yjd+kHdX6Pz43nj2rPXo6jjd6un503b71m9Wf9qvez41f2b1c+Oz55/dr7mzuIzoB5Ytl72Blhtr16PUr2BovbsfKJ61fXvdv1o/NH+Ubr1g7q/RufH88a1Z69HUcfvVk/Pm7bfs3qz/tV62fGr+zernx2fPf/sfM2dxWdAPbBsvewNsNpevR6legNF7dn5RPWq69/t+tH4o/2jdOsHdX+Nzo/njWvPXo+ijt+tnp43bb9n9Wb9q/Wy41f3b1Y/Oz57/tn5mjuLz4B6YNl62Rtgtb16PUr1Boras/OJ6lXXv9v1o/FH+0fp1g/q/hqdH88b1569HkUdv1s9PW/afs/qzfpX62XHr+7frH52fPb8s/M1dxafAfXAsvWyN8Bqe/V6lOoNFLVn5xPVq65/t+tH44/2j9KtH9T9NTo/njeuPXs9ijp+t3p63rT9ntWb9a/Wy45f3b9Z/ez47Pln52vuLD4D6oFl62VvgNX26vUo1Rsoas/OJ6pXXf9u14/GH+0fpVs/qPtrdH48b1x79noUdfxu9fS8afs9qzfrX62XHb+6f7P62fHZ88/O19xZfAbUA8vWy94Aq+3V61GqN1DUnp1PVK+6/t2uH40/2j9Kt35Q99fo/HjeuPbs9Sjq+N3q6XnT9ntWb9a/Wi87fnX/ZvWz47Pnn52vubP4DKgHlq2XvQFW26vXo1RvoKg9O5+oXnX9u10/Gn+0f5Ru/aDur9H58bxx7dnrUdTxu9XT86bt96zerH+1Xnb86v7N6mfHZ88/O19zZ/EZUA8sWy97A6y2V69Hqd5AUXt2PlG96vp3u340/mj/KN36Qd1fo/PjeePas9ejqON3q6fnTdvvWb1Z/2q97PjV/ZvVz47Pnn92vubO4jOgHli2XvYGWG2vXo9SvYGi9ux8onrV9e92/Wj80f5RuvWDur9G58fzxrVnr0dRx+9WT8+btt+zerP+1XrZ8av7N6ufHZ89/+x8zZ3FZ0A9sGy97A2w2l69HqV6A0Xt2flE9arr3+360fij/aN06wd1f43Oj+eNa89ej6KO362enjdtv2f1Zv2r9bLjV/dvVj87Pnv+2fmaO4vPgHpg2XrZG2C1vXo9SvUGitqz84nqVde/2/Wj8Uf7R+nWD+r+Gp0fzxvXnr0eRR2/Wz09b9p+z+rN+lfrZcev7t+sfnZ89vyz8zV3Fp8B9cCy9bI3wGp79XqU6g0UtWfnE9Wrrn+360fjj/aP0q0f1P01Oj+eN649ez2KOn63enretP2e1Zv1r9bLjl/dv1n97Pjs+Wfna+4sPgPqgWXrZW+A1fbq9SjVGyhqz84nqldd/27Xj8Yf7R+lWz+o+2t0fjxvXHv2ehR1/G719Lxp+z2rN+tfrZcdv7p/s/rZ8dnzz87X3Fl8BtQDy9bL3gCr7dXrUao3UNSenU9Ur7r+3a4fjT/aP0q3flD31+j8eN649uz1KOr43erpedP2e1Zv1r9aLzt+df9m9bPjs+efna+5s/gMqAeWrZe9AVbbq9ejVG+gqD07n6hedf27XT8af7R/lG79oO6v0fnxvHHt2etR1PG71dPzpu33rN6sf7Vedvzq/s3qZ8dnzz87X3Nn8RlQDyxbL3sDrLZXr0ep3kBRe3Y+Ub3q+ne7fjT+aP8o3fpB3V+j8+N549qz16Oo43erp+dN2+9ZvVn/ar3s+NX9m9XPjs+ef3a+5s7iM6AeWLZe9gZYba9ej1K9gaL27HyietX173b9aPzR/lG69YO6v0bnx/PGtWevR1HH71ZPz5u237N6s/7Vetnxq/s3q58dnz3/7HzNncVnQD2wbL3sDbDaXr0epXoDRe3Z+UT1quvf7frR+KP9o3TrB3V/jc6P541rz16Poo7frZ6eN22/Z/Vm/av1suNX929WPzs+e/7Z+Zo7i8+AemDZetkbYLW9ej1K9QaK2rPziepV17/b9aPxR/tH6dYP6v4anR/PG9eevR5FHb9bPT1v2n7P6s36V+tlx6/u36x+dnz2/LPzNXcWnwH1wLL1sjfAanv1epTqDRS1Z+cT1auuf7frR+OP9o/SrR/U/TU6P543rj17PYo6frd6et60/Z7Vm/Wv1suOX92/Wf3s+Oz5Z+dr7iw+A+qBZetlb4DV9ur1KNUbKGrPzieqV13/btePxh/tH6VbP6j7a3R+PG9ce/Z6FHX8bvX0vGn7Pas361+tlx2/un+z+tnx2fPPztfcWXwG1APL1sveAKvt1etRqjdQ1J6dT1Svuv7drh+NP9o/Srd+UPfX6Px43rj27PUo6vjd6ul50/Z7Vm/Wv1ovO351/2b1s+Oz55+dr7mz+AyoB5atl70BVtur16NUb6CoPTufqF51/btdPxp/tH+Ubv2g7q/R+fG8ce3Z61HU8bvV0/Om7fes3qx/tV52/Or+zepnx2fPPztfc2fxGVAPLFsvewOstlevR6neQFF7dj5Rver6d7t+NP5o/yjd+kHdX6Pz43nj2rPXo6jjd6un503b71m9Wf9qvez41f2b1c+Oz55/dr7mzuIzoB5Ytl72Blhtr16PUr2BovbsfKJ61fXvdv1o/NH+Ubr1g7q/RufH88a1Z69HUcfvVk/Pm7bfs3qz/tV62fGr+zernx2fPf/sfM2dxWdAPbBsvewNsNpevR6legNF7dn5RPWq69/t+tH4o/2jdOsHdX+Nzo/njWvPXo+ijt+tnp43bb9n9Wb9q/Wy41f3b1Y/Oz57/tn5mjuLz4B6YNl62Rtgtb16PUr1Boras/OJ6lXXv9v1o/FH+0fp1g/q/hqdH88b1569HkUdv1s9PW/afs/qzfpX62XHr+7frH52fPb8s/M1dxafAfXAsvWyN8Bqe/V6lOoNFLVn5xPVq65/t+tH44/2j9KtH9T9NTo/njeuPXs9ijp+t3p63rT9ntWb9a/Wy45f3b9Z/ez47Pln52vuLD4D6oFl62VvgNX26vUo1Rsoas/OJ6pXXf9u14/GH+0fpVs/qPtrdH48b1x79noUdfxu9fS8afs9qzfrX62XHb+6f7P62fHZ88/O19xZfAbUA8vWy94Aq+3V61GqN1DUnp1PVK+6/t2uH40/2j9Kt35Q99fo/HjeuPbs9Sjq+N3q6XnT9ntWb9a/Wi87fnX/ZvWz47Pnn52vubP4DKgHlq2XvQFW26vXo1RvoKg9O5+oXnX9u10/Gn+0f5Ru/aDur9H58bxx7dnrUdTxu9XT86bt96zerH+1Xnb86v7N6mfHZ88/O19zZ/EZUA8sWy97A6y2V69Hqd5AUXt2PlG96vp3u340/mj/KN36Qd1fo/PjeePas9ejqON3q6fnTdvvWb1Z/2q97PjV/ZvVz47Pnn92vubO4jOgHli2XvYGWG2vXo9SvYGi9ux8onrV9e92/Wj80f5RuvWDur9G58fzxrVnr0dRx+9WT8+btt+zerP+1XrZ8av7N6ufHZ89/+x8zZ3FZ0A9sGy97A2w2l69HqV6A0Xt2flE9arr3+360fij/aN06wd1f43Oj+eNa89ej6KO362enjdtv2f1Zv2r9bLjV/dvVj87Pnv+2fmaO4vPgHpg2XrZG2C1vXo9SvUGitqz84nqVde/2/Wj8Uf7R+nWD+r+Gp0fzxvXnr0eRR2/Wz09b9p+z+rN+lfrZcev7t+sfnZ89vyz8zV3Fp8B9cCy9bI3wGp79XqU6g0UtWfnE9Wrrn+360fjj/aP0q0f1P01Oj+eN649ez2KOn63enretP2e1Zv1r9bLjl/dv1n97Pjs+Wfna+4sPgPqgWXrZW+A1fbq9SjVGyhqz84nqldd/27Xj8Yf7R+lWz+o+2t0fjxvXHv2ehR1/G719Lxp+z2rN+tfrZcdv7p/s/rZ8dnzz87X3Fl8BtQDy9bL3gCr7dXrUao3UNSenU9Ur7r+3a4fjT/aP0q3flD31+j8eN649uz1KOr43erpedP2e1Zv1r9aLzt+df9m9bPjs+efna+5s/gMqAeWrZe9AVbbq9ejVG+gqD07n6hedf27XT8af7R/lG79oO6v0fnxvHHt2etR1PG71dPzpu33rN6sf7Vedvzq/s3qZ8dnzz87X3Nn8RlQDyxbL3sDrLZXr0ep3kBRe3Y+Ub3q+ne7fjT+aP8o3fpB3V+j8+N549qz16Oo43erp+dN2+9ZvVn/ar3s+NX9m9XPjs+ef3a+5s7iM6AeWLZe9gZYba9ej1K9gaL27HyietX173b9aPzR/lG69YO6v0bnx/PGtWevR1HH71ZPz5u237N6s/7Vetnxq/s3q58dnz3/7HzNncVnQD2wbL3sDbDaXr0epXoDRe3Z+UT1quvf7frR+KP9o3TrB3V/jc6P541rz16Poo7frZ6eN22/Z/Vm/av1suNX929WPzs+e/7Z+Zo7i8+AemDZetkbYLW9ej1K9QaK2rPziepV17/b9aPxR/tH6dYP6v4anR/PG9eevR5FHb9bPT1v2n7P6s36V+tlx6/u36x+dnz2/LPzNXcWnwH1wLL1sjfAanv1epTqDRS1Z+cT1auuf7frR+OP9o/SrR/U/TU6P543rj17PYo6frd6et60/Z7Vm/Wv1suOX92/Wf3s+Oz5Z+dr7iw+A+qBZetlb4DV9ur1KNUbKGrPzieqV13/btePxh/tH6VbP6j7a3R+PG9ce/Z6FHX8bvX0vGn7Pas361+tlx2/un+z+tnx2fPPztfcWXwG1APL1sveAKvt1etRqjdQ1J6dT1Svuv7drh+NP9o/Srd+UPfX6Px43rj27PUo6vjd6ul50/Z7Vm/Wv1ovO351/2b1s+Oz55+dr7mz+AyoB5atl70BVtur16NUb6CoPTufqF51/btdPxp/tH+Ubv2g7q/R+fG8ce3Z61HU8bvV0/Om7fes3qx/tV52/Or+zepnx2fPPztfc2fxGVAPLFsvewOstlevR6neQFF7dj5Rver6d7t+NP5o/yjd+kHdX6Pz43nj2rPXo6jjd6un503b71m9Wf9qvez41f2b1c+Oz55/dr7mzuIzoB5Ytl72Blhtr16PUr2BovbsfKJ61fXvdv1o/NH+Ubr1g7q/RufH88a1Z69HUcfvVk/Pm7bfs3qz/tV62fGr+zernx2fPf/sfM2dxWdAPbBsvewNsNpevR6legNF7dn5RPWq69/t+tH4o/2jdOsHdX+Nzo/njWvPXo+ijt+tnp43bb9n9Wb9q/Wy41f3b1Y/Oz57/tn5mjuLz4B6YNl62Rtgtb16PUr1Boras/OJ6lXXv9v1o/FH+0fp1g/q/hqdH88b1569HkUdv1s9PW/afs/qzfpX62XHr+7frH52fPb8s/M1dxafAfXAsvWyN8Bqe/V6lOoNFLVn5xPVq65/t+tH44/2j9KtH9T9NTo/njeuPXs9ijp+t3p63rT9ntWb9a/Wy45f3b9Z/ez47Pln52vuLD4D6oFl62VvgNX26vUo1Rsoas/OJ6pXXf9u14/GH+0fpVs/qPtrdH48b1x79noUdfxu9fS8afs9qzfrX62XHb+6f7P62fHZ88/O19xZfAbUA8vWy94Aq+3V61GqN1DUnp1PVK+6/t2uH40/2j9Kt35Q99fo/HjeuPbs9Sjq+N3q6XnT9ntWb9a/Wi87fnX/ZvWz47Pnn52vubP4DKgHlq2XvQFW26vXo1RvoKg9O5+oXnX9u10/Gn+0f5Ru/aDur9H58bxx7dnrUdTxu9XT86bt96zerH+1Xnb86v7N6mfHZ88/O19zZ/EZUA8sWy97A6y2V69Hqd5AUXt2PlG96vp3u340/mj/KN36Qd1fo/PjeePas9ejqON3q6fnTdvvWb1Z/2q97PjV/ZvVz47Pnn92vubO4jOgHli2XvYGWG2vXo9SvYGi9ux8onrV9e92/Wj80f5RuvWDur9G58fzxrVnr0dRx+9WT8+btt+zerP+1XrZ8av7N6ufHZ89/+x8zZ3FZ0A9sGy97A2w2l69HqV6A0Xt2flE9arr3+360fij/aN06wd1f43Oj+eNa89ej6KO362enjdtv2f1Zv2r9bLjV/dvVj87Pnv+2fmaO4vPgHpg2XrZG2C1vXo9SvUGitqz84nqVde/2/Wj8Uf7R+nWD+r+Gp0fzxvXnr0eRR2/Wz09b9p+z+rN+lfrZcev7t+sfnZ89vyz8zV3Fp8B9cCy9bI3wGp79XqU6g0UtWfnE9Wrrn+360fjj/aP0q0f1P01Oj+eN649ez2KOn63enretP2e1Zv1r9bLjl/dv1n97Pjs+Wfna+4sPgPqgWXrZW+A1fbq9SjVGyhqz84nqldd/27Xj8Yf7R+lWz+o+2t0fjxvXHv2ehR1/G719Lxp+z2rN+tfrZcdv7p/s/rZ8dnzz87X3Fl8BtQDy9bL3gCr7dXrUao3UNSenU9Ur7r+3a4fjT/aP0q3flD31+j8eN649uz1KOr43erpedP2e1Zv1r9aLzt+df9m9bPjs+efna+5s/gMqAeWrZe9AVbbq9ejVG+gqD07n6hedf27XT8af7R/lG79oO6v0fnxvHHt2etR1PG71dPzpu33rN6sf7Vedvzq/s3qZ8dnzz87X3Nn8RlQDyxbL3sDrLZXr0ep3kBRe3Y+Ub3q+ne7fjT+aP8o3fpB3V+j8+N549qz16Oo43erp+dN2+9ZvVn/ar3s+NX9m9XPjs+ef3a+5s7iM6AeWLZe9gZYba9ej1K9gaL27HyietX173b9aPzR/lG69YO6v0bnx/PGtWevR1HH71ZPz5u237N6s/7Vetnxq/s3q58dnz3/7HzNncVnQD2wbL3sDbDaXr0epXoDRe3Z+UT1quvf7frR+KP9o3TrB3V/jc6P541rz16Poo7frZ6eN22/Z/Vm/av1suNX929WPzs+e/7Z+Zo7i8+AemDZetkbYLW9ej1K9QaK2rPziepV17/b9aPxR/tH6dYP6v4anR/PG9eevR5FHb9bPT1v2n7P6s36V+tlx6/u36x+dnz2/LPzNXcWnwH1wLL1sjfAanv1epTqDRS1Z+cT1auuf7frR+OP9o/SrR/U/TU6P543rj17PYo6frd6et60/Z7Vm/Wv1suOX92/Wf3s+Oz5Z+dr7iw+A+qBZetlb4DV9ur1KNUbKGrPzieqV13/btePxh/tH6VbP6j7a3R+PG9ce/Z6FHX8bvX0vGn7Pas361+tlx2/un+z+tnx2fPPztfcWXwG1APL1sveAKvt1etRqjdQ1J6dT1Svuv7drh+NP9o/Srd+UPfX6Px43rj27PUo6vjd6ul50/Z7Vm/Wv1ovO351/2b1s+Oz55+dr7mz+AyoB5atl70BVtur16NUb6CoPTufqF51/btdPxp/tH+Ubv2g7q/R+fG8ce3Z61HU8bvV0/Om7fes3qx/tV52/Or+zepnx2fPPztfc2fxGVAPLFsvewOstlevR6neQFF7dj5Rver6d7t+NP5o/yjd+kHdX6Pz43nj2rPXo6jjd6un503b71m9Wf9qvez41f2b1c+Oz55/dr7mzuIzoB5Ytl72Blhtr16PUr2BovbsfKJ61fXvdv1o/NH+Ubr1g7q/RufH88a1Z69HUcfvVk/Pm7bfs3qz/tV62fGr+zernx2fPf/sfM2dxWdAPbBsvewNsNpevR6legNF7dn5RPWq69/t+tH4o/2jdOsHdX+Nzo/njWvPXo+ijt+tnp43bb9n9Wb9q/Wy41f3b1Y/Oz57/tn5mjuLz4B6YNl62Rtgtb16PUr1Boras/OJ6lXXv9v1o/FH+0fp1g/q/hqdH88b1569HkUdv1s9PW/afs/qzfpX62XHr+7frH52fPb8s/M1dxafAfXAsvWyN8Bqe/V6lOoNFLVn5xPVq65/t+tH44/2j9KtH9T9NTo/njeuPXs9ijp+t3p63rT9ntWb9a/Wy45f3b9Z/ez47Pln52vuLD4D6oFl62VvgNX26vUo1Rsoas/OJ6pXXf9u14/GH+0fpVs/qPtrdH48b1x79noUdfxu9fS8afs9qzfrX62XHb+6f7P62fHZ88/O19xZfAbUA8vWy94Aq+3V61GqN1DUnp1PVK+6/t2uH40/2j9Kt35Q99fo/HjeuPbs9Sjq+N3q6XnT9ntWb9a/Wi87fnX/ZvWz47Pnn52vubP4DKgHlq2XvQFW26vXo1RvoKg9O5+oXnX9u10/Gn+0f5Ru/aDur9H58bxx7dnrUdTxu9XT86bt96zerH+1Xnb86v7N6mfHZ88/O19zZ/EZUA8sWy97A6y2V69Hqd5AUXt2PlG96vp3u340/mj/KN36Qd1fo/PjeePas9ejqON3q6fnTdvvWb1Z/2q97PjV/ZvVz47Pnn92vubO4jOgHli2XvYGWG2vXo9SvYGi9ux8onrV9e92/Wj80f5RuvWDur9G58fzxrVnr0dRx+9WT8+btt+zerP+1XrZ8av7N6ufHZ89/+x8zZ3FZ0A9sGy97A2w2l69HqV6A0Xt2flE9arr3+360fij/aN06wd1f43Oj+eNa89ej6KO362enjdtv2f1Zv2r9bLjV/dvVj87Pnv+2fmaO4vPgHpg2XrZG2C1vXo9SvUGitqz84nqVde/2/Wj8Uf7R+nWD+r+Gp0fzxvXnr0eRR2/Wz09b9p+z+rN+lfrZcev7t+sfnZ89vyz8zV3Fp8B9cCy9bI3wGp79XqU6g0UtWfnE9Wrrn+360fjj/aP0q0f1P01Oj+eN649ez2KOn63enretP2e1Zv1r9bLjl/dv1n97Pjs+Wfna+4sPgPqgWXrZW+A1fbq9SjVGyhqz84nqldd/27Xj8Yf7R+lWz+o+2t0fjxvXHv2ehR1/G719Lxp+z2rN+tfrZcdv7p/s/rZ8dnzz87X3Fl8BtQDy9bL3gCr7dXrUao3UNSenU9Ur7r+3a4fjT/aP0q3flD31+j8eN649uz1KOr43erpedP2e1Zv1r9aLzt+df9m9bPjs+efna+5s/gMqAeWrZe9AVbbq9ejVG+gqD07n6hedf27XT8af7R/lG79oO6v0fnxvHHt2etR1PG71dPzpu33rN6sf7Vedvzq/s3qZ8dnzz87X3Nn8RlQDyxbL3sDrLZXr0ep3kBRe3Y+Ub3q+ne7fjT+aP8o3fpB3V+j8+N549qz16Oo43erp+dN2+9ZvVn/ar3s+NX9m9XPjs+ef3a+5s7iM6AeWLZe9gZYba9ej1K9gaL27HyietX173b9aPzR/lG69YO6v0bnx/PGtWevR1HH71ZPz5u237N6s/7Vetnxq/s3q58dnz3/7HzNncVnQD2wbL3sDbDaXr0epXoDRe3Z+UT1quvf7frR+KP9o3TrB3V/jc6P541rz16Poo7frZ6eN22/Z/Vm/av1suNX929WPzs+e/7Z+Zo7i8+AemDZetkbYLW9ej1K9QaK2rPziepV17/b9aPxR/tH6dYP6v4anR/PG9eevR5FHb9bPT1v2n7P6s36V+tlx6/u36x+dnz2/LPzNXcWnwH1wLL1sjfAanv1epTqDRS1Z+cT1auuf7frR+OP9o/SrR/U/TU6P543rj17PYo6frd6et60/Z7Vm/Wv1suOX92/Wf3s+Oz5Z+dr7iw+A+qBZetlb4DV9ur1KNUbKGrPzieqV13/btePxh/tH6VbP6j7a3R+PG9ce/Z6FHX8bvX0vGn7Pas361+tlx2/un+z+tnx2fPPztfcWXwG1APL1sveAKvt1etRqjdQ1J6dT1Svuv7drh+NP9o/Srd+UPfX6Px43rj27PUo6vjd6ul50/Z7Vm/Wv1ovO351/2b1s+Oz55+dr7mz+AyoB5atl70BVtur16NUb6CoPTufqF51/btdPxp/tH+Ubv2g7q/R+fG8ce3Z61HU8bvV0/Om7fes3qx/tV52/Or+zepnx2fPPztfc2fxGVAPLFsvewOstlevR6neQFF7dj5Rver6d7t+NP5o/yjd+kHdX6Pz43nj2rPXo6jjd6un503b71m9Wf9qvez41f2b1c+Oz55/dr7mzuIzoB5Ytl72Blhtr16PUr2BovbsfKJ61fXvdv1o/NH+Ubr1g7q/RufH88a1Z69HUcfvVk/Pm7bfs3qz/tV62fGr+zernx2fPf/sfM2dxWdAPbBsvewNsNpevR6legNF7dn5RPWq69/t+tH4o/2jdOsHdX+Nzo/njWvPXo+ijt+tnp43bb9n9Wb9q/Wy41f3b1Y/Oz57/tn5mjuLz4B6YNl62Rtgtb16PUr1Boras/OJ6lXXv9v1o/FH+0fp1g/q/hqdH88b1569HkUdv1s9PW/afs/qzfpX62XHr+7frH52fPb8s/M1dxafAfXAsvWyN8Bqe/V6lOoNFLVn5xPVq65/t+tH44/2j9KtH9T9NTo/njeuPXs9ijp+t3p63rT9ntWb9a/Wy45f3b9Z/ez47Pln52vuLD4D6oFl62VvgNX26vUo1Rsoas/OJ6pXXf9u14/GH+0fpVs/qPtrdH48b1x79noUdfxu9fS8afs9qzfrX62XHb+6f7P62fHZ88/O19xZfAbUA8vWy94Aq+3V61GqN1DUnp1PVK+6/t2uH40/2j9Kt35Q99fo/HjeuPbs9Sjq+N3q6XnT9ntWb9a/Wi87fnX/ZvWz47Pnn52vubP4DKgHlq2XvQFW26vXo1RvoKg9O5+oXnX9u10/Gn+0f5Ru/aDur9H58bxx7dnrUdTxu9XT86bt96zerH+1Xnb86v7N6mfHZ88/O19zZ/EZUA8sWy97A6y2V69Hqd5AUXt2PlG96vp3u340/mj/KN36Qd1fo/PjeePas9ejqON3q6fnTdvvWb1Z/2q97PjV/ZvVz47Pnn92vubO4jOgHli2XvYGWG2vXo9SvYGi9ux8onrV9e92/Wj80f5RuvWDur9G58fzxrVnr0dRx+9WT8+btt+zerP+1XrZ8av7N6ufHZ89/+x8zZ3FZ0A9sGy97A2w2l69HqV6A0Xt2flE9arr3+360fij/aN06wd1f43Oj+eNa89ej6KO362enjdtv2f1Zv2r9bLjV/dvVj87Pnv+2fmaO4vPgHpg2XrZG2C1vXo9SvUGitqz84nqVde/2/Wj8Uf7R+nWD+r+Gp0fzxvXnr0eRR2/Wz09b9p+z+rN+lfrZcev7t+sfnZ89vyz8zV3Fp8B9cCy9bI3wGp79XqU6g0UtWfnE9Wrrn+360fjj/aP0q0f1P01Oj+eN649ez2KOn63enretP2e1Zv1r9bLjl/dv1n97Pjs+Wfna+4sPgPqgWXrZW+A1fbq9SjVGyhqz84nqldd/27Xj8Yf7R+lWz+o+2t0fjxvXHv2ehR1/G719Lxp+z2rN+tfrZcdv7p/s/rZ8dnzz87X3Fl8BtQDy9bL3gCr7dXrUao3UNSenU9Ur7r+3a4fjT/aP0q3flD31+j8eN649uz1KOr43erpedP2e1Zv1r9aLzt+df9m9bPjs+efna+5s/gMqAeWrZe9AVbbq9ejVG+gqD07n6hedf27XT8af7R/lG79oO6v0fnxvHHt2etR1PG71dPzpu33rN6sf7Vedvzq/s3qZ8dnzz87X3Nn8RlQDyxbL3sDrLZXr0ep3kBRe3Y+Ub3q+ne7fjT+aP8o3fpB3V+j8+N549qz16Oo43erp+dN2+9ZvVn/ar3s+NX9m9XPjs+ef3a+5s7iM6AeWLZe9gZYba9ej1K9gaL27HyietX173b9aPzR/lG69YO6v0bnx/PGtWevR1HH71ZPz5u237N6s/7Vetnxq/s3q58dnz3/7HzNncVnQD2wbL3sDbDaXr0epXoDRe3Z+UT1quvf7frR+KP9o3TrB3V/jc6P541rz16Poo7frZ6eN22/Z/Vm/av1suNX929WPzs+e/7Z+Zo7i8+AemDZetkbYLW9ej1K9QaK2rPziepV17/b9aPxR/tH6dYP6v4anR/PG9eevR5FHb9bPT1v2n7P6s36V+tlx6/u36x+dnz2/LPzNXcWnwH1wLL1sjfAanv1epTqDRS1Z+cT1auuf7frR+OP9o/SrR/U/TU6P543rj17PYo6frd6et60/Z7Vm/Wv1suOX92/Wf3s+Oz5Z+dr7iw+A+qBZetlb4DV9ur1KNUbKGrPzieqV13/btePxh/tH6VbP6j7a3R+PG9ce/Z6FHX8bvX0vGn7Pas361+tlx2/un+z+tnx2fPPztfcWXwG1APL1sveAKvt1etRqjdQ1J6dT1Svuv7drh+NP9o/Srd+UPfX6Px43rj27PUo6vjd6ul50/Z7Vm/Wv1ovO351/2b1s+Oz55+dr7njDBhjjDHGGGOMMTuAD/jGGGOMMcYYY8wO4AO+McYYY4wxxhizA/iAb4wxxhhjjDHG7AA+4BtjjDHGGGOMMTuAD/jGGGOMMcYYY8wO4AO+McYYY4wxxhizA/iAb4wxxhhjjDHG7AA+4BtjjDHGGGOMMTuAD/jGGGOMMcYYY8wO4AO+McYYY4wxxhizA/iAb4wxxhhjjDHG7AA+4BtjjDHGGGOMMTuAD/jGGGOMMcYYY8wO4AO+McYYY4wxxhizA/iAb4wxxhhjjDHG7AA+4BtjjDHGGGOMMTuAD/jGGGOMMcYYY8wO4AO+MQvjE5/4xOov//Iv037+53/+Z/UXf/EXq//93/8dossYY4zpwMc+9rHVtdde+/m/66677thr/+///m/1N3/zN6esv+GGG6h6Vfzbv/3b6k1vetPqyiuvXH3wgx/c2s9nP/vZ1dvf/vb1/zXGjMcHfGMEvOIVr1jd//73X93+9rc/9O8Od7jD6j73uc/qUY961OrJT37y6pJLLln/IziKiy66aPVFX/RFqxMnTqy+4zu+Y/Vf//VfW/l529vetvqar/matZ/TTz999a53vQta//GPf3z1uMc9bvX1X//1q1vd6laH/t361rdefd3Xfd3a9u53v/vq3HPPXT3taU9bvfOd71y/kFoC//mf/7m6/PLLVxdeeOHqvPPOWz3wgQ9cfeu3fuvqq7/6q1df8iVfss7Nfe9739X555+/etaznrW6/vrry7TGGz7Pf/7zV/e85z1XZ5111vrFIJN4o+mP/uiPVj/1Uz+1etjDHrb6ru/6rnW/fMVXfMXqG7/xG9d5iXmKnsm8IN2Wt771rav73e9+a10vfvGL5fG70KlO1nIwf/VXf7X+t+ehD33o6tu//dvX+3zsMbe97W1X97rXvVY/+IM/uHrhC1+4+td//Ve6lgquueaa1Z3udKf1v23Tv8jHv/zLvxy6/s/+7M/W/25N197oRjda1zfqPZKI9xM/8ROrRz7ykZ//+/mf//nV3/7t3w6NE1x88cXrXth7Xd/zPd+z+o//+A/Iz5vf/ObVzW52s/X6r/zKr1y/njDGjMUHfGPIfOADH1h94Rd+4cYXDMf9u/Od77w+HHzqU5/aWkd8gnDaaaed4vfSSy/dytfZZ599ip/v/d7vhdZfcMEFqXyc/LvlLW+5fvNkF4lD/R/8wR+svv/7v391k5vcBMrLl37pl67fQFEfaKM/H/zgB5+i5Ra3uMXWbyQdRnyS9IQnPGHdA0huvvM7v3P1spe9bLieTXz0ox9d3fSmNz0l/tVXXy2J3YVOdbKWzcShM/4tiDcXjqsjDno/8AM/sHrLW94yVEs1D3nIQw697h/90R89cG3kMd6QPmz9S1/60mFaX/va1x742iLemMm8XpgS/To93J/8iw8OEOJNgb3r4/83xozFB3xjyPz6r//6kMNs/MVB7+Uvf/lWOv7+7/9+n79f/uVf3spXvMjc6yc+2UCIT59H5ST+nvjEJw7/ZKSSq666at/BcJu/ePH3ghe8QKL57/7u7zZ+8vXd3/3dw2N9+MMfXt3xjndM5SbeAPnv//7v4dr2Em987Y0Zb7zErb9LoVOdrGUz8Yl03BGU2WOe8Yxn7MzdVEf92xSfPH/mM5/ZuPaKK644Ml+/8Au/MEzrve9970Nj/c7v/M6wWJteP5z8i4N/fCXhuGRfPxhjjsYHfGPIbDrgf/M3f/Pq277t2/b9xYuL+AQgDgKHvaDa5lOAzgf8eNEUX2HY9Be3hd71rndd36564xvf+MC8POABDzjy9sm5EF+f2HSN8WlffKIft/M+85nPXF122WXrN3xOft3hoNz82q/9GlVvfIoXn9RP45555pmrf/qnfxoaK15Invx6yN6/uAU2euApT3nK+m6XyEu8ufGkJz1p3Z9f8AVfsG9NHGxYB5Pf/d3f3RcvDkJLoVOdrOVgLbe73e32+Y07vWKPjq8GPPvZz173cuiKT7fPOOOMjXtM7Eu7cMg/zpvPB9019ohHPEJ2wI+vYZ38ut3Jv2mPnHPOOUNirY444Mdf9MZx8QHfGD4+4BtDZtMB/zgPuYvDatyKGd+F3HTI/+3f/m1IR+cD/nE/5Y3vd8dXHuIFcHz/fHo9j370o7e6nm7EGzjx3cQTn7vF/bGPfez6u+xHPdAwPhmM5zZM3wiJF35xOyeD8Lvp1s04HDBuzZ/e3nnycBEPjzyMeCDkpjdOXvKSlwzXGLM7PcTF3Q1LeqBUpzpZy2Ye//jH79sn4vvcn/zkJw9dF/9+3eMe99inZRdu15/+2xRvLE8P0vFGzJR4JsF0H4w38lkH/HjTdur7x37sx075/7/sy75s9elPf3pIvKMO+PEXz5I4Dj7gG8PHB3xjyGx7wN9L3Go3ffEQBwaEXTjg7yU+GY51e/3EoXhXDlHxlYOPfOQjW30qFg9emt4FEt+XHc1v/dZvbfwU6elPf/rwWMHv//7v7+vhn/zJnzz2+ngY1PR7xnEQP+pAg/LDP/zD+3ISD9tbCp3qZC2biX0lHua311fcEXBc4k2s6b9JyLV0ZdO/TQ960INO+d/iDfbpV23iwYPT2v7Kr/wK7YAfD+7c6zd0x4P1pvFe9apXDYl3nAN+vBlynH9/fcA3ho8P+MaQGXHAD+LJuNNDwz//8z8fe/2uHfBXn3tC+bafIuw60zs/4tcORrLpxWu8qfDKV75yaJy9xCdn0xeU6LMX3v/+9+97MNXIB1+98Y1v3JeXwx7MtYt0qpO1bCYOYl/1VV91ip94+CnC9AGBu3AH1aZ/m+KQPJ3p6ZuYd7vb3U757/HpeTyXhHHAjze3v/iLv/gUv0996lPX/+0ud7nLKf973B0ygk2vH+JrJdP/LX7F5Sh8wDeGjw/4xpAZdcCPW7SnfuIp68dlFw/4Qfy04F5fj3nMY7b2tUvEC9BpveOp7iOIvpn6jp/1Yt6iG78qMP3E8EUvetFWvqYPFXv4wx8+RGN8wjp9FkIcguIJ1EuhU52s5XDiWR57/cT364/7tZp3v/vd+/aAuHNo7mz6tylyMn0z5Bu+4Rs+vyb+PZ/mIn5OMG7bZxzwf+M3fuPA1xRx0N/7v8eDeaP3smx6/RBvXE7vFPvyL//y1XXXXXeoLx/wjeHjA74xZEYd8ONwNvXznOc859jrd/GAH99JP/ld9ZN/8cC5pROfCsang9MD+IhfGth0K2o8DyFe8DOJOzOmcbf9GcDnPve5lNzEA9GmGkfdIjsXOtXJWg4nvtc/1RTfrT/qeQAx69NP7+PAu4sP2Tv5b1N8/WCaqz//8z9f/7fpswzi78orr6Qd8DfdCXKS973vfftivvrVr07HPOj1Qzx8cfq/x/NXDsMHfGP4+IBvDJlRB/z4vvPUD3I7+i4e8C+//PJ91zTyp4HmStyyO83L2WefnfYbD/SaPqk5XujHi0o2v/qrv3pK3HiQ4LZsOmzF7bQZrrnmmn23zcbP5C2NTnWylqOZHhbjLz6tjl98mH63P54JEg9y2/RQzXjTYRc46N+m97znPfuu+fzzz1//VOH0gZrxbIN4s4NxwI9nH0xvjY83FvcyfXM37ibIctDrh7hrafosh6OeOeIDvjF8fMA3hsyIA37c4hs/ozf1c9StcHvZpQN+fMIU3/WbHqjihcU//MM/gFezW8SncvFTi9Na/+Ef/mHK7+tf//p93/2N/McL1riT5MILL1z9zM/8zOp5z3ve6jWvec3qve9979CH102fEP1N3/RNW/vadEvtyU/jtiE+PZ3OZ9waGweipdGpTtZyNHFAjdu6N32fOr5HHofD5z//+av73Oc+++b/xOfu3omf0dsVDvu3afr99pve9Kbrn8yb5iQ+1V597sn6ow/4l1566T6f73jHO06x+bmf+7lT/nvc4ZH9RZPDXj/Ec1em/y32w4N+9cUHfGP4+IBvDJnsAT9uh7zzne+8zwf6VPTOB/zb3OY26wPiRRddtH6YYLxA+sVf/MX1C8/4ixdF8fNN55577urud7/7vie3n/yLF6IZ4lOXkX9KIl58p3fTp2s//dM/nfL9qU99avW1X/u1G3N+1F98mhR3n2R/3eCss846xW/8ZNi2xO9/T3Ue9NvWx2H66ewJ8Oszo+jQv53qZC3HJ+5AiV9mQWb7OD/vh9Chfw874Me/L9McTL8iFm8yx9PsV6QD/vRnFuPfzum1vvOd79wX93Wve10q7lGvH+5973vv+++/+Zu/udGXD/jG8PEB3xgymw748Ru2V1xxxb6/+Ef4sssuW386HQ9Aiu81bnphFb+NHk/SReh8wB/xd/Ipwihxi2G8cTB9oTbiLw632TcdjsMf//Efr2uwSUM82Tr76c2m75iif3Eb5yWXXLK1lunPg5155plbX8+mWQht2xAv5uOTzr2+7nrXux74neh44FU8HDO+ShJvnGTp1r+d6mQtGDGb058ePehv2387pnTr38MO+PGrNZveQD3IfvQB/4Ybbliddtppp/jb9NOEm34CMfsLB0e9fog7x6ZvvMfdHaF5ig/4xvDxAd8YMpsO+Jm/eGEY/5ii7PIBP17MxAvFbdj06evIv7it9dprr91K21FcffXV61tnN8WNW8Rf9rKXpWPEd08PumPi5F88OTk+/YsXt/Gm1GEvguNTv20+XYtPPA96IY0Sb45NdW37ifv973//U/xErt71rncdaH+ve93rlAPIZz7zma2vY9WwfzvVyVqOT3y3O57Gf9y+iBmPmNk7lbr171FfHzsqR/EG/UlGH/DD99TfQb9cMP2FhHgDJXMX1XFeP/z4j//4PptNb0D4gG8MHx/wjSEz6oB/q1vdavXyl7986xdUu3zAj7/73ve+Wx3yNz35fPTfVVddBes6jHjOwCMf+cgD48UhetT3v+MrEZtixIOlnv3sZ68/1ZoSPfrhD394/dWA6c8oxV98HQMlPhU/7IU3wqYX3vFQMZRNDzM87OsQkZOpPfKgzE10699OdbKW4xF3AMW/L5tqH88KiLujDvqKTuy7H/vYx7aO3a1/jzrgx7NMDooT38n/93//98/bjj7gx0M79/qKO/kO+p77m9/85qF7zXFeP8SbRNOfE4zntEw/kPAB3xg+PuAbQ2bbA3684x4PqnnYwx62+qVf+qVTXjhsQ+cD/t3udrf1i4CD/uKT6vjt3/jd3bjVNT6d3pSz+93vfvBv/sbTp29+85vTXlzGC+BR38ePW2if+cxnHnj98elw5mFxU66//vqNceKW2k9/+tPH8hEPgvyWb/mWfT7QuwumD7iKa92WeCE61YN+xSO+ezztm/g+7GFzGrfzT+NmH37YrX871claDifuHolPeqe/jHHic3dFxbMzTn7VJPbV2HvigW1T25vd7GZbP2ivW/8edcCPfBz0Zsd55513iu3IA348aHd6Z9RjHvOYA+3j4D99uv+P/MiPbBV7Bbx+ePGLX7zPLr6fvxcf8I3h4wO+MWQ2HfDjtsR4QTT9i+/mxkP1Nn1vLUvnAz76aVa8eImntG96+GB8XxwlXrS95S1vWb32ta8d+jfy1vw3vOENBz6TIV5A/emf/umwWCfZ9GlV3GqM3lb+oQ99aH0I2OsnDjwIe29tP5F8SNlHP/rR9CzEmxxTH1Hzw2Ac8FfN+rdTnazlYOLfmDve8Y77/MShML63ftCzMuLNhfi1jE1fw4kHoW5Dp/49zr9N06fUn/yLT833MvKAH2+ITn3FG6cPetCDDvyL78DvtY///6BngxzFcV8/xL/Nm/5djiftn8QHfGP4+IBvDJkRP5M3gl064J8kPkW+5z3veYqvM844YytfXYmfsXrEIx6x8QVlfP9++qJyJBdffPG+mPGE5m2IX0XY6ydu3TzuXQDBgx/84H0vbrdl08+MIQ/j2vTGxznnnHPkOtYBvxOd6mQtBxNfr5n6iJ/EO+6dYvEVoOnvrcf33eMJ/3PmOP82ffCDH9yXu9vf/vb77hQYecB/yEMesvHfAPTvyiuv3Co+8vph09cD9j4nxwd8Y/j4gG8MGR/w9zPqgL864HvQ2zyEsCvxqdj0+uL7soqD4UMf+tBT4sandts+qCl+IWJ6HQc9IGoTj3rUo05Ze/rpp2+lI4hP96ZakFuMN/0kVHyqGXfmHPb35Cc/ed+6uM325H+PZ2ww7t5R0qlO1rKZ+JT1dre73Snr47vTcSDN6sj+JGc1x/236YEPfOApdi94wQv22Yw64MevbRz19P7j/l1wwQVb5QV9/RA/4zu1j5/AXfmAb4wEH/CNIdPlgB/fhZ7qiO/2b8P0idDxDzbCyAP+pt+EVvw0nYL4OcXptcXvIMdtsgri2Qh7Y8etl9uy6QFzz33uc4+9Pg7Q0/Xbflq46cnd73vf+469nvGQyJN/8ZN7kau50qlO1rKZTQfz+O70Nkzf7Irv6GefF1PJcf9timdwxHfa4w6yuBtiE6MO+PGTmlM/8WsdcRfUUX/T5yvEVzAOejDfYaAH/Hjw4o1vfONT7ONNiriLyQd8Y/j4gG8MmS4H/GD627jxtHWUeHEwfdDSpp/COYyRB/xXvOIV+/L7pje9aWt/XXjjG9+4foG297rioYvIbe1Z4qGGe+PHz+Ft+x3OK664Yl+d4rkCmfXxELBteMADHnCKn3jSP3JdP/RDP0Q74Mff61//+q2uqwOd6mQtmzn77LNPWR/P9th2rt/61rfuu65LL710K18dGPlv06gD/qY7qeJT/eMQtZhq2OZrXdvcAfj0pz9935rv+77v8wHfGAE+4BtDptMB/3GPe9wpOm55y1vCPuL29+n1oD+/M+pFVHw/fXqrZLz5EP/7nInvck6fgBy/qvDxj39cquPVr371vlof9hvvh/GzP/uzp/iJT6A++clPHnt9PPQrfoZqr4/oI/TTqPgN8Rvd6Ean+InvRyPEzxTG08cjfnwP+bh/09ui4+/Wt7715/97zMHc7z7pVCdr2cz034F4AOa2e+ZrXvOafT095+dKdDvgx90Q058ajQfoHZfol9hr967f5mGI2xzw42Gsm/a86Rz4gG/MeHzAN4ZMpwP+plszkZ8ri59Kmv4uetyGhz5VfcSLqPj99XjI3PR64mcF586mh2g9/OEPl+uIA/j0LoK4TT9+sgkhfmd7+h3SuP0fJXIwzctLXvISyEfctZKZgQxLeMjeqlmdrGU/m/4duOyyy8Cr+f//HsTevdfPaaedJr3LaDTdDvi/93u/t89H/GQswvRrFPEzf+hPt277DJ9NbwBN/3zAN2Y8PuAbQ6bTAT9eeE0PWvHk4/iu91HE7xXHJwfTa0E/PVpt8SIqDprxveR4gvsLX/jC9af2mx46FD8DtAsP2Nv0AnzTQ5wUTD95j7973OMe6ydJH0Xc9hsPjovvle9dH28aHPWTcpu45ppr9tX9Jje5yTo3R30SGv/9aU972r5riadfqw4kSzngd6qTtewn7KefosZ3tZ/ylKesD+3H4a//+q/3He5PfO5J/HOm2wF/+qZQ/Hv9j//4j5CP6K+pjquuugrykXlI7/QuOx/wjeHjA74xZDod8IP4fu/0wBV/cYtwfDoU/2jHJ67xAi5+Wz0+2Xn0ox+977bQ+IvfUY6H6aBMX0SF77gl/Ra3uMX6ac43v/nN17eNxu32m+Ju+ov1lXkdSRyKp9cXNYgX4Nv8xQO04rbybYhPeuJJ71M9cSCI7/LG07vf/va3r190xm3I8eCweH5APHjqtre97cZ1mU/MN71Yjb942NWLXvSi9fMXTr4AjkNRHKqj5zcdRuLTxm2/crANSzngr5rVyVr2c/XVV6/32anP2G/vcpe7rG/jj+9vx54aOuJN1vjKTvzvm267PnkYRu/m6kanA378rNz0QXXx5ipKHM6nD9tDf+0gc8B///vff+i/4z7gGzMeH/CNIdPtgB/Eu/fxne7jHJwP+otb9bd9mvvop5Df5ja3Wb+I2BXiFsyR+Tl5GIg3bbYhXuBvujUY/YsXmXEHRpZNtzpP/+J7q3HNB/33ePMobh9VsqQD/qpZnaxlP/Hk/bhd+zhze5RN/LIK8kyNrnQ64F9++eX71j/rWc/aSsv0l2/igbvIbfrZn9l9/OMff2Dv+IBvzHh8wDeGzKanvH/kIx+plrV+k+E4L+42/Z111lnrTxe25QlPeMJWcff+xScb55577vqANPeH6k2JT+WO86Ia/YtP1rclXgxGrjd9knjUX9yWfP75568+8IEPDMlPaIlb/KcvWo/7F09x3vYnyjJcf/31+x549ba3vU2uQ0WnOlnLZuLBnRdeeOG+h3oe9y8eEhmf9G/7FP5uTJ8xEz9Lui3xgLzpM0yQA/oznvGMffn+0Ic+tJWWOIxPfSFv+MabFdNrueSSS469Pp7bclCPxa9CGGPG4gO+MWQ++9nPru5whzt8/h+zbX6ajsUNN9ywvsPgzDPPPPJAufdAnX0xFy8WLr744vVhMV7kHvYXNuecc87qsY997OpJT3rS+gVS3BY+599aPg7xcKW47qPyc5y/eE7CS1/60mHa4vbe6IU73elO65/Om/ZK9NLpp5++PohEzZhP//+TP/mT1Xnnnbfu4fhViE29G4fquK34iU984uo973kPTctxuOiii9ZveMSnsxdccEGpFiWd6mQt+4l/p175yleuD7RnnHHGoXcPxGzH81ie97znHfs7+3Mh3pA/+W9h5P3KK69M+Yt/t07mLZ4Rg9z1Fl/V2Lu/xleltiUeSht1PekrvhePEj+He3J93AGA/hscvb73tdCJz735G18FNMaMxQd8YwTEgTi+1/6Od7wDfnqtiviOdvw+bhws44XbU5/61PXD9+I20PiO9a4fqM32xBs27373u9cv4K699trS7+HGA8TiQYvxu+PxUMZ4cwH9KTI2MUvx5tqS6VQna9lP/DsVB8z4NyueAfC6171u/W/YddddJ9eiJm5Hf9WrXrX6xCc+McTfe9/73vUdG9u8GRL9EP8Gx5uq2T6Ir1CEjvj3fFvizr94kz/eENqGuIY3vOEN62f7RI7RX2QxxhwPH/CNMcYYY4wxxpgdwAd8Y4wxxhhjjDFmB/AB3xhjjDHGGGOM2QF8wDfGGGOMMcYYY3YAH/CNMcYYY4wxxpgdwAd8Y4wxxhhjjDFmB/AB3xhjjDHGGGOM2QF8wDfGGGOMMcYYY3YAH/CNMcYYY4wxxpgdwAd8Y4wxxhhjjDFmB/AB3xhjjDHGGGOM2QF8wDfGGGOMMcYYY3YAH/CNMcYYY4wxxpgdwAd8Y4wxxhhjjDFmB/AB3xhjjDHGGGOM2QF8wDfGGGOMMcYYY3YAH/CNMcYYY4wxxpgdwAd8Y4wxxhhjjDFmB/AB3xhjjDHGGGOM2QF8wDfGGGOMMcYYY3YAH/CNMcYYY4wxxpgdwAd8Y4wxxhhjjDFmB/AB3xhjjDHGGGOM2QF8wDfGGGOMMcYYY3YAH/CNMcYYY4wxxpgdwAd8Y4wxxhhjjDFmB/AB3xhjjDHGGGOM2QF8wDfGGGOMMcYYY3YAH/CNMcYYY4wxxpgdwAd8Y4wxxhhjjDFmB/AB3xhjjDHGGGOM2QF8wDfGGGOMMcYYY3YAH/CNMcYYY4wxxpgdwAd8Y4wxxhhjjDFmB/AB3xhjjDHGGGOM2QF8wDfGGGOMMcYYY3YAH/CNMcYYY4wxxpgd4P8BCmIpW9w0W+IAAAAASUVORK5CYII=">
+  </div>
+
+  <article><figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">文件名称：EMS 并离网切换单一功能开发文档
+文档类型：功能开发标准文档
+适用范围：工商业储能 EMS / 微电网控制 / 并网点断路器联锁控制
+版本：V1.0
+状态：开发基线</code></pre></figure>
+<h2>1. 文档目的</h2>
+<p>本文档用于定义 EMS 中“并离网切换”这一单一功能的完整开发基线，覆盖：</p>
+<ul><li>功能目标</li><li>控制边界</li><li>术语与对象定义</li><li>系统架构</li><li>状态机</li><li>联锁逻辑</li><li>I/O 与通信映射</li><li>UI 交互</li><li>告警与日志</li><li>故障策略</li><li>测试要求</li><li>交付边界</li><li>伪代码与数据结构建议</li></ul>
+<p>本文档以现有 Notion 检索到的内部材料为主要素材来源，特别吸收以下理论与结构基础：</p>
+<ul><li>Trip 必须由继电器本地执行，Close 必须由 EMS 授权执行</li><li>并离网切换必须具备反孤岛、反逆流、重并网联锁与同步判定</li><li>重合闸必须禁止继电器自主闭合</li><li>必须具备双路径感知、闭环反馈、日志追溯、失效闭锁</li><li>必须形成 UI、逻辑引擎、I/O 执行、物理断路器之间的完整闭环</li></ul>
+<h2>2. 适用对象与边界声明</h2>
+<p>本文档适用于以下对象：</p>
+<ul><li>EMS 软件开发</li><li>HMI / Web UI 开发</li><li>EMS 控制器逻辑开发</li><li>I/O 映射开发</li><li>PCS/BESS 接口开发</li><li>并网保护接口开发</li><li>FAT/SAT 测试设计</li></ul>
+<p>本文档不涵盖以下责任：</p>
+<ul><li>最终持牌电气设计</li><li>Utility 合规签章</li><li>保护定值最终设定</li><li>现场施工图</li><li>继电器厂家内部逻辑实现</li><li>EPC 最终 wiring as-built 责任</li><li>断路器、继电器、PCS 的厂家认证责任</li></ul>
+<p>本文件仅定义 EMS 单一功能的开发标准与接口逻辑，不承担 EOR、施工或法规签章责任。</p>
+<h2>3. 功能定义</h2>
+<p>“并离网切换”是指 EMS 对以下过程进行感知、判断、联锁、授权、执行与记录的单一功能模块：</p>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">电网正常并网
+    ↓
+检测电网异常 / 失网 / 孤岛风险
+    ↓
+执行解列（Trip）
+    ↓
+判断是否允许进入离网运行
+    ↓
+维持离网状态 / 孤岛状态
+    ↓
+检测电网恢复
+    ↓
+验证重并网前提
+    ↓
+执行重并网（Close）
+    ↓
+恢复并网运行</code></pre></figure>
+<p>该功能不是单纯的“开关控制”，而是一个完整的闭环控制能力，必须同时具备：</p>
+<ul><li>感知</li><li>决策</li><li>联锁</li><li>执行</li><li>反馈</li><li>告警</li><li>记录</li><li>权限控制</li><li>失败闭锁</li></ul>
+<h2>4. 设计原则</h2>
+<h3>4.1 总原则</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">Trip 快速、硬件优先、本地优先
+Close 慢速、策略优先、EMS 授权优先</code></pre></figure>
+<h3>4.2 核心原则</h3>
+<ol><li>跳闸必须不依赖 EMS 在线</li><li>合闸必须依赖 EMS 授权</li><li>合闸前必须满足完整联锁条件</li><li>继电器不得拥有自主重合闸权</li><li>所有关键动作必须可追溯</li><li>所有关键闭锁必须可解释</li><li>所有失效场景默认不允许 Close</li><li>UI 显示必须与物理反馈一致，禁止盲显</li><li>并离网切换逻辑必须与 BESS/PCS 运行状态耦合</li><li>任何缺失数据、冲突数据、链路异常，默认转为保守闭锁</li></ol>
+<h2>5. 功能目标</h2>
+<h3>5.1 主要目标</h3>
+<ul><li>在电网异常时，实现快速、可靠、可追溯的解列</li><li>在解列后，判断是否允许进入离网供电状态</li><li>在电网恢复后，实现受控、联锁、同步、可审计的重并网</li><li>保证断路器闭合权只属于 EMS</li><li>保证系统在数据缺失或控制链故障时保持 Fail-Safe</li></ul>
+<h3>5.2 子目标</h3>
+<ul><li>实现反孤岛逻辑</li><li>实现反逆流逻辑</li><li>实现并网恢复联锁</li><li>实现同步校验闭锁</li><li>实现 BESS/PV 状态约束</li><li>实现用户权限约束</li><li>实现 UI 与物理反馈闭环</li><li>实现日志与告警追溯</li></ul>
+<h2>6. 术语定义</h2>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">EMS            Energy Management System
+BESS           Battery Energy Storage System
+PCS            Power Conversion System
+POI            Point of Interconnection，并网点
+AIPP           Anti-Islanding Protection Panel
+Trip           分闸 / 跳闸 / 解列动作
+Close          合闸 / 重并网动作
+Grid-Tie       并网运行状态
+Island         离网 / 孤岛运行状态
+Zero Export    零反送 / 不向电网反送功率
+ROCOF          频率变化率
+52a            断路器合位反馈辅助接点
+52b            断路器分位反馈辅助接点
+DI             Digital Input
+DO             Digital Output
+Interposing Relay 中间继电器
+Sync           同步检查</code></pre></figure>
+<h2>7. 系统角色与控制边界</h2>
+<h3>7.1 控制分层</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">L1 感知层
+├─ 并网保护继电器
+├─ 电表 / 冗余测量表
+├─ 断路器 52a/52b
+└─ PCS/BESS 状态反馈
+
+L2 决策层
+└─ EMS 控制器策略引擎
+
+L3 输出层
+├─ EMS DO
+└─ 中间继电器
+
+L4 执行层
+├─ 主断路器 Trip Coil
+├─ 主断路器 Close Coil
+└─ PCS/BESS 启停与模式切换接口
+
+L5 展示层
+└─ EMS UI / HMI / Web 界面</code></pre></figure>
+<h3>7.2 角色边界</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">继电器职责
+├─ 电网异常检测
+├─ 反孤岛主触发
+└─ 本地 Trip 执行
+
+EMS 职责
+├─ 状态整合
+├─ 联锁判断
+├─ Close 授权
+├─ UI 控制
+├─ 告警日志
+├─ 离网许可判断
+└─ BESS/PV 协同控制
+
+断路器职责
+├─ 执行物理解列
+├─ 执行物理重并网
+└─ 提供位置反馈
+
+PCS/BESS 职责
+├─ 提供运行状态
+├─ 接受停机/待机/并网/离网模式控制
+└─ 提供输出功率与模式反馈</code></pre></figure>
+<h3>7.3 硬边界规定</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">Trip 权限：继电器主导，EMS可冗余，但不得依赖 EMS 才能跳
+Close 权限：仅 EMS
+Auto Reclose：严格禁止
+Bypass Close：严格禁止
+Relay Autonomous Close：严格禁止</code></pre></figure>
+<h2>8. 功能架构</h2>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">并离网切换功能
+├─ F1 电网状态检测
+│  ├─ 电压检测
+│  ├─ 频率检测
+│  ├─ 相位检测
+│  ├─ ROCOF 检测
+│  └─ 电网稳定计时
+├─ F2 反孤岛解列
+│  ├─ 越限解列
+│  ├─ 无压解列
+│  ├─ ROCOF 解列
+│  ├─ Trip 执行确认
+│  └─ EMS 事件同步
+├─ F3 离网准入控制
+│  ├─ BESS 可离网能力判断
+│  ├─ SOC 判断
+│  ├─ PCS 模式判断
+│  ├─ 关键负载支撑判断
+│  └─ Island Start Permit
+├─ F4 反逆流控制
+│  ├─ POI 功率方向判断
+│  ├─ Zero Export 策略使能
+│  ├─ 输出归零验证
+│  └─ 重并网前逆流闭锁
+├─ F5 重并网联锁
+│  ├─ Grid Stable
+│  ├─ Zero Export / Inflow
+│  ├─ BESS/PV Stop or Standby
+│  ├─ EMS Close Authorization
+│  ├─ Sync Complete
+│  ├─ Breaker Open Confirm
+│  └─ User Permission Check
+├─ F6 动作执行
+│  ├─ Open Breaker
+│  ├─ Close Breaker
+│  ├─ Start BESS Island
+│  ├─ Start PV Island
+│  ├─ Start BESS Grid-Tie
+│  └─ Start PV Grid-Tie
+├─ F7 UI 与告警
+│  ├─ 状态显示
+│  ├─ 条件显示
+│  ├─ 主阻塞原因显示
+│  ├─ 动作建议显示
+│  └─ 权限与确认交互
+└─ F8 日志与追溯
+   ├─ 事件日志
+   ├─ 动作日志
+   ├─ 条件快照
+   ├─ 用户日志
+   └─ 故障日志</code></pre></figure>
+<h2>9. 外部接口定义</h2>
+<h3>9.1 继电器接口</h3>
+<p>继电器至少应提供：</p>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">输入到 EMS
+├─ Grid Voltage
+├─ Grid Frequency
+├─ ROCOF
+├─ Grid Healthy / Abnormal
+├─ Trip Trigger Code
+└─ Relay Fault / Comm Status
+
+输出到断路器
+└─ Trip Coil 驱动</code></pre></figure>
+<p>说明：</p>
+<ul><li>继电器负责快速异常检测与 Trip 触发</li><li>继电器只允许 Trip，不允许 Close</li><li>若继电器存在自主重合闸逻辑，必须禁用；若无法禁用，则该设备不得用于本功能 Close 链路</li></ul>
+<h3>9.2 电表/冗余测量接口</h3>
+<p>推荐提供：</p>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">输入到 EMS
+├─ POI Active Power
+├─ Reverse Power Flag
+├─ Grid Voltage
+├─ Grid Frequency
+├─ Phase Angle / Sync Info（如有）
+└─ Meter Comm Status</code></pre></figure>
+<p>用途：</p>
+<ul><li>作为继电器之外的冗余感知路径</li><li>用于 Zero Export 验证</li><li>用于感知冲突检测</li></ul>
+<h3>9.3 断路器接口</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">输出自 EMS
+├─ DO_Open_Breaker
+└─ DO_Close_Breaker
+
+输入到 EMS
+├─ DI_52a_Breaker_Closed
+├─ DI_52b_Breaker_Open
+├─ Coil Ready / Spring Charged（如有）
+└─ Breaker Fault（如有）</code></pre></figure>
+<h3>9.4 PCS/BESS 接口</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">输入到 EMS
+├─ BESS Running Status
+├─ PCS Running Status
+├─ Grid-Forming Ready
+├─ Grid-Following Ready
+├─ Output Power
+├─ SOC
+├─ Alarm / Fault
+├─ Standby Status
+└─ Sync Ready（如由 PCS 提供）
+
+输出自 EMS
+├─ CMD_Stop_BESS
+├─ CMD_Start_BESS_Island
+├─ CMD_Start_BESS_GridTie
+├─ CMD_Stop_PV
+├─ CMD_Start_PV_Island
+└─ CMD_Start_PV_GridTie</code></pre></figure>
+<h2>10. 运行状态定义</h2>
+<h3>10.1 顶层运行状态</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">S0 INIT                初始化
+S1 GRID_TIED           正常并网
+S2 TRIP_PENDING        异常检测到，等待 Trip 结果确认
+S3 ISOLATED            已解列，尚未进入离网
+S4 ISLAND_READY        允许离网启动
+S5 ISLAND_RUNNING      离网运行中
+S6 GRID_RECOVERY_WAIT  电网恢复观察中
+S7 RECLOSE_READY       满足重并网基础条件
+S8 RECLOSE_BLOCKED     存在闭锁，禁止合闸
+S9 RECLOSE_EXECUTING   正在执行合闸
+S10 GRID_RESTORED      已恢复并网
+S11 FAULT_LOCKED       故障锁定</code></pre></figure>
+<h3>10.2 状态迁移树</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">S1 GRID_TIED
+├─ 电网异常 → S2 TRIP_PENDING
+│  ├─ Trip 成功 → S3 ISOLATED
+│  │  ├─ Island Permitted → S4 ISLAND_READY
+│  │  │  └─ 启动成功 → S5 ISLAND_RUNNING
+│  │  └─ Island Not Permitted → 保持 S3
+│  └─ Trip 失败 → S11 FAULT_LOCKED
+└─ 正常保持
+
+S3 / S5
+└─ 电网恢复稳定 → S6 GRID_RECOVERY_WAIT
+   ├─ 稳定计时完成 → 联锁检查
+   │  ├─ 全满足 → S7 RECLOSE_READY
+   │  │  └─ EMS 授权并执行 → S9 RECLOSE_EXECUTING
+   │  │     ├─ 合闸成功 → S10 GRID_RESTORED → S1 GRID_TIED
+   │  │     └─ 合闸失败 → S11 FAULT_LOCKED
+   │  └─ 任一不满足 → S8 RECLOSE_BLOCKED
+   └─ 再次异常 → 返回 S3 或 S5</code></pre></figure>
+<h2>11. 条件代码体系</h2>
+<p>为保证 UI、逻辑、日志一致，定义统一条件代码。</p>
+<h3>11.1 反孤岛自动解列条件 A 组</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">A1 Grid voltage/frequency exceeds limit
+A2 Grid power outage (no voltage)
+A3 ROCOF &gt;= threshold
+A4 Trip action completed
+A5 Trip signal reported to EMS
+A6 Island mode startup permitted</code></pre></figure>
+<p>定义：</p>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">A1：电网电压或频率越限
+A2：电网无压 / 失网
+A3：频率变化率超过阈值
+A4：跳闸动作已确认完成
+A5：跳闸事件已同步到 EMS
+A6：允许启动离网模式</code></pre></figure>
+<h3>11.2 反逆流条件 R 组</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">R1 Reverse power detected at POI
+R2 PV/BESS output power = 0
+R3 EMS enabled &quot;Zero Export&quot; strategy</code></pre></figure>
+<p>定义：</p>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">R1：POI 处检测到逆功率
+R2：PV/BESS 输出功率归零
+R3：EMS 已启用零反送策略</code></pre></figure>
+<h3>11.3 重并网联锁条件 C 组</h3>
+<p>推荐统一使用 7 项条件，兼容已检索文档中的 C1-C7 体系。</p>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">C1 Grid stable &gt;= 60s
+C2 Power flow is inflow or zero export
+C3 PV/BESS is stopped or in standby
+C4 EMS authorized breaker close
+C5 Phase/frequency sync complete
+C6 Breaker is confirmed open
+C7 User permission valid</code></pre></figure>
+<p>定义：</p>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">C1：电网电压/频率/相位稳定持续至少 60 秒
+C2：POI 功率方向为流入或零反送
+C3：BESS/PV 已停止或待机
+C4：EMS 已授权合闸
+C5：相位/频率同步完成
+C6：断路器当前确认处于分位
+C7：当前用户具备合闸权限</code></pre></figure>
+<h2>12. 状态判定逻辑</h2>
+<h3>12.1 Grid Abnormal 判定</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">Grid_Abnormal = A1 OR A2 OR A3</code></pre></figure>
+<h3>12.2 Trip 完成判定</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">Trip_Completed = Trip_Command_Sent AND DI_52b_Breaker_Open = TRUE</code></pre></figure>
+<p>若使用双反馈：</p>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">Trip_Completed = Trip_Command_Sent
+                 AND DI_52b_Breaker_Open = TRUE
+                 AND DI_52a_Breaker_Closed = FALSE</code></pre></figure>
+<h3>12.3 Island Permit 判定</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">Island_Permit = BESS_GridForming_Ready
+                AND SOC &gt;= Island_Min_SOC
+                AND PCS_No_Fault
+                AND Load_Transfer_Condition_OK
+                AND Breaker_Open_Confirmed</code></pre></figure>
+<p>如项目早期未做负载分区，可保留 <code>Load_Transfer_Condition_OK = Configurable</code>。</p>
+<h3>12.4 Reverse Power 判定</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">Reverse_Power = POI_Active_Power &lt; ReversePowerThreshold</code></pre></figure>
+<p>建议阈值参数化：</p>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">ReversePowerThreshold = -X kW</code></pre></figure>
+<h3>12.5 Zero Export 满足判定</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">Zero_Export_Satisfied = abs(POI_Active_Power) &lt;= ZeroExportTolerance</code></pre></figure>
+<h3>12.6 Sync Complete 判定</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">Sync_Complete =
+    abs(Grid_Frequency - Microgrid_Frequency) &lt;= Sync_Freq_Delta_Max
+AND abs(Grid_Voltage - Microgrid_Voltage) &lt;= Sync_Volt_Delta_Max
+AND abs(Grid_Phase_Angle - Microgrid_Phase_Angle) &lt;= Sync_Phase_Delta_Max
+AND Sync_Stable_Timer &gt;= Sync_Stable_Time</code></pre></figure>
+<h2>13. 动作逻辑</h2>
+<h3>13.1 Open Breaker 动作逻辑</h3>
+<p>来源可能有三类：</p>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">来源1：继电器自动 Trip
+来源2：EMS 冗余 Trip
+来源3：用户手动 Open Breaker</code></pre></figure>
+<p>统一结果要求：</p>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">执行 Open Breaker
+    ↓
+等待 52b = TRUE
+    ↓
+确认 52a = FALSE
+    ↓
+记录 Trip 完成
+    ↓
+进入解列后状态</code></pre></figure>
+<h3>13.2 Start BESS Island 动作逻辑</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">前提：
+A6 = TRUE
+Breaker_Open_Confirmed = TRUE
+PCS/BESS 无故障
+SOC 满足条件
+
+动作：
+发送 CMD_Start_BESS_Island
+等待 PCS 反馈 Island Running
+记录结果</code></pre></figure>
+<h3>13.3 Close Breaker 动作逻辑</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">前提：
+C1 AND C2 AND C3 AND C4 AND C5 AND C6 AND C7 = TRUE
+
+动作：
+发送 DO_Close_Breaker
+等待 52a = TRUE
+确认 52b = FALSE
+记录 Close 成功
+切换系统状态为 Grid-Tied</code></pre></figure>
+<h3>13.4 Close 失败逻辑</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">若 Close_Command_Sent 后超时未收到 52a=TRUE
+    → Close Failed
+    → 记录错误
+    → UI 红色告警
+    → 进入 FAULT_LOCKED</code></pre></figure>
+<h2>14. 完整联锁逻辑</h2>
+<h3>14.1 Close 总联锁表达式</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">Close_Permit = C1 AND C2 AND C3 AND C4 AND C5 AND C6 AND C7</code></pre></figure>
+<h3>14.2 Close 按钮使能逻辑</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">UI_Close_Button_Enabled = Close_Permit
+                          AND System_Not_Fault_Locked
+                          AND Comm_Healthy
+                          AND UPS_Healthy</code></pre></figure>
+<h3>14.3 Start Island 按钮使能逻辑</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">UI_Start_BESS_Island_Enabled = A6
+                               AND Breaker_Open_Confirmed
+                               AND BESS_Not_Running_Island
+                               AND PCS_Healthy</code></pre></figure>
+<h3>14.4 Open Breaker 按钮使能逻辑</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">UI_Open_Breaker_Enabled = Breaker_Not_Open
+                          AND User_Has_Open_Permission</code></pre></figure>
+<h2>15. UI 开发规范</h2>
+<h3>15.1 页面目标</h3>
+<p>UI 必须做到：</p>
+<ul><li>当前状态可见</li><li>条件状态可见</li><li>阻塞原因可见</li><li>动作可用性可见</li><li>风险提示可见</li><li>日志与事件可追溯</li></ul>
+<h3>15.2 页面结构</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">Grid-Tie / Island Transition 页面
+├─ 顶部系统状态栏
+│  ├─ Breaker 状态
+│  ├─ Grid Voltage
+│  ├─ Grid Frequency
+│  └─ 当前控制模式
+├─ Anti-Islanding 区块
+│  ├─ A1-A6 条件显示
+│  └─ Open / Start Island 按钮
+├─ Anti-Reverse Power 区块
+│  ├─ R1-R3 条件显示
+│  └─ 动作建议
+├─ Grid Reconnection 区块
+│  ├─ C1-C7 条件显示
+│  └─ Close / Stop / Start GridTie 按钮
+├─ Primary Blocking Condition 区块
+├─ Action Suggestion 区块
+└─ Event / Operation Log 区块</code></pre></figure>
+<h3>15.3 状态颜色规范</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">绿色：Satisfied / Enabled / Healthy / Completed
+橙色：Not Triggered / Waiting / Pending / Warning
+红色：Not Allowed / Not Satisfied / Fault / Blocked
+灰色：Unknown / Disabled / No Data / Inactive</code></pre></figure>
+<h3>15.4 UI 显示要求</h3>
+<p>每个条件必须显示：</p>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">代码 + 描述 + 当前状态 + 可选的说明文字</code></pre></figure>
+<p>示例：</p>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">C3  PV/BESS is stopped or in standby
+Status: Not Satisfied
+Description: BESS is still running</code></pre></figure>
+<h3>15.5 主阻塞条件显示要求</h3>
+<p>必须显式提供一个“主阻塞条件”区域，选择最关键的当前阻塞项。</p>
+<p>示例：</p>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">PRIMARY BLOCKING CONDITION
+C3 - BESS still running</code></pre></figure>
+<h3>15.6 动作建议显示要求</h3>
+<p>必须基于当前闭锁生成顺序化建议。</p>
+<p>示例：</p>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">Action Suggestion
+1. Force Stop BESS
+2. Confirm PV output = 0
+3. Wait for phase/frequency sync
+4. Request EMS breaker close authorization</code></pre></figure>
+<h3>15.7 权限要求</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">一般用户
+├─ 查看状态
+├─ 查看日志
+└─ 可执行 Open（按策略决定）
+
+管理员
+├─ 拥有一般用户全部权限
+├─ 可执行 Close 授权
+├─ 可执行强制停机
+└─ 可执行模式切换</code></pre></figure>
+<p>Close 至少需要：</p>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">C7 = TRUE</code></pre></figure>
+<h2>16. 事件与日志设计</h2>
+<h3>16.1 日志分类</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">系统日志
+动作日志
+联锁日志
+故障日志
+权限日志
+通信日志</code></pre></figure>
+<h3>16.2 必须记录的事件</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">Grid abnormal detected
+Trip command issued
+Trip action completed
+Trip failed
+Island permit granted
+Island start command issued
+Island running confirmed
+Grid stable timer started
+Grid stable timer completed
+Close blocked
+Close authorized
+Close command issued
+Close completed
+Close failed
+Relay comm lost
+Meter comm lost
+Breaker feedback mismatch
+UPS low / UPS lost
+User login / user authorization / user action</code></pre></figure>
+<h3>16.3 日志字段标准</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;timestamp&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;2026-04-07T18:00:00Z&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;event&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Close_Blocked&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;severity&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Warning&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;state&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;RECLOSE_BLOCKED&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;blocking_code&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;C3&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;message&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;BESS is still running&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;user&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;admin&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;breaker_52a&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;breaker_52b&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;grid_voltage&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">479.2</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;grid_frequency&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">59.98</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;poi_power_kw&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">-2.1</span>
+<span class="hljs-punctuation">}</span></code></pre></figure>
+<h3>16.4 联锁失败记录要求</h3>
+<p>任何一个 C 条件不满足时，必须记录：</p>
+<ul><li>条件代码</li><li>实际测量值</li><li>阈值</li><li>数据来源</li><li>阻塞时间戳</li></ul>
+<h2>17. 告警与故障策略</h2>
+<h3>17.1 故障分类</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">F01 EMS controller offline
+F02 Relay failure
+F03 Meter offline
+F04 DO output failure
+F05 UPS lost
+F06 52a/52b inconsistent
+F07 Trip failed
+F08 Close criteria not met
+F09 Sync data invalid
+F10 PCS/BESS status unavailable</code></pre></figure>
+<h3>17.2 故障响应原则</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">影响 Trip 的故障：优先由继电器本地保护兜底
+影响 Close 的故障：一律禁止 Close
+影响反馈的故障：禁止盲操作
+影响同步的故障：禁止 Close
+影响权限的故障：禁止 Close</code></pre></figure>
+<h3>17.3 Fail-Safe 规则</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">任一关键输入缺失
+任一关键通信中断
+任一关键反馈冲突
+任一关键 UPS 失效
+任一关键执行输出失败
+
+→ 默认 Close_Permit = FALSE</code></pre></figure>
+<h3>17.4 反馈冲突规则</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">若 52a = TRUE 且 52b = TRUE
+    → Feedback Error
+    → Close 禁止
+    → Open 状态未知
+    → 记录故障
+
+若 52a = FALSE 且 52b = FALSE 且超时
+    → Breaker Position Unknown
+    → Close 禁止</code></pre></figure>
+<h3>17.5 感知冲突规则</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">继电器判定 Grid Healthy
+但电表判定 Reverse Power 或电网异常
+    → 标记 Data Conflict
+    → Close 禁止
+    → 记录冲突</code></pre></figure>
+<h2>18. 参数体系</h2>
+<h3>18.1 必须参数化的阈值</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">Grid_OverVoltage_Limit
+Grid_UnderVoltage_Limit
+Grid_OverFrequency_Limit
+Grid_UnderFrequency_Limit
+ROCOF_Threshold
+Grid_Stable_Time
+ZeroExportTolerance
+ReversePowerThreshold
+Island_Min_SOC
+Sync_Freq_Delta_Max
+Sync_Volt_Delta_Max
+Sync_Phase_Delta_Max
+Sync_Stable_Time
+Trip_Timeout
+Close_Timeout
+Comm_Timeout</code></pre></figure>
+<h3>18.2 推荐默认参数占位</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">Grid_Stable_Time = 60s
+ZeroExportTolerance = ±50W 或按站点参数
+Island_Min_SOC = 30%
+Sync_Phase_Delta_Max = 5°</code></pre></figure>
+<p>说明：</p>
+<ul><li>具体数值必须参数化，不允许硬编码死写在业务逻辑中</li><li>最终工程阈值由项目参数表确定，不由 UI 写死</li></ul>
+<h2>19. I/O 建议映射</h2>
+<h3>19.1 DI 映射建议</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">DI1  Breaker_52a_Closed
+DI2  Breaker_52b_Open
+DI3  Breaker_Spring_Charged
+DI4  Relay_Healthy
+DI5  UPS_Healthy
+DI6  PCS_Ready
+DI7  PCS_Standby
+DI8  PCS_Island_Running
+DI9  PCS_GridTie_Running
+DI10 Emergency_Stop_Active</code></pre></figure>
+<h3>19.2 DO 映射建议</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">DO1  Open_Breaker_Command
+DO2  Close_Breaker_Command
+DO3  Stop_BESS_Command
+DO4  Start_BESS_Island_Command
+DO5  Start_BESS_GridTie_Command
+DO6  Stop_PV_Command
+DO7  Start_PV_Island_Command
+DO8  Start_PV_GridTie_Command</code></pre></figure>
+<h2>20. 通信点位建议</h2>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">Modbus / TCP 点位
+├─ Relay.GridVoltage
+├─ Relay.GridFrequency
+├─ Relay.ROCOF
+├─ Relay.GridHealthy
+├─ Relay.TripEventCode
+├─ Relay.CommHealthy
+├─ Meter.POI_ActivePower
+├─ Meter.GridVoltage
+├─ Meter.GridFrequency
+├─ Meter.ReversePowerFlag
+├─ Meter.CommHealthy
+├─ PCS.Status
+├─ PCS.Mode
+├─ PCS.OutputPower
+├─ PCS.SOC
+├─ PCS.Fault
+├─ PCS.SyncReady
+└─ PCS.GridFormingReady</code></pre></figure>
+<h2>21. 推荐数据模型</h2>
+<h3>21.1 并离网功能状态对象</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;breaker&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">&quot;opened&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;closed&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;position_known&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span>
+  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;grid&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">&quot;voltage&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">480.1</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;frequency&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">60.00</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;healthy&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;stable_seconds&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">61</span>
+  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;anti_islanding&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">&quot;A1&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;A2&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;A3&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;A4&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;A5&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;A6&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span>
+  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;reverse_power&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">&quot;R1&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;R2&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;R3&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span>
+  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;reclose&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">&quot;C1&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;C2&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;C3&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;C4&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;C5&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;C6&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;C7&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span>
+  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;blocking&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">&quot;primary_code&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;C3&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;message&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;BESS is still running&quot;</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span></code></pre></figure>
+<h2>22. 伪代码设计</h2>
+<h3>22.1 主循环</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">evaluate_grid_tie_island_transition</span>(<span class="hljs-params">ctx</span>):
+    refresh_inputs(ctx)
+    evaluate_A_group(ctx)
+    evaluate_R_group(ctx)
+    evaluate_C_group(ctx)
+    evaluate_state_machine(ctx)
+    evaluate_button_enablement(ctx)
+    update_ui_model(ctx)
+    write_event_logs_if_needed(ctx)</code></pre></figure>
+<h3>22.2 A 组判定</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">evaluate_A_group</span>(<span class="hljs-params">ctx</span>):
+    ctx.A1 = voltage_or_frequency_exceeds_limit(ctx)
+    ctx.A2 = grid_power_outage(ctx)
+    ctx.A3 = rocof_exceeds_threshold(ctx)
+    ctx.A4 = trip_action_completed(ctx)
+    ctx.A5 = trip_reported_to_ems(ctx)
+    ctx.A6 = island_mode_startup_permitted(ctx)</code></pre></figure>
+<h3>22.3 R 组判定</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">evaluate_R_group</span>(<span class="hljs-params">ctx</span>):
+    ctx.R1 = reverse_power_detected(ctx)
+    ctx.R2 = pv_bess_output_zero(ctx)
+    ctx.R3 = zero_export_strategy_enabled(ctx)</code></pre></figure>
+<h3>22.4 C 组判定</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">evaluate_C_group</span>(<span class="hljs-params">ctx</span>):
+    ctx.C1 = grid_stable_for_required_time(ctx)
+    ctx.C2 = power_flow_inflow_or_zero_export(ctx)
+    ctx.C3 = pv_bess_stopped_or_standby(ctx)
+    ctx.C4 = ems_authorized_breaker_close(ctx)
+    ctx.C5 = phase_frequency_sync_complete(ctx)
+    ctx.C6 = breaker_open_confirmed(ctx)
+    ctx.C7 = user_permission_valid(ctx)
+    ctx.close_permit = <span class="hljs-built_in">all</span>([ctx.C1, ctx.C2, ctx.C3, ctx.C4, ctx.C5, ctx.C6, ctx.C7])</code></pre></figure>
+<h3>22.5 主阻塞条件选择</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">pick_primary_blocking_condition</span>(<span class="hljs-params">ctx</span>):
+    order = [<span class="hljs-string">&quot;C3&quot;</span>, <span class="hljs-string">&quot;C5&quot;</span>, <span class="hljs-string">&quot;C4&quot;</span>, <span class="hljs-string">&quot;C2&quot;</span>, <span class="hljs-string">&quot;C1&quot;</span>, <span class="hljs-string">&quot;C6&quot;</span>, <span class="hljs-string">&quot;C7&quot;</span>]
+    <span class="hljs-keyword">for</span> code <span class="hljs-keyword">in</span> order:
+        <span class="hljs-keyword">if</span> <span class="hljs-built_in">getattr</span>(ctx, code) <span class="hljs-keyword">is</span> <span class="hljs-literal">False</span>:
+            <span class="hljs-keyword">return</span> code, blocking_message_for(code, ctx)
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">None</span>, <span class="hljs-literal">None</span></code></pre></figure>
+<h3>22.6 Close 执行</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">execute_close_breaker</span>(<span class="hljs-params">ctx</span>):
+    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> ctx.close_permit:
+        <span class="hljs-keyword">raise</span> BlockedError(<span class="hljs-string">&quot;Close permit not satisfied&quot;</span>)
+
+    send_do_close_breaker()
+    start_timer(<span class="hljs-string">&quot;close_timeout&quot;</span>)
+
+    <span class="hljs-keyword">while</span> <span class="hljs-keyword">not</span> timer_expired(<span class="hljs-string">&quot;close_timeout&quot;</span>):
+        refresh_breaker_feedback(ctx)
+        <span class="hljs-keyword">if</span> ctx.breaker_52a <span class="hljs-keyword">and</span> <span class="hljs-keyword">not</span> ctx.breaker_52b:
+            log_event(<span class="hljs-string">&quot;Close_Completed&quot;</span>)
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">True</span>
+
+    log_event(<span class="hljs-string">&quot;Close_Failed&quot;</span>)
+    lock_fault_state(ctx)
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span></code></pre></figure>
+<h2>23. 页面按钮行为规范</h2>
+<h3>23.1 Open Breaker</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">点击后：
+1. 校验权限
+2. 发送 Open 命令或记录用户请求
+3. 等待反馈
+4. 更新 UI
+5. 记录日志</code></pre></figure>
+<h3>23.2 Start BESS Island</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">点击后：
+1. 校验 A6
+2. 校验 Breaker 已打开
+3. 校验 BESS 可离网
+4. 发送启动命令
+5. 等待运行反馈
+6. 记录日志</code></pre></figure>
+<h3>23.3 Close Breaker</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">点击后：
+1. 校验 C1-C7
+2. 二次确认
+3. 发送 Close 命令
+4. 等待 52a / 52b 反馈
+5. 成功则切换状态
+6. 失败则闭锁并告警</code></pre></figure>
+<h3>23.4 Force Stop BESS / PV</h3>
+<p>必须满足：</p>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">管理员权限
+设备在线
+当前无硬件联锁禁止</code></pre></figure>
+<p>若无权限或站点配置禁用，按钮应灰显并显示原因。</p>
+<h2>24. 页面显示文案建议</h2>
+<h3>24.1 顶部状态栏</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">Breaker: Opened / Closed / Unknown
+Grid Voltage: 实时值或 -
+Grid Frequency: 实时值或 -
+Set mode: Relay Control / EMS Control</code></pre></figure>
+<h3>24.2 条件显示模板</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">Code
+Description
+Status
+Optional detail message</code></pre></figure>
+<h3>24.3 阻塞提示模板</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">PRIMARY BLOCKING CONDITION
+{ConditionCode} - {Message}</code></pre></figure>
+<h3>24.4 动作建议模板</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">ACTION SUGGESTION
+1. {建议1}
+2. {建议2}
+3. {建议3}</code></pre></figure>
+<h2>25. 安全约束</h2>
+<h3>25.1 禁止事项</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">禁止继电器自主 Close
+禁止定时器盲重合闸
+禁止在 52a/52b 未确认下盲合
+禁止在 Sync 未完成下合闸
+禁止在 BESS/PV 未停稳下合闸
+禁止在 Reverse Power 未消除下合闸
+禁止在用户权限不满足下合闸
+禁止在关键通信故障下合闸</code></pre></figure>
+<h3>25.2 强制闭锁场景</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">继电器离线
+电表离线且站点要求双路径
+52a/52b 冲突
+UPS 故障
+DO 模块故障
+Close 线圈故障
+Sync 数据无效
+PCS 状态未知
+BESS 故障</code></pre></figure>
+<h2>26. 测试要求</h2>
+<h3>26.1 FAT 测试范围</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">T1 正常并网状态显示
+T2 电压越限触发 Trip
+T3 无压触发 Trip
+T4 ROCOF 触发 Trip
+T5 Trip 动作反馈闭环
+T6 Trip 事件同步 EMS
+T7 Island Permit 正常判定
+T8 Island Permit 拒绝判定
+T9 Reverse Power 检测
+T10 Zero Export 策略使能显示
+T11 Grid Stable 60s 计时
+T12 C1-C7 全部满足后允许 Close
+T13 任一 C 条件不满足时禁止 Close
+T14 主阻塞条件正确显示
+T15 Action Suggestion 正确生成
+T16 52a/52b 冲突时禁止 Close
+T17 Meter 离线闭锁
+T18 Relay 离线闭锁
+T19 UPS 故障闭锁
+T20 Close 成功闭环
+T21 Close 失败告警
+T22 用户权限校验
+T23 日志完整性
+T24 UI 与物理状态一致性</code></pre></figure>
+<h3>26.2 SAT 测试重点</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">现场通信稳定性
+真实断路器执行时间
+真实 52a/52b 反馈有效性
+PCS/BESS 模式切换反馈有效性
+零反送阈值适配
+同步条件适配
+异常断电后 Fail-Safe 行为</code></pre></figure>
+<h2>27. 配置项建议</h2>
+<h3>27.1 站点级配置</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;grid_stable_time_sec&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">60</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;zero_export_tolerance_kw&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">0.05</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;reverse_power_threshold_kw&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">-0.05</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;island_min_soc_percent&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">30</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;sync_phase_delta_deg_max&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">5</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;sync_freq_delta_hz_max&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">0.1</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;sync_voltage_delta_percent_max&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">5</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;close_timeout_sec&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">10</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;trip_timeout_sec&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">5</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;require_dual_sensing_for_close&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;require_admin_for_close&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span>
+<span class="hljs-punctuation">}</span></code></pre></figure>
+<h3>27.2 功能开关建议</h3>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">feature.dual_sensing_required
+feature.allow_manual_open
+feature.allow_force_stop_bess
+feature.allow_force_stop_pv
+feature.require_sync_check
+feature.require_zero_export
+feature.require_user_permission_for_close
+feature.enable_primary_blocking_condition
+feature.enable_action_suggestion</code></pre></figure>
+<h2>28. 推荐开发目录结构</h2>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">grid_tie_island_transition/
+├─ domain/
+│  ├─ models.py
+│  ├─ enums.py
+│  ├─ conditions.py
+│  └─ state_machine.py
+├─ services/
+│  ├─ relay_service.py
+│  ├─ meter_service.py
+│  ├─ breaker_service.py
+│  ├─ pcs_service.py
+│  └─ permission_service.py
+├─ logic/
+│  ├─ anti_islanding.py
+│  ├─ reverse_power.py
+│  ├─ reclose_interlock.py
+│  ├─ sync_check.py
+│  └─ action_suggestion.py
+├─ ui/
+│  ├─ view_model.py
+│  ├─ button_rules.py
+│  └─ blocking_display.py
+├─ logs/
+│  ├─ event_logger.py
+│  └─ audit_logger.py
+├─ config/
+│  └─ site_params.json
+└─ tests/
+   ├─ test_A_group.py
+   ├─ test_R_group.py
+   ├─ test_C_group.py
+   ├─ test_state_machine.py
+   ├─ test_ui_rules.py
+   └─ test_fail_safe.py</code></pre></figure>
+<h2>29. 开发完成判定标准</h2>
+<p>满足以下条件，方可认为“并离网切换单一功能开发完成”：</p>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">1. A/R/C 条件判定全部实现
+2. 状态机实现并通过测试
+3. UI 页面实现完成
+4. 主阻塞条件实现完成
+5. Action Suggestion 实现完成
+6. Open / Close / Start Island / Start GridTie 动作链实现
+7. 断路器反馈闭环实现
+8. 日志与审计实现
+9. 权限控制实现
+10. Fail-Safe 闭锁实现
+11. 参数化配置实现
+12. 单元测试与联调测试通过</code></pre></figure>
+<h2>30. 最终开发基线总结</h2>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">本功能的本质不是“做一个并离网页面”，
+而是“做一套以 Trip 快速解列、以 Island 准入判断、以 Reverse Power 约束、
+以 Reclose 多条件联锁、以 EMS 独占 Close 权限、以日志追溯和 Fail-Safe 为底座的完整闭环控制能力”。
+
+该能力的最低开发基线必须包括：
+
+感知层
+决策层
+联锁层
+执行层
+反馈层
+UI 层
+日志层
+故障闭锁层
+权限层
+参数层
+测试层</code></pre></figure>
+<h2>31. 建议直接固化的核心逻辑</h2>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">Trip = Relay First
+Close = EMS Only
+No Auto Reclose
+No Blind Close
+No Close When Data Missing
+No Close When Feedback Conflicts
+No Close When BESS/PV Still Running
+No Close Without Sync
+No Close Without Authorization</code></pre></figure>
+<h2>32. 后续可扩展项</h2>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">Phase 2 可扩展功能
+├─ 关键负载切换
+├─ 多断路器拓扑
+├─ 多微网母线
+├─ 柴油机并联系统
+├─ 黑启动流程
+├─ SCADA 上位写入
+├─ 云端审计追溯
+├─ 策略版本控制
+└─ 站点级条件模板库</code></pre></figure>
+</article>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <span>© 2026 Energize Solutions Inc. — External Documents. Powered by GitHub Pages | Contact:</span>
+      <a href="mailto:info@energizeos.com">info@energizeos.com</a>
+      <span class="sep">·</span>
+      <a class="icon" href="https://www.linkedin.com/in/gongtiejing" target="_blank" rel="noopener" aria-label="LinkedIn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M4.98 3.5C4.98 4.88 3.86 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM0 8h5v13H0zM7 8h4.8v1.8h.07C12.54 8.94 14.17 8 16.6 8c5.06 0 6 3.33 6 7.66V21h-5v-6.5c0-1.55-.03-3.55-2.17-3.55-2.17 0-2.5 1.69-2.5 3.43V21H7V8z"/>
+        </svg>
+      </a>
+      <a class="icon" href="https://github.com/enxpower" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 .5C5.73.5.98 5.24.98 11.5c0 4.85 3.15 8.96 7.52 10.41.55.1.75-.24.75-.53 0-.26-.01-1.1-.02-1.99-3.06.66-3.71-1.3-3.71-1.3-.5-1.26-1.22-1.6-1.22-1.6-.99-.68.08-.67.08-.67 1.1.08 1.68 1.13 1.68 1.13.98 1.67 2.56 1.19 3.18.91.1-.72.38-1.19.69-1.46-2.44-.28-5.01-1.22-5.01-5.43 0-1.2.43-2.18 1.13-2.95-.11-.28-.49-1.42.11-2.96 0 0 .93-.3 3.05 1.13a10.7 10.7 0 0 1 2.78-.37c.94 0 1.88.13 2.78.37 2.12-1.43 3.05-1.13 3.05-1.13.6 1.54.22 2.68.11 2.96.71.77 1.13 1.75 1.13 2.95 0 4.22-2.58 5.14-5.03 5.41.39.33.73.98.73 1.98 0 1.43-.01 2.59-.01 2.95 0 .29.2.64.76.53A10.54 10.54 0 0 0 23 11.5C23 5.24 18.27.5 12 .5z"/>
+        </svg>
+      </a>
+    </div>
+  </footer>
+</main>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(','\\)']], displayMath: [['$$','$$']] },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.min.js"></script>
+
+</body></html>
