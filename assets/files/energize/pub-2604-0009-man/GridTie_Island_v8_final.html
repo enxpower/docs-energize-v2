@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>EnergizeOS — Grid-Tie / Island Transition</title>
+<style>
+/* ═══════════════════════════════════════════
+   RESET & TOKENS
+═══════════════════════════════════════════ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  /* — exactly the original palette from image 2 — */
+  --navy:  #1d3461;
+  --bg:    #f4f6f9;
+  --surf:  #ffffff;
+  --surf2: #f8f9fa;
+  --bord:  #e2e8f0;
+  --bord2: #d1d9e6;
+  --text:  #0f1923;
+  --text2: #4a5568;
+  --text3: #94a3b8;
+
+  --green:  #16a34a;  --green-lt: #f0fdf4;  --green-bd: #86efac;  --gdot: #22c55e;
+  --orange: #d97706;  --orange-lt:#fffbeb;  --orange-bd:#fcd34d;  --odot: #f59e0b;
+  --red:    #dc2626;  --red-lt:   #fef2f2;  --red-bd:   #fca5a5;  --rdot: #ef4444;
+  --gray:   #64748b;  --gray-lt:  #f8fafc;  --gray-bd:  #e2e8f0;
+
+  --font: -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --mono: 'SFMono-Regular','Consolas','Liberation Mono',monospace;
+  --r: 6px;
+}
+
+html,body{
+  width:1280px; height:800px;
+  overflow:hidden;
+  font-family:var(--font); font-size:13px;
+  background:var(--bg); color:var(--text);
+  -webkit-font-smoothing:antialiased;
+}
+.app{width:1280px;height:800px;display:flex;flex-direction:column;overflow:hidden;}
+
+/* ═══════════════════════════════════════════
+   TOP NAV  — matches original
+═══════════════════════════════════════════ */
+.topnav{
+  height:48px;flex-shrink:0;
+  background:var(--surf);
+  border-bottom:1px solid var(--bord);
+  display:flex;align-items:center;
+  box-shadow:0 1px 2px rgba(0,0,0,.04);
+}
+.tn-logo{
+  width:148px;flex-shrink:0;
+  border-right:1px solid var(--bord);
+  height:100%;display:flex;align-items:center;
+  padding:0 16px;gap:8px;
+}
+.tn-logo svg{flex-shrink:0;}
+.tn-logo-name{font-size:14px;font-weight:700;color:var(--navy);}
+.tn-logo-name span{color:#f59e0b;}
+.nav-tab{
+  height:48px;padding:0 18px;
+  display:flex;align-items:center;
+  font-size:13px;font-weight:400;color:var(--text2);
+  cursor:pointer;border-bottom:2px solid transparent;
+  white-space:nowrap;transition:color .15s,border-color .15s;
+  user-select:none;
+}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--navy);border-bottom-color:var(--navy);font-weight:600;}
+
+/* ═══════════════════════════════════════════
+   STATUS BAR  — matches original top strip
+═══════════════════════════════════════════ */
+.statusbar{
+  height:36px;flex-shrink:0;
+  background:var(--surf);
+  border-bottom:1px solid var(--bord);
+  display:flex;align-items:center;
+  padding:0 16px 0 160px;   /* indent past sidebar */
+  gap:0;
+}
+.sb-item{
+  display:flex;align-items:center;gap:6px;
+  padding:0 14px;
+  border-right:1px solid var(--bord);
+  height:36px;
+}
+.sb-item:last-child{border-right:none;margin-left:auto;}
+.sb-lbl{font-size:11.5px;color:var(--text3);font-weight:500;}
+.sb-val{font-size:12px;font-weight:700;font-family:var(--mono);}
+
+/* Breaker pill */
+.bpill{
+  display:flex;align-items:center;gap:5px;
+  padding:2px 10px;border-radius:20px;
+  font-size:12px;font-weight:700;
+}
+.bpill.open  {background:var(--green-lt);border:1px solid var(--green-bd);color:var(--green);}
+.bpill.closed{background:var(--red-lt);  border:1px solid var(--red-bd);  color:var(--red);}
+.bdot{width:7px;height:7px;border-radius:50%;background:currentColor;animation:blink 2s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+
+/* ── Mode toggle CSS ── */
+.mo-wrap-box{
+  display:flex;align-items:center;gap:0;
+  border:1px solid var(--bord2);border-radius:5px;overflow:hidden;
+}
+.mo-pill{
+  padding:3px 11px;font-size:12px;font-weight:600;
+  cursor:pointer;user-select:none;transition:all .15s;
+  display:flex;align-items:center;gap:5px;
+}
+.mo-pill svg{width:10px;height:10px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0;}
+.mo-pill.relay-active{
+  background:#fff7ed;color:var(--orange);border-right:1px solid var(--bord2);
+}
+.mo-pill.relay-inactive{
+  background:var(--surf2);color:var(--text3);border-right:1px solid var(--bord2);
+}
+.mo-pill.relay-inactive:hover{color:var(--text2);background:var(--bg);}
+.mo-pill.ems-active{
+  background:#eff6ff;color:var(--navy);
+}
+.mo-pill.ems-inactive{
+  background:var(--surf2);color:var(--text3);
+}
+.mo-pill.ems-inactive:hover{color:var(--text2);background:var(--bg);}
+
+/* When relay-only mode: right col actions are read-only */
+.relay-locked-overlay{
+  position:absolute;inset:0;background:rgba(255,255,255,.6);
+  backdrop-filter:blur(1px);border-radius:4px;
+  display:flex;align-items:center;justify-content:center;
+  z-index:10;pointer-events:none;
+  font-size:12px;font-weight:700;color:var(--text3);
+}
+/* Mode context banner */
+.mode-banner{
+  padding:5px 14px;font-size:11.5px;font-weight:600;
+  display:flex;align-items:center;gap:7px;
+  border-bottom:1px solid var(--bord);flex-shrink:0;
+}
+.mode-banner.relay{background:#fff7ed;color:#92400e;border-bottom-color:var(--orange-bd);}
+.mode-banner.ems  {background:#eff6ff;color:#1e40af;border-bottom-color:var(--blue-bd);}
+.mode-banner svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0;}
+
+/* ═══════════════════════════════════════════
+   BODY  —  sidebar + main
+═══════════════════════════════════════════ */
+.body{flex:1;display:flex;overflow:hidden;}
+
+/* ── SIDEBAR  (matches image 2) ── */
+.sidebar{
+  width:148px;flex-shrink:0;
+  background:var(--surf);
+  border-right:1px solid var(--bord);
+  display:flex;flex-direction:column;
+  padding:12px 0;gap:2px;overflow:hidden;
+}
+.si{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 16px;
+  cursor:pointer;color:var(--text2);
+  border-radius:0;
+  font-size:13px;font-weight:500;
+  transition:background .12s,color .12s;
+  user-select:none;position:relative;
+}
+.si svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7;flex-shrink:0;}
+.si:hover{background:var(--bg);color:var(--text);}
+.si.active{color:var(--navy);background:#eff6ff;}
+.si.active svg{stroke:var(--navy);}
+.si.active::before{
+  content:'';position:absolute;left:0;top:4px;bottom:4px;
+  width:3px;background:var(--navy);border-radius:0 2px 2px 0;
+}
+.si-bdg{
+  margin-left:auto;
+  width:16px;height:16px;border-radius:50%;
+  background:var(--red);color:#fff;
+  font-size:9px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* ── MAIN CONTENT (2-col like original) ── */
+.main{flex:1;display:grid;grid-template-columns:420px 1fr;overflow:hidden;}
+
+/* ── COLUMN SHARED ── */
+.col{display:flex;flex-direction:column;overflow:hidden;}
+.col-l{border-right:1px solid var(--bord);}
+.scroll{overflow-y:auto;overflow-x:hidden;flex:1;}
+.scroll::-webkit-scrollbar{width:4px;}
+.scroll::-webkit-scrollbar-thumb{background:var(--bord2);border-radius:2px;}
+
+/* ═══════════════════════════════════════════
+   SECTION HEADER  (same as original)
+═══════════════════════════════════════════ */
+.sec-hd{
+  padding:7px 14px;
+  background:var(--surf2);
+  border-bottom:1px solid var(--bord);
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;
+}
+.sec-ttl{
+  font-size:12.5px;font-weight:700;color:var(--text);
+  display:flex;align-items:center;gap:6px;
+}
+.sec-bar{width:3px;height:12px;background:var(--navy);border-radius:2px;}
+.sec-badge{
+  font-size:10.5px;font-weight:700;
+  padding:2px 9px;border-radius:4px;
+  letter-spacing:.3px;text-transform:uppercase;
+}
+.sb-blue  {background:#eff6ff;color:var(--navy);border:1px solid #93c5fd;}
+.sb-green {background:var(--green-lt);color:var(--green);border:1px solid var(--green-bd);}
+.sb-red   {background:var(--red-lt);  color:var(--red);  border:1px solid var(--red-bd);}
+.sb-orange{background:var(--orange-lt);color:var(--orange);border:1px solid var(--orange-bd);}
+
+/* ═══════════════════════════════════════════
+   STATUS CHIP  (exactly original dot + text)
+═══════════════════════════════════════════ */
+.chip{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:12.5px;font-weight:500;
+}
+.chip .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.chip.orange .dot{background:var(--odot);}
+.chip.red    .dot{background:var(--rdot);}
+.chip.green  .dot{background:var(--gdot);}
+.chip.gray   .dot{background:var(--gray-bd);}
+
+/* ═══════════════════════════════════════════
+   TABLE  (original clean table style)
+═══════════════════════════════════════════ */
+.tbl{width:100%;border-collapse:collapse;}
+.tbl th{
+  padding:7px 12px;
+  font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;
+  color:var(--text3);
+  border-bottom:1px solid var(--bord2);
+  text-align:left;background:var(--bg);
+}
+.tbl td{
+  padding:8px 12px;
+  border-bottom:1px solid var(--bord);
+  font-size:13px;vertical-align:middle;
+}
+.tbl tbody tr:last-child td{border-bottom:none;}
+.tbl tbody tr:hover td{background:#f9fbff;}
+.tbl tbody tr.blocked td{background:#fff7ed!important;}
+.tbl tbody tr.blocked:hover td{background:#fef3e2!important;}
+.tbl tbody tr.r2-warn td{background:#fffbeb;}
+.tc{font-family:var(--mono);font-size:11.5px;font-weight:700;color:var(--navy);width:38px;}
+.td{color:var(--text);}
+.td small{display:block;font-size:11px;color:var(--text3);margin-top:1px;}
+.ts-{text-align:right;}
+.ta{text-align:right;font-size:12px;color:var(--text2);}
+.ta.err{color:var(--red);font-weight:600;}
+.ta.ok2{color:var(--gray);}
+
+/* ═══════════════════════════════════════════
+   BUTTON ROW  below table
+═══════════════════════════════════════════ */
+.btn-row{
+  padding:8px 12px;
+  border-top:1px solid var(--bord);
+  background:var(--surf2);
+  display:flex;gap:7px;align-items:center;
+  flex-shrink:0;
+}
+
+/* ═══════════════════════════════════════════
+   BUTTONS — precise interlock states
+═══════════════════════════════════════════ */
+.btn{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:6px 14px;border-radius:5px;
+  font-size:12.5px;font-weight:600;font-family:var(--font);
+  cursor:pointer;border:1px solid transparent;
+  transition:all .15s;white-space:nowrap;user-select:none;
+  position:relative;outline:none;
+}
+.btn svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0;}
+
+/* Disabled — crisp gray, no interaction */
+.btn:disabled{
+  opacity:.38;cursor:not-allowed;
+  background:var(--gray-lt)!important;
+  color:var(--text3)!important;
+  border-color:var(--gray-bd)!important;
+  transform:none!important;box-shadow:none!important;
+}
+
+/* navy fill — for Open Breaker, Close Breaker (when ready) */
+.btn-navy{background:var(--navy);color:#fff;border-color:var(--navy);}
+.btn-navy:not(:disabled):hover{background:#162850;box-shadow:0 2px 8px rgba(29,52,97,.3);transform:translateY(-1px);}
+
+/* orange glow — CURRENT required action */
+.btn-now{
+  background:var(--orange-lt);color:var(--orange);border-color:var(--orange-bd);
+  box-shadow:0 0 0 3px rgba(217,119,6,.12);
+}
+.btn-now:not(:disabled):hover{background:#fef3c7;box-shadow:0 0 0 4px rgba(217,119,6,.2);transform:translateY(-1px);}
+.btn-now::after{
+  content:'';position:absolute;inset:-3px;border-radius:8px;
+  border:1.5px solid var(--orange-bd);
+  animation:rp 1.8s ease-in-out infinite;pointer-events:none;
+}
+@keyframes rp{0%,100%{opacity:.7;transform:scale(1)}50%{opacity:.15;transform:scale(1.04)}}
+
+/* green check — completed, locked */
+.btn-done{background:var(--green-lt);color:var(--green);border-color:var(--green-bd);cursor:default;}
+.btn-done:hover{background:var(--green-lt);}
+.btn-done::after{display:none;}
+
+/* green available — not urgent but usable */
+.btn-avail{background:var(--green-lt);color:var(--green);border-color:var(--green-bd);}
+.btn-avail:not(:disabled):hover{background:#dcfce7;}
+
+/* navy pulsing — THE final action (Close Breaker when all met) */
+.btn-final{
+  background:var(--navy);color:#fff;border-color:var(--navy);
+  box-shadow:0 0 0 3px rgba(29,52,97,.15);
+}
+.btn-final:not(:disabled):hover{background:#162850;box-shadow:0 0 0 5px rgba(29,52,97,.2);transform:translateY(-1px);}
+.btn-final::after{
+  content:'';position:absolute;inset:-3px;border-radius:8px;
+  border:1.5px solid #93c5fd;
+  animation:rp 2s ease-in-out infinite;pointer-events:none;
+}
+
+/* outline neutral */
+.btn-out{background:#fff;color:var(--text2);border-color:var(--bord2);}
+.btn-out:not(:disabled):hover{border-color:var(--navy);color:var(--navy);background:#eff6ff;}
+
+.btn-cancel{background:#f8fafc;color:var(--text2);border:1.5px solid var(--bord2);}
+.btn-cancel:hover{background:#f1f5f9;}
+
+/* ═══════════════════════════════════════════
+   RIGHT COL — interlock chain + C-table + guidance
+═══════════════════════════════════════════ */
+
+/* Chain header */
+.chain-hd{
+  padding:6px 14px;background:var(--surf2);border-bottom:1px solid var(--bord);
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+}
+.chain-ttl{font-size:12.5px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:6px;}
+.chain-met{font-size:12px;color:var(--text2);}
+.cm-n{font-family:var(--mono);font-weight:700;font-size:14px;}
+.cm-met{color:var(--orange);}
+.cm-tot{color:var(--text3);}
+
+/* Progress dots strip */
+.dots-strip{
+  padding:5px 16px;display:flex;align-items:center;
+  background:var(--surf);border-bottom:1px solid var(--bord);flex-shrink:0;
+}
+.dn{display:flex;flex-direction:column;align-items:center;gap:2px;flex:1;}
+.dd{
+  width:13px;height:13px;border-radius:50%;border:2px solid;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:all .4s;
+}
+.dd.done {background:var(--gdot);border-color:var(--green);box-shadow:0 0 0 3px var(--green-lt);}
+.dd.block{background:#ea580c;border-color:#9a3412;box-shadow:0 0 0 3px #fff7ed;animation:bp 1.4s infinite;}
+.dd.fail {background:var(--rdot); border-color:var(--red); box-shadow:0 0 0 2px var(--red-lt);}
+.dd.idle {background:var(--gray-lt);border-color:var(--gray-bd);}
+.dd.req  {background:#38bdf8;border-color:#0369a1;box-shadow:0 0 0 3px #f0f9ff;animation:bp .9s infinite;}
+.dd.tgt  {background:var(--navy);border-color:var(--navy);}
+@keyframes bp{0%,100%{box-shadow:0 0 0 3px rgba(234,88,12,.18)}50%{box-shadow:0 0 0 6px rgba(234,88,12,.35)}}
+.dl{font-size:9px;font-weight:700;color:var(--text3);font-family:var(--mono);}
+.dline{flex:1;height:2px;margin-bottom:15px;background:var(--bord);border-radius:1px;transition:background .4s;}
+.dline.done{background:var(--gdot);}
+
+/* Sync bar */
+.sync-bar{
+  padding:5px 14px;background:var(--surf);border-bottom:1px solid var(--bord);
+  display:flex;align-items:center;gap:12px;flex-shrink:0;
+}
+.sv{display:flex;flex-direction:column;align-items:center;gap:1px;}
+.sv-lbl{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);}
+.sv-val{font-family:var(--mono);font-size:13px;font-weight:700;}
+.sv-val.ok  {color:var(--green);}
+.sv-val.warn{color:var(--orange);}
+.sv-val.fail{color:var(--red);}
+.sv-tr{font-size:9px;margin-left:1px;}
+.s-sep{width:1px;height:22px;background:var(--bord);}
+.sync-badge{
+  margin-left:auto;display:flex;align-items:center;gap:5px;
+  padding:3px 11px;border-radius:4px;font-size:11.5px;font-weight:700;
+  transition:all .3s;
+}
+.sync-badge.ns{background:var(--red-lt);color:var(--red);border:1px solid var(--red-bd);}
+.sync-badge.ok{background:var(--green-lt);color:var(--green);border:1px solid var(--green-bd);}
+.sdot{width:6px;height:6px;border-radius:50%;background:currentColor;animation:blink 1.5s infinite;}
+
+/* Blocking panel */
+.blk{
+  margin:8px 12px;padding:10px 13px;
+  background:#fff7ed;border:1px solid #fed7aa;
+  border-left:3px solid #ea580c;border-radius:var(--r);
+}
+.blk-hd{display:flex;align-items:center;gap:7px;margin-bottom:4px;}
+.blk-code{font-family:var(--mono);font-size:14px;font-weight:800;color:#9a3412;}
+.blk-ttl{font-size:12.5px;font-weight:700;color:#9a3412;}
+.blk-cause{font-size:12px;color:#c2410c;display:flex;align-items:center;gap:4px;margin-bottom:4px;}
+.blk-cause::before{content:'▲';font-size:9px;}
+.blk-al{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#9a3412;margin-bottom:2px;}
+.blk-act{font-size:12px;color:#7c2d12;background:rgba(255,255,255,.55);border-left:2px solid #ea580c;padding:3px 8px;border-radius:0 3px 3px 0;}
+.blk-imp{margin-top:4px;font-size:11px;color:#9a3412;opacity:.8;line-height:1.4;}
+
+/* Guidance steps */
+.guide-hd{padding:6px 14px;background:var(--surf2);border-bottom:1px solid var(--bord);
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.guide-ttl{font-size:12px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:6px;}
+.guide-steps{padding:5px 12px;display:flex;flex-direction:column;gap:4px;}
+.gs{
+  display:flex;align-items:center;gap:8px;
+  padding:6px 10px;border-radius:var(--r);border:1px solid transparent;
+  transition:all .2s;
+}
+.gs.done  {background:var(--green-lt);border-color:var(--green-bd);}
+.gs.active{background:var(--orange-lt);border-color:var(--orange-bd);}
+.gs.locked{background:var(--gray-lt);border-color:var(--gray-bd);opacity:.6;}
+.gsn{
+  width:20px;height:20px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10.5px;font-weight:800;flex-shrink:0;font-family:var(--mono);
+}
+.gs.done  .gsn{background:var(--green);color:#fff;}
+.gs.active .gsn{background:var(--orange);color:#fff;}
+.gs.locked .gsn{background:var(--gray-bd);color:var(--gray);}
+.gs-body{flex:1;}
+.gs-txt{font-size:12.5px;font-weight:500;}
+.gs.done   .gs-txt{color:var(--green);}
+.gs.active .gs-txt{color:#92400e;}
+.gs.locked .gs-txt{color:var(--text3);}
+.gs-sub{font-size:11px;color:var(--text3);margin-top:1px;}
+.gs.active .gs-sub{color:#a16207;}
+.gs-st{font-size:11px;font-weight:700;text-transform:uppercase;white-space:nowrap;flex-shrink:0;}
+.gs.done   .gs-st{color:var(--green);}
+.gs.active .gs-st{color:var(--orange);}
+.gs.locked .gs-st{color:var(--text3);}
+
+/* ═══════════════════════════════════════════
+   CTRL BAR — bottom buttons
+═══════════════════════════════════════════ */
+.ctrl{
+  height:46px;flex-shrink:0;
+  background:var(--surf);
+  border-top:2px solid var(--bord2);
+  display:flex;align-items:center;
+  padding:0 12px 0 160px;gap:6px;
+}
+.cg{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);flex-shrink:0;}
+.csep{width:1px;height:24px;background:var(--bord2);margin:0 3px;}
+.csp{flex:1;}
+.cst{
+  display:flex;align-items:center;gap:6px;
+  padding:5px 13px;border-radius:5px;
+  font-size:12px;font-weight:700;
+}
+.cst.blocked{background:var(--red-lt);color:var(--red);border:1px solid var(--red-bd);}
+.cst.waiting{background:var(--orange-lt);color:var(--orange);border:1px solid var(--orange-bd);}
+.cst.ready  {background:var(--green-lt);color:var(--green);border:1px solid var(--green-bd);}
+.csdot{width:6px;height:6px;border-radius:50%;background:currentColor;}
+.cst.blocked .csdot,.cst.waiting .csdot{animation:blink 1.2s infinite;}
+
+/* ═══════════════════════════════════════════
+   LOG BAR — event-driven push-right
+═══════════════════════════════════════════ */
+.logbar{
+  height:28px;flex-shrink:0;
+  background:#0d1117;border-top:1px solid #1a2332;
+  display:flex;align-items:stretch;overflow:hidden;
+}
+.log-hd{
+  flex-shrink:0;width:70px;background:#060d1a;border-right:1px solid #1a2332;
+  display:flex;align-items:center;justify-content:center;gap:4px;
+}
+.lhd-dot{width:5px;height:5px;border-radius:50%;background:#22c55e;animation:blink 1.5s infinite;}
+.lhd-txt{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#4b5563;}
+.log-vp{flex:1;overflow:hidden;position:relative;}
+.log-vp::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:24px;
+  background:linear-gradient(90deg,#0d1117 35%,transparent);z-index:2;pointer-events:none;
+}
+.log-row{display:flex;align-items:center;height:28px;justify-content:flex-end;}
+.log-e{
+  display:flex;align-items:center;gap:6px;
+  padding:0 12px;height:100%;border-left:1px solid #1a2332;
+  flex-shrink:0;white-space:nowrap;
+}
+.log-e.new{animation:logIn .32s cubic-bezier(.25,.46,.45,.94) both;}
+@keyframes logIn{from{opacity:0;transform:translateX(50px)}to{opacity:1;transform:translateX(0)}}
+.log-ts{font-family:var(--mono);font-size:9.5px;color:#374151;}
+.log-lv{font-size:9px;font-weight:800;letter-spacing:.8px;padding:1px 5px;border-radius:2px;}
+.log-lv.info {background:#1e3a5f;color:#60a5fa;}
+.log-lv.warn {background:#3d2a00;color:#f59e0b;}
+.log-lv.error{background:#3b0d0d;color:#f87171;}
+.log-lv.ok   {background:#052e16;color:#4ade80;}
+.log-msg{color:#9ca3af;font-size:11px;}
+
+/* ═══════════════════════════════════════════
+   TOAST — bottom right, no overlap
+═══════════════════════════════════════════ */
+.toast-stack{
+  position:fixed;bottom:74px;right:14px;z-index:9999;
+  display:flex;flex-direction:column-reverse;gap:6px;pointer-events:none;
+}
+.toast{
+  min-width:260px;max-width:340px;
+  background:var(--surf);border:1px solid var(--bord2);border-radius:var(--r);
+  padding:10px 13px;box-shadow:0 10px 24px rgba(0,0,0,.11);
+  display:flex;align-items:flex-start;gap:9px;
+  animation:tIn .22s ease both;pointer-events:auto;
+}
+@keyframes tIn{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:translateX(0)}}
+.t-ico{width:17px;height:17px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:900;flex-shrink:0;margin-top:1px;}
+.toast.ti .t-ico{background:#eff6ff;color:#1d4ed8;}
+.toast.tok .t-ico{background:var(--green-lt);color:var(--green);}
+.toast.tw .t-ico{background:var(--orange-lt);color:var(--orange);}
+.toast.te .t-ico{background:var(--red-lt);color:var(--red);}
+.t-body{flex:1;}
+.t-ttl{font-size:12.5px;font-weight:700;margin-bottom:2px;}
+.toast.ti .t-ttl{color:var(--text);}
+.toast.tok .t-ttl{color:var(--green);}
+.toast.tw .t-ttl{color:var(--orange);}
+.toast.te .t-ttl{color:var(--red);}
+.t-msg{font-size:11.5px;color:var(--text2);line-height:1.4;}
+.t-x{font-size:14px;color:var(--text3);cursor:pointer;}
+.t-x:hover{color:var(--text);}
+
+/* ═══════════════════════════════════════════
+   CONFIRM DIALOG
+═══════════════════════════════════════════ */
+.ov{position:fixed;inset:0;background:rgba(15,25,35,.45);z-index:8888;display:none;align-items:center;justify-content:center;}
+.ov.open{display:flex;}
+.dlg{background:var(--surf);border-radius:var(--r);width:400px;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.18);animation:dIn .18s ease both;}
+@keyframes dIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.dlg-ico{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;margin-bottom:12px;}
+.dlg-ico.warn{background:var(--orange-lt);}
+.dlg-ico.err {background:var(--red-lt);}
+.dlg-ttl{font-size:15px;font-weight:700;margin-bottom:7px;}
+.dlg-body{font-size:13px;color:var(--text2);line-height:1.5;margin-bottom:20px;}
+.dlg-btns{display:flex;gap:8px;justify-content:flex-end;}
+
+/* ═══════════════════════════════════════════
+   SUCCESS MODAL — shown after Close Breaker completes
+═══════════════════════════════════════════ */
+.success-ov{position:fixed;inset:0;background:rgba(15,25,35,.5);z-index:9000;display:none;align-items:center;justify-content:center;}
+.success-ov.open{display:flex;}
+.success-box{
+  background:var(--surf);border-radius:10px;width:440px;
+  padding:32px 28px;text-align:center;
+  box-shadow:0 24px 64px rgba(0,0,0,.2);
+  animation:dIn .22s ease both;
+}
+.success-icon{
+  width:60px;height:60px;border-radius:50%;
+  background:var(--green-lt);border:2px solid var(--green-bd);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 16px;font-size:26px;
+}
+.success-ttl{font-size:18px;font-weight:800;color:var(--green);margin-bottom:8px;}
+.success-sub{font-size:13px;color:var(--text2);line-height:1.5;margin-bottom:20px;}
+.success-meta{
+  background:var(--green-lt);border:1px solid var(--green-bd);border-radius:var(--r);
+  padding:10px 14px;text-align:left;margin-bottom:20px;font-size:12px;
+}
+.success-meta-row{display:flex;justify-content:space-between;padding:2px 0;}
+.success-meta-key{color:var(--text3);font-weight:600;}
+.success-meta-val{font-family:var(--mono);color:var(--green);font-weight:700;}
+
+/* kv rows */
+.kv{display:flex;align-items:center;justify-content:space-between;padding:3px 0;}
+.kv-l{font-size:12px;color:var(--text2);}
+.kv-v{font-family:var(--mono);font-size:12px;font-weight:600;}
+.kv-v.g{color:var(--green);}.kv-v.o{color:var(--orange);}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ═══ TOP NAV ═══ -->
+<div class="topnav">
+  <div class="tn-logo">
+    <svg viewBox="0 0 36 36" width="32" height="32">
+      <circle cx="18" cy="18" r="15" fill="none" stroke="#e5e7eb" stroke-width="1.2"/>
+      <path d="M18 3 A15 15 0 0 1 33 18" fill="none" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/>
+      <path d="M33 18 A15 15 0 0 1 3 18" fill="none" stroke="#1d3461" stroke-width="3" stroke-linecap="round"/>
+      <path d="M3 18 A15 15 0 0 1 18 3" fill="none" stroke="#e5e7eb" stroke-width="1.2"/>
+      <text x="18" y="23" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9.5" font-weight="800" fill="#1d3461">EX</text>
+    </svg>
+    <span class="tn-logo-name">Energize<span>X</span></span>
+  </div>
+  <div class="nav-tab">Demand Charge Management</div>
+  <div class="nav-tab">TOU Optimization</div>
+  <div class="nav-tab">Renewable Integration</div>
+  <div class="nav-tab active">Grid-Tie/Island Transition</div>
+</div>
+
+<!-- ═══ STATUS BAR ═══ -->
+<div class="statusbar">
+  <div class="sb-item">
+    <div class="bpill open" id="sb-bpill"><div class="bdot"></div><span id="sb-bkr-txt">Breaker Opened</span></div>
+  </div>
+  <div class="sb-item">
+    <span class="sb-lbl">Grid Voltage</span>
+    <span class="sb-val" id="sb-v">—</span>
+  </div>
+  <div class="sb-item">
+    <span class="sb-lbl">Grid Frequency</span>
+    <span class="sb-val" id="sb-f">—</span>
+  </div>
+  <div class="sb-item">
+    <span class="sb-lbl">Mode</span>
+    <span class="sb-val" style="color:var(--navy)" id="sb-mode">Island Mode</span>
+  </div>
+  <div class="sb-item">
+    <span class="sb-lbl">Primary Source</span>
+    <span class="sb-val" style="color:var(--green)" id="sb-src">BESS</span>
+  </div>
+  <div class="sb-item">
+    <div class="mo-wrap-box">
+      <div class="mo-pill relay-inactive" id="mo-relay" onclick="setMode('relay')" title="Relay Control: hardware protection monitors and trips automatically. EMS is read-only.">
+        <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        Relay Control
+      </div>
+      <div class="mo-pill ems-active" id="mo-ems" onclick="setMode('ems')" title="EMS Control: operator can authorize breaker close and execute reconnection sequence.">
+        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><polyline points="8 21 12 17 16 21"/></svg>
+        EMS Control
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ BODY ═══ -->
+<div class="body">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="si" onclick="navTo(this)">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    Dashboard
+  </div>
+  <div class="si" onclick="navTo(this)">
+    <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    Monitoring
+  </div>
+  <div class="si active" onclick="navTo(this)">
+    <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+    Strategy
+  </div>
+  <div class="si" onclick="navTo(this)">
+    <div class="si-bdg">2</div>
+    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    Message
+  </div>
+  <div class="si" style="margin-top:auto" onclick="navTo(this)">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M5.34 18.66l-1.41 1.41M4.93 4.93l1.41 1.41M18.66 18.66l1.41 1.41M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>
+    Setting
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+<!-- ─── LEFT COL ─── -->
+<div class="col col-l">
+<div class="scroll">
+
+<!-- Section A -->
+<div class="sec-hd">
+  <div class="sec-ttl"><div class="sec-bar"></div>Auto Disconnection Logic (Anti-Islanding): Relay Control</div>
+  <div class="sec-badge sb-blue">Relay Control</div>
+</div>
+<table class="tbl">
+  <thead><tr><th style="width:42px">Code</th><th>Auto Trip Criteria</th><th style="width:140px">Current Status</th></tr></thead>
+  <tbody>
+    <tr><td class="tc">A1</td><td class="td">Grid voltage/frequency exceeds limit<small>OV&gt;110% · UV&lt;85% · OF&gt;50.5Hz · UF&lt;49.5Hz</small></td><td class="ts-"><span class="chip orange"><span class="dot"></span>Not Triggered</span></td></tr>
+    <tr><td class="tc">A2</td><td class="td">Grid power outage (no voltage)<small>V&lt;5V sustained &gt;100ms</small></td><td class="ts-"><span class="chip orange"><span class="dot"></span>Not Triggered</span></td></tr>
+    <tr><td class="tc">A3</td><td class="td">ROCOF ≥ threshold<small>Rate-of-change-of-frequency &gt; 1.0 Hz/s</small></td><td class="ts-"><span class="chip orange"><span class="dot"></span>Not Triggered</span></td></tr>
+    <tr><td class="tc">A4</td><td class="td">Trip action completed<small>52b contact confirmed — breaker mechanically open</small></td><td class="ts-"><span class="chip gray"><span class="dot"></span>Standby</span></td></tr>
+    <tr><td class="tc">A5</td><td class="td">Trip signal reported to EMS<small>Event logged · UI alert triggered</small></td><td class="ts-"><span class="chip gray"><span class="dot"></span>Standby</span></td></tr>
+    <tr><td class="tc">A6</td><td class="td">Island mode startup permitted<small>BESS grid-forming · SOC · load coordination verified</small></td><td class="ts-"><span class="chip red"><span class="dot"></span>Not Allowed</span></td></tr>
+  </tbody>
+</table>
+<div class="btn-row">
+  <!-- Open Breaker: disabled when already open (§14.4) -->
+  <button class="btn btn-navy" id="btn-open" disabled onclick="doOpen()">
+    <svg viewBox="0 0 24 24"><path d="M18.36 6.64A9 9 0 1 1 5.64 5.64"/><polyline points="22 2 12 12 9 9"/></svg>
+    Breaker Is Open
+  </button>
+  <button class="btn btn-out" id="btn-bess-isl" disabled onclick="doIsland('bess')">Start BESS Island</button>
+  <button class="btn btn-out" id="btn-pv-isl"   disabled onclick="doIsland('pv')">Start PV Island</button>
+</div>
+
+<!-- Section R -->
+<div class="sec-hd">
+  <div class="sec-ttl"><div class="sec-bar"></div>Anti-Reverse Power Detection: Enabled</div>
+  <div style="font-size:11.5px;color:var(--text3);">
+    Set mode:
+    <span style="font-weight:700;color:var(--green);cursor:pointer;" onclick="toast('i','Zero Export','Zero Export strategy is currently Enabled. Reverse power protection active.')">Enabled</span>
+    <span style="color:var(--text3);"> / </span>
+    <span style="color:var(--text3);cursor:pointer;" onclick="toast('w','Cannot Disable','Zero Export cannot be disabled while reconnection sequence is active.')">Disable</span>
+  </div>
+</div>
+<table class="tbl">
+  <thead><tr><th style="width:42px">Code</th><th>Description</th><th style="width:130px">Status</th><th style="width:160px">Action Suggestion</th></tr></thead>
+  <tbody>
+    <tr><td class="tc">R1</td><td class="td">Reverse power detected at POI</td><td class="ts-"><span class="chip orange"><span class="dot"></span>Not Triggered</span></td><td class="ta ok2">No action required</td></tr>
+    <tr class="r2-warn"><td class="tc">R2</td><td class="td">PV/BESS output power = 0<small>Required before reconnection attempt</small></td><td class="ts-"><span class="chip red" id="chip-r2"><span class="dot"></span>Not Satisfied</span></td><td class="ta err" id="act-r2">Maintain current state</td></tr>
+    <tr><td class="tc">R3</td><td class="td">EMS enabled "Zero Export" strategy</td><td class="ts-"><span class="chip green"><span class="dot"></span>Enabled</span></td><td class="ta ok2">Reverse power protection active</td></tr>
+  </tbody>
+</table>
+<div style="background:var(--surf2);border-top:1px solid var(--bord);padding:5px 0 7px;">
+  <div class="kv" style="padding:3px 14px;"><span class="kv-l">POI Active Power</span><span class="kv-v g" id="poi-p">+84.1 kW</span></div>
+  <div class="kv" style="padding:3px 14px;"><span class="kv-l">Reverse Power Limit</span><span class="kv-v">10.0 kW</span></div>
+  <div class="kv" style="padding:3px 14px;"><span class="kv-l">BESS Output</span><span class="kv-v o" id="bess-o">+19.7 kW</span></div>
+</div>
+
+</div><!-- /scroll -->
+</div><!-- /col-l -->
+
+<!-- ─── RIGHT COL ─── -->
+<div class="col">
+
+<!-- Chain header -->
+<div class="chain-hd">
+  <div class="chain-ttl"><div class="sec-bar"></div>Grid Reconnection (Breaker Close) Control Logic</div>
+  <div class="chain-met">Conditions met:&nbsp;<span class="cm-n"><span class="cm-met" id="met-n">2</span><span style="color:var(--text3)">/</span><span class="cm-tot">5</span></span></div>
+</div>
+
+<!-- Mode context banner — explains current control authority -->
+<div class="mode-banner ems" id="mode-banner">
+  <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><polyline points="8 21 12 17 16 21"/></svg>
+  <span id="mode-banner-txt"><strong>EMS Control active</strong> — Operator can authorize breaker close. All C1–C5 prerequisites must be met before Close is permitted.</span>
+</div>
+
+<!-- Progress strip C1-C5 + CLOSE target -->
+<div class="dots-strip">
+  <div class="dn"><div class="dd done" id="d1"></div><div class="dl">C1</div></div>
+  <div class="dline done" id="l12"></div>
+  <div class="dn"><div class="dd done" id="d2"></div><div class="dl">C2</div></div>
+  <div class="dline" id="l23"></div>
+  <div class="dn"><div class="dd block" id="d3"></div><div class="dl">C3</div></div>
+  <div class="dline" id="l34"></div>
+  <div class="dn"><div class="dd idle" id="d4"></div><div class="dl">C4</div></div>
+  <div class="dline" id="l45"></div>
+  <div class="dn"><div class="dd fail" id="d5"></div><div class="dl">C5</div></div>
+  <div class="dline" id="l5e"></div>
+  <div class="dn">
+    <div class="dd tgt" style="width:15px;height:15px;">
+      <svg width="7" height="7" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2.2"><polyline points="1.5,5 4,7.5 8.5,2.5"/></svg>
+    </div>
+    <div class="dl" style="color:var(--navy);font-weight:800;">CLOSE</div>
+  </div>
+</div>
+
+<!-- Sync bar -->
+<div class="sync-bar">
+  <div class="sv"><div class="sv-lbl">ΔV</div><div style="display:flex;align-items:baseline;gap:1px;"><div class="sv-val warn" id="sv-dv">4.0 V</div><span class="sv-tr" id="sv-dv-t" style="color:var(--text3)">→</span></div></div>
+  <div class="s-sep"></div>
+  <div class="sv"><div class="sv-lbl">Δf</div><div style="display:flex;align-items:baseline;gap:1px;"><div class="sv-val fail" id="sv-df">0.24 Hz</div><span class="sv-tr" id="sv-df-t" style="color:var(--text3)">→</span></div></div>
+  <div class="s-sep"></div>
+  <div class="sv"><div class="sv-lbl">Δθ</div><div style="display:flex;align-items:baseline;gap:1px;"><div class="sv-val fail" id="sv-dt">20.3°</div><span class="sv-tr" id="sv-dt-t" style="color:var(--text3)">→</span></div></div>
+  <div class="s-sep"></div>
+  <div class="sv"><div class="sv-lbl">ΔV limit</div><div class="sv-val" style="font-size:10.5px;color:var(--text3);">≤ 2.0 V</div></div>
+  <div class="sv"><div class="sv-lbl">Δf limit</div><div class="sv-val" style="font-size:10.5px;color:var(--text3);">≤ 0.05 Hz</div></div>
+  <div class="sv"><div class="sv-lbl">Δθ limit</div><div class="sv-val" style="font-size:10.5px;color:var(--text3);">≤ 5°</div></div>
+  <div class="sync-badge ns" id="sync-badge"><span class="sdot"></span>NOT SYNCHRONIZED</div>
+</div>
+
+<!-- C1-C5 table -->
+<div class="scroll">
+<table class="tbl">
+  <thead>
+    <tr>
+      <th style="width:42px">Code</th>
+      <th>Prerequisite</th>
+      <th style="width:148px">Status</th>
+      <th style="width:188px">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="tc">C1</td>
+      <td class="td">Stable grid voltage, frequency, phase ≥ 60s<small>V:220–240V · f:49.8–50.2Hz · 60s window</small></td>
+      <td class="ts-"><span class="chip green"><span class="dot"></span>Satisfied</span></td>
+      <td class="ta ok2">Grid has been stable over 60s</td>
+    </tr>
+    <tr>
+      <td class="tc">C2</td>
+      <td class="td">Power flow is "inflow" or "zero export"<small>POI flow must not be export before reconnect</small></td>
+      <td class="ts-"><span class="chip green"><span class="dot"></span>Satisfied</span></td>
+      <td class="ta ok2">No reverse power</td>
+    </tr>
+    <tr class="blocked" id="row-c3">
+      <td class="tc">C3</td>
+      <td class="td">PV/BESS is stopped or in standby<small>All DER output must be zero — avoids power surge</small></td>
+      <td class="ts-"><span class="chip red" id="chip-c3"><span class="dot"></span>Not Satisfied</span></td>
+      <td class="ta err" id="desc-c3">BESS is still running</td>
+    </tr>
+    <tr id="row-c4">
+      <td class="tc">C4</td>
+      <td class="td">EMS authorized breaker close<small>Solely authorized by EMS via UI interlock engine</small></td>
+      <td class="ts-"><span class="chip red" id="chip-c4"><span class="dot"></span>Not Allowed</span></td>
+      <td class="ta ok2" id="desc-c4">—</td>
+    </tr>
+    <tr id="row-c5">
+      <td class="tc">C5</td>
+      <td class="td">Phase/frequency sync complete<small>Δf&lt;0.05Hz · ΔV&lt;2V · Δθ&lt;5° confirmed</small></td>
+      <td class="ts-"><span class="chip red" id="chip-c5"><span class="dot"></span>Not synchronized</span></td>
+      <td class="ta err" id="desc-c5">Parameters not matched</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Blocking panel (primary blocking condition) -->
+<div class="blk" id="blk-panel">
+  <div class="blk-hd"><div class="blk-code">C3</div><div class="blk-ttl">Assets Not Stopped — Primary Blocking Condition</div></div>
+  <div class="blk-cause">BESS is actively discharging. Output power &gt; 0 kW.</div>
+  <div class="blk-al">Required Action</div>
+  <div class="blk-act">Execute <strong>Force Stop BESS</strong>, confirm output = 0 kW before proceeding.</div>
+  <div class="blk-imp">⚑ C4 (EMS Auth) and C5 (Phase Sync) cannot be evaluated until C3 is cleared.</div>
+</div>
+
+<!-- Operator Guidance -->
+<div class="guide-hd">
+  <div class="guide-ttl"><div class="sec-bar"></div>Operator Guidance — Reconnection Sequence</div>
+  <div class="sec-badge sb-red" id="g-badge">Action Required</div>
+</div>
+<div class="guide-steps">
+  <div class="gs done">
+    <div class="gsn">1</div>
+    <div class="gs-body"><div class="gs-txt">Verify grid stability ≥ 60s (C1)</div><div class="gs-sub">Grid stable for 60s confirmed ✓</div></div>
+    <div class="gs-st">✓ COMPLETED</div>
+  </div>
+  <div class="gs done">
+    <div class="gsn">2</div>
+    <div class="gs-body"><div class="gs-txt">Confirm zero export / inflow only at POI (C2)</div><div class="gs-sub">No reverse power ✓</div></div>
+    <div class="gs-st">✓ COMPLETED</div>
+  </div>
+  <div class="gs active" id="gs3">
+    <div class="gsn">3</div>
+    <div class="gs-body"><div class="gs-txt">Stop BESS &amp; PV — wait until output = 0 kW (C3)</div><div class="gs-sub" id="gs3-sub">Use Force Stop BESS + Force Stop PV in control bar</div></div>
+    <div class="gs-st" id="gs3-st">⚠ ACTION</div>
+  </div>
+  <div class="gs locked" id="gs4">
+    <div class="gsn">4</div>
+    <div class="gs-body"><div class="gs-txt">Await EMS authorization for breaker close (C4)</div><div class="gs-sub" id="gs4-sub">🔒 Requires C3 satisfied first</div></div>
+    <div class="gs-st" id="gs4-st">LOCKED</div>
+  </div>
+  <div class="gs locked" id="gs5">
+    <div class="gsn">5</div>
+    <div class="gs-body"><div class="gs-txt">Phase sync complete — ΔV&lt;2V · Δf&lt;0.05Hz · Δθ&lt;5° (C5)</div><div class="gs-sub" id="gs5-sub">🔒 Requires C3 + C4 first</div></div>
+    <div class="gs-st" id="gs5-st">LOCKED</div>
+  </div>
+</div>
+
+</div><!-- /scroll -->
+</div><!-- /right col -->
+</div><!-- /main -->
+</div><!-- /body -->
+
+<!-- ═══ CTRL BAR ═══ -->
+<div class="ctrl">
+  <span class="cg">Breaker</span>
+  <!-- Close Breaker: hard disabled until C1+C2+C3+C4+C5 all met -->
+  <button class="btn btn-out" id="btn-close" disabled onclick="doClose()">
+    <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    Close Breaker
+  </button>
+
+  <div class="csep"></div>
+  <span class="cg">Force Stop</span>
+  <!-- Force Stop BESS — btn-now = current required action -->
+  <button class="btn btn-now" id="btn-fbess" onclick="forceStop('bess')">
+    <svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>
+    Force Stop BESS
+  </button>
+  <button class="btn btn-now" id="btn-fpv" onclick="forceStop('pv')">
+    <svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>
+    Force Stop PV
+  </button>
+
+  <div class="csep"></div>
+  <span class="cg">Grid-Tie</span>
+  <button class="btn btn-out" id="btn-bgt" disabled onclick="startGT('bess')">Start BESS Grid-Tie</button>
+  <button class="btn btn-pgt btn-out" id="btn-pgt" disabled onclick="startGT('pv')">Start PV Grid-Tie</button>
+
+  <div class="csp"></div>
+  <div class="cst blocked" id="cst">
+    <div class="csdot"></div>
+    <span id="cst-txt">RECONNECT BLOCKED — C3 Not Satisfied</span>
+  </div>
+</div>
+
+<!-- ═══ LOG BAR ═══ -->
+<div class="logbar">
+  <div class="log-hd"><div class="lhd-dot"></div><span class="lhd-txt">SYS LOG</span></div>
+  <div class="log-vp"><div class="log-row" id="log-row"></div></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-stack" id="toasts"></div>
+
+<!-- CONFIRM DIALOG -->
+<div class="ov" id="ov">
+  <div class="dlg">
+    <div class="dlg-ico warn" id="dlg-ico">⚠</div>
+    <div class="dlg-ttl" id="dlg-ttl">Confirm</div>
+    <div class="dlg-body" id="dlg-body">Please confirm.</div>
+    <div class="dlg-btns">
+      <button class="btn btn-cancel" onclick="closeDlg()">Cancel</button>
+      <button class="btn" id="dlg-ok">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS MODAL — shown when Close Breaker completes -->
+<div class="success-ov" id="success-ov">
+  <div class="success-box">
+    <div class="success-icon">✓</div>
+    <div class="success-ttl">Grid Reconnection Successful</div>
+    <div class="success-sub">The main breaker has been closed. System is now operating in Grid-Tied mode.</div>
+    <div class="success-meta" id="success-meta">
+      <div class="success-meta-row"><span class="success-meta-key">Timestamp</span><span class="success-meta-val" id="sm-ts">—</span></div>
+      <div class="success-meta-row"><span class="success-meta-key">Operator</span><span class="success-meta-val">Admin</span></div>
+      <div class="success-meta-row"><span class="success-meta-key">System State</span><span class="success-meta-val">GRID_TIED</span></div>
+      <div class="success-meta-row"><span class="success-meta-key">Breaker 52a</span><span class="success-meta-val">CLOSED (TRUE)</span></div>
+      <div class="success-meta-row"><span class="success-meta-key">Breaker 52b</span><span class="success-meta-val">OPEN (FALSE)</span></div>
+    </div>
+    <button class="btn btn-navy" style="width:100%;" onclick="closeSuccess()">Acknowledge &amp; Continue</button>
+  </div>
+</div>
+
+<script>
+'use strict';
+/* ══════════════════════════════════════════════
+   STATE — mirrors original C1-C5 logic exactly.
+   No new conditions added (no C6/C7).
+   Logic preserved 1:1 from original design.
+══════════════════════════════════════════════ */
+const S = {
+  bkrOpen:  true,     // breaker physically open = island mode
+  mode:     'ems',    // DEFAULT = EMS Control (operator can authorize Close)
+  bessStop: false,    // BESS force-stopped
+  pvStop:   false,    // PV force-stopped
+  c3:       false,    // C3: PV+BESS stopped
+  c4:       false,    // C4: EMS authorized
+  c4Req:    false,    // C4 intermediate "Requesting" state
+  c5:       false,    // C5: phase sync complete
+  dv: 4.0, df: 0.24, dt: 20.3,   // sync deviations — START out of range
+  _pdv: 4.0, _pdf: 0.24, _pdt: 20.3,  // previous values for trend
+  bessOut: 19.7,
+  poiPwr:  84.1,
+};
+
+/* ── HELPERS ── */
+const $  = id => document.getElementById(id);
+const tx = (id, v)  => { const e=$(id); if(e) e.textContent=v; };
+const cx = (id, c)  => { const e=$(id); if(e) e.className=c; };
+const hx = (id, h)  => { const e=$(id); if(e) e.innerHTML=h; };
+const dx = (id, v)  => { const e=$(id); if(e) e.disabled=v; };
+const sv = (id, v)  => { const e=$(id); if(e) e.style.display=v?'':'none'; };
+
+/* ══════════════════════════════════════════════
+   RENDER — called on state change only.
+   Interval only calls syncRender() for numbers.
+══════════════════════════════════════════════ */
+function render() {
+  /* ── Breaker pill ── */
+  const bp = $('sb-bpill');
+  bp.className = 'bpill ' + (S.bkrOpen ? 'open' : 'closed');
+  tx('sb-bkr-txt', S.bkrOpen ? 'Breaker Opened' : 'Breaker Closed');
+
+  /* ── Status bar ── */
+  tx('sb-mode', S.bkrOpen ? 'Island Mode' : 'Grid-Tied');
+  $('sb-src').style.color = S.bkrOpen ? 'var(--green)' : 'var(--navy)';
+  tx('sb-src', S.bkrOpen ? 'BESS' : 'Grid');
+  tx('sb-v', S.bkrOpen ? '—' : '409.0 V');
+  tx('sb-f', S.bkrOpen ? '—' : '50.00 Hz');
+
+  /* ── Open Breaker button ──
+     • bkrOpen=true  → breaker already open  → grey pill "● Breaker Is Open" (disabled)
+     • bkrOpen=false → breaker closed         → navy active "Open Breaker" (clickable)
+     The button in the A-section is for OPENING (tripping) the breaker.
+     It is NOT the same as the ctrl-bar Close Breaker button.
+  ── */
+  const ob = $('btn-open');
+  if (S.bkrOpen) {
+    // Already open — show grey, clearly not an action
+    cx('btn-open', 'btn btn-out');
+    dx('btn-open', true);
+    ob.innerHTML = '<span style="display:inline-flex;align-items:center;gap:5px;">' +
+      '<span style="width:7px;height:7px;border-radius:50%;background:var(--gdot);display:inline-block;"></span>' +
+      'Breaker Is Open</span>';
+  } else {
+    // Breaker is closed → this button lets operator open it
+    cx('btn-open', 'btn btn-navy');
+    dx('btn-open', false);
+    ob.innerHTML = svgPower() + ' Open Breaker';
+  }
+
+  /* ── ctrl-bar Close Breaker button label ──
+     States:
+     1. Breaker already closed → grey done pill "✓ Breaker Closed"
+     2. Relay mode → grey locked (EMS has no close authority in relay mode)
+     3. EMS mode, C1-C5 all met → navy pulsing "Close Breaker"
+     4. EMS mode, conditions not met → grey disabled
+  ── */
+  const cb = $('btn-close');
+  if (!S.bkrOpen) {
+    cx('btn-close', 'btn btn-done'); dx('btn-close', true);
+    cb.innerHTML = '<span style="display:inline-flex;align-items:center;gap:5px;">' +
+      '<span style="width:7px;height:7px;border-radius:50%;background:var(--rdot);display:inline-block;"></span>' +
+      '✓ Breaker Closed</span>';
+  } else if (S.mode === 'relay') {
+    cx('btn-close', 'btn btn-out'); dx('btn-close', true);
+    cb.innerHTML = svgArrow() + ' Close Breaker';
+  } else if (S.c3 && S.c4 && S.c5) {
+    cx('btn-close', 'btn btn-final'); dx('btn-close', false);
+    cb.innerHTML = svgArrow() + ' Close Breaker';
+  } else {
+    cx('btn-close', 'btn btn-out'); dx('btn-close', true);
+    cb.innerHTML = svgArrow() + ' Close Breaker';
+  }
+
+  /* ── C3 ── */
+  if (S.c3) {
+    hx('chip-c3','<span class="dot"></span>Satisfied');   cx('chip-c3','chip green');
+    tx('desc-c3','PV & BESS output = 0 kW ✓');           cx('desc-c3','ta ok2');
+    $('row-c3').classList.remove('blocked');
+    cx('d3','dd done');   sv('blk-panel', false);
+  } else {
+    hx('chip-c3','<span class="dot"></span>Not Satisfied'); cx('chip-c3','chip red');
+    tx('desc-c3','BESS is still running');                  cx('desc-c3','ta err');
+    $('row-c3').classList.add('blocked');
+    cx('d3','dd block');  sv('blk-panel', true);
+  }
+
+  /* ── C4 (3 states: not-allowed / requesting / authorized) ── */
+  if (S.c4) {
+    hx('chip-c4','<span class="dot"></span>Authorized');
+    cx('chip-c4','chip green'); tx('desc-c4','EMS authorization issued ✓'); cx('desc-c4','ta ok2');
+    cx('d4','dd done');
+  } else if (S.c4Req) {
+    hx('chip-c4','<span class="dot"></span>Requesting…');
+    cx('chip-c4','chip'); $('chip-c4').style.cssText='display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:500;color:#0369a1;';
+    tx('desc-c4','EMS evaluating — please wait'); cx('desc-c4','ta ok2');
+    cx('d4','dd req');
+  } else {
+    hx('chip-c4','<span class="dot"></span>Not Allowed');
+    cx('chip-c4','chip red'); tx('desc-c4', S.c3 ? 'Evaluating after C3 cleared' : '—'); cx('desc-c4','ta ok2');
+    cx('d4','dd idle');
+  }
+
+  /* ── C5 ── */
+  if (S.c5) {
+    hx('chip-c5','<span class="dot"></span>Satisfied');     cx('chip-c5','chip green');
+    tx('desc-c5','All parameters in range ✓');              cx('desc-c5','ta ok2');
+    cx('d5','dd done');
+  } else {
+    hx('chip-c5','<span class="dot"></span>Not synchronized'); cx('chip-c5','chip red');
+    tx('desc-c5','Parameters not matched');                    cx('desc-c5','ta err');
+    cx('d5','dd fail');
+  }
+
+  /* ── R2 ── */
+  if (S.bessStop && S.pvStop) {
+    hx('chip-r2','<span class="dot"></span>Satisfied'); cx('chip-r2','chip green');
+    tx('act-r2','Output = 0 kW confirmed');             cx('act-r2','ta ok2');
+  } else {
+    hx('chip-r2','<span class="dot"></span>Not Satisfied'); cx('chip-r2','chip red');
+    tx('act-r2','Maintain current state');                  cx('act-r2','ta err');
+  }
+
+  /* ── Progress met count ── */
+  const met = [true, true, S.c3, S.c4, S.c5].filter(Boolean).length;
+  $('met-n').textContent = met;
+  $('met-n').style.color = met < 3 ? 'var(--red)' : met < 5 ? 'var(--orange)' : 'var(--green)';
+
+  /* ── Chain lines ── */
+  cx('l23','dline'+(S.c3?' done':''));
+  cx('l34','dline'+(S.c3&&S.c4?' done':''));
+  cx('l45','dline'+(S.c4&&S.c5?' done':''));
+
+  /* ── Guidance steps ── */
+  cx('gs3','gs '+(S.c3?'done':'active'));
+  tx('gs3-st', S.c3?'✓ COMPLETED':'⚠ ACTION');
+  tx('gs3-sub', S.c3?'BESS & PV output = 0 kW ✓':'Use Force Stop BESS + Force Stop PV in control bar');
+
+  if (S.c4) {
+    cx('gs4','gs done'); tx('gs4-st','✓ COMPLETED'); tx('gs4-sub','EMS authorization granted');
+  } else if (S.c4Req) {
+    cx('gs4','gs active'); tx('gs4-st','WAIT'); tx('gs4-sub','EMS evaluating close authorization…');
+  } else if (S.c3) {
+    cx('gs4','gs active'); tx('gs4-st','→ NEXT'); tx('gs4-sub','EMS authorization will be issued automatically');
+  } else {
+    cx('gs4','gs locked'); tx('gs4-st','LOCKED'); tx('gs4-sub','🔒 Requires C3 satisfied first');
+  }
+
+  if (S.c5) {
+    cx('gs5','gs done'); tx('gs5-st','✓ COMPLETED'); tx('gs5-sub','Sync parameters all in range');
+  } else if (S.c4) {
+    cx('gs5','gs active'); tx('gs5-st','MONITOR'); tx('gs5-sub','Waiting for sync: ΔV<2V · Δf<0.05Hz · Δθ<5°');
+  } else {
+    cx('gs5','gs locked'); tx('gs5-st','LOCKED'); tx('gs5-sub','🔒 Requires C3 + C4 first');
+  }
+
+  /* ── Guidance badge ── */
+  const gb = $('g-badge');
+  if (met >= 5)      { gb.className='sec-badge sb-green';  gb.textContent='Ready to Close'; }
+  else if (met >= 3) { gb.className='sec-badge sb-orange'; gb.textContent='In Progress'; }
+  else               { gb.className='sec-badge sb-red';    gb.textContent='Action Required'; }
+
+  /* ── Control status pill ── */
+  const cst = $('cst');
+  if (S.c3 && S.c4 && S.c5) {
+    cst.className='cst ready'; cst.innerHTML='<div class="csdot"></div><span>READY TO CLOSE BREAKER</span>';
+  } else if (S.c3 && S.c4) {
+    cst.className='cst waiting'; cst.innerHTML='<div class="csdot"></div><span>AWAITING SYNC (C5)</span>';
+  } else if (S.c3) {
+    cst.className='cst waiting'; cst.innerHTML='<div class="csdot"></div><span>AWAITING EMS AUTH (C4)</span>';
+  } else {
+    cst.className='cst blocked'; cst.innerHTML='<div class="csdot"></div><span>RECONNECT BLOCKED — C3 Not Satisfied</span>';
+  }
+
+  /* ══ BUTTON STATE MACHINE ══
+     Exactly mirrors original button behavior.
+     Force Stop: btn-now (orange) → btn-done (green disabled) when stopped
+     Grid-Tie: locked until C3 met
+     Close Breaker: locked until ALL C1-C5 met → btn-final (navy pulsing)
+  */
+  // Force Stop BESS
+  if (S.bessStop) { cx('btn-fbess','btn btn-done'); dx('btn-fbess',true); }
+  else            { cx('btn-fbess','btn btn-now');  dx('btn-fbess',false); }
+
+  // Force Stop PV
+  if (S.pvStop)   { cx('btn-fpv','btn btn-done'); dx('btn-fpv',true); }
+  else            { cx('btn-fpv','btn btn-now');  dx('btn-fpv',false); }
+
+  // Grid-Tie buttons
+  if (S.c3) {
+    cx('btn-bgt','btn btn-avail'); dx('btn-bgt',false);
+    cx('btn-pgt','btn btn-avail'); dx('btn-pgt',false);
+  } else {
+    cx('btn-bgt','btn btn-out'); dx('btn-bgt',true);
+    cx('btn-pgt','btn btn-out'); dx('btn-pgt',true);
+  }
+
+  // Close Breaker is now handled above (with post-close grey state)
+
+  /* ── Telemetry (inline with render) ── */
+  syncRender();
+}
+
+/* ══ syncRender — interval calls this only ══ */
+function syncRender() {
+  // Trend arrows — textContent only, no innerHTML
+  const tArr = (cur, prev) => {
+    const d = cur - prev;
+    return Math.abs(d) < 0.003 ? '→' : d < 0 ? '↓' : '↑';
+  };
+  const tCol = (cur, prev) =>
+    cur < prev ? 'var(--green)' : cur > prev ? 'var(--red)' : 'var(--text3)';
+
+  const dvT=$('sv-dv-t'), dfT=$('sv-df-t'), dtT=$('sv-dt-t');
+  if(dvT){dvT.textContent=tArr(S.dv,S._pdv); dvT.style.color=tCol(S.dv,S._pdv);}
+  if(dfT){dfT.textContent=tArr(S.df,S._pdf); dfT.style.color=tCol(S.df,S._pdf);}
+  if(dtT){dtT.textContent=tArr(S.dt,S._pdt); dtT.style.color=tCol(S.dt,S._pdt);}
+  S._pdv=S.dv; S._pdf=S.df; S._pdt=S.dt;
+
+  // Sync values
+  const dvEl=$('sv-dv'), dfEl=$('sv-df'), dtEl=$('sv-dt');
+  dvEl.textContent = S.dv.toFixed(1)+' V';
+  dfEl.textContent = S.df.toFixed(2)+' Hz';
+  dtEl.textContent = S.dt.toFixed(1)+'°';
+  dvEl.className = 'sv-val '+(S.dv<=2.0?'ok':S.dv<=3.5?'warn':'fail');
+  dfEl.className = 'sv-val '+(S.df<=0.05?'ok':'fail');
+  dtEl.className = 'sv-val '+(S.dt<=5.0?'ok':'fail');
+
+  // Sync overall badge
+  const sb = $('sync-badge');
+  sb.className = 'sync-badge '+(S.c5?'ok':'ns');
+  sb.innerHTML = '<span class="sdot"></span>'+(S.c5?'SYNCHRONIZED':'NOT SYNCHRONIZED');
+
+  // Telemetry
+  $('poi-p').textContent  = '+'+S.poiPwr.toFixed(1)+' kW';
+  $('bess-o').textContent = S.bessStop ? '0.0 kW' : '+'+S.bessOut.toFixed(1)+' kW';
+  $('bess-o').className   = 'kv-v '+(S.bessStop?'g':'o');
+}
+
+/* ══ INTERVAL — numbers only, no DOM structure changes ══ */
+setInterval(() => {
+  if (!S.bessStop) S.bessOut = Math.max(0, 19.7 + (Math.random()-.5)*1.1);
+  S.poiPwr = 84.1 + (Math.random()-.5)*2.2;
+
+  // Sync drift — realistic values that change slowly
+  // Once C3+C4 are met, sync converges toward in-range over ~30s
+  if (S.c3 && S.c4) {
+    // Active convergence toward 0 — simulates PCS synchronization
+    S.dv = Math.max(0, S.dv * 0.92 + (Math.random()-.5)*0.05);
+    S.df = Math.max(0, S.df * 0.90 + (Math.random()-.5)*0.003);
+    S.dt = Math.max(0, S.dt * 0.88 + (Math.random()-.5)*0.5);
+  } else {
+    // Random drift — out of range while BESS still running
+    S.dv = Math.max(2.5, Math.min(6.0, S.dv + (Math.random()-.5)*0.18));
+    S.df = Math.max(0.08, Math.min(0.35, S.df + (Math.random()-.5)*0.009));
+    S.dt = Math.max(8.0, Math.min(30.0, S.dt + (Math.random()-.5)*0.8));
+  }
+
+  const newC5 = S.dv<=2.0 && S.df<=0.05 && S.dt<=5.0;
+  if (newC5 !== S.c5) {
+    S.c5 = newC5;
+    if (S.c5) {
+      addLog('ok','C5 SYNCHRONIZED — ΔV='+S.dv.toFixed(1)+'V · Δf='+S.df.toFixed(2)+'Hz · Δθ='+S.dt.toFixed(1)+'°');
+      toast('ok','C5 Synchronized','Sync complete. Close Breaker is now available.');
+    } else {
+      addLog('warn','C5 SYNC LOST — deviation out of range');
+    }
+    render();
+  } else {
+    syncRender();
+  }
+}, 1800);
+
+/* ══ LOG ══ */
+function ts(){
+  const n=new Date();
+  return [n.getHours(),n.getMinutes(),n.getSeconds()].map(x=>String(x).padStart(2,'0')).join(':');
+}
+function addLog(level, msg) {
+  const row=$('log-row');
+  const e=document.createElement('div');
+  e.className='log-e new';
+  e.innerHTML=`<span class="log-ts">${ts()}</span><span class="log-lv ${level}">${level.toUpperCase()}</span><span class="log-msg">${msg}</span>`;
+  row.appendChild(e);
+  setTimeout(()=>e.classList.remove('new'),400);
+  while(row.children.length>6) row.removeChild(row.firstChild);
+}
+
+/* ══ TOAST ══ */
+const TI={i:'ℹ',ok:'✓',w:'⚠',e:'✕'};
+const TC={i:'ti',ok:'tok',w:'tw',e:'te'};
+function toast(type,title,msg,ms=4000){
+  const s=$('toasts'),d=document.createElement('div');
+  d.className='toast '+(TC[type]||'ti');
+  d.innerHTML=`<div class="t-ico">${TI[type]||'ℹ'}</div><div class="t-body"><div class="t-ttl">${title}</div><div class="t-msg">${msg}</div></div><div class="t-x" onclick="this.parentElement.remove()">×</div>`;
+  s.appendChild(d);
+  setTimeout(()=>{d.style.transition='opacity .4s';d.style.opacity='0';setTimeout(()=>d.remove(),420);},ms);
+}
+
+/* ══ CONFIRM DIALOG ══ */
+let _cb=null;
+function confirm2(ico,title,body,okLbl,okCls,cb){
+  $('dlg-ico').textContent=ico==='e'?'⛔':'⚠';
+  $('dlg-ico').className='dlg-ico '+(ico==='e'?'err':'warn');
+  tx('dlg-ttl',title); tx('dlg-body',body);
+  const ok=$('dlg-ok'); ok.textContent=okLbl; ok.className='btn '+okCls;
+  _cb=cb; ok.onclick=()=>{closeDlg();_cb&&_cb();};
+  $('ov').classList.add('open');
+}
+function closeDlg(){$('ov').classList.remove('open');}
+$('ov').addEventListener('click',function(e){if(e.target===this)closeDlg();});
+
+/* ══ SUCCESS MODAL ══ */
+function showSuccess(){
+  tx('sm-ts', new Date().toLocaleTimeString('en-US',{hour12:false}));
+  $('success-ov').classList.add('open');
+}
+function closeSuccess(){
+  $('success-ov').classList.remove('open');
+}
+$('success-ov').addEventListener('click',function(e){if(e.target===this)closeSuccess();});
+
+/* ══ ACTIONS ══ */
+function doOpen(){
+  // Only callable when breaker is CLOSED
+  if (!S.bkrOpen){
+    confirm2('w','Open Breaker',
+      'This will physically open the main breaker and disconnect from the utility grid. The system will enter island mode with BESS as primary source.',
+      'Open Breaker','btn-navy',()=>{
+        S.bkrOpen=true;
+        addLog('warn','OPERATOR: Breaker OPENED — system entered island mode');
+        toast('w','Breaker Opened','System in island mode. BESS is primary source.');
+        render();
+      });
+  }
+}
+
+function doIsland(unit){
+  toast('e','Island Start Blocked',
+    'A6 (Island mode startup) is Not Allowed — BESS grid-forming capability, SOC, and load coordination must be verified first.');
+  addLog('error','Start '+unit.toUpperCase()+' Island REJECTED — A6 = Not Allowed');
+}
+
+function doClose(){
+  if(!(S.c3&&S.c4&&S.c5)){
+    toast('e','Interlock Active','All prerequisites C1–C5 must be satisfied before closing the breaker.');
+    addLog('error','Close Breaker REJECTED — interlock (C3='+S.c3+',C4='+S.c4+',C5='+S.c5+')');
+    return;
+  }
+  confirm2('w','Confirm: Close Breaker & Reconnect to Grid',
+    'All 5 prerequisites (C1–C5) are satisfied. This will close the main breaker and reconnect to the utility grid. This action is logged.',
+    'Confirm Close','btn-navy',()=>{
+      S.bkrOpen=false;
+      addLog('ok','OPERATOR: Breaker CLOSED — grid reconnected · C1–C5 all satisfied · Admin authorized');
+      toast('ok','Grid Reconnected','Breaker closed. System mode: Grid-Tied.');
+      render();
+      // Show success modal after short delay
+      setTimeout(showSuccess, 600);
+    });
+}
+
+function forceStop(unit){
+  const name = unit==='bess'?'BESS':'PV';
+  const done  = unit==='bess'?S.bessStop:S.pvStop;
+  if(done){
+    toast('i',name+' Already Stopped',name+' output is confirmed at 0 kW.');
+    return;
+  }
+  confirm2('e','Force Stop '+name,
+    'This will immediately command '+name+' to cease output. In island mode this may affect load supply. Confirm?',
+    'Force Stop','btn-now',()=>{
+      if(unit==='bess'){S.bessStop=true; addLog('ok','OPERATOR: Force Stop BESS — output = 0 kW'); toast('ok','BESS Stopped','BESS output = 0 kW.');}
+      else             {S.pvStop=true;   addLog('ok','OPERATOR: Force Stop PV — output = 0 kW');   toast('ok','PV Stopped','PV output = 0 kW.');}
+
+      // C3 met when both stopped
+      if(S.bessStop&&S.pvStop){
+        S.c3=true; S.c4Req=true;
+        addLog('ok','C3 SATISFIED — all DER output = 0 kW');
+        addLog('info','EMS authorization request sent — C4 evaluating');
+        toast('ok','C3 Satisfied','Assets stopped. EMS authorization in progress…');
+        render();
+        // C4 auto-authorizes after 2s
+        setTimeout(()=>{
+          if(S.c3){
+            S.c4Req=false; S.c4=true;
+            addLog('ok','C4 SATISFIED — EMS breaker close authorization granted');
+            toast('ok','C4 — EMS Authorized','Authorization granted. Sync converging (C5)…');
+            render();
+          }
+        },2000);
+      } else {
+        render();
+      }
+    });
+}
+
+function startGT(unit){
+  const name=unit==='bess'?'BESS':'PV';
+  if(!S.c3){
+    toast('e','Interlock Active','Cannot start '+name+' Grid-Tie until C3 is satisfied. Stop all DER first.');
+    return;
+  }
+  confirm2('w','Start '+name+' Grid-Tie',
+    'Begin the '+name+' grid-tie reconnection sequence. Monitor C5 sync parameters before final breaker close.',
+    'Start','btn-avail',()=>{
+      toast('i',name+' Grid-Tie Started',name+' initiating grid-tie sequence. Monitor sync.');
+      addLog('info','OPERATOR: Start '+name+' Grid-Tie sequence initiated');
+    });
+}
+
+function setMode(m) {
+  S.mode = m;
+
+  // Update pill styles
+  const relayPill = $('mo-relay');
+  const emsPill   = $('mo-ems');
+
+  if (m === 'ems') {
+    relayPill.className = 'mo-pill relay-inactive';
+    emsPill.className   = 'mo-pill ems-active';
+  } else {
+    relayPill.className = 'mo-pill relay-active';
+    emsPill.className   = 'mo-pill ems-inactive';
+  }
+
+  // Update mode banner
+  const banner = $('mode-banner');
+  const bannerTxt = $('mode-banner-txt');
+  if (m === 'ems') {
+    banner.className = 'mode-banner ems';
+    bannerTxt.innerHTML = '<strong>EMS Control active</strong> — Operator can authorize breaker close. All C1–C5 prerequisites must be met.';
+  } else {
+    banner.className = 'mode-banner relay';
+    bannerTxt.innerHTML = '<strong>Relay Control mode</strong> — Hardware relay monitors and trips automatically. EMS close authorization is <strong>read-only</strong>. Switch to EMS Control to enable breaker close.';
+  }
+
+  // In relay-only mode: lock all right-col action buttons
+  // (Relay handles trips; EMS cannot authorize close)
+  const isEMS = m === 'ems';
+  // Force Stop still allowed in relay mode (emergency stop)
+  // Close Breaker locked in relay mode — EMS has no close authority
+  // Grid-Tie locked in relay mode
+  if (!isEMS) {
+    // Relay mode: disable close and grid-tie, keep force-stop available
+    cx('btn-close', 'btn btn-out'); dx('btn-close', true);
+    cx('btn-bgt',   'btn btn-out'); dx('btn-bgt', true);
+    cx('btn-pgt',   'btn btn-out'); dx('btn-pgt', true);
+  }
+  // If switching back to EMS, full render will restore correct states
+  if (isEMS) render();
+
+  addLog('info', 'Control mode → ' + (m === 'ems' ? 'EMS CONTROL (close authority: EMS)' : 'RELAY CONTROL (close authority: hardware relay only)'));
+  toast(m === 'ems' ? 'i' : 'w',
+    m === 'ems' ? 'EMS Control Active' : 'Relay Control Active',
+    m === 'ems'
+      ? 'Operator can now authorize breaker close via this interface.'
+      : 'Hardware relay has sole Trip authority. Breaker Close locked — switch to EMS Control to reconnect.'
+  );
+}
+
+function navTo(e){
+  document.querySelectorAll('.si').forEach(n=>n.classList.remove('active'));
+  e.classList.add('active');
+}
+
+/* ══ SVG helpers ══ */
+function svgPower(){
+  return '<svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2"><path d="M18.36 6.64A9 9 0 1 1 5.64 5.64"/><polyline points="22 2 12 12 9 9"/></svg>';
+}
+function svgArrow(){
+  return '<svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+}
+
+/* ══ BOOT LOG ══ */
+const BOOT=[
+  {d:200, l:'info', m:'EMS initialized — Grid-Tie/Island Transition module ready'},
+  {d:600, l:'ok',   m:'C1 Satisfied — grid stable 60s (409V / 50.00Hz)'},
+  {d:1000,l:'ok',   m:'C2 Satisfied — POI flow = inflow, no reverse power'},
+  {d:1400,l:'warn', m:'C3 NOT SATISFIED — BESS output = +19.7kW, still running'},
+  {d:1800,l:'error',m:'C4 BLOCKED — pending C3 clearance'},
+  {d:2200,l:'error',m:'C5 NOT SYNCED — Δf=0.24Hz · Δθ=20.3° · ΔV=4.0V'},
+];
+BOOT.forEach(({d,l,m})=>setTimeout(()=>addLog(l,m),d));
+
+render();
+// Initialize mode display to EMS (default)
+setMode('ems');
+setTimeout(()=>toast('w','Reconnect Blocked','C3 not satisfied. Use Force Stop BESS + Force Stop PV to proceed.'),2400);
+</script>
+</body>
+</html>
