@@ -34,8 +34,10 @@
 
   <article><h2>文档信息</h2>
 <figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">文件名称：EMS 控制柜厂家柜门标签与接口整改说明
-版本：v1.0
+版本：v1.2
 状态：Final
+Based on: PUB-2605-0004-SPEC v1.5
+文档定位：本文件为主接口指导文件的厂家执行版，用于柜门标签、端子表、线号表和图纸 wording 整改。
 适用对象：EMS 控制柜厂家 / 面板厂 / 柜内接线工程师 / 图纸工程师 / FAT 检查人员
 项目架构：All-in-one BESS + EMS Control Panel + PCC Breaker + Protection Relay + Grid Meter</code></pre></figure>
 <h2>1. 本文件目的</h2>
@@ -52,10 +54,10 @@ EMS 与 BESS 的接口统一为 Ethernet / Modbus TCP。</code></pre></figure>
 <p>现场不存在 DG / Diesel Generator，也不存在 PV / PV Inverter。</p>
 <p>本项目 EMS 控制柜需要保留以下项目接口：</p>
 <figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">1. EMS Operational Close:
-   EMS DO2 → Close Interposing Relay → PCC / Main Breaker Close Coil
+   EMS DO2 → RL-02 Close Interposing Relay → PCC / Main Breaker Close Circuit
 
 2. EMS Operational Trip（if enabled）:
-   EMS DO1 → Trip Interposing Relay → PCC / Main Breaker Trip Coil
+   EMS DO1 → RL-01 Trip Interposing Relay → PCC / Main Breaker Trip Circuit
 
 3. Breaker Feedback:
    PCC / Main Breaker 52a → EMS DI1
@@ -102,8 +104,10 @@ DI4   EMS Cabinet Water Leak Detector</code></pre></figure>
 <figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">Anti-islanding Trip Control
 Anti-islanding closing control</code></pre></figure>
 <p>必须替换为：</p>
-<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">DO1   EMS Operational Trip (If Enabled)
-DO2   EMS Operational Close / PCC Breaker Close Command</code></pre></figure>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">DO1    EMS Operational Trip (If Enabled) → RL-01 Trip Interposing Relay
+DO2    EMS Operational Close / PCC Breaker Close Command → RL-02 Close Interposing Relay
+RL-01  Trip Interposing Relay → PCC / Main Breaker Trip Circuit
+RL-02  Close Interposing Relay → PCC / Main Breaker Close Circuit</code></pre></figure>
 <p>强制约束：</p>
 <figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">DO1 is not Protection Trip.
 DO1 is not Anti-islanding Trip.
@@ -169,6 +173,11 @@ CT / PT Measurement Input → SEL735
 SEL735 Ethernet / Modbus TCP → EMS ETH-1
 Measurement Only / No Trip / No Close</code></pre></figure>
 <h2>9. Breaker 控制说明标签</h2>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">RL-01 = Trip Interposing Relay (internal to EMS panel)
+RL-02 = Close Interposing Relay (internal to EMS panel)
+DO1 → RL-01 → Trip Circuit
+DO2 → RL-02 → Close Circuit
+EMS DO shall not directly drive breaker coils</code></pre></figure>
 <p>建议在柜内增加以下简短说明：</p>
 <figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">Breaker Control
 Trip Primary: Protection Relay
@@ -225,6 +234,13 @@ No Close
 No Auto Reclose</code></pre></figure>
 <h2>12. 厂家交付前检查清单</h2>
 <p>出厂前必须逐项确认：</p>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">Relay Path Verification (Mandatory):
+1. DO1 energizes RL-01 coil
+2. RL-01 output reaches PCC / Main Breaker Trip terminal
+3. DO2 energizes RL-02 coil
+4. RL-02 output reaches PCC / Main Breaker Close terminal
+5. No direct DO → breaker coil wiring exists
+6. RL-01 / RL-02 labels appear in cabinet label, terminal schedule, wire schedule and wiring diagram</code></pre></figure>
 <figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">1. DI1 / DI2 已改为 PCC / Main Breaker 52a / 52b feedback
 2. DO1 已改为 EMS Operational Trip (If Enabled)
 3. DO2 已改为 EMS Operational Close / PCC Breaker Close Command
