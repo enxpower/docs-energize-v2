@@ -312,6 +312,115 @@ ETH-3     REMOTE_ACCESS_OPTIONAL  ↔ Router / VPN / Local HMI（Optional）</co
         ├── SEL-735 / Grid Meter
         ├── All-in-one BESS PLC
         └── Router / HMI / VPN（Optional）</code></pre></figure>
+<h3>7.7 EMS 控制网络拓扑与 IP 分段（Reference）</h3>
+<p>本节根据最新 EMS Control Cabinet 网络拓扑图补充，用于说明 EMS 控制柜内部网络、外部控制柜网络分段、静态路由和 IP 地址分配原则。</p>
+<p>重要说明：本节为 <strong>Reference EMS Control Network Topology</strong>。对于 CA-PEP01 当前项目范围，BESS 通信为必需接口；Generator Control Cabinet 与 PV Control Cabinet 在当前项目中不属于有效项目范围，除非后续通过正式 Scope Change 增加。</p>
+<p>7.7.1 网络分段原则</p>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">以下网段不得被其他设备重复使用：
+
+192.16.111.0/24    EMS 控制柜核心网络
+192.168.1.0/24     BESS Control Cabinet LAN
+192.168.2.0/24     Generator Control Cabinet LAN（预留 / 非当前项目范围）
+192.168.3.0/24     PV Control Cabinet LAN（预留 / 非当前项目范围）</code></pre></figure>
+<p>说明：</p>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">192.16.111.0/24 为 EMS 控制柜核心控制网络。
+192.168.1.0/24、192.168.2.0/24、192.168.3.0/24 分别用于外部控制柜 LAN 网段。
+上述网段不得在现场其他设备中重复使用，以避免路由冲突、网关冲突或 Modbus TCP 通信失败。</code></pre></figure>
+<p>7.7.2 EMS 控制柜网络设备</p>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">Internet / Remote Connection
+    ↓
+nCell G4302-LTE4-US
+Device Tag: ENS0331
+WAN: X.X.X.X
+LAN: 192.16.111.1/24
+Function: LTE / Router / Remote Access Gateway
+
+Industrial Ethernet Switch
+Device: EDS-2008-ELP
+Device Tag: ENS0306
+LAN: 192.16.111.0/24 switching layer
+Function: EMS cabinet internal Ethernet aggregation switch</code></pre></figure>
+<p>设备型号说明：</p>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">nCell G4302-LTE4-US、EDS-2008-ELP、ioLogik E1212、MGate 5121、NPort 5650-8-DT 等型号应由 EPC / Network Integrator 依据厂家最新 datasheet 核对。
+本文件仅按现有网络拓扑图记录设备型号、设备位号和网络角色，不构成最终网络设备选型批准。</code></pre></figure>
+<p>7.7.3 EMS 控制柜内部设备 IP 分配</p>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">ioLogik E1212
+Device Tag: PLC0336
+LAN IP: 192.16.111.109/24
+Gateway: 192.16.111.1
+Function: Remote I/O / DI-DO interface
+
+MIP65BD0N108NN00
+Device Tag: PC0300
+LAN IP: 192.16.111.123/24
+Gateway: 192.16.111.1
+Function: EMS HMI / Industrial PC / Local control interface（按厂家定义确认）
+
+MGate 5121
+Device Tag: ENS0320
+LAN IP: 192.16.111.101/24
+Gateway: 192.16.111.1
+Function: Protocol gateway
+
+MGate 5121
+Device Tag: ENS0326
+LAN IP: 192.16.111.104/24
+Gateway: 192.16.111.1
+Function: Protocol gateway
+
+NPort 5650-8-DT
+Device Tag: ENS0312
+LAN IP: 192.16.111.130/24
+Gateway: 192.16.111.1
+Function: Serial device server / RS485-to-Ethernet interface</code></pre></figure>
+<p>7.7.4 外部控制柜网络分段</p>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">BESS Control Cabinet
+WAN: 192.16.111.10
+LAN: 192.168.1.1/24
+Status: Required for CA-PEP01 BESS PLC Modbus TCP communication
+
+Generator Control Cabinet
+WAN: 192.16.111.11
+LAN: 192.168.2.1/24
+Status: Reference / Reserved only; not active in current CA-PEP01 project scope
+
+PV Control Cabinet
+WAN: 192.16.111.12
+LAN: 192.168.3.1/24
+Status: Reference / Reserved only; not active in current CA-PEP01 project scope</code></pre></figure>
+<p>7.7.5 静态路由要求</p>
+<p>EMS LTE Router / Gateway 应配置以下静态路由，用于访问外部控制柜 LAN 网段：</p>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">192.168.1.0/24 → 192.16.111.10
+192.168.2.0/24 → 192.16.111.11
+192.168.3.0/24 → 192.16.111.12</code></pre></figure>
+<p>对于 CA-PEP01 当前范围：</p>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">必须启用并验证：
+192.168.1.0/24 → 192.16.111.10   BESS Control Cabinet
+
+预留但不启用，除非正式增加范围：
+192.168.2.0/24 → 192.16.111.11   Generator Control Cabinet
+192.168.3.0/24 → 192.16.111.12   PV Control Cabinet</code></pre></figure>
+<p>7.7.6 通信与调试要求</p>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">1. 所有控制相关设备必须使用固定 IP，不建议使用 DHCP。
+2. 所有 Modbus TCP 设备必须在 FAT / SAT 前完成 IP、Subnet Mask、Gateway 确认。
+3. 静态路由必须完成 ping 测试和应用层通信测试。
+4. 仅 ping 通不代表通信完成，必须验证 Modbus TCP / PLC 协议层读取。
+5. 外部控制柜接入前必须检查网段冲突和网关冲突。
+6. 远程访问不得绕过 EMS 控制逻辑、EMS 用户权限、本地安全联锁或现场 E-Stop。
+7. 防火墙、VPN、远程访问白名单、IT 安全策略由 EPC / Network Integrator / Owner IT 负责。</code></pre></figure>
+<p>7.7.7 责任边界</p>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">Energize 负责定义 EMS 通信接口需求、设备通信需求和 EMS 软件侧通信逻辑。
+
+EPC / Network Integrator 负责：
+- 最终 IP 地址分配
+- Router / Switch / Gateway 配置
+- Static Route 配置
+- Firewall / VPN / Remote Access 策略
+- Cybersecurity Review
+- Owner IT Approval
+- Final Network Commissioning
+
+EMS 软件团队仅在收到最终批准的 Network Table 后，配置通信驱动和寄存器读取逻辑。</code></pre></figure>
 <h2>8. 本项目取消或标记 Spare 的接口</h2>
 <p>以下接口在本项目中取消或标记为 Spare：</p>
 <figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">DG Start Command
