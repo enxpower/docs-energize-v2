@@ -83,8 +83,8 @@ EMS 与 BESS 的接口统一为 Ethernet / Modbus TCP。</code></pre></figure>
 <figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">1. DI1 / DI2 必须写成 PCC / Main Breaker 52a / 52b feedback
 2. DO1 必须写成 EMS Operational Trip (If Enabled)，不得写成 Protection Trip
 3. DO2 必须写成 EMS Operational Close / PCC Breaker Close Command
-4. RS485 CH1–CH9 必须写成 Spare / Reserved (No project assignment)
-5. 必须新增 ETH-1 / ETH-2 / ETH-3 通信标签
+4. RS485 CH1–CH8 必须写成 Spare / Reserved (No project assignment)
+5. 必须新增 ENS0306:ETH-1 / ETH-2 / ETH-4 通信标签
 6. 必须明确 SEL700G Trip Output 去 PCC / Main Breaker Trip Circuit
 7. 必须明确 SEL735 通过 Ethernet / Modbus TCP 去 EMS ETH-1
 8. 如 SEL700G 与 EMS 有通信，必须标明为 Monitoring Communication only，不得标为 Trip path</code></pre></figure>
@@ -123,17 +123,17 @@ RS485 CH4   Spare / Reserved (No project assignment)
 RS485 CH5   Spare / Reserved (No project assignment)
 RS485 CH6   Spare / Reserved (No project assignment)
 RS485 CH7   Spare / Reserved (No project assignment)
-RS485 CH8   Spare / Reserved (No project assignment)
-RS485 CH9   Spare / Reserved (No project assignment)</code></pre></figure>
+RS485 CH8   Spare / Reserved (No project assignment)</code></pre></figure>
 <p>必须增加说明：</p>
 <figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">RS485 channels are not used in this project.
 PCS / BMS / STS / Fire are internally connected to BESS PLC.
 EMS communicates with BESS via Ethernet / Modbus TCP only.</code></pre></figure>
 <h2>7. Ethernet / Modbus TCP 标签新增</h2>
 <p>柜门或柜内通信标签必须新增以下内容：</p>
-<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">ETH-1   Grid Meter / SEL-735 Modbus TCP
-ETH-2   All-in-one BESS PLC Modbus TCP
-ETH-3   Remote Access / HMI / Router Optional</code></pre></figure>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">ENS0306:ETH-1   ETH_SEL735_TO_EMS        → SEL735 / Grid Meter Measurement Only
+ENS0306:ETH-2   ETH_BESSGW_WAN_TO_EMS    → BESS Gateway / All-in-one BESS PLC Communication
+ENS0306:ETH-4   ETH_SEL700G_TO_EMS       → SEL700G EMS Monitoring Only
+ETH-3           Remote Access / HMI / Router Optional</code></pre></figure>
 <p>如 EMS 控制器物理网口不足，应在图纸中标明工业交换机连接结构。</p>
 <h2>8. SEL700G / Protection Relay 接线与通信去向</h2>
 <p>柜门或图纸必须明确 SEL700G 的接线与通信去向：</p>
@@ -180,10 +180,10 @@ DO2 → RL-02 → Close Circuit
 EMS DO shall not directly drive breaker coils</code></pre></figure>
 <p>建议在柜内增加以下简短说明：</p>
 <figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">Breaker Control
-Trip Primary: Protection Relay
-Trip Optional: EMS DO1
-Close Only: EMS DO2
-Feedback Required: 52a / 52b</code></pre></figure>
+Trip Primary: SEL700G / Protection Relay → TB0507:1/2
+Trip Optional: EMS DO1 → RL-01 (If Enabled)
+Close Only: EMS DO2 → RL-02 → TB0507:3/4
+Feedback Required: 52A / 52B → EMS DI1 / DI2</code></pre></figure>
 <h2>10. 禁止出现的标签文字</h2>
 <p>柜门、端子表、线号表、图纸中禁止出现以下误导性 wording：</p>
 <figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">Anti-islanding Trip (for EMS)
@@ -194,44 +194,15 @@ Fire Alarm (hardwire to EMS)
 STS Control (hardwire from EMS)
 PV RS485
 DG Start / Stop</code></pre></figure>
-<h2>11. 推荐柜门标签成品版</h2>
-<h3>11.1 24V Wiring Guide</h3>
-<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">24V Wiring Guide
-1   DC24V
-2   DC0V</code></pre></figure>
-<h3>11.2 DI Wiring Guide</h3>
-<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">DI Wiring Guide
-DI0   EMS Cabinet Emergency Stop
-DI1   PCC / Main Breaker 52a Closed Feedback
-DI2   PCC / Main Breaker 52b Open Feedback
-DI3   EMS Cabinet Door Contact
-DI4   EMS Cabinet Water Leak Detector</code></pre></figure>
-<h3>11.3 DO Wiring Guide</h3>
-<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">DO Wiring Guide
-DO1   EMS Operational Trip (If Enabled)
-DO2   EMS Operational Close / PCC Breaker Close Command</code></pre></figure>
-<h3>11.4 Communication Wiring Guide</h3>
-<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">Communication Wiring Guide
-ETH-1       Grid Meter / SEL735 Modbus TCP → EMS
-ETH-2       All-in-one BESS PLC Modbus TCP → EMS
-ETH-3       Remote Access / HMI / Router Optional
-SEL700G Comm Optional → EMS Monitoring Only（if provided）
-RS485 CH1   Spare / Reserved (No project assignment)
-RS485 CH2   Spare / Reserved (No project assignment)
-RS485 CH3   Spare / Reserved (No project assignment)
-RS485 CH4   Spare / Reserved (No project assignment)
-RS485 CH5   Spare / Reserved (No project assignment)
-RS485 CH6   Spare / Reserved (No project assignment)
-RS485 CH7   Spare / Reserved (No project assignment)
-RS485 CH8   Spare / Reserved (No project assignment)
-RS485 CH9   Spare / Reserved (No project assignment)</code></pre></figure>
-<h3>11.5 Protection Relay Guide</h3>
-<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">Protection Relay / SEL700G
-Trip Output → PCC / Main Breaker Trip Circuit
-Optional Comm → EMS Monitoring Only（if provided）
-Trip Only
-No Close
-No Auto Reclose</code></pre></figure>
+<h2>11. 推荐柜门标签原则（最终贴柜门以第16章为准）</h2>
+<p>第16章为厂家最终贴柜门、端子表、线号表和图纸说明的唯一执行表格。本章仅保留原则：</p>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">1. 52A = PCC / Main Breaker 52a Closed Feedback
+2. 52B = PCC / Main Breaker 52b Open Feedback
+3. SEL_TRIP_COM / SEL_TRIP_NO = SEL700G Primary Protection Trip Circuit
+4. PCC_CLOSE_CIRCUIT_COM / PCC_CLOSE_CIRCUIT_NO = EMS Operational Close via RL-02
+5. SEL735 = Measurement Only / No Trip / No Close
+6. SEL700G Ethernet = EMS Monitoring Only / Not Trip Path
+7. RS485 CH1–CH8 = Spare / Reserved (No project assignment)</code></pre></figure>
 <h2>12. 厂家交付前检查清单</h2>
 <p>出厂前必须逐项确认：</p>
 <figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">Relay Path Verification (Mandatory):
@@ -240,12 +211,13 @@ No Auto Reclose</code></pre></figure>
 3. DO2 energizes RL-02 coil
 4. RL-02 output reaches PCC / Main Breaker Close terminal
 5. No direct DO → breaker coil wiring exists
-6. RL-01 / RL-02 labels appear in cabinet label, terminal schedule, wire schedule and wiring diagram</code></pre></figure>
+6. RL-01 / RL-02 labels appear in cabinet label, terminal schedule, wire schedule and wiring diagram
+7. EMS Operational Trip via RL-01 is reserved / not field-wired unless enabled by project design</code></pre></figure>
 <figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">1. DI1 / DI2 已改为 PCC / Main Breaker 52a / 52b feedback
 2. DO1 已改为 EMS Operational Trip (If Enabled)
 3. DO2 已改为 EMS Operational Close / PCC Breaker Close Command
-4. RS485 CH1–CH9 已标记 Spare / Reserved / No project assignment
-5. ETH-1 / ETH-2 / ETH-3 标签已增加
+4. RS485 CH1–CH8 已标记 Spare / Reserved / No project assignment
+5. ENS0306:ETH-1 / ETH-2 / ETH-4 标签已增加
 6. SEL700G Trip Output → PCC / Main Breaker Trip Circuit 已明确
 7. SEL700G optional communication, if provided, is marked EMS Monitoring Only
 8. SEL735 Modbus TCP → EMS ETH-1 已明确
@@ -256,14 +228,14 @@ No Auto Reclose</code></pre></figure>
 13. 端子表、线号表、柜门标签 wording 一致</code></pre></figure>
 <h2>13. 最终验收标准</h2>
 <p>整改后的柜门标签必须满足：</p>
-<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">1. Operational Close 走 EMS DO2 → Close Relay → PCC / Main Breaker Close Circuit
-2. Operational Trip（if enabled）走 EMS DO1 → Trip Relay → PCC / Main Breaker Trip Circuit
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">1. Operational Close 走 EMS DO2 → RL-02 Close Interposing Relay → PCC / Main Breaker Close Circuit
+2. Operational Trip（if enabled）走 EMS DO1 → RL-01 Trip Interposing Relay → PCC / Main Breaker Trip Circuit
 3. Primary Protection Trip 走 SEL700G Trip Output → PCC / Main Breaker Trip Circuit
 4. Breaker Feedback 来自 52a / 52b → EMS DI1 / DI2
 5. SEL735 Measurement Data 走 Ethernet / Modbus TCP → EMS ETH-1
 6. BESS PLC Data / Command Interface 走 Ethernet / Modbus TCP → EMS ETH-2
 7. SEL700G communication, if provided, is monitoring only, not trip path
-8. RS485 CH1–CH9 在本项目没有分配用途</code></pre></figure>
+8. RS485 CH1–CH8 在本项目没有分配用途</code></pre></figure>
 <h2>14. 厂家执行要求</h2>
 <figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">This is not label optimization.
 This is mandatory project architecture alignment.
@@ -290,7 +262,8 @@ Incorrect labels may cause incorrect site wiring and wrong commissioning assumpt
 <figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">TB0507:1/2 = SEL700G Protection Trip Circuit
 TB0507:3/4 = PCC / Main Breaker Close Circuit
 TB0507:1/2 shall not be marked as EMS Operational Trip.
-EMS DO shall not directly drive breaker trip/close circuits.</code></pre></figure>
+EMS DO shall not directly drive breaker trip/close circuits.
+EMS Operational Trip via RL-01 is reserved / not field-wired unless enabled by project design.</code></pre></figure>
 <h3>16.4 RS485 Wiring Guide</h3>
 <div class="table-wrap"><table><thead><tr><th>No</th><th>RS485 Address</th><th>Corresponding Function</th><th>Connector Port</th></tr></thead><tbody><tr><td>1</td><td>CH1 RxD-(A) / CH1 RxD-(B)</td><td>RS485 CH1 Spare / Reserved (No project assignment)</td><td>TB508:1 Lower / Upper</td></tr><tr><td>2</td><td>CH2 RxD-(A) / CH2 RxD-(B)</td><td>RS485 CH2 Spare / Reserved (No project assignment)</td><td>TB508:2 Lower / Upper</td></tr><tr><td>3</td><td>CH3 RxD-(A) / CH3 RxD-(B)</td><td>RS485 CH3 Spare / Reserved (No project assignment)</td><td>TB508:3 Lower / Upper</td></tr><tr><td>4</td><td>CH4 RxD-(A) / CH4 RxD-(B)</td><td>RS485 CH4 Spare / Reserved (No project assignment)</td><td>TB508:4 Lower / Upper</td></tr><tr><td>5</td><td>CH5 RxD-(A) / CH5 RxD-(B)</td><td>RS485 CH5 Spare / Reserved (No project assignment)</td><td>TB508:5 Lower / Upper</td></tr><tr><td>6</td><td>CH6 RxD-(A) / CH6 RxD-(B)</td><td>RS485 CH6 Spare / Reserved (No project assignment)</td><td>TB508:6 Lower / Upper</td></tr><tr><td>7</td><td>CH7 RxD-(A) / CH7 RxD-(B)</td><td>RS485 CH7 Spare / Reserved (No project assignment)</td><td>TB508:7 Lower / Upper</td></tr><tr><td>8</td><td>CH8 RxD-(A) / CH8 RxD-(B)</td><td>RS485 CH8 Spare / Reserved (No project assignment)</td><td>TB508:8 Lower / Upper</td></tr></tbody></table></div>
 <p>Notes:</p>
