@@ -3,8 +3,32 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>EnergizeOS™ EMS — Technical Specification | docs.energizeos.com/ems/manual</title>
+
+<!-- SEO -->
+<meta name="description" content="Full technical specification for EnergizeOS™ EMS: 15 strategy modules, C1–C7 interlock chain, hardware specs, compliance standards, FAT protocol, and case studies.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://docs.energizeos.com/ems/manual/">
+
+<!-- Open Graph (WeChat, LinkedIn, Facebook) -->
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://docs.energizeos.com/ems/manual/">
+<meta property="og:title" content="EnergizeOS™ EMS — Full Technical Specification">
+<meta property="og:description" content="13-section engineering spec: architecture, C1–C7 interlocks, 15 strategy modules, IEEE 1547 compliance, FAT protocol, case studies. SPEC-EOS-EMS-001 Rev 1.0">
+<meta property="og:image" content="https://docs.energizeos.com/assets/og-manual.svg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="EnergizeOS™ by Energize Solutions Inc.">
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="EnergizeOS™ EMS — Full Technical Specification">
+<meta name="twitter:description" content="13-section engineering spec. SPEC-EOS-EMS-001 Rev 1.0">
+<meta name="twitter:image" content="https://docs.energizeos.com/assets/og-manual.svg">
+
+<meta name="theme-color" content="#F7F6F2">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -239,10 +263,167 @@ td:first-child { font-weight:600; color:var(--text-pri); white-space:nowrap; }
 .dl-name { font-weight:600; color:var(--text-pri); }
 .dl-desc { color:var(--text-sec); }
 .dl-fmt { font-family:var(--f-mono); font-size:10px; color:var(--text-ter); }
+
+/* ═══════════════════════════════════════
+   MOBILE  — Sidebar collapses to top bar
+═══════════════════════════════════════ */
+
+/* Mobile hamburger button */
+.mob-menu-btn {
+  display: none;
+  position: fixed; top: 12px; left: 16px; z-index: 200;
+  width: 38px; height: 38px; border-radius: 8px;
+  background: var(--bg-navy); border: none; cursor: pointer;
+  align-items: center; justify-content: center; flex-direction: column; gap: 5px;
+}
+.mob-menu-btn span {
+  display: block; width: 18px; height: 2px;
+  background: #fff; border-radius: 1px;
+  transition: all 0.2s;
+}
+
+/* Mobile top bar */
+.mob-topbar {
+  display: none;
+  position: fixed; top: 0; left: 0; right: 0; z-index: 150;
+  height: 52px;
+  background: rgba(247,246,242,0.96);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--rule);
+  align-items: center; justify-content: space-between;
+  padding: 0 16px;
+}
+.mob-topbar-title {
+  font-weight: 700; font-size: 14px; color: var(--text-pri);
+  display: flex; align-items: center; gap: 8px;
+}
+.mob-topbar-mark {
+  width: 26px; height: 26px; border-radius: 6px;
+  background: var(--bg-navy);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--f-mono); font-size: 8px; color: #fff;
+}
+.mob-topbar-cta {
+  font-size: 12px; font-weight: 600; color: var(--blue);
+  text-decoration: none; background: var(--blue-light);
+  padding: 6px 12px; border-radius: 6px;
+  border: 1px solid rgba(26,95,191,0.2);
+}
+
+@media (max-width: 900px) {
+  .mob-menu-btn { display: flex; }
+  .mob-topbar { display: flex; }
+
+  /* Sidebar becomes overlay drawer */
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.28s cubic-bezier(.25,.8,.25,1);
+    z-index: 180;
+    box-shadow: 4px 0 24px rgba(15,35,64,0.15);
+  }
+  .sidebar.mob-open { transform: translateX(0); }
+
+  /* Sidebar overlay backdrop */
+  .sidebar-backdrop {
+    display: none;
+    position: fixed; inset: 0; z-index: 170;
+    background: rgba(15,35,64,0.4);
+  }
+  .sidebar-backdrop.mob-open { display: block; }
+
+  /* Main takes full width */
+  .main {
+    margin-left: 0 !important;
+    max-width: 100% !important;
+    padding: 0 20px 80px !important;
+    min-width: 0;
+  }
+
+  /* Topbar adjusts for mobile */
+  .topbar {
+    margin: 0 -20px !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    padding-top: 66px !important;
+    position: relative !important;
+  }
+  .tb-crumb { display: none; }
+
+  /* Content padding top for fixed mobile topbar */
+  .content { padding-top: 20px; }
+
+  /* Section titles smaller */
+  .sec-title { font-size: 24px !important; }
+  .sec-sub { font-size: 13px !important; }
+
+  /* Tables: horizontal scroll */
+  .tbl-wrap { border-radius: 8px; }
+  table { font-size: 11px; min-width: 480px; }
+  thead th { padding: 9px 12px; }
+  td { padding: 9px 12px; }
+
+  /* Code block */
+  .code { padding: 16px 18px; font-size: 11px; line-height: 1.8; }
+
+  /* Spec grid: 1 col on mobile */
+  .spec-grid { grid-template-columns: 1fr 1fr !important; }
+
+  /* Metric row: 1 col */
+  .metric-row { grid-template-columns: 1fr !important; gap: 10px; }
+
+  /* Badge strip */
+  .sbadge { padding: 8px 12px; }
+  .sbadge-name { font-size: 11px; }
+
+  /* Roadmap */
+  .roadmap-row { flex-direction: column; }
+  .rm-date { width: 100%; border-right: none; border-bottom: 1px solid var(--rule); padding: 8px 16px; }
+  .rm-status { width: 100%; border-left: none; border-top: 1px solid var(--rule); padding: 8px 16px; }
+
+  /* Delivery table */
+  .dl-head { display: none; }
+  .dl-row { grid-template-columns: 1fr !important; }
+  .dl-row > div { padding: 8px 14px; }
+  .dl-id { border-bottom: none; font-size: 10px; padding-bottom: 2px; }
+  .dl-fmt { color: var(--text-ter); padding-top: 2px; }
+
+  /* Note */
+  .note { padding: 12px 14px; font-size: 12px; }
+
+  /* h3 */
+  h3 { font-size: 14px !important; }
+}
+
+@media (max-width: 480px) {
+  .main { padding: 0 14px 80px !important; }
+  .spec-grid { grid-template-columns: 1fr !important; }
+  .sec-title { font-size: 22px !important; }
+  .metric-val { font-size: 24px !important; }
+}
+
 </style>
 </head>
 <body>
 <div class="app">
+
+<!-- Mobile top bar (visible on ≤900px) -->
+<div class="mob-topbar">
+  <div class="mob-topbar-title">
+    <div class="mob-topbar-mark">EOS</div>
+    EMS Manual
+  </div>
+  <a class="mob-topbar-cta" href="mailto:sales@energizeos.com">Get Quote</a>
+</div>
+
+<!-- Hamburger toggle -->
+<button class="mob-menu-btn" id="mobMenuBtn" aria-label="Open navigation">
+  <span></span><span></span><span></span>
+</button>
+
+<!-- Backdrop -->
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+
 
 <!-- ════════ SIDEBAR ════════ -->
 <aside class="sidebar">
@@ -938,6 +1119,35 @@ const spy = new IntersectionObserver(entries => {
   });
 }, { threshold: 0.12, rootMargin: '-56px 0px -70% 0px' });
 secs.forEach(s => spy.observe(s));
+
+// Mobile sidebar toggle
+const menuBtn = document.getElementById('mobMenuBtn');
+const sidebar = document.querySelector('.sidebar');
+const backdrop = document.getElementById('sidebarBackdrop');
+
+function openSidebar() {
+  sidebar.classList.add('mob-open');
+  backdrop.classList.add('mob-open');
+  document.body.style.overflow = 'hidden';
+}
+function closeSidebar() {
+  sidebar.classList.remove('mob-open');
+  backdrop.classList.remove('mob-open');
+  document.body.style.overflow = '';
+}
+
+menuBtn.addEventListener('click', () => {
+  sidebar.classList.contains('mob-open') ? closeSidebar() : openSidebar();
+});
+backdrop.addEventListener('click', closeSidebar);
+
+// Close sidebar when a nav link is tapped on mobile
+document.querySelectorAll('.sb-link').forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth <= 900) closeSidebar();
+  });
+});
+
 </script>
 </body>
 </html>
