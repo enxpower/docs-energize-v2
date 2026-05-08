@@ -3,8 +3,34 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>EnergizeOS™ EMS — Intelligent Energy Management for C&I and Microgrid Applications</title>
+
+<!-- SEO & Social Sharing -->
+<meta name="description" content="EnergizeOS™ is a commercial-grade EMS for BESS, microgrid, and grid-interconnection applications. Strategy-driven, utility-compliant, factory pre-configured.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://docs.energizeos.com/ems/">
+
+<!-- Open Graph (WeChat, LinkedIn, Facebook) -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://docs.energizeos.com/ems/">
+<meta property="og:title" content="EnergizeOS™ EMS — Commercial Energy Management System">
+<meta property="og:description" content="15 strategy modules. C1–C7 interlock chain. IEEE 1547 compliant. Factory pre-configured. Deployed at PepsiCo, SDG&E territory and beyond.">
+<meta property="og:image" content="https://docs.energizeos.com/assets/og-ems.svg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="EnergizeOS™ by Energize Solutions Inc.">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter / X Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="EnergizeOS™ EMS — Commercial Energy Management System">
+<meta name="twitter:description" content="15 strategy modules. C1–C7 interlock chain. IEEE 1547 compliant. Ships pre-configured.">
+<meta name="twitter:image" content="https://docs.energizeos.com/assets/og-ems.svg">
+
+<!-- Theme color for mobile browser chrome -->
+<meta name="theme-color" content="#F7F6F2">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -551,6 +577,101 @@ footer {
 .ns-val sup { font-family:var(--f-body); font-size:16px; vertical-align:super; }
 .ns-label { font-family:var(--f-mono); font-size:10px; color:#6A9ABE; letter-spacing:0.06em; line-height:1.35; }
 .ns-note { font-size:9px; color:rgba(106,154,190,0.6); margin-top:2px; font-family:var(--f-mono); }
+
+/* ═══════════════════════════════════════
+   MOBILE RESPONSIVE  — ≤768px
+═══════════════════════════════════════ */
+@media (max-width: 768px) {
+  nav {
+    padding: 0 16px; height: 52px;
+  }
+  .nav-links { display: none; }
+  .nav-cta { padding: 7px 14px; font-size: 12px; }
+
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 88px 20px 48px;
+  }
+  .hero-title { font-size: 36px; letter-spacing: -0.5px; }
+  .hero-body { font-size: 15px; }
+  .hero-actions { flex-direction: column; }
+  .btn-primary, .btn-secondary { width: 100%; justify-content: center; padding: 14px 20px; }
+  .hero-stats { grid-template-columns: 1fr; }
+  .hero-diagram { display: none; }
+
+  .numbers-strip { grid-template-columns: 1fr 1fr; }
+  .ns-item:last-child { grid-column: span 2; }
+  .ns-val { font-size: 26px; }
+
+  .container { padding: 0 20px; }
+  .section-gap { padding: 64px 0; }
+  .section-gap-sm { padding: 48px 0; }
+  .section-title { font-size: 28px; }
+  .section-sub { font-size: 14px; }
+
+  .problem-grid { grid-template-columns: 1fr; gap: 12px; }
+
+  .arch-layout { grid-template-columns: 1fr; gap: 40px; }
+
+  .strat-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .strat-card { padding: 16px 14px; }
+  .strat-name { font-size: 12px; }
+
+  .interlock-layout { grid-template-columns: 1fr; gap: 32px; }
+  .interlock-notes { display: none; }
+
+  .cases-layout { grid-template-columns: 1fr; }
+  .case-metrics { gap: 16px; }
+  .cm-val { font-size: 22px; }
+
+  .compliance-grid { gap: 6px; }
+  .cbadge { padding: 8px 12px; }
+  .cbadge-name { font-size: 12px; }
+
+  .hw-grid { grid-template-columns: 1fr; gap: 14px; }
+
+  .cta-dark { padding: 64px 20px; }
+  .cta-title-dark { font-size: 28px; }
+  .cta-sub-dark { font-size: 14px; }
+  .cta-steps-dark { flex-direction: column; border-radius: 10px; max-width: 100%; }
+  .cta-step-dark { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); padding: 16px 20px; }
+  .cta-step-dark:last-child { border: none; }
+  .cta-btns { flex-direction: column; align-items: center; }
+  .btn-inv-main, .btn-inv-out { width: 100%; max-width: 320px; justify-content: center; padding: 14px 20px; }
+
+  footer { padding: 32px 20px; flex-direction: column; gap: 16px; text-align: center; }
+  .footer-links { flex-wrap: wrap; justify-content: center; gap: 16px; }
+  .footer-legal { text-align: center; }
+
+  .ic-result { flex-direction: column; gap: 10px; }
+  .ic-close-btn { width: 100%; }
+}
+
+/* ── 480px and below ── */
+@media (max-width: 480px) {
+  .hero-title { font-size: 30px; }
+  .strat-grid { grid-template-columns: 1fr 1fr; }
+  .numbers-strip { grid-template-columns: 1fr 1fr; }
+  .ns-item:nth-child(5) { grid-column: span 2; }
+  .hero-stats { grid-template-columns: 1fr; gap: 1px; }
+  .section-title { font-size: 26px; }
+}
+
+/* ── Tablet 769–1024px ── */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .hero { grid-template-columns: 1fr; gap: 40px; padding: 100px 40px 60px; }
+  .hero-diagram { max-width: 500px; }
+  .strat-grid { grid-template-columns: repeat(3, 1fr); }
+  .arch-layout { grid-template-columns: 1fr; gap: 40px; }
+  .hw-grid { grid-template-columns: 1fr 1fr; }
+  .cases-layout { grid-template-columns: 1fr; }
+  .interlock-layout { grid-template-columns: 1fr; gap: 32px; }
+  .interlock-notes { display: none; }
+  .numbers-strip { grid-template-columns: repeat(3, 1fr); }
+  .ns-item:nth-child(4), .ns-item:nth-child(5) { border-top: 1px solid rgba(255,255,255,0.06); }
+}
+
 </style>
 </head>
 <body>
