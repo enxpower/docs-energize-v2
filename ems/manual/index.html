@@ -1,0 +1,943 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EnergizeOS™ EMS — Technical Specification | docs.energizeos.com/ems/manual</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ─────────────────────────────────────────
+   TOKENS — identical to index page
+───────────────────────────────────────── */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --bg-page:    #F7F6F2;
+  --bg-white:   #FFFFFF;
+  --bg-raised:  #EFEFEB;
+  --bg-panel:   #E8E7E2;
+  --bg-navy:    #0F2340;
+  --bg-navy-2:  #162D50;
+  --text-pri:   #0D1B2A;
+  --text-sec:   #3D5166;
+  --text-ter:   #7A8FA3;
+  --text-inv:   #EFF4FA;
+  --text-inv2:  #8BAAC8;
+  --blue:       #1A5FBF;
+  --blue-mid:   #2D7DD2;
+  --blue-light: #EBF3FF;
+  --green:      #0E7C5A;
+  --green-bg:   #E8F5F0;
+  --amber:      #A0650A;
+  --amber-bg:   #FEF3E2;
+  --red:        #C0392B;
+  --rule:       #D4D2CC;
+  --rule-med:   #C0BCB4;
+  --f-head:     'DM Serif Display', Georgia, serif;
+  --f-body:     'Plus Jakarta Sans', system-ui, sans-serif;
+  --f-mono:     'IBM Plex Mono', 'Courier New', monospace;
+}
+html { scroll-behavior:smooth; }
+::selection { background:rgba(26,95,191,0.15); color:var(--text-pri); }
+body {
+  background: var(--bg-page);
+  color: var(--text-pri);
+  font-family: var(--f-body);
+  font-size: 14px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── LAYOUT ─── */
+.app { display:flex; min-height:100vh; width:100%; }
+
+/* Sidebar */
+.sidebar {
+  width: 268px; flex-shrink:0;
+  background: var(--bg-white);
+  border-right: 1px solid var(--rule);
+  position: fixed; top:0; left:0; bottom:0;
+  overflow-y:auto; z-index:50;
+  display:flex; flex-direction:column;
+}
+.sidebar::-webkit-scrollbar { width:3px; }
+.sidebar::-webkit-scrollbar-thumb { background:var(--rule-med); border-radius:2px; }
+
+.sb-top {
+  padding:22px 22px 18px;
+  border-bottom:1px solid var(--rule);
+  position:sticky; top:0; background:var(--bg-white); z-index:1;
+}
+.sb-logo {
+  display:flex; align-items:center; gap:9px;
+  font-weight:700; font-size:14px; color:var(--text-pri);
+  text-decoration:none; margin-bottom:8px; letter-spacing:-0.2px;
+}
+.sb-mark {
+  width:28px; height:28px; border-radius:7px;
+  background:var(--bg-navy);
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--f-mono); font-size:9px; color:var(--text-inv);
+}
+.sb-docinfo { font-size:11px; color:var(--text-ter); line-height:1.45; }
+.sb-back {
+  display:flex; align-items:center; gap:5px;
+  font-size:12px; color:var(--blue); text-decoration:none; margin-top:8px;
+  font-weight:500;
+}
+.sb-back:hover { text-decoration:underline; }
+
+.sb-nav { padding:12px 0; flex:1; }
+.sb-sec { font-family:var(--f-mono); font-size:9px; font-weight:500; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-ter); padding:12px 20px 6px; }
+.sb-link {
+  display:flex; align-items:center; gap:8px;
+  padding:7px 20px; font-size:12px; color:var(--text-sec);
+  text-decoration:none; transition:all 0.12s;
+  border-left:2px solid transparent;
+}
+.sb-link:hover { color:var(--text-pri); background:var(--bg-raised); }
+.sb-link.active { color:var(--blue); border-left-color:var(--blue); background:var(--blue-light); font-weight:600; }
+.sb-link-n { font-family:var(--f-mono); font-size:10px; color:var(--text-ter); min-width:18px; }
+
+.sb-foot { padding:14px 20px; border-top:1px solid var(--rule); font-size:11px; color:var(--text-ter); line-height:1.55; }
+.sb-foot a { color:var(--blue); text-decoration:none; }
+
+/* Main */
+.main { margin-left:268px; flex:1; max-width:1080px; padding:0 64px 100px; }
+
+/* Topbar */
+.topbar {
+  position:sticky; top:0; z-index:40;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:14px 0; margin:0 -64px; padding-left:64px; padding-right:64px;
+  background:rgba(247,246,242,0.95); backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--rule);
+}
+.tb-crumb { font-family:var(--f-mono); font-size:11px; color:var(--text-ter); }
+.tb-crumb span { color:var(--text-sec); }
+.tb-crumb strong { color:var(--text-pri); }
+.tb-acts { display:flex; gap:8px; }
+.tb-btn {
+  padding:6px 14px; border-radius:6px; font-size:12px; font-weight:500;
+  text-decoration:none; border:none; cursor:pointer; transition:all 0.12s;
+}
+.tb-out { background:transparent; border:1px solid var(--rule-med); color:var(--text-sec); }
+.tb-out:hover { border-color:var(--blue); color:var(--blue); }
+.tb-solid { background:var(--bg-navy); color:var(--text-inv); }
+.tb-solid:hover { background:var(--bg-navy-2); }
+
+/* Content */
+.content { padding-top:44px; }
+
+/* Section wrappers */
+.sec { margin-bottom:60px; scroll-margin-top:56px; }
+.sec-eye { font-family:var(--f-mono); font-size:10px; font-weight:500; letter-spacing:0.12em; text-transform:uppercase; color:var(--blue); display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+.sec-eye::before { content:''; width:20px; height:1px; background:var(--blue); }
+.sec-title { font-family:var(--f-head); font-size:clamp(26px,3vw,38px); font-weight:400; line-height:1.15; color:var(--text-pri); letter-spacing:-0.3px; margin-bottom:10px; }
+.sec-sub { font-size:14px; color:var(--text-sec); max-width:620px; margin-bottom:24px; line-height:1.65; }
+
+h3 { font-family:var(--f-body); font-size:16px; font-weight:700; color:var(--text-pri); margin:40px 0 16px; border-left:3px solid var(--blue); padding-left:14px; }
+h4 { font-size:13px; font-weight:700; color:var(--text-sec); margin:24px 0 10px; text-transform:uppercase; letter-spacing:0.06em; font-family:var(--f-mono); }
+p { color:var(--text-sec); margin-bottom:14px; font-size:13px; line-height:1.7; }
+p strong { color:var(--text-pri); font-weight:600; }
+ul { padding-left:18px; margin-bottom:14px; }
+ul li { font-size:13px; color:var(--text-sec); line-height:1.7; }
+
+/* Divider */
+.rule { height:1px; background:var(--rule); margin:56px 0 0; }
+
+/* ─── TABLE ─── */
+.tbl-wrap { overflow-x:auto; margin:16px 0 30px; border-radius:12px; border:1px solid var(--rule); box-shadow:0 1px 4px rgba(15,35,64,0.04); }
+table { width:100%; border-collapse:collapse; font-size:12px; }
+thead tr { background:var(--bg-raised); }
+thead th { padding:11px 16px; text-align:left; font-size:10px; font-weight:600; letter-spacing:0.07em; text-transform:uppercase; color:var(--text-ter); border-bottom:1px solid var(--rule); white-space:nowrap; }
+tbody tr { border-bottom:1px solid var(--rule); transition:background 0.12s; }
+tbody tr:last-child { border:none; }
+tbody tr:hover { background:rgba(26,95,191,0.05); }
+td { padding:11px 16px; vertical-align:top; font-size:12px; }
+td:first-child { font-weight:600; color:var(--text-pri); white-space:nowrap; }
+.mono { font-family:var(--f-mono); font-size:11px; color:var(--blue); }
+.tag { display:inline-block; padding:2px 7px; border-radius:3px; font-size:9px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; font-family:var(--f-mono); }
+.t-green { background:var(--green-bg); color:var(--green); }
+.t-blue  { background:var(--blue-light); color:var(--blue); }
+.t-amber { background:var(--amber-bg); color:var(--amber); }
+.t-red   { background:#FEE2E2; color:var(--red); }
+
+/* ─── CODE BLOCK ─── */
+.code {
+  background:var(--bg-navy); border-radius:12px;
+  padding:22px 26px; margin:16px 0 26px;
+  font-family:var(--f-mono); font-size:12px; line-height:2; overflow-x:auto;
+  box-shadow:0 2px 12px rgba(15,35,64,0.15);
+}
+.ck { color:#58AFFF; }   /* keyword */
+.cv { color:#2FD68F; }   /* value */
+.cc { color:#4A6A88; }   /* comment */
+
+/* ─── NOTE CALLOUT ─── */
+.note {
+  display:flex; gap:14px; padding:16px 20px; border-radius:10px; margin:18px 0;
+  font-size:13px; line-height:1.7;
+}
+.n-info { background:var(--blue-light); border:1px solid rgba(26,95,191,0.2); }
+.n-warn { background:var(--amber-bg); border:1px solid rgba(160,101,10,0.2); }
+.n-ok   { background:var(--green-bg); border:1px solid rgba(14,124,90,0.2); }
+.n-dark { background:var(--bg-navy); color:var(--text-inv2); border:none; }
+.note .ico { font-size:15px; flex-shrink:0; margin-top:1px; }
+.note .body { color:var(--text-sec); }
+.note .body strong { color:var(--text-pri); }
+.n-dark .body { color:var(--text-inv2); }
+.n-dark .body strong { color:var(--text-inv); }
+
+/* ─── SPEC GRID ─── */
+.spec-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin:16px 0 24px; }
+.spec-row {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:9px 14px; background:var(--bg-white); border-radius:7px;
+  border:1px solid var(--rule); font-size:12px;
+}
+.spec-k { color:var(--text-sec); }
+.spec-v { font-family:var(--f-mono); font-size:11px; color:var(--text-pri); font-weight:500; }
+
+/* ─── METRIC BLOCKS ─── */
+.metric-row { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:18px 0 26px; }
+.metric-card { background:var(--bg-white); border:1px solid var(--rule); border-radius:10px; padding:18px; }
+.metric-val { font-family:var(--f-head); font-size:28px; color:var(--bg-navy); line-height:1; margin-bottom:4px; }
+.metric-val.green { color:var(--green); }
+.metric-val.blue  { color:var(--blue); }
+.metric-label { font-size:11px; color:var(--text-ter); line-height:1.4; }
+
+/* ─── BADGE STRIP ─── */
+.badge-strip { display:flex; flex-wrap:wrap; gap:7px; margin:16px 0; }
+.sbadge { display:flex; align-items:center; gap:10px; padding:10px 16px; border:1px solid var(--rule); border-radius:8px; background:var(--bg-white); font-size:12px; transition:all 0.15s; }
+.sbadge:hover { border-color:var(--blue); background:var(--blue-light); }
+.sbadge-check { color:var(--green); font-weight:700; }
+.sbadge-name { font-weight:600; }
+.sbadge-sub { font-size:10px; color:var(--text-ter); display:block; }
+
+/* ─── ROADMAP TABLE ─── */
+.roadmap { margin:16px 0; }
+.roadmap-row { display:flex; gap:0; border:1px solid var(--rule); border-bottom:none; }
+.roadmap-row:first-child { border-radius:10px 10px 0 0; }
+.roadmap-row:last-child { border-bottom:1px solid var(--rule); border-radius:0 0 10px 10px; }
+.rm-date { width:106px; flex-shrink:0; padding:13px 16px; font-family:var(--f-mono); font-size:11px; font-weight:500; color:var(--blue); background:var(--bg-raised); border-right:1px solid var(--rule); display:flex; align-items:center; }
+.rm-body { flex:1; padding:13px 18px; font-size:12px; }
+.rm-title { font-weight:600; margin-bottom:2px; }
+.rm-desc { color:var(--text-sec); }
+.rm-status { width:128px; flex-shrink:0; padding:13px 16px; display:flex; align-items:center; border-left:1px solid var(--rule); }
+
+/* Delivery list */
+.deliver { margin:16px 0; border:1px solid var(--rule); border-radius:10px; overflow:hidden; }
+.dl-head { display:grid; grid-template-columns:60px 220px 1fr 90px; background:var(--bg-raised); border-bottom:1px solid var(--rule); }
+.dl-head > div { padding:9px 14px; font-size:10px; font-weight:600; letter-spacing:0.07em; text-transform:uppercase; color:var(--text-ter); }
+.dl-row { display:grid; grid-template-columns:60px 220px 1fr 90px; border-bottom:1px solid var(--rule); transition:background 0.12s; }
+.dl-row:last-child { border:none; }
+.dl-row:hover { background:var(--blue-light); }
+.dl-row > div { padding:10px 14px; font-size:12px; }
+.dl-id { font-family:var(--f-mono); font-size:11px; color:var(--blue); }
+.dl-name { font-weight:600; color:var(--text-pri); }
+.dl-desc { color:var(--text-sec); }
+.dl-fmt { font-family:var(--f-mono); font-size:10px; color:var(--text-ter); }
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ════════ SIDEBAR ════════ -->
+<aside class="sidebar">
+  <div class="sb-top">
+    <a class="sb-logo" href="https://energizeos.com">
+      <div class="sb-mark">EOS</div>
+      EnergizeOS™ EMS
+    </a>
+    <div class="sb-docinfo">Technical Specification<br>SPEC-EOS-EMS-001 · Rev 1.0 · May 2026</div>
+    <a class="sb-back" href="../ems">← Back to Product Overview</a>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-sec">Contents</div>
+    <a class="sb-link active" href="#s1"><span class="sb-link-n">01</span>Executive Summary</a>
+    <a class="sb-link" href="#s2"><span class="sb-link-n">02</span>System Architecture</a>
+    <a class="sb-link" href="#s3"><span class="sb-link-n">03</span>Hardware Platform</a>
+    <a class="sb-link" href="#s4"><span class="sb-link-n">04</span>Strategy Engine</a>
+    <a class="sb-link" href="#s5"><span class="sb-link-n">05</span>Protection & Redundancy</a>
+    <a class="sb-link" href="#s6"><span class="sb-link-n">06</span>Communication & Integration</a>
+    <a class="sb-link" href="#s7"><span class="sb-link-n">07</span>Licensing & Commercial</a>
+    <a class="sb-link" href="#s8"><span class="sb-link-n">08</span>Standards & Compliance</a>
+    <a class="sb-link" href="#s9"><span class="sb-link-n">09</span>Deployment & Commissioning</a>
+    <a class="sb-link" href="#s10"><span class="sb-link-n">10</span>Case Studies</a>
+    <a class="sb-link" href="#s11"><span class="sb-link-n">11</span>Roadmap & Lifecycle</a>
+    <a class="sb-link" href="#s12"><span class="sb-link-n">12</span>Delivery Package</a>
+    <a class="sb-link" href="#s13"><span class="sb-link-n">13</span>Contact</a>
+  </nav>
+  <div class="sb-foot">
+    © 2026 Energize Solutions Inc.<br>
+    <a href="mailto:sales@energizeos.com">sales@energizeos.com</a><br>
+    <a href="https://energizeos.com">energizeos.com</a>
+  </div>
+</aside>
+
+<!-- ════════ MAIN ════════ -->
+<main class="main">
+  <div class="topbar">
+    <div class="tb-crumb">
+      <span>docs.</span><span>energizeos.com</span> / <span>ems</span> / <strong>manual</strong>
+    </div>
+    <div class="tb-acts">
+      <a class="tb-btn tb-out" href="../ems">← Product Overview</a>
+      <a class="tb-btn tb-solid" href="mailto:sales@energizeos.com">Request Quote</a>
+    </div>
+  </div>
+
+<div class="content">
+
+<!-- ── S1 ── -->
+<section class="sec" id="s1">
+  <div class="sec-eye">Section 01</div>
+  <h1 class="sec-title">Executive Summary</h1>
+  <p class="sec-sub">EnergizeOS™ is a commercial-grade, hardware-software integrated Energy Management System for industrial and commercial (C&I) energy storage, microgrid, and grid-interconnection applications.</p>
+  <p>Developed by <strong>Energize Solutions Inc.</strong>, EnergizeOS™ integrates a ruggedized industrial control panel (ECP), a real-time embedded strategy execution engine, and an OTA management platform into a standardized, production-ready control framework.</p>
+  <div class="note n-info">
+    <div class="ico">ℹ</div>
+    <div class="body"><strong>EnergizeOS™ is not an HMI and not a project-specific EMS script.</strong> It is a productized control platform with defined engineering responsibility boundaries, built-in interlock logic, compliance-ready architecture, and full lifecycle support — designed to deploy repeatedly across diverse sites and jurisdictions without re-engineering.</div>
+  </div>
+  <h3>Core Value Summary</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Dimension</th><th>Capability</th><th>Validated Outcome</th></tr></thead>
+      <tbody>
+        <tr><td>Cost Optimization</td><td>TOU dispatch + demand charge management + DG fuel coordination</td><td style="color:var(--green);font-weight:600">10–35% electricity or fuel cost reduction</td></tr>
+        <tr><td>Grid Transition</td><td>Grid-tie/island transition with C1–C7 interlock chain; dual-path anti-islanding</td><td style="color:var(--green);font-weight:600">&lt;2 s per IEEE 1547; &lt;150 ms typical with relay hardware</td></tr>
+        <tr><td>Diesel Optimization</td><td>Smart DG start/stop with light-load shutdown and load-following logic</td><td style="color:var(--green);font-weight:600">20–48% diesel consumption reduction (deployment-dependent)</td></tr>
+        <tr><td>Regulatory Compliance</td><td>Dual-path anti-islanding; 52a/52b feedback loop; IEEE 1547 / UL 1741 SB architecture</td><td style="color:var(--green);font-weight:600">Utility-accepted in SDG&E territory (Rule 21)</td></tr>
+        <tr><td>Auditability</td><td>Full event log: trip / close / mode change / parameter change with source attribution</td><td style="color:var(--green);font-weight:600">Utility-grade traceability on every control action</td></tr>
+        <tr><td>Deployment Efficiency</td><td>Factory pre-configured, FAT-tested, plug-and-play on arrival</td><td style="color:var(--green);font-weight:600">&lt;1 day to first strategy activation</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ── S2 ── -->
+<section class="sec" id="s2" style="margin-top:56px">
+  <div class="sec-eye">Section 02</div>
+  <h1 class="sec-title">System Architecture & Control Philosophy</h1>
+
+  <h3>2.1 Five-Layer Architecture</h3>
+  <p>EnergizeOS™ is structured as five discrete functional layers, each with defined responsibility and clear interfaces to adjacent layers.</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Layer</th><th>Name</th><th>Function</th><th>Key Component</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">L1</td><td>Strategy Engine</td><td>15 parametric modules; OTA-activated; version-locked; no site code required</td><td>Strategy module library</td></tr>
+        <tr><td class="mono">L2</td><td>Control Core (LRE)</td><td>Real-time BESS/PCS/DG/breaker command dispatch with closed-loop feedback</td><td>Local Runtime Engine</td></tr>
+        <tr><td class="mono">L3</td><td>Communication Layer</td><td>Modbus TCP, RS485, hardwired DO/DI, MQTT, WebSocket, REST API</td><td>Industrial switch, I/O board</td></tr>
+        <tr><td class="mono">L4</td><td>User Interface & Audit</td><td>Local HMI + remote browser UI; every action logged with timestamp and source</td><td>7"/10" touchscreen or web portal</td></tr>
+        <tr><td class="mono">L5</td><td>Security & OTA</td><td>SN-bound licensing; digital signature validation on every OTA push; tamper-proof logs</td><td>License engine, cloud OTA</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>2.2 Control Philosophy</h3>
+  <p>EnergizeOS™ is governed by a formally defined control philosophy that establishes unambiguous engineering boundaries between protection and control responsibilities. <strong>These principles are immutable — they are not configurable.</strong></p>
+  <div class="code">
+<span class="cc">// EnergizeOS™ Immutable Control Principles</span>
+
+<span class="ck">Protection Trip</span>  = <span class="cv">Relay Primary</span>       <span class="cc">// protection relay owns protection engineering responsibility</span>
+<span class="ck">Operational Trip</span> = <span class="cv">EMS Optional</span>        <span class="cc">// controlled disconnection for commissioning / maintenance only</span>
+<span class="ck">Breaker Close</span>    = <span class="cv">EMS Exclusive</span>       <span class="cc">// no blind close; no auto-reclose by default</span>
+<span class="ck">Close Gate</span>       = <span class="cv">C1–C7 All Met</span>       <span class="cc">// all seven interlock conditions must be satisfied simultaneously</span>
+<span class="ck">Feedback</span>         = <span class="cv">Physical 52a/52b</span>    <span class="cc">// completion confirmed by hardware, not by command issuance</span>
+<span class="ck">Measurement Gap</span>  = <span class="cv">Block High-Risk</span>     <span class="cc">// stale or conflicting data blocks close; never acts on incomplete data</span>
+  </div>
+
+  <div class="note n-warn">
+    <div class="ico">⚠</div>
+    <div class="body">
+      <strong>Responsibility separation is fundamental.</strong> Protection responsibility — including protection relay settings, protection coordination, and fault current analysis — remains with the protection relay, site protection design, and licensed protection engineers. EnergizeOS™ does not overlap with or absorb protection engineering responsibility. The EMS holds control and supervisory responsibility only.
+    </div>
+  </div>
+
+  <h3>2.3 System Topology</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Node</th><th>Device Class</th><th>Interface</th><th>Direction</th></tr></thead>
+      <tbody>
+        <tr><td>PV Inverter</td><td>DER Generation</td><td>Modbus TCP</td><td>Read power/status; write curtailment setpoint</td></tr>
+        <tr><td>Revenue/Grid Meter</td><td>Utility-grade metering (e.g., eGauge)</td><td>Modbus TCP</td><td>Read V, I, P, Q, f, direction — C1/C2 source</td></tr>
+        <tr><td>Utility Grid / PCC</td><td>Point of Common Coupling</td><td>Via anti-islanding relay + meter</td><td>Grid status monitoring; trip/close at PCC breaker</td></tr>
+        <tr><td>Diesel Generator</td><td>Dispatchable generation</td><td>Modbus or DO/DI</td><td>Start/stop command; run status and output feedback</td></tr>
+        <tr><td>BESS / PCS</td><td>Energy storage</td><td>Modbus TCP</td><td>Charge/discharge setpoint; SOC, state, alarm readback</td></tr>
+        <tr><td>PCC Breaker</td><td>Grid connection breaker</td><td>Hardwired DO/DI</td><td>Close DO; Trip DO; 52a/52b DI feedback</td></tr>
+        <tr><td>Site Load Bus</td><td>Load aggregation point</td><td>Via meter(s)</td><td>Load monitoring for demand control and SOC decisions</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ── S3 ── -->
+<section class="sec" id="s3" style="margin-top:56px">
+  <div class="sec-eye">Section 03</div>
+  <h1 class="sec-title">Hardware Platform — ECP Control Panel</h1>
+
+  <h3>3.1 Model Comparison</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Specification</th><th>ECP Lite</th><th>ECP Pro</th><th>OEM Embedded Module</th></tr></thead>
+      <tbody>
+        <tr><td>Deployment Environment</td><td>Indoor control room / lab</td><td>Outdoor / industrial / battery container</td><td>Embedded in client BESS panel</td></tr>
+        <tr><td>Enclosure Dimensions</td><td class="mono">300 × 400 × 150 mm</td><td class="mono">800 × 600 × 250 mm</td><td>Per OEM specification</td></tr>
+        <tr><td>Digital Outputs (DO)</td><td class="mono">4 × DO (24 VDC logic)</td><td class="mono">8 × DO (24 VDC logic)</td><td>Expandable interface board</td></tr>
+        <tr><td>Digital Inputs (DI)</td><td class="mono">6 × DI</td><td class="mono">10 × DI</td><td>Expandable interface board</td></tr>
+        <tr><td>Ethernet Ports</td><td class="mono">2 × Industrial Ethernet</td><td class="mono">4 × Industrial Ethernet</td><td>Modbus TCP / CAN / USB</td></tr>
+        <tr><td>RS485 Channels</td><td class="mono">1 ×</td><td class="mono">2 ×</td><td>Per OEM spec</td></tr>
+        <tr><td>Power Supply Input</td><td>AC 110–230 V + UPS</td><td>AC 110–230 V + UPS + 24 VDC output</td><td>External / client-provided</td></tr>
+        <tr><td>UPS Integration</td><td>Built-in, 7 Ah battery optional</td><td>Dual battery support + UVT trip output</td><td>External or client-provided</td></tr>
+        <tr><td>Thermal Management</td><td>Passive (indoor ambient)</td><td>Active fan + temp/humidity sensor</td><td>Client-controlled</td></tr>
+        <tr><td>Display</td><td>7"/10" touchscreen optional</td><td>7"/10" touchscreen standard</td><td>N/A</td></tr>
+        <tr><td>Mounting</td><td>Wall-mounted</td><td>Floor-standing with base</td><td>Embedded module</td></tr>
+        <tr><td>Enclosure Rating</td><td>Indoor (IP20 equiv.)</td><td>NEMA 4 / IP55 — outdoor-rated</td><td>Per OEM panel design</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note n-info">
+    <div class="ico">💡</div>
+    <div class="body"><strong>Pro Panel is required when:</strong> the system controls main PCC breaker closing, anti-islanding relay tripping, DG start/stop, or any function requiring UVT output. The Pro Panel's 24 VDC output from the internal UPS provides the fail-safe supply for UVT circuits and auxiliary relay coils — essential for IEEE 1547 / Rule 21 compliant anti-islanding architecture.</div>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ── S4 ── -->
+<section class="sec" id="s4" style="margin-top:56px">
+  <div class="sec-eye">Section 04</div>
+  <h1 class="sec-title">Strategy Engine — Functional Modules</h1>
+
+  <h3>4.1 Module Catalogue</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>#</th><th>Module Name</th><th>Primary Function</th><th>Trigger Condition</th><th>Tier</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">01</td><td>TOU Arbitrage</td><td>Charge off-peak, discharge peak; configurable multi-period tariff schedules</td><td>Tariff schedule / time</td><td><span class="tag t-green">Core</span></td></tr>
+        <tr><td class="mono">02</td><td>Demand Charge Management</td><td>Real-time interval peak shaving; BESS discharge to keep site demand below billing threshold</td><td>Measured demand vs. threshold</td><td><span class="tag t-green">Core</span></td></tr>
+        <tr><td class="mono">03</td><td>PV Self-Consumption</td><td>Maximize solar self-use; configurable zero-export or export limit to PCC</td><td>PV output + SOC + meter</td><td><span class="tag t-green">Core</span></td></tr>
+        <tr><td class="mono">04</td><td>Grid-Tie / Island Transition</td><td>Supervised PCC breaker close and open; full C1–C7 interlock enforcement on every transition</td><td>Grid status + C1–C7 conditions</td><td><span class="tag t-green">Core</span></td></tr>
+        <tr><td class="mono">05</td><td>Anti-Islanding Protection</td><td>Dual-path islanding detection (relay + meter); auto-trip on grid loss; close blocked until both paths recover</td><td>Relay trip + meter anomaly</td><td><span class="tag t-green">Core</span></td></tr>
+        <tr><td class="mono">06</td><td>SOC Floor Enforcement</td><td>Maintains configurable minimum SOC reserve for emergency islanding or fail-safe ride-through</td><td>SOC reading from BMS/PCS</td><td><span class="tag t-green">Core</span></td></tr>
+        <tr><td class="mono">07</td><td>Battery Balancing Control</td><td>SOC equalization across parallel BESS strings; prevents premature capacity degradation from imbalance</td><td>Multi-string BMS SOC delta</td><td><span class="tag t-green">Core</span></td></tr>
+        <tr><td class="mono">08</td><td>Anti-Backfeed Protection</td><td>Monitors PCC active power direction; prevents reverse power injection to utility in export-prohibited interconnections</td><td>PCC power direction via meter</td><td><span class="tag t-green">Core</span></td></tr>
+        <tr><td class="mono">09</td><td>Overload Protection</td><td>Site load overload detection; triggers BESS discharge boost or load-shed sequence to protect service entrance</td><td>Site load current vs. limit</td><td><span class="tag t-green">Core</span></td></tr>
+        <tr><td class="mono">10</td><td>Emergency Shutdown (ESD)</td><td>Controlled DER shutdown sequence preserving breaker state and BESS SOC; state logged for restart</td><td>Manual trigger or alarm condition</td><td><span class="tag t-green">Core</span></td></tr>
+        <tr><td class="mono">11</td><td>Diesel Generator Coordination</td><td>DG start/stop dispatch; light-load shutdown; load-following fuel optimization for off-grid and hybrid sites</td><td>Site load vs. DG min output</td><td><span class="tag t-blue">Advanced</span></td></tr>
+        <tr><td class="mono">12</td><td>Load Following Dispatch</td><td>Dynamic BESS output to track island load profile; prevents frequency deviation under islanded operation</td><td>Island bus frequency / load delta</td><td><span class="tag t-blue">Advanced</span></td></tr>
+        <tr><td class="mono">13</td><td>AI Power Optimization</td><td>ML-based predictive charge/discharge scheduling using load forecast and tariff price prediction</td><td>Historical + forecast data</td><td><span class="tag t-blue">Advanced</span></td></tr>
+        <tr><td class="mono">14</td><td>Remote Override / VPP API</td><td>External setpoint override via REST API; VPP dispatch integration; ancillary services participation interface</td><td>External command via API</td><td><span class="tag t-blue">Advanced</span></td></tr>
+        <tr><td class="mono">15</td><td>Flexible Strategy Triggering</td><td>User-defined logic conditions for custom strategy sequencing; SDK-accessible trigger framework</td><td>Custom configuration</td><td><span class="tag t-blue">Advanced</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>4.2 C1–C7 Breaker Close Interlock Chain</h3>
+  <p>All PCC breaker close operations must satisfy seven conditions simultaneously. This chain is enforced in hardware (52b DI, sync-check relay output) and software (EMS logic, role check) in series. No individual condition can be bypassed without administrator intervention and a logged override event.</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Code</th><th>Condition</th><th>Technical Specification</th><th>Data Source</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="mono" style="color:var(--amber)">C1</td>
+          <td>Grid Stable ≥ 60 s</td>
+          <td>Voltage ∈ [210–260 V L-N]; Frequency ∈ [59.5–60.5 Hz]; both parameters within range simultaneously for ≥ 60 continuous seconds</td>
+          <td>Anti-islanding relay measurement / utility-grade meter</td>
+        </tr>
+        <tr>
+          <td class="mono" style="color:var(--amber)">C2</td>
+          <td>Zero Export Verified</td>
+          <td>PCC active power &lt; ±50 W; power direction = 0 (no net injection to utility); prevents close into export-prohibited state</td>
+          <td>Revenue-grade meter (Modbus TCP)</td>
+        </tr>
+        <tr>
+          <td class="mono" style="color:var(--amber)">C3</td>
+          <td>BESS Idle or Charging</td>
+          <td>PCS operational state = Idle or Charging only; no active discharge setpoint; prevents close with DER output active</td>
+          <td>PCS controller status register</td>
+        </tr>
+        <tr>
+          <td class="mono" style="color:var(--amber)">C4</td>
+          <td>Close Authorized</td>
+          <td>Administrator has confirmed via UI close button; active session role = Admin; prevents unauthorized or accidental close</td>
+          <td>Local or Remote UI (role module)</td>
+        </tr>
+        <tr>
+          <td class="mono" style="color:var(--amber)">C5</td>
+          <td>Phase Sync Completed</td>
+          <td>Phase angle difference between island bus and utility ≤ 5°; sync-check relay output confirmed; prevents out-of-phase close</td>
+          <td>Phase synchronizer / sync-check relay DI output</td>
+        </tr>
+        <tr>
+          <td class="mono" style="color:var(--amber)">C6</td>
+          <td>Breaker Currently Open</td>
+          <td>52b auxiliary contact = OPEN confirmed via hardwired DI; prevents duplicate close command on already-closed breaker</td>
+          <td>Breaker 52b auxiliary contact (hardwired DI)</td>
+        </tr>
+        <tr>
+          <td class="mono" style="color:var(--amber)">C7</td>
+          <td>Admin Role Verified</td>
+          <td>Active logged-in user = Administrator role; operator-level accounts cannot initiate close; enforces operational discipline</td>
+          <td>UI role and session module</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note n-warn">
+    <div class="ico">⚠</div>
+    <div class="body">If any single condition C1–C7 is not satisfied, the Close button is locked and disabled in the UI. An on-screen advisory identifies the specific blocking condition. The blocking event is logged with timestamp, condition code, and measured values. <strong>No close command is issued to the breaker DO output.</strong></div>
+  </div>
+
+  <h3>4.3 Closed-Loop Control Execution Path</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Step</th><th>Action</th><th>Criteria Source</th><th>Confirmation Mechanism</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">1</td><td>Strategy Trigger Evaluation</td><td>SOC reading / TOU schedule / meter power / time</td><td>All conditions evaluated against current measured values</td></tr>
+        <tr><td class="mono">2</td><td>DO Command Issued</td><td>DO1–DO8 (model-dependent)</td><td>Physical DO output energized; relay coil or actuator driven</td></tr>
+        <tr><td class="mono">3</td><td>Field Device Acts</td><td>Breaker, PCS, DG controller</td><td>Physical state change occurs (breaker operates, PCS changes mode)</td></tr>
+        <tr><td class="mono">4</td><td>DI Feedback Received</td><td>52a/52b breaker auxiliary contacts or device status DI</td><td>Physical state confirmed via hardwired DI — not assumed from DO issuance</td></tr>
+        <tr><td class="mono">5</td><td>Meter Verification</td><td>Revenue-grade meter (Modbus TCP)</td><td>Power flow and direction verified consistent with intended operation</td></tr>
+        <tr><td class="mono">6</td><td>Event Logged</td><td>EMS audit module</td><td>Action, source, timestamp, and outcome written to immutable event log</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ── S5 ── -->
+<section class="sec" id="s5" style="margin-top:56px">
+  <div class="sec-eye">Section 05</div>
+  <h1 class="sec-title">Protection, Redundancy & Fail-Safe Design</h1>
+
+  <h3>5.1 Dual-Path Anti-Islanding Protection</h3>
+  <p>EnergizeOS™ implements a dual-path anti-islanding architecture compliant with UL 1741 SB, IEEE 1547-2018, CPUC Rule 21, and EU EN 50549. Both paths operate simultaneously and independently. Grid reconnection is blocked until both paths confirm stable grid conditions.</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Path</th><th>Hardware</th><th>Detection Parameters</th><th>Trip Execution</th><th>Independence</th></tr></thead>
+      <tbody>
+        <tr>
+          <td style="color:var(--blue);font-weight:600">Path A (Primary)</td>
+          <td>Dedicated anti-islanding relay (e.g., ABB CM-UFD, SEL-700G, SEL-735)</td>
+          <td>V magnitude deviation; frequency out-of-range; ROCOF threshold; anti-islanding algorithm</td>
+          <td>Direct hardwired trip to breaker trip coil — no EMS software in the trip path</td>
+          <td>Hardware-only; operates independently of EMS software state</td>
+        </tr>
+        <tr>
+          <td style="color:var(--text-sec);font-weight:600">Path B (Secondary)</td>
+          <td>Revenue-grade smart meter (Modbus TCP, e.g., eGauge)</td>
+          <td>Voltage presence; current direction; active power import/export direction</td>
+          <td>EMS issues operational trip via DO when meter data indicates grid-loss condition</td>
+          <td>Software path; secondary to relay; provides EMS visibility and log attribution</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note n-info">
+    <div class="ico">ℹ</div>
+    <div class="body">Path A is the primary anti-islanding protection and must satisfy utility interconnection requirements (IEEE 1547-2018 §8, UL 1741 SB). Path B provides EMS-layer visibility and secondary action. Path A relay settings and protection coordination are the responsibility of the site protection engineer — not EnergizeOS™.</div>
+  </div>
+
+  <h3>5.2 Triple-Redundant Breaker Trip Architecture</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Method</th><th>Control Source</th><th>Operating Principle</th><th>Independence Level</th></tr></thead>
+      <tbody>
+        <tr><td>EMS DO Signal</td><td>EnergizeOS™ strategy logic</td><td>Condition-verified software trip via DO output; full interlock enforcement; UI-visible and logged</td><td>Powered via internal UPS; independent of external AC supply</td></tr>
+        <tr><td>UVT (Undervoltage Trip)</td><td>UPS DC bus voltage drop</td><td>Passive hardware fail-safe; trips automatically when UPS output voltage drops below threshold; no software required</td><td>Pure hardware path — operates independently of EMS software state</td></tr>
+        <tr><td>Manual Field Button</td><td>Local panel emergency stop button</td><td>Hardwired direct to trip coil; available regardless of EMS, network, or power supply state</td><td>Fully independent of all digital control and communication systems</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>5.3 Abnormal State Handling</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Condition</th><th>Automatic EMS Response</th><th>Operator Notification</th></tr></thead>
+      <tbody>
+        <tr><td>Network / Cloud Disconnection</td><td>All strategies continue on Local Runtime Engine; zero dependency on cloud for real-time control</td><td>UI: "Offline Mode — Local Operation Active"</td></tr>
+        <tr><td>UPS Power Loss</td><td>UVT hardware path trips PCC breaker; EMS enters safe-open state; strategies paused</td><td>HMI red alert + event log entry with timestamp</td></tr>
+        <tr><td>SOC Below Configured Floor</td><td>Island mode auto-disabled; BESS enters standby; configured load-shed sequence initiated</td><td>Event log entry + automatic strategy mode transition</td></tr>
+        <tr><td>Breaker Close Failure</td><td>DO signal state re-evaluated; 52a/52b compared against command state; meter power cross-checked; failure reason logged</td><td>UI: specific failure cause displayed; Close button locked</td></tr>
+        <tr><td>Stale or Conflicting Measurement</td><td>C1/C2 interlock conditions invalidated; close blocked; high-risk actions suspended pending measurement recovery</td><td>UI advisory: "Measurement Unavailable — Close Blocked"</td></tr>
+        <tr><td>OTA Strategy Signature Failure</td><td>Strategy update package rejected; current active version maintained unchanged</td><td>Alert: "Invalid Strategy Signature — Update Rejected"</td></tr>
+        <tr><td>Unknown Breaker Position</td><td>Both 52a and 52b read indeterminate; close blocked; operator prompt to verify field state</td><td>UI alert: "Breaker Position Unknown — Manual Verification Required"</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ── S6 ── -->
+<section class="sec" id="s6" style="margin-top:56px">
+  <div class="sec-eye">Section 06</div>
+  <h1 class="sec-title">Communication Architecture & Device Integration</h1>
+
+  <h3>6.1 Supported Protocols</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Protocol</th><th>Physical Interface</th><th>Typical Application</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Modbus TCP</td><td class="mono">Ethernet / RJ45</td><td>BESS/PCS, PV inverter, revenue meter, DG controller</td><td>Primary protocol; full R/W; setpoint push + state readback</td></tr>
+        <tr><td>Modbus RTU</td><td class="mono">RS485 (2-wire)</td><td>BMS, legacy PCS, protection relay data</td><td>Serial integration; battery pack monitoring</td></tr>
+        <tr><td>Hardwired DO/DI</td><td class="mono">Terminal block (24 VDC)</td><td>PCC breaker (52a/52b), DG start/stop, UVT relay, anti-islanding relay trip output</td><td>Physical interlock; not subject to software or network failure</td></tr>
+        <tr><td>MQTT</td><td class="mono">Ethernet / Internet</td><td>OTA cloud platform, remote console, alarm telemetry</td><td>Optional; EMS operates fully without MQTT connection</td></tr>
+        <tr><td>WebSocket</td><td class="mono">Ethernet / Internet</td><td>Remote browser UI, live strategy status</td><td>Real-time UI updates; optional for remote access</td></tr>
+        <tr><td>RESTful API (HTTPS)</td><td class="mono">HTTPS over LAN/WAN</td><td>Third-party SCADA, VPP dispatch, BMS dashboard integration</td><td>Module 14 (Remote Override/VPP) required for write access</td></tr>
+        <tr><td>CAN Bus</td><td class="mono">CAN port (Pro / OEM)</td><td>Advanced multi-string BMS, certain EV charger systems</td><td>Optional; Pro Panel and OEM module only</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>6.2 Third-Party Equipment Compatibility</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Device Category</th><th>Compatible / Validated Models</th><th>Integration Interface</th></tr></thead>
+      <tbody>
+        <tr><td>Revenue / Utility Meter</td><td>eGauge 4115/4150, ABB B23, Schneider PM5300 series</td><td>Modbus TCP; CT/PT ratio and register mapping configurable</td></tr>
+        <tr><td>Anti-Islanding Relay</td><td>ABB CM-UFD / PO11, SEL-700G, SEL-735</td><td>Hardwired DI for trip status; trip output contacts wired to breaker trip coil</td></tr>
+        <tr><td>BESS / PCS</td><td>SMA Sunny Central Storage, Sungrow SG series, ABB PVS-980, Schneider Conext, generic Modbus PCS</td><td>Modbus TCP; charge/discharge setpoint registers; SOC and state readback</td></tr>
+        <tr><td>PV Inverter</td><td>SMA Sunny Tripower, Fronius Symo, Sungrow SG-RT series</td><td>Modbus TCP; active power curtailment setpoint; output monitoring</td></tr>
+        <tr><td>DG Controller / Gen-set</td><td>ComAp InteliGen, Deep Sea Electronics DSE, Deif AGC series</td><td>Modbus TCP or hardwired DO (start/stop); run status and output via DI/Modbus</td></tr>
+        <tr><td>Protection Relay</td><td>SEL-700G, SEL-351, ABB REF615, GE F650</td><td>DI/DO for trip/close interposing; optional Modbus for event and measurement data</td></tr>
+        <tr><td>Phase Synchronizer</td><td>SEL-321, dedicated sync-check relay</td><td>DO close-enable output from sync relay wired to EMS DI (C5 source)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ── S7 ── -->
+<section class="sec" id="s7" style="margin-top:56px">
+  <div class="sec-eye">Section 07</div>
+  <h1 class="sec-title">Licensing & Commercial Model</h1>
+  <p>EnergizeOS™ is sold as an integrated hardware-software product. The ECP control panel is a one-time hardware purchase. The software runtime and strategy modules are licensed via annual subscription per site, enabling predictable CapEx and transparent OpEx for project budgeting.</p>
+
+  <h3>7.1 Commercial Components</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Component</th><th>Model</th><th>Scope</th><th>Included By Default</th></tr></thead>
+      <tbody>
+        <tr><td>ECP Panel (Lite or Pro)</td><td><span class="tag t-amber">One-time purchase</span></td><td>Per unit</td><td>Pre-loaded factory config + strategy templates + FAT</td></tr>
+        <tr><td>Local Runtime Engine (LRE)</td><td><span class="tag t-blue">Annual license / site</span></td><td>Per site SN</td><td>OTA rights, logging, access control, watchdog</td></tr>
+        <tr><td>Core Strategy Bundle (Modules 01–10)</td><td><span class="tag t-green">Included with license</span></td><td>Per site</td><td>Yes — all 10 core modules active with license</td></tr>
+        <tr><td>Advanced Modules (11–15)</td><td><span class="tag t-blue">SaaS / module / site</span></td><td>Per module per site</td><td>No — optional add-on; OTA-activated per subscription</td></tr>
+        <tr><td>OTA Cloud Service</td><td><span class="tag t-green">Included</span></td><td>Per site</td><td>Yes — strategy push, remote diagnostics, changelog</td></tr>
+        <tr><td>Managed O&M Service</td><td><span class="tag t-amber">Optional</span></td><td>Per container / month</td><td>No — log analysis, strategy health monitoring, version management</td></tr>
+        <tr><td>Multi-Site Management Console</td><td><span class="tag t-amber">Optional</span></td><td>Per fleet</td><td>No — centralized monitoring and analytics for multiple sites</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>7.2 License Activation Methods</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Method</th><th>Description</th><th>Best For</th></tr></thead>
+      <tbody>
+        <tr><td>Online Subscription</td><td>Stripe-based recurring billing; activation on payment confirmation</td><td>Standard C&I deployments with internet access</td></tr>
+        <tr><td>Offline License Key</td><td>One-time SN-bound key; no internet required for activation or operation</td><td>Remote sites, air-gapped installations, off-grid projects</td></tr>
+        <tr><td>Enterprise / Lifetime License</td><td>Perpetual license; negotiated for large programs or government clients</td><td>Public sector, long-term infrastructure contracts</td></tr>
+        <tr><td>OEM SDK License</td><td>SDK-based integration agreement; custom activation logic and branding</td><td>BESS manufacturers and system integrators</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>7.3 Indicative Pricing by Application</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Application Scenario</th><th>Panel Model</th><th>Strategy Bundle</th><th>Indicative Price</th></tr></thead>
+      <tbody>
+        <tr><td>Peak Shaving + Demand Charge Control</td><td>Lite</td><td>TOU + Demand Limit</td><td style="color:var(--green);font-weight:600">USD 8,000–12,000</td></tr>
+        <tr><td>Rooftop PV + Grid-Tie Control</td><td>Lite</td><td>PV Self-Consumption + Grid-Tie</td><td style="color:var(--green);font-weight:600">USD 9,000–13,000</td></tr>
+        <tr><td>PV-DG-Storage Co-generation Microgrid</td><td>Pro</td><td>PV + DG Coordination + TOU + Grid-Tie</td><td style="color:var(--green);font-weight:600">USD 15,000–22,000</td></tr>
+        <tr><td>Campus / Hotel Islanding + PV</td><td>Pro</td><td>PV + Load Limit + Grid-Tie + Anti-Islanding</td><td style="color:var(--green);font-weight:600">USD 18,000–25,000</td></tr>
+        <tr><td>Demo / Pilot Deployment</td><td>Lite or Pro</td><td>Single strategy module</td><td style="color:var(--green);font-weight:600">From USD 6,000</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note n-ok">
+    <div class="ico">✓</div>
+    <div class="body">All prices include control panel hardware, factory configuration, FAT documentation, 1-year software license, and OTA update rights. On-site commissioning, third-party FAT witness support, and custom strategy development are quoted separately.</div>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ── S8 ── -->
+<section class="sec" id="s8" style="margin-top:56px">
+  <div class="sec-eye">Section 08</div>
+  <h1 class="sec-title">Standards & Compliance Architecture</h1>
+  <p>EnergizeOS™ is designed against the following grid interconnection, equipment, and cybersecurity standards. Compliance documentation packages are available for supported jurisdictions. Contact sales for third-party certification status per applicable standard.</p>
+
+  <h3>8.1 Grid Interconnection Standards</h3>
+  <div class="badge-strip">
+    <div class="sbadge"><span class="sbadge-check">✓</span><div><div class="sbadge-name">IEEE 1547-2018</div><div class="sbadge-sub">DER Interconnection · US Federal Baseline</div></div></div>
+    <div class="sbadge"><span class="sbadge-check">✓</span><div><div class="sbadge-name">UL 1741 SB</div><div class="sbadge-sub">Advanced Inverter Functions · Rule 21 Aligned</div></div></div>
+    <div class="sbadge"><span class="sbadge-check">✓</span><div><div class="sbadge-name">CPUC Rule 21</div><div class="sbadge-sub">California Interconnection · SDG&E / SCE / PG&E</div></div></div>
+    <div class="sbadge"><span class="sbadge-check">✓</span><div><div class="sbadge-name">IEC 62898</div><div class="sbadge-sub">Microgrid Architecture · International</div></div></div>
+    <div class="sbadge"><span class="sbadge-check">✓</span><div><div class="sbadge-name">EN 50549-1/2</div><div class="sbadge-sub">Anti-Islanding · EU Generator Connection</div></div></div>
+    <div class="sbadge"><span class="sbadge-check">✓</span><div><div class="sbadge-name">G98 / G99</div><div class="sbadge-sub">DNO Connection Requirements · United Kingdom</div></div></div>
+  </div>
+
+  <h3>8.2 Equipment & Cybersecurity Standards</h3>
+  <div class="badge-strip">
+    <div class="sbadge"><span class="sbadge-check">✓</span><div><div class="sbadge-name">UL 508A</div><div class="sbadge-sub">Industrial Control Panel Construction · US/Canada</div></div></div>
+    <div class="sbadge"><span class="sbadge-check">✓</span><div><div class="sbadge-name">CSA C22.2 No.14</div><div class="sbadge-sub">Industrial Control Equipment · Canada</div></div></div>
+    <div class="sbadge"><span class="sbadge-check">✓</span><div><div class="sbadge-name">NEMA 4 / IEC IP55</div><div class="sbadge-sub">Pro Panel Outdoor Enclosure Rating</div></div></div>
+    <div class="sbadge"><span class="sbadge-check">✓</span><div><div class="sbadge-name">IEC 62443</div><div class="sbadge-sub">Industrial Cybersecurity Architecture</div></div></div>
+    <div class="sbadge"><span class="sbadge-check">✓</span><div><div class="sbadge-name">IEC 61010-1</div><div class="sbadge-sub">Electrical Safety · Control Equipment</div></div></div>
+  </div>
+  <div class="note n-warn">
+    <div class="ico">⚠</div>
+    <div class="body">Anti-islanding protection architecture is designed to the above standards. Site-specific compliance with IEEE 1547 / UL 1741 SB / Rule 21 requires that relay settings, protection coordination, and interconnection study documentation be completed by a licensed protection engineer and reviewed by the interconnecting utility. EnergizeOS™ provides the control architecture and documentation framework; protection engineering responsibility lies with the site engineer of record.</div>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ── S9 ── -->
+<section class="sec" id="s9" style="margin-top:56px">
+  <div class="sec-eye">Section 09</div>
+  <h1 class="sec-title">Deployment, Commissioning & Support</h1>
+
+  <h3>9.1 Installation Requirements</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Requirement</th><th>ECP Lite</th><th>ECP Pro</th></tr></thead>
+      <tbody>
+        <tr><td>Location</td><td>Indoor control room or BESS container interior</td><td>Outdoor cabinet, BESS container exterior, rooftop enclosure</td></tr>
+        <tr><td>Front/Rear Clearance</td><td class="mono">≥ 600 mm</td><td class="mono">≥ 600 mm</td></tr>
+        <tr><td>Side Clearance</td><td class="mono">≥ 150 mm</td><td class="mono">≥ 300 mm</td></tr>
+        <tr><td>Ventilation</td><td>≥ 50 CFM ambient airflow</td><td>Built-in fan; temp/humidity sensor auto-control</td></tr>
+        <tr><td>AC Power Supply</td><td>AC 110–230 V; dedicated UPS circuit</td><td>AC 110–230 V; UPS circuit must not share load</td></tr>
+        <tr><td>Grounding</td><td>Independent earth bond required</td><td>Independent earth bond + equipotential bonding bus</td></tr>
+        <tr><td>Cable Management</td><td>Separate low-voltage signal and power routes</td><td>Metal cable trays or conduit recommended</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>9.2 Factory Acceptance Test (FAT) Protocol</h3>
+  <p>Every ECP system undergoes a standardized FAT before shipment. FAT checklist, test results, and engineer sign-off are included in the delivery package.</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>#</th><th>Test Category</th><th>Test Procedure</th><th>Pass Criterion</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">T1</td><td>Power-On Self-Test</td><td>UPS energize; control rail check; display boot; watchdog active confirmation</td><td style="color:var(--green);font-weight:600">All rails nominal; HMI boot &lt; 60 s</td></tr>
+        <tr><td class="mono">T2</td><td>I/O Point Verification (100%)</td><td>Loop test each DO/DI channel; NO/NC state confirmation; continuity check</td><td style="color:var(--green);font-weight:600">All points respond; zero false-state readings</td></tr>
+        <tr><td class="mono">T3</td><td>Strategy Upload & Validation</td><td>OTA push strategy package; signature verification; version lock confirmation</td><td style="color:var(--green);font-weight:600">Strategy active; version number confirmed</td></tr>
+        <tr><td class="mono">T4</td><td>Communication Poll</td><td>Modbus TCP poll all device register maps; RS485 bus scan; Modbus error rate check</td><td style="color:var(--green);font-weight:600">All device registers readable; zero CRC errors</td></tr>
+        <tr><td class="mono">T5</td><td>C1–C7 Interlock Simulation</td><td>Individually inhibit each condition; verify Close button locks; verify advisory text; verify log entry</td><td style="color:var(--green);font-weight:600">Correct lock / unlock behavior per condition</td></tr>
+        <tr><td class="mono">T6</td><td>Close Failure Protection</td><td>Simulate close attempt with 52b = CLOSED; verify rejection; verify log entry and failure reason</td><td style="color:var(--green);font-weight:600">Close rejected; log entry with failure reason correct</td></tr>
+        <tr><td class="mono">T7</td><td>Protection Trip Simulation</td><td>Simulate relay trip signal via DI; verify EMS state update; verify log entry with source attribution</td><td style="color:var(--green);font-weight:600">State updated; log timestamped with relay source</td></tr>
+        <tr><td class="mono">T8</td><td>UPS Loss / UVT Simulation</td><td>Remove AC supply; verify UVT fires; verify EMS enters safe-open state; verify state persistence</td><td style="color:var(--green);font-weight:600">UVT fires &lt; 200 ms; state preserved on recovery</td></tr>
+        <tr><td class="mono">T9</td><td>Audit Log Export</td><td>Export complete event log from FAT session; verify all test events recorded with correct timestamps</td><td style="color:var(--green);font-weight:600">All events present; timestamps accurate; format correct</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>9.3 Support Tiers</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Tier</th><th>Scope</th><th>Response Target</th><th>Availability</th></tr></thead>
+      <tbody>
+        <tr><td>Standard</td><td>Email support; OTA updates (quarterly); online documentation access</td><td>24-hour response</td><td>All subscribers</td></tr>
+        <tr><td>Tier-1 SLA</td><td>Priority email + remote diagnostic session; strategy audit and review</td><td>4-hour response</td><td>All subscribers</td></tr>
+        <tr><td>Premium</td><td>24/7 hotline + dedicated project manager; custom strategy development access</td><td>1-hour response</td><td>Enterprise / premium plan</td></tr>
+        <tr><td>On-Site</td><td>Physical commissioning support; FAT video recording; third-party witness facilitation</td><td>Per project schedule</td><td>Optional add-on</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ── S10 ── -->
+<section class="sec" id="s10" style="margin-top:56px">
+  <div class="sec-eye">Section 10</div>
+  <h1 class="sec-title">Reference Deployments & Case Studies</h1>
+
+  <h3>🇺🇸 PepsiCo EV Depot — San Diego, California (SDG&E Territory)</h3>
+  <div class="spec-grid">
+    <div class="spec-row"><span class="spec-k">Client</span><span class="spec-v">PepsiCo / Black &amp; Veatch (EPC)</span></div>
+    <div class="spec-row"><span class="spec-k">Utility / Standard</span><span class="spec-v">SDG&E · Rule 21 / UL 1741 SB</span></div>
+    <div class="spec-row"><span class="spec-k">BESS Scale</span><span class="spec-v">1,000 kW / 2,000 kWh</span></div>
+    <div class="spec-row"><span class="spec-k">EV Charger Load</span><span class="spec-v">56 units (Level 2 + Level 3)</span></div>
+    <div class="spec-row"><span class="spec-k">EMS Configuration</span><span class="spec-v">ECP Pro · Grid-Tie + C1–C7 + AIPP</span></div>
+    <div class="spec-row"><span class="spec-k">Utility Acceptance</span><span class="spec-v" style="color:var(--green)">SDG&E anti-islanding accepted</span></div>
+  </div>
+  <div class="metric-row">
+    <div class="metric-card"><div class="metric-val blue">28–35%</div><div class="metric-label">Energy bill reduction via TOU + demand control</div></div>
+    <div class="metric-card"><div class="metric-val green">0</div><div class="metric-label">Fleet delivery interruptions during grid outages</div></div>
+    <div class="metric-card"><div class="metric-val">&lt;150ms</div><div class="metric-label">Island transition time (relay hardware path)</div></div>
+  </div>
+  <div class="note n-info">
+    <div class="ico">💬</div>
+    <div class="body">"Our trucks can't wait for the grid. EnergizeOS™ gave us control, savings, and resilience — all without adding a generator." — Site Energy Manager, PepsiCo North America</div>
+  </div>
+
+  <h3>🏝 Caribbean Agro-Industrial Off-Grid Microgrid</h3>
+  <div class="metric-row">
+    <div class="metric-card"><div class="metric-val green">48%</div><div class="metric-label">Max diesel consumption reduction (DG coordination + PV dispatch)</div></div>
+    <div class="metric-card"><div class="metric-val blue">$16,100</div><div class="metric-label">Saved per month at $1.40/L fuel cost</div></div>
+    <div class="metric-card"><div class="metric-val">–40%</div><div class="metric-label">Generator runtime reduction</div></div>
+  </div>
+  <p style="font-size:11px;color:var(--text-ter)">Note: 48% diesel reduction reflects an optimized off-grid PV+BESS+DG deployment with full DG coordination and load-following strategy enabled. Results are site- and DER-mix-dependent.</p>
+
+  <h3>🇪🇸 Madrid EV Fast-Charging Station (Grid-Tied)</h3>
+  <div class="metric-row">
+    <div class="metric-card"><div class="metric-val green">$130K+</div><div class="metric-label">Annual demand charge penalties avoided</div></div>
+    <div class="metric-card"><div class="metric-val">22%</div><div class="metric-label">Total electricity cost reduction</div></div>
+    <div class="metric-card"><div class="metric-val blue">$11.2K</div><div class="metric-label">Saved per month</div></div>
+  </div>
+
+  <h3>🇺🇸 Nevada Copper Mine — Off-Grid</h3>
+  <div class="metric-row">
+    <div class="metric-card"><div class="metric-val">–31.9%</div><div class="metric-label">Monthly diesel consumption</div></div>
+    <div class="metric-card"><div class="metric-val green">+29.4%</div><div class="metric-label">Generation efficiency (kWh/L)</div></div>
+    <div class="metric-card"><div class="metric-val">–40%</div><div class="metric-label">Generator runtime (2 sets → 1.4 × 20 h/day)</div></div>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ── S11 ── -->
+<section class="sec" id="s11" style="margin-top:56px">
+  <div class="sec-eye">Section 11</div>
+  <h1 class="sec-title">Product Roadmap & Lifecycle Commitments</h1>
+
+  <h3>11.1 Technology Roadmap 2024–2026</h3>
+  <div class="roadmap">
+    <div class="roadmap-row">
+      <div class="rm-date">2024 Q4</div>
+      <div class="rm-body"><div class="rm-title">Lite/Pro Panel Launch</div><div class="rm-desc">Core 10 strategy modules; factory FAT protocol; initial deployment</div></div>
+      <div class="rm-status"><span class="tag t-green">✓ Done</span></div>
+    </div>
+    <div class="roadmap-row">
+      <div class="rm-date">2025 Q2</div>
+      <div class="rm-body"><div class="rm-title">OTA Platform + C1–C7 Interlock Chain</div><div class="rm-desc">Full logging system; remote commissioning tools; strategy version management</div></div>
+      <div class="rm-status"><span class="tag t-green">✓ Done</span></div>
+    </div>
+    <div class="roadmap-row">
+      <div class="rm-date">2025 Q3</div>
+      <div class="rm-body"><div class="rm-title">Engineering Delivery Package v1.0</div><div class="rm-desc">FAT/SAT test protocols; standardized wiring documentation; control philosophy documents</div></div>
+      <div class="rm-status"><span class="tag t-green">✓ Done</span></div>
+    </div>
+    <div class="roadmap-row">
+      <div class="rm-date">2025 Q4</div>
+      <div class="rm-body"><div class="rm-title">AI Power Optimization Module</div><div class="rm-desc">ML-based load and price forecasting; adaptive charge/discharge scheduling</div></div>
+      <div class="rm-status"><span class="tag t-amber">● Active</span></div>
+    </div>
+    <div class="roadmap-row">
+      <div class="rm-date">2026 Q1</div>
+      <div class="rm-body"><div class="rm-title">OAuth2 / Webhook API</div><div class="rm-desc">VPP dispatch integration; SCADA setpoint interface; third-party API security framework</div></div>
+      <div class="rm-status"><span class="tag t-blue">◑ Planned</span></div>
+    </div>
+    <div class="roadmap-row">
+      <div class="rm-date">2026 Q2</div>
+      <div class="rm-body"><div class="rm-title">Multi-Site Console + Multilingual UI</div><div class="rm-desc">Fleet monitoring; EN/ES/DE/FR interface; centralized strategy management</div></div>
+      <div class="rm-status"><span class="tag t-blue">◑ Planned</span></div>
+    </div>
+  </div>
+
+  <h3>11.2 Lifecycle Support Commitments</h3>
+  <ul>
+    <li>Minimum <strong>5 years</strong> support per major version release</li>
+    <li>Minimum <strong>3 years</strong> strategy upgrade support for all subscribed modules</li>
+    <li>Hardware platform supports <strong>≥ 3 future major software versions</strong> without panel replacement</li>
+    <li><strong>Fully standalone local runtime</strong> — no cloud dependency for real-time strategy execution</li>
+    <li>UPS, CPU, communication modules: <strong>5-year serviceable parts availability guarantee</strong></li>
+    <li>Quarterly minor releases; biannual stable release versions with OTA delivery</li>
+  </ul>
+</section>
+
+<div class="rule"></div>
+
+<!-- ── S12 ── -->
+<section class="sec" id="s12" style="margin-top:56px">
+  <div class="sec-eye">Section 12</div>
+  <h1 class="sec-title">Delivery Package & Engineering Documentation</h1>
+  <p>Every EnergizeOS™ system ships with a complete engineering documentation package. All documents are specific to the project site and SN-tagged to the delivered unit.</p>
+  <div class="deliver">
+    <div class="dl-head">
+      <div>Ref</div><div>Document</div><div>Content</div><div>Format</div>
+    </div>
+    <div class="dl-row"><div class="dl-id">A1</div><div class="dl-name">Control Philosophy</div><div class="dl-desc">EMS control boundary, trip/close philosophy, responsibility separation — external baseline for EPCs and utilities</div><div class="dl-fmt">PDF / Web</div></div>
+    <div class="dl-row"><div class="dl-id">B1</div><div class="dl-name">Single-Line Diagram</div><div class="dl-desc">System power topology; breaker positions; DER interconnection; protection device locations</div><div class="dl-fmt">DWG / PDF</div></div>
+    <div class="dl-row"><div class="dl-id">B2</div><div class="dl-name">Control Circuit Diagram</div><div class="dl-desc">DO/DI loop wiring; relay coil and contact circuits; UVT / UPS trip paths; interposing relay details</div><div class="dl-fmt">DWG / PDF</div></div>
+    <div class="dl-row"><div class="dl-id">B3</div><div class="dl-name">IO Mapping Document</div><div class="dl-desc">Complete DO/DI channel assignment table; Modbus device address map; signal descriptions</div><div class="dl-fmt">Excel + PDF</div></div>
+    <div class="dl-row"><div class="dl-id">B4</div><div class="dl-name">Cabinet Layout Drawing</div><div class="dl-desc">Panel interior component layout; DIN rail arrangement; cable entry and routing</div><div class="dl-fmt">DWG / PDF</div></div>
+    <div class="dl-row"><div class="dl-id">B5</div><div class="dl-name">Terminal Block Diagram</div><div class="dl-desc">Terminal strip layout; wire numbers; ferrule markings; cable labels</div><div class="dl-fmt">DWG / PDF</div></div>
+    <div class="dl-row"><div class="dl-id">C1</div><div class="dl-name">Terminal Schedule</div><div class="dl-desc">Full terminal-level connection list with wire numbers, device tags, and signal descriptions</div><div class="dl-fmt">Excel</div></div>
+    <div class="dl-row"><div class="dl-id">C2</div><div class="dl-name">Wire & Device Tag Schedule</div><div class="dl-desc">Wire numbering standard; device position tags cross-referenced to drawings</div><div class="dl-fmt">Excel</div></div>
+    <div class="dl-row"><div class="dl-id">D1</div><div class="dl-name">FAT Test Report</div><div class="dl-desc">Completed and signed FAT checklist; test results; photos; engineer signature summary</div><div class="dl-fmt">PDF</div></div>
+    <div class="dl-row"><div class="dl-id">D2</div><div class="dl-name">User Manual</div><div class="dl-desc">Strategy configuration guide; UI reference; alarm descriptions; operating procedures</div><div class="dl-fmt">PDF + Web</div></div>
+    <div class="dl-row"><div class="dl-id">D3</div><div class="dl-name">Strategy Parameter Registry</div><div class="dl-desc">All configurable parameters with default values, valid ranges, and engineering notes</div><div class="dl-fmt">PDF + JSON</div></div>
+    <div class="dl-row"><div class="dl-id">D4</div><div class="dl-name">License File & Activation Guide</div><div class="dl-desc">SN-bound license file; activation instructions; OTA platform credentials</div><div class="dl-fmt">File package</div></div>
+    <div class="dl-row"><div class="dl-id">D5</div><div class="dl-name">OTA & Update Manual</div><div class="dl-desc">Strategy update and rollback procedure; version management guide; OTA platform access</div><div class="dl-fmt">PDF</div></div>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ── S13 ── -->
+<section class="sec" id="s13" style="margin-top:56px">
+  <div class="sec-eye">Section 13</div>
+  <h1 class="sec-title">Contact & Next Steps</h1>
+  <p>To request a quotation, technical consultation, site-specific documentation package, or FAT demonstration, contact our application engineering team.</p>
+  <div class="spec-grid" style="margin-top:20px">
+    <div class="spec-row"><span class="spec-k">Sales & Technical Inquiries</span><span class="spec-v" style="color:var(--blue)">sales@energizeos.com</span></div>
+    <div class="spec-row"><span class="spec-k">Engineering Support</span><span class="spec-v" style="color:var(--blue)">support@energizeos.com</span></div>
+    <div class="spec-row"><span class="spec-k">Product Website</span><span class="spec-v" style="color:var(--blue)">energizeos.com</span></div>
+    <div class="spec-row"><span class="spec-k">Product Overview Page</span><span class="spec-v" style="color:var(--blue)">docs.energizeos.com/ems</span></div>
+    <div class="spec-row"><span class="spec-k">Document Reference</span><span class="spec-v">SPEC-EOS-EMS-001 · Rev 1.0 · May 2026</span></div>
+    <div class="spec-row"><span class="spec-k">Issued By</span><span class="spec-v">Energize Solutions Inc.</span></div>
+  </div>
+  <div class="note n-ok" style="margin-top:32px">
+    <div class="ico">🚀</div>
+    <div class="body">
+      <strong>Ready to proceed?</strong> Our application engineers will review your site load profile, DER mix, target utility, and interconnection standard to recommend the correct ECP model, strategy bundle, and compliance documentation package. Response within 1 business day.
+      <br><br>
+      <a href="mailto:sales@energizeos.com" style="color:var(--blue);font-weight:600;font-size:14px">sales@energizeos.com →</a>
+    </div>
+  </div>
+  <div style="margin-top:48px;padding-top:24px;border-top:1px solid var(--rule);font-size:11px;color:var(--text-ter);line-height:1.8">
+    © 2026 Energize Solutions Inc. All rights reserved. EnergizeOS™ is a trademark of Energize Solutions Inc.<br>
+    This document is provided for evaluation purposes to authorized recipients only. Specifications subject to change without notice. Contact sales@energizeos.com for the latest revision.
+  </div>
+</section>
+
+</div><!-- /content -->
+</main>
+</div>
+
+<script>
+function setActive(href) {
+  document.querySelectorAll('.sb-link').forEach(l => l.classList.remove('active'));
+  const a = document.querySelector(`.sb-link[href="${href}"]`);
+  if (a) a.classList.add('active');
+}
+const secs = document.querySelectorAll('section.sec[id]');
+const links = document.querySelectorAll('.sb-link');
+const spy = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#'+e.target.id));
+    }
+  });
+}, { threshold: 0.12, rootMargin: '-56px 0px -70% 0px' });
+secs.forEach(s => spy.observe(s));
+</script>
+</body>
+</html>
