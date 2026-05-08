@@ -1,0 +1,108 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0F2340"/>
+      <stop offset="100%" stop-color="#162D50"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="400" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#2D7DD2"/>
+      <stop offset="100%" stop-color="#1A5FBF"/>
+    </linearGradient>
+    <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+
+  <!-- Left accent bar -->
+  <rect x="0" y="0" width="6" height="630" fill="url(#accent)"/>
+
+  <!-- Logo mark -->
+  <rect x="72" y="72" width="64" height="64" rx="16" fill="rgba(45,125,210,0.25)" stroke="rgba(45,125,210,0.5)" stroke-width="1.5"/>
+  <text x="104" y="113" text-anchor="middle" fill="#A8D4FF" font-family="monospace" font-size="18" font-weight="600">EOS</text>
+
+  <!-- Brand -->
+  <text x="156" y="115" fill="#EFF4FA" font-family="Georgia, serif" font-size="26" font-weight="700">EnergizeOS™</text>
+  <text x="156" y="140" fill="#6A9ABE" font-family="monospace" font-size="13">by Energize Solutions Inc.</text>
+
+  <!-- Divider -->
+  <rect x="72" y="172" width="560" height="1" fill="rgba(255,255,255,0.1)"/>
+
+  <!-- Main headline -->
+  <text x="72" y="240" fill="#EFF4FA" font-family="Georgia, serif" font-size="54" font-weight="400">The control layer</text>
+  <text x="72" y="306" fill="#EFF4FA" font-family="Georgia, serif" font-size="54" font-weight="400">your energy system</text>
+  <text x="72" y="372" fill="#58AFFF" font-family="Georgia, serif" font-size="54" font-weight="400" font-style="italic">has been missing.</text>
+
+  <!-- Sub text -->
+  <text x="72" y="428" fill="#8BAAC8" font-family="sans-serif" font-size="20">Commercial-grade EMS for BESS, microgrid &amp; grid-interconnection</text>
+  <text x="72" y="456" fill="#8BAAC8" font-family="sans-serif" font-size="20">IEEE 1547 · UL 1741 SB · Rule 21 · IEC 62898</text>
+
+  <!-- Stats pills -->
+  <rect x="72" y="496" width="160" height="52" rx="10" fill="rgba(26,95,191,0.2)" stroke="rgba(45,125,210,0.4)" stroke-width="1"/>
+  <text x="152" y="518" text-anchor="middle" fill="#EFF4FA" font-family="Georgia, serif" font-size="22" font-weight="700">&lt;2s</text>
+  <text x="152" y="537" text-anchor="middle" fill="#6A9ABE" font-family="monospace" font-size="11">Grid/Island Switch</text>
+
+  <rect x="248" y="496" width="140" height="52" rx="10" fill="rgba(26,95,191,0.2)" stroke="rgba(45,125,210,0.4)" stroke-width="1"/>
+  <text x="318" y="518" text-anchor="middle" fill="#EFF4FA" font-family="Georgia, serif" font-size="22" font-weight="700">C1–C7</text>
+  <text x="318" y="537" text-anchor="middle" fill="#6A9ABE" font-family="monospace" font-size="11">Interlock Chain</text>
+
+  <rect x="404" y="496" width="140" height="52" rx="10" fill="rgba(26,95,191,0.2)" stroke="rgba(45,125,210,0.4)" stroke-width="1"/>
+  <text x="474" y="518" text-anchor="middle" fill="#EFF4FA" font-family="Georgia, serif" font-size="22" font-weight="700">15</text>
+  <text x="474" y="537" text-anchor="middle" fill="#6A9ABE" font-family="monospace" font-size="11">Strategy Modules</text>
+
+  <!-- Right diagram panel -->
+  <rect x="740" y="72" width="390" height="486" rx="20" fill="rgba(15,30,50,0.8)" stroke="rgba(45,125,210,0.25)" stroke-width="1.5"/>
+
+  <text x="760" y="108" fill="rgba(106,154,190,0.6)" font-family="monospace" font-size="11">// SYSTEM TOPOLOGY</text>
+
+  <!-- Device nodes -->
+  <rect x="760" y="124" width="160" height="36" rx="7" fill="rgba(255,181,71,0.1)" stroke="rgba(255,181,71,0.3)" stroke-width="1"/>
+  <circle cx="775" cy="142" r="4" fill="#FFB547"/>
+  <text x="790" y="147" fill="#A8C8E8" font-family="monospace" font-size="12">PV Inverter</text>
+
+  <rect x="940" y="124" width="160" height="36" rx="7" fill="rgba(255,181,71,0.1)" stroke="rgba(255,181,71,0.3)" stroke-width="1"/>
+  <circle cx="955" cy="142" r="4" fill="#FFB547"/>
+  <text x="970" y="147" fill="#A8C8E8" font-family="monospace" font-size="12">eGauge Meter</text>
+
+  <rect x="760" y="174" width="160" height="36" rx="7" fill="rgba(100,160,255,0.1)" stroke="rgba(100,160,255,0.25)" stroke-width="1"/>
+  <circle cx="775" cy="192" r="4" fill="#6AA0FF"/>
+  <text x="790" y="197" fill="#A8C8E8" font-family="monospace" font-size="12">Utility Grid</text>
+
+  <rect x="940" y="174" width="160" height="36" rx="7" fill="rgba(255,181,71,0.08)" stroke="rgba(255,181,71,0.2)" stroke-width="1"/>
+  <circle cx="955" cy="192" r="4" fill="#FFB547" opacity="0.7"/>
+  <text x="970" y="197" fill="#A8C8E8" font-family="monospace" font-size="12">Diesel Gen</text>
+
+  <!-- Arrow down -->
+  <text x="935" y="230" text-anchor="middle" fill="rgba(106,154,190,0.5)" font-family="monospace" font-size="11">↓ Modbus TCP / RS485 / DO·DI ↓</text>
+
+  <!-- EMS box -->
+  <rect x="760" y="244" width="340" height="72" rx="12" fill="rgba(26,95,191,0.18)" stroke="rgba(45,125,210,0.55)" stroke-width="1.5"/>
+  <text x="930" y="272" text-anchor="middle" fill="#58AFFF" font-family="Georgia, serif" font-size="16" font-weight="700">EnergizeOS™ ECP Panel</text>
+  <text x="930" y="294" text-anchor="middle" fill="rgba(139,170,200,0.7)" font-family="monospace" font-size="11">Strategy · Control · Interlock · Audit</text>
+
+  <!-- Arrow down 2 -->
+  <text x="930" y="334" text-anchor="middle" fill="rgba(106,154,190,0.5)" font-family="monospace" font-size="11">↓ Closed-loop feedback ↓</text>
+
+  <!-- Bottom nodes -->
+  <rect x="760" y="350" width="100" height="50" rx="7" fill="rgba(14,124,90,0.12)" stroke="rgba(14,124,90,0.3)" stroke-width="1"/>
+  <circle cx="775" cy="366" r="4" fill="#2FD68F"/>
+  <text x="810" y="369" text-anchor="middle" fill="#A8C8E8" font-family="monospace" font-size="10">BESS</text>
+  <text x="810" y="385" text-anchor="middle" fill="#A8C8E8" font-family="monospace" font-size="10">/ PCS</text>
+
+  <rect x="875" y="350" width="110" height="50" rx="7" fill="rgba(255,92,92,0.08)" stroke="rgba(255,92,92,0.25)" stroke-width="1"/>
+  <circle cx="890" cy="366" r="4" fill="#4A9EFF"/>
+  <text x="930" y="369" text-anchor="middle" fill="#A8C8E8" font-family="monospace" font-size="10">PCC Breaker</text>
+  <text x="930" y="385" text-anchor="middle" fill="#5A6A80" font-family="monospace" font-size="10">52a / 52b</text>
+
+  <rect x="1000" y="350" width="100" height="50" rx="7" fill="rgba(100,160,255,0.07)" stroke="rgba(100,160,255,0.2)" stroke-width="1"/>
+  <circle cx="1015" cy="366" r="4" fill="#6A9ABE" opacity="0.7"/>
+  <text x="1050" y="369" text-anchor="middle" fill="#A8C8E8" font-family="monospace" font-size="10">Site Load</text>
+  <text x="1050" y="385" text-anchor="middle" fill="#A8C8E8" font-family="monospace" font-size="10">Bus</text>
+
+  <!-- Bottom URL -->
+  <text x="72" y="596" fill="rgba(106,154,190,0.5)" font-family="monospace" font-size="14">docs.energizeos.com/ems</text>
+  <text x="1128" y="596" text-anchor="end" fill="rgba(106,154,190,0.4)" font-family="monospace" font-size="12">SPEC-EOS-EMS-001 Rev 1.0</text>
+</svg>
