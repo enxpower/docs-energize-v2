@@ -1,0 +1,1190 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EnergizeOS™ EMS — Intelligent Energy Management for C&I and Microgrid Applications</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ─────────────────────────────────────────
+   DESIGN TOKENS  — Light Industrial Theme
+───────────────────────────────────────── */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  /* Backgrounds */
+  --bg-page:    #F7F6F2;   /* warm off-white, like engineering paper */
+  --bg-white:   #FFFFFF;
+  --bg-raised:  #EFEFEB;
+  --bg-panel:   #E8E7E2;
+  --bg-navy:    #0F2340;   /* deep navy for key blocks */
+  --bg-navy-2:  #162D50;
+
+  /* Text */
+  --text-pri:   #0D1B2A;   /* near-black */
+  --text-sec:   #3D5166;   /* medium slate */
+  --text-ter:   #7A8FA3;   /* muted */
+  --text-inv:   #EFF4FA;   /* on dark */
+  --text-inv2:  #8BAAC8;   /* muted on dark */
+
+  /* Accent */
+  --blue:       #1A5FBF;
+  --blue-mid:   #2D7DD2;
+  --blue-light: #EBF3FF;
+  --green:      #0E7C5A;
+  --green-bg:   #E8F5F0;
+  --amber:      #A0650A;
+  --amber-bg:   #FEF3E2;
+  --red:        #C0392B;
+
+  /* Borders */
+  --rule:       #D4D2CC;
+  --rule-med:   #C0BCB4;
+
+  /* Typography */
+  --f-head:     'DM Serif Display', Georgia, serif;
+  --f-body:     'Plus Jakarta Sans', system-ui, sans-serif;
+  --f-mono:     'IBM Plex Mono', 'Courier New', monospace;
+}
+
+html { scroll-behavior:smooth; }
+::selection { background:rgba(26,95,191,0.15); color:var(--text-pri); }
+body {
+  background: var(--bg-page);
+  color: var(--text-pri);
+  font-family: var(--f-body);
+  font-size: 15px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── UTILITIES ─── */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 48px; }
+.section-eyebrow {
+  font-family: var(--f-mono);
+  font-size: 11px; font-weight: 500;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--blue); margin-bottom: 12px;
+  display: flex; align-items: center; gap: 10px;
+}
+.section-eyebrow::before { content:''; width:24px; height:1px; background:var(--blue); flex-shrink:0; }
+
+.section-title {
+  font-family: var(--f-head);
+  font-size: clamp(30px, 3.5vw, 44px);
+  font-weight: 400; /* serif display — weight from the font, not bold */
+  line-height: 1.15;
+  color: var(--text-pri);
+  letter-spacing: -0.3px;
+}
+
+.section-sub {
+  font-size: 16px; color: var(--text-sec);
+  line-height: 1.7; max-width: 560px;
+  margin-top: 12px;
+}
+
+/* ─── NAV ─── */
+nav {
+  position: fixed; top:0; left:0; right:0; z-index:100;
+  background: rgba(247,246,242,0.94);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--rule);
+  height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 40px;
+}
+.nav-brand {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--f-body); font-weight: 700; font-size: 16px;
+  color: var(--text-pri); text-decoration: none; letter-spacing: -0.3px;
+}
+.nav-mark {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: var(--bg-navy);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--f-mono); font-size: 10px; font-weight: 500;
+  color: var(--text-inv); letter-spacing: 0.02em;
+}
+.nav-links { display: flex; gap: 32px; }
+.nav-links a {
+  font-size: 14px; font-weight: 500; color: var(--text-sec);
+  text-decoration: none; transition: color 0.15s;
+}
+.nav-links a:hover { color: var(--text-pri); }
+.nav-cta {
+  background: var(--bg-navy); color: var(--text-inv);
+  padding: 8px 20px; border-radius: 7px;
+  font-size: 13px; font-weight: 600; text-decoration: none;
+  transition: background 0.15s;
+  border: none; cursor: pointer;
+}
+.nav-cta:hover { background: var(--bg-navy-2); }
+
+/* ─── HERO ─── */
+.hero {
+  padding: 132px 40px 72px;
+  max-width: 1200px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 440px; gap: 80px; align-items: center;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--blue-light);
+  border: 1px solid rgba(26,95,191,0.2);
+  border-radius: 100px; padding: 5px 14px;
+  font-family: var(--f-mono); font-size: 11px; font-weight: 500;
+  color: var(--blue); letter-spacing: 0.06em;
+  margin-bottom: 24px;
+}
+.hero-badge-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--blue); animation: hbpulse 2.2s ease-in-out infinite;
+}
+@keyframes hbpulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.35;transform:scale(.65)} }
+
+.hero-title {
+  font-family: var(--f-head);
+  font-size: clamp(38px, 4.5vw, 58px);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.5px;
+  color: var(--text-pri);
+  margin-bottom: 20px;
+}
+.hero-title em {
+  font-style: italic; color: var(--blue);
+}
+
+.hero-body {
+  font-size: 16px; color: var(--text-sec); line-height: 1.75;
+  max-width: 520px; margin-bottom: 36px;
+}
+.hero-body strong { color: var(--text-pri); font-weight: 600; }
+
+.hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 48px; }
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--bg-navy); color: var(--text-inv);
+  padding: 13px 28px; border-radius: 9px;
+  font-size: 14px; font-weight: 600; text-decoration: none;
+  border: none; cursor: pointer; transition: all 0.15s;
+  box-shadow: 0 2px 12px rgba(15,35,64,0.18);
+}
+.btn-primary:hover { background: var(--bg-navy-2); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(15,35,64,0.25); }
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: transparent; color: var(--text-pri);
+  padding: 12px 28px; border-radius: 9px;
+  font-size: 14px; font-weight: 500; text-decoration: none;
+  border: 1px solid var(--rule-med); transition: all 0.15s;
+}
+.btn-secondary:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-light); }
+
+/* Hero stat strip */
+.hero-stats {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: var(--rule);
+  border: 1px solid var(--rule); border-radius: 10px; overflow: hidden;
+}
+.hstat {
+  background: var(--bg-white); padding: 20px 18px; text-align: center;
+}
+.hstat-val {
+  font-family: var(--f-head); font-size: 30px;
+  color: var(--bg-navy); line-height: 1; margin-bottom: 4px;
+}
+.hstat-label { font-family: var(--f-mono); font-size: 10px; color: var(--text-ter); letter-spacing: 0.06em; }
+
+/* Hero right — architecture mini-diagram */
+.hero-diagram {
+  background: var(--bg-navy);
+  border-radius: 14px; padding: 28px;
+  position: relative; overflow: hidden;
+}
+.hero-diagram::before {
+  content:''; position:absolute; top:0; left:0; right:0; bottom:0;
+  background: repeating-linear-gradient(
+    45deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px,
+    transparent 1px, transparent 24px
+  );
+  pointer-events: none;
+}
+.hd-label { font-family: var(--f-mono); font-size: 9px; color: rgba(139,170,200,0.6); letter-spacing:0.12em; text-transform:uppercase; margin-bottom:20px; }
+.hd-node {
+  background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px; padding: 10px 14px;
+  font-family: var(--f-mono); font-size: 11px; color: #A8C8E8;
+  margin-bottom: 6px; display: flex; align-items: center; gap: 10px;
+}
+.hd-node-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+.dot-blue  { background: #4A9EFF; box-shadow:0 0 6px #4A9EFF; }
+.dot-green { background: #2FD68F; box-shadow:0 0 6px #2FD68F; }
+.dot-amber { background: #FFB84A; box-shadow:0 0 6px #FFB84A; }
+.dot-gray  { background: #6A8EA8; }
+
+.hd-ems {
+  margin: 14px 0; padding: 14px 16px;
+  background: rgba(26,95,191,0.2); border: 1px solid rgba(74,158,255,0.4);
+  border-radius: 10px;
+}
+.hd-ems-title { font-family: var(--f-mono); font-size: 12px; color: #58AFFF; font-weight:500; margin-bottom:4px; }
+.hd-ems-sub { font-size: 10px; color: rgba(139,170,200,0.7); font-family: var(--f-mono); }
+.hd-arrow { text-align:center; color: rgba(139,170,200,0.4); font-size:16px; margin: 2px 0; }
+.hd-row { display:flex; gap:6px; }
+.hd-node-sm {
+  flex:1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+  border-radius:6px; padding:8px 10px;
+  font-family: var(--f-mono); font-size:10px; color:#8BAAC8; text-align:center;
+}
+
+/* ─── SECTION DIVIDER ─── */
+.divider { height:1px; background: var(--rule); }
+.section-gap { padding: 96px 0; }
+.section-gap-sm { padding: 60px 0; }
+
+/* ─── PROBLEM CARDS ─── */
+.problem-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:48px; }
+.prob-card {
+  background: var(--bg-white); border: 1px solid var(--rule);
+  border-radius: 12px; padding: 32px 28px;
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+.prob-card:hover { box-shadow: 0 6px 30px rgba(15,35,64,0.1); border-color: var(--rule-med); transform:translateY(-2px); }
+.prob-icon { font-size:22px; margin-bottom:14px; }
+.prob-title { font-weight: 700; font-size: 15px; margin-bottom: 8px; color: var(--text-pri); }
+.prob-body { font-size: 13px; color: var(--text-sec); line-height: 1.65; }
+.prob-quote {
+  margin-top: 14px; padding: 10px 14px;
+  background: #FEF2F2; border-left: 2px solid #E5807A;
+  border-radius: 0 6px 6px 0;
+  font-size: 12px; color: #8B2E2A; font-style: italic; line-height: 1.5;
+}
+
+/* ─── ARCHITECTURE SECTION ─── */
+.arch-layout { display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:start; margin-top:48px; }
+.arch-layers { display:flex; flex-direction:column; gap:2px; }
+.layer-row {
+  display:flex; gap:0; border: 1px solid var(--rule); border-bottom:none;
+  transition: background 0.15s;
+}
+.layer-row:first-child { border-radius:10px 10px 0 0; }
+.layer-row:last-child  { border-bottom: 1px solid var(--rule); border-radius:0 0 10px 10px; }
+.layer-row:hover { background: var(--blue-light); }
+.layer-num {
+  width:48px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+  font-family: var(--f-mono); font-size:11px; font-weight:500;
+  color: var(--blue); background: var(--bg-raised);
+  border-right: 1px solid var(--rule);
+}
+.layer-body { padding: 14px 18px; flex:1; }
+.layer-name { font-weight:600; font-size:13px; margin-bottom:3px; }
+.layer-desc { font-size:12px; color:var(--text-sec); line-height:1.5; }
+
+.arch-philosophy { }
+.phil-block {
+  padding: 20px 0; border-bottom: 1px solid var(--rule);
+}
+.phil-block:last-child { border:none; }
+.phil-rule {
+  font-family: var(--f-mono); font-size:12px; font-weight:500;
+  padding: 8px 14px; border-radius: 6px; margin-bottom: 8px;
+  display: inline-block;
+}
+.rule-warn  { background:var(--amber-bg); color:var(--amber); }
+.rule-ok    { background:var(--green-bg);  color:var(--green); }
+.rule-blue  { background:var(--blue-light); color:var(--blue); }
+.phil-desc  { font-size:13px; color:var(--text-sec); line-height:1.6; }
+
+/* ─── STRATEGY GRID ─── */
+.strat-grid {
+  display: grid; grid-template-columns: repeat(5,1fr); gap:12px; margin-top:40px;
+}
+.strat-card {
+  background: var(--bg-white); border:1px solid var(--rule);
+  border-radius:12px; padding:20px 18px 16px;
+  transition:all 0.2s cubic-bezier(.25,.8,.25,1); cursor:default;
+  border-top: 3px solid transparent; position:relative; overflow:hidden;
+}
+.strat-card::before {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(135deg, rgba(26,95,191,0.03) 0%, transparent 60%);
+  opacity:0; transition:opacity 0.2s;
+}
+.strat-card:hover { box-shadow:0 6px 28px rgba(15,35,64,0.11); border-top-color: var(--blue); transform:translateY(-2px); }
+.strat-card:hover::before { opacity:1; }
+.strat-card.core:hover { border-top-color: var(--green); }
+.strat-card.core:hover::before { background:linear-gradient(135deg, rgba(14,124,90,0.04) 0%, transparent 60%); opacity:1; }
+.strat-num { font-family:var(--f-mono); font-size:10px; color:var(--text-ter); margin-bottom:10px; letter-spacing:0.06em; }
+.strat-icon {
+  width:36px; height:36px; border-radius:9px; margin-bottom:12px;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+}
+.strat-icon.core-icon { background:var(--green-bg); }
+.strat-icon.adv-icon  { background:var(--blue-light); }
+.strat-icon svg { display:block; }
+.strat-name { font-size:12.5px; font-weight:600; color:var(--text-pri); line-height:1.35; margin-bottom:10px; }
+.strat-tag {
+  font-family:var(--f-mono); font-size:9px; font-weight:600;
+  letter-spacing:0.07em; text-transform:uppercase;
+  padding:3px 7px; border-radius:4px; display:inline-block;
+}
+.t-core { background:var(--green-bg); color:var(--green); border:1px solid rgba(14,124,90,0.15); }
+.t-adv  { background:var(--blue-light); color:var(--blue); border:1px solid rgba(26,95,191,0.15); }
+
+/* ─── INTERLOCK SECTION ─── */
+.interlock-layout { display:grid; grid-template-columns:1fr 480px; gap:72px; align-items:start; margin-top:48px; }
+.interlock-chain { display:flex; flex-direction:column; }
+.ic-row {
+  display:flex; gap:0; border:1px solid var(--rule); border-bottom:none;
+}
+.ic-row:first-child { border-radius:10px 10px 0 0; }
+.ic-row:last-child { border-bottom:1px solid var(--rule); border-radius:0 0 10px 10px; }
+.ic-row.is-met { background: var(--green-bg); }
+.ic-row.is-checking { background:var(--amber-bg); animation: rowBlink 1.4s ease-in-out infinite; }
+.ic-row.is-blocked { background:#FEF2F2; }
+@keyframes rowBlink { 0%,100%{opacity:1} 50%{opacity:.6} }
+.ic-code {
+  width:56px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+  font-family:var(--f-mono); font-size:13px; font-weight:500;
+  border-right:1px solid var(--rule);
+}
+.ic-row.is-met     .ic-code { color:var(--green); }
+.ic-row.is-checking .ic-code { color:var(--amber); }
+.ic-row.is-blocked  .ic-code { color:var(--red); }
+.ic-body { padding:11px 16px; flex:1; }
+.ic-title { font-size:13px; font-weight:600; margin-bottom:2px; }
+.ic-desc { font-size:11px; color:var(--text-sec); }
+.ic-src { font-family:var(--f-mono); font-size:10px; color:var(--blue); margin-top:3px; }
+
+.ic-result {
+  margin-top:10px; padding:16px 18px; border-radius:10px;
+  display:flex; align-items:center; gap:14px;
+  border:1px solid var(--rule);
+  transition:all 0.4s;
+}
+.ic-result.locked { background:#FEF2F2; border-color:#E5807A; }
+.ic-result.ready  { background:var(--green-bg); border-color:#4EC99A; }
+.ic-close-btn {
+  padding:9px 18px; border-radius:7px; font-size:13px; font-weight:700;
+  border:none; flex-shrink:0; cursor:pointer; transition:all 0.2s;
+}
+.ic-close-btn.locked { background:#F5C6C4; color:#8B2E2A; cursor:not-allowed; }
+.ic-close-btn.ready  { background:var(--green); color:#fff; box-shadow:0 0 16px rgba(14,124,90,0.35); }
+.ic-result-text { font-size:13px; color:var(--text-sec); line-height:1.45; }
+
+.interlock-notes { display:flex; flex-direction:column; gap:18px; }
+.in-card {
+  background: var(--bg-white); border:1px solid var(--rule); border-radius:10px;
+  padding:20px 22px;
+}
+.in-title { font-weight:700; font-size:14px; margin-bottom:6px; }
+.in-body { font-size:13px; color:var(--text-sec); line-height:1.6; }
+.accent-green { color:var(--green); }
+.accent-blue  { color:var(--blue); }
+.accent-amber { color:var(--amber); }
+
+/* ─── CASE STUDIES ─── */
+.cases-layout { display:grid; grid-template-columns:2fr 1fr; gap:16px; margin-top:40px; }
+.cases-col { display:flex; flex-direction:column; gap:16px; }
+.case-card {
+  background:var(--bg-white); border:1px solid var(--rule); border-radius:14px;
+  padding:30px; position:relative; overflow:hidden; transition:all 0.2s;
+}
+.case-card:hover { box-shadow:0 4px 24px rgba(15,35,64,0.08); border-color:var(--rule-med); }
+.case-card.featured { border-top:3px solid var(--blue); }
+.case-flag { font-size:20px; margin-bottom:10px; }
+.case-title { font-weight:700; font-size:15px; margin-bottom:4px; }
+.case-meta { font-family:var(--f-mono); font-size:10px; color:var(--text-ter); letter-spacing:0.05em; margin-bottom:16px; }
+.case-metrics { display:flex; gap:20px; flex-wrap:wrap; margin-bottom:14px; }
+.cm-val { font-family:var(--f-head); font-size:26px; color:var(--bg-navy); line-height:1; }
+.cm-label { font-size:11px; color:var(--text-ter); margin-top:2px; }
+.case-quote {
+  padding:12px 14px; background:var(--bg-raised); border-left:2px solid var(--blue);
+  border-radius:0 6px 6px 0; font-size:12px; color:var(--text-sec);
+  font-style:italic; line-height:1.55;
+}
+.case-quote cite { display:block; font-style:normal; font-size:11px; color:var(--text-ter); margin-top:5px; }
+.case-tag {
+  position:absolute; top:14px; right:14px;
+  font-family:var(--f-mono); font-size:9px; font-weight:500;
+  letter-spacing:0.08em; text-transform:uppercase;
+  padding:3px 9px; border-radius:4px;
+  background:var(--blue-light); color:var(--blue); border:1px solid rgba(26,95,191,0.2);
+}
+
+/* ─── COMPLIANCE ─── */
+.compliance-grid { display:flex; flex-wrap:wrap; gap:8px; margin-top:36px; }
+.cbadge {
+  display:flex; align-items:center; gap:8px;
+  background:var(--bg-white); border:1px solid var(--rule); border-radius:8px;
+  padding:10px 16px; transition:all 0.15s;
+}
+.cbadge:hover { border-color:var(--blue); background:var(--blue-light); }
+.cbadge-check { color:var(--green); font-size:13px; font-weight:700; }
+.cbadge-name { font-size:13px; font-weight:600; }
+.cbadge-sub { font-size:11px; color:var(--text-ter); }
+
+/* ─── HARDWARE ─── */
+.hw-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:40px; }
+.hw-card {
+  background:var(--bg-white); border:1px solid var(--rule); border-radius:16px;
+  overflow:hidden; transition:all 0.2s cubic-bezier(.25,.8,.25,1);
+}
+.hw-card:hover { box-shadow:0 8px 40px rgba(15,35,64,0.12); transform:translateY(-3px); }
+.hw-card.featured { border-color:var(--blue); box-shadow:0 0 0 1px var(--blue); }
+.hw-header { padding:24px 24px 20px; border-bottom:1px solid var(--rule); }
+.hw-eyebrow { font-family:var(--f-mono); font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--blue); margin-bottom:6px; }
+.hw-name { font-family:var(--f-head); font-size:26px; color:var(--text-pri); margin-bottom:6px; }
+.hw-desc { font-size:13px; color:var(--text-sec); line-height:1.5; }
+.hw-body { padding:0 24px; }
+.hw-spec {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:10px 0; border-bottom:1px solid var(--rule); font-size:12px;
+}
+.hw-spec:last-child { border:none; }
+.hw-spec-k { color:var(--text-sec); }
+.hw-spec-v { font-family:var(--f-mono); font-size:11px; color:var(--text-pri); font-weight:500; }
+.hw-footer { padding:16px 24px 24px; }
+.hw-price { font-family:var(--f-head); font-size:24px; color:var(--text-pri); margin-bottom:4px; }
+.hw-price span { font-family:var(--f-body); font-size:13px; color:var(--text-ter); }
+.hw-price-note { font-size:11px; color:var(--text-ter); margin-bottom:10px; }
+.hw-btn {
+  display:block; text-align:center; padding:11px; border-radius:8px;
+  font-size:13px; font-weight:600; text-decoration:none; transition:all 0.15s;
+}
+.hw-btn-main { background:var(--bg-navy); color:var(--text-inv); }
+.hw-btn-main:hover { background:var(--bg-navy-2); }
+.hw-btn-out { border:1px solid var(--rule-med); color:var(--text-pri); }
+.hw-btn-out:hover { border-color:var(--blue); color:var(--blue); background:var(--blue-light); }
+
+/* ─── DARK CTA SECTION ─── */
+.cta-dark {
+  background: var(--bg-navy);
+  padding: 88px 40px;
+  margin: 0;
+  text-align:center;
+  position:relative; overflow:hidden;
+}
+.cta-dark::before {
+  content:''; position:absolute; inset:0;
+  background: repeating-linear-gradient(
+    -45deg, rgba(255,255,255,0.018) 0px, rgba(255,255,255,0.018) 1px,
+    transparent 1px, transparent 28px
+  );
+  pointer-events:none;
+}
+.cta-dark .section-eyebrow { justify-content:center; color:#6BA4E0; }
+.cta-dark .section-eyebrow::before { background:#6BA4E0; }
+.cta-title-dark {
+  font-family: var(--f-head);
+  font-size: clamp(32px, 4vw, 52px);
+  color: var(--text-inv);
+  line-height: 1.12;
+  letter-spacing: -0.3px;
+  margin-bottom: 16px;
+}
+.cta-sub-dark { font-size:16px; color:var(--text-inv2); max-width:480px; margin:0 auto 44px; }
+.cta-steps-dark {
+  display:flex; justify-content:center; gap:0;
+  border:1px solid rgba(255,255,255,0.12); border-radius:10px; overflow:hidden;
+  max-width:700px; margin:0 auto 44px; position:relative; z-index:1;
+}
+.cta-step-dark {
+  flex:1; padding:20px 24px; border-right:1px solid rgba(255,255,255,0.1);
+}
+.cta-step-dark:last-child { border:none; }
+.step-n { font-family:var(--f-mono); font-size:10px; color:#4A9EFF; letter-spacing:0.1em; margin-bottom:4px; }
+.step-t { font-size:14px; font-weight:600; color:var(--text-inv); margin-bottom:2px; }
+.step-s { font-size:12px; color:var(--text-inv2); }
+.cta-btns { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; position:relative; z-index:1; }
+.btn-inv-main {
+  display:inline-flex; align-items:center; gap:8px;
+  background:#fff; color:var(--bg-navy);
+  padding:13px 28px; border-radius:9px;
+  font-size:14px; font-weight:700; text-decoration:none;
+  border:none; cursor:pointer; transition:all 0.15s;
+}
+.btn-inv-main:hover { background:#EFF4FA; transform:translateY(-1px); }
+.btn-inv-out {
+  display:inline-flex; align-items:center; gap:8px;
+  background:transparent; color:var(--text-inv);
+  padding:12px 28px; border-radius:9px;
+  font-size:14px; font-weight:500; text-decoration:none;
+  border:1px solid rgba(255,255,255,0.22); transition:all 0.15s;
+}
+.btn-inv-out:hover { background:rgba(255,255,255,0.07); border-color:rgba(255,255,255,0.4); }
+.cta-note { font-size:12px; color:rgba(139,170,200,0.6); margin-top:20px; position:relative; z-index:1; }
+
+/* ─── FOOTER ─── */
+footer {
+  background:var(--bg-white); border-top:1px solid var(--rule);
+  padding:40px 40px;
+  display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px;
+}
+.footer-brand { font-weight:700; font-size:14px; color:var(--text-pri); }
+.footer-brand span { display:block; font-weight:400; font-size:12px; color:var(--text-ter); margin-top:2px; }
+.footer-links { display:flex; gap:28px; }
+.footer-links a { font-size:13px; color:var(--text-sec); text-decoration:none; }
+.footer-links a:hover { color:var(--text-pri); }
+.footer-legal { font-size:11px; color:var(--text-ter); text-align:right; line-height:1.6; }
+
+/* ─── SCROLL REVEAL ─── */
+.reveal { opacity:0; transform:translateY(20px); transition:opacity .6s ease, transform .6s ease; }
+.reveal.visible { opacity:1; transform:none; }
+
+/* ─── NAVY NUMBERS STRIP ─── */
+.numbers-strip {
+  background: var(--bg-navy); padding: 0;
+  display:grid; grid-template-columns:repeat(5,1fr);
+  border-top:1px solid rgba(255,255,255,0.06);
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.ns-item {
+  padding:28px 24px; text-align:center;
+  border-right:1px solid rgba(255,255,255,0.06);
+}
+.ns-item:last-child { border:none; }
+.ns-val { font-family:var(--f-head); font-size:34px; color:#EFF4FA; line-height:1; margin-bottom:6px; }
+.ns-val sup { font-family:var(--f-body); font-size:16px; vertical-align:super; }
+.ns-label { font-family:var(--f-mono); font-size:10px; color:#6A9ABE; letter-spacing:0.06em; line-height:1.35; }
+.ns-note { font-size:9px; color:rgba(106,154,190,0.6); margin-top:2px; font-family:var(--f-mono); }
+</style>
+</head>
+<body>
+
+<!-- ── NAV ───────────────────────────────── -->
+<nav>
+  <a class="nav-brand" href="https://energizeos.com">
+    <div class="nav-mark">EOS</div>
+    EnergizeOS™
+  </a>
+  <div class="nav-links">
+    <a href="#architecture">Architecture</a>
+    <a href="#strategies">Strategies</a>
+    <a href="#cases">Case Studies</a>
+    <a href="#hardware">Hardware</a>
+    <a href="./manual" style="color:var(--blue);font-weight:600">Full Spec →</a>
+  </div>
+  <a class="nav-cta" href="mailto:sales@energizeos.com">Request Demo</a>
+</nav>
+
+<!-- ── HERO ──────────────────────────────── -->
+<section>
+<div class="hero">
+  <div>
+    <div class="hero-badge">
+      <div class="hero-badge-dot"></div>
+      EMS Platform v1.0 — Now Available
+    </div>
+    <h1 class="hero-title">
+      The <em>control layer</em><br>your energy system<br>has been missing.
+    </h1>
+    <p class="hero-body">
+      EnergizeOS™ is a <strong>commercial-grade EMS</strong> for BESS, microgrid, and grid-interconnection applications. Strategy-driven, utility-compliant, factory pre-configured. Ships ready to commission.
+    </p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="./manual">
+        View Full Specification
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7h9M8 3.5l3.5 3.5L8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="btn-secondary" href="mailto:sales@energizeos.com">Talk to an Engineer</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hstat">
+        <div class="hstat-val">&lt;2s</div>
+        <div class="hstat-label">Grid/Island Transition<br>(IEEE 1547 compliant)</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-val">C1–C7</div>
+        <div class="hstat-label">Interlock Chain<br>on every close event</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-val">15</div>
+        <div class="hstat-label">Strategy Modules<br>OTA-activated</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Architecture mini-diagram -->
+  <div class="hero-diagram">
+    <div class="hd-label">// System Topology</div>
+    <div class="hd-row" style="margin-bottom:6px">
+      <div class="hd-node" style="flex:1"><div class="hd-node-dot dot-amber"></div>PV Inverter</div>
+      <div class="hd-node" style="flex:1"><div class="hd-node-dot dot-amber"></div>eGauge Meter</div>
+    </div>
+    <div class="hd-row" style="margin-bottom:6px">
+      <div class="hd-node" style="flex:1"><div class="hd-node-dot dot-gray"></div>Utility Grid</div>
+      <div class="hd-node" style="flex:1"><div class="hd-node-dot dot-amber"></div>Diesel Gen</div>
+    </div>
+    <div class="hd-arrow">↓ Modbus TCP / RS485 / DO·DI ↓</div>
+    <div class="hd-ems">
+      <div class="hd-ems-title">EnergizeOS™ ECP Panel</div>
+      <div class="hd-ems-sub">Strategy Engine · Control Core · Interlock · Audit Log</div>
+    </div>
+    <div class="hd-arrow">↓ Closed-loop feedback ↓</div>
+    <div class="hd-row">
+      <div class="hd-node-sm"><div class="hd-node-dot dot-green" style="margin:0 auto 4px"></div>BESS / PCS</div>
+      <div class="hd-node-sm"><div class="hd-node-dot dot-blue" style="margin:0 auto 4px"></div>PCC Breaker<br>52a/52b</div>
+      <div class="hd-node-sm"><div class="hd-node-dot dot-gray" style="margin:0 auto 4px"></div>Site Load<br>Bus</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ── NUMBERS STRIP ──────────────────────── -->
+<div class="numbers-strip">
+  <div class="ns-item">
+    <div class="ns-val">&lt;2<sup>s</sup></div>
+    <div class="ns-label">Grid/Island Transition</div>
+    <div class="ns-note">per IEEE 1547 / typically &lt;150 ms with relay hardware</div>
+  </div>
+  <div class="ns-item">
+    <div class="ns-val">48<sup>%</sup></div>
+    <div class="ns-label">Diesel Reduction (max)</div>
+    <div class="ns-note">Caribbean microgrid deployment, PV+BESS+DG coordination</div>
+  </div>
+  <div class="ns-item">
+    <div class="ns-val">35<sup>%</sup></div>
+    <div class="ns-label">Energy Cost Reduction</div>
+    <div class="ns-note">TOU + demand control, PepsiCo/SDG&E project</div>
+  </div>
+  <div class="ns-item">
+    <div class="ns-val">$16K</div>
+    <div class="ns-label">Saved Per Month</div>
+    <div class="ns-note">Fuel savings, off-grid DG coordination deployment</div>
+  </div>
+  <div class="ns-item">
+    <div class="ns-val">0</div>
+    <div class="ns-label">Cloud Dependency</div>
+    <div class="ns-note">Full offline strategy execution. Cloud is optional O&M only.</div>
+  </div>
+</div>
+
+<!-- ── PROBLEM ───────────────────────────── -->
+<section class="section-gap" id="problem">
+<div class="container">
+  <div class="section-eyebrow">The Problem</div>
+  <h2 class="section-title">Three problems every energy project faces.</h2>
+  <p class="section-sub">Not edge cases. These are the reasons EMS deployments go over budget, fail utility inspection, or get called back on site.</p>
+  <div class="problem-grid reveal">
+    <div class="prob-card">
+      <div class="prob-icon">⚡</div>
+      <div class="prob-title">Unverified breaker close operations</div>
+      <div class="prob-body">Most EMS platforms issue a close command and assume execution. No sync-check confirmation, no 52a/52b feedback loop, no phase-angle verification. When a close fails or misoperates, the root cause is buried in relay event logs — discovered after the fact.</div>
+      <div class="prob-quote">"We had an auto-reclose event that took the feeder down. The EMS had no record of it."</div>
+    </div>
+    <div class="prob-card">
+      <div class="prob-icon">📋</div>
+      <div class="prob-title">No audit trail for interconnection</div>
+      <div class="prob-body">Utilities and interconnection engineers require complete event logs: every trip, every close, every mode transition — with source attribution and timestamps. Project-specific scripts on a laptop don't satisfy SDG&E, SCE, or CPUC Rule 21 documentation requirements.</div>
+      <div class="prob-quote">"The interconnection engineer asked for 6 months of operational logs. We had a partial CSV."</div>
+    </div>
+    <div class="prob-card">
+      <div class="prob-icon">🔁</div>
+      <div class="prob-title">Every project re-engineered from scratch</div>
+      <div class="prob-body">Custom EMS logic written for one site doesn't transfer to the next. Different hardware, different DER mix, different utility — and the engineering cycle restarts. There's no product standard, no template, no repeatable delivery structure.</div>
+      <div class="prob-quote">"We quoted 3 weeks for commissioning. It took 11 weeks and two site visits."</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── ARCHITECTURE ───────────────────────── -->
+<section class="section-gap" id="architecture">
+<div class="container">
+  <div class="section-eyebrow">Architecture</div>
+  <h2 class="section-title">Five layers. Clear engineering boundaries.</h2>
+  <p class="section-sub">EnergizeOS™ is not a monolithic script. Each layer has defined responsibility, and those boundaries are maintained across every deployment.</p>
+  <div class="arch-layout reveal">
+    <div>
+      <h3 style="font-family:var(--f-body);font-size:13px;font-weight:700;color:var(--text-ter);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0">SYSTEM LAYERS</h3>
+      <div class="arch-layers" style="margin-top:12px">
+        <div class="layer-row">
+          <div class="layer-num">L1</div>
+          <div class="layer-body">
+            <div class="layer-name">Strategy Engine</div>
+            <div class="layer-desc">15 parametric modules. OTA-activated, version-locked. No site coding required.</div>
+          </div>
+        </div>
+        <div class="layer-row">
+          <div class="layer-num">L2</div>
+          <div class="layer-body">
+            <div class="layer-name">Control Core (LRE)</div>
+            <div class="layer-desc">Real-time embedded runtime. Dispatches BESS/PCS/DG/breaker with closed-loop confirmation.</div>
+          </div>
+        </div>
+        <div class="layer-row">
+          <div class="layer-num">L3</div>
+          <div class="layer-body">
+            <div class="layer-name">Communication Layer</div>
+            <div class="layer-desc">Modbus TCP, RS485, hardwired DO/DI, MQTT, WebSocket, REST API. Factory pre-wired.</div>
+          </div>
+        </div>
+        <div class="layer-row">
+          <div class="layer-num">L4</div>
+          <div class="layer-body">
+            <div class="layer-name">UI & Audit System</div>
+            <div class="layer-desc">Touchscreen HMI + remote browser UI. Every action logged with timestamp, source, and outcome.</div>
+          </div>
+        </div>
+        <div class="layer-row">
+          <div class="layer-num">L5</div>
+          <div class="layer-body">
+            <div class="layer-name">Security & OTA</div>
+            <div class="layer-desc">SN-bound licensing, digital signature on every OTA push. Tamper-proof event records.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arch-philosophy">
+      <h3 style="font-family:var(--f-body);font-size:13px;font-weight:700;color:var(--text-ter);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:12px">CONTROL PHILOSOPHY</h3>
+      <div class="phil-block">
+        <div class="phil-rule rule-warn">Protection Trip = Relay Primary</div>
+        <div class="phil-desc">The protection relay holds protection engineering responsibility. EnergizeOS™ observes, logs, and reacts — but does not replace the relay. Trip thresholds, settings, and protection coordination remain with the protection engineer.</div>
+      </div>
+      <div class="phil-block">
+        <div class="phil-rule rule-ok">Close = EMS Only</div>
+        <div class="phil-desc">Breaker close is EMS-exclusive. No blind close. No auto-reclose by default. Every close requires all C1–C7 conditions satisfied, physical 52a/52b feedback confirmed, and admin authorization verified.</div>
+      </div>
+      <div class="phil-block">
+        <div class="phil-rule rule-blue">Operational Trip = EMS Optional</div>
+        <div class="phil-desc">Controlled disconnection for commissioning or maintenance may be issued by EMS when site design permits. This is a control action — not a protection function — and is clearly distinguished in all event logs.</div>
+      </div>
+      <div class="phil-block" style="border:none;padding-top:14px">
+        <div style="background:var(--bg-raised);border-radius:8px;padding:14px 16px;font-size:12px;color:var(--text-sec);line-height:1.6">
+          <strong style="color:var(--text-pri)">Responsibility separation is not configurable.</strong> Protection responsibility stays with protection hardware and licensed protection engineers. Control and supervisory responsibility belongs to the EMS. This boundary is enforced in hardware and software at every deployment.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── STRATEGIES ─────────────────────────── -->
+<section class="section-gap" id="strategies">
+<div class="container">
+  <div class="section-eyebrow">Strategy Engine</div>
+  <h2 class="section-title">15 modules. Subscribe only what you need.</h2>
+  <p class="section-sub">All strategies ship in the hardware. Activate per module via OTA. No site visits, no code changes, no re-commissioning.</p>
+  <div class="strat-grid reveal">
+    <div class="strat-card core">
+      <div class="strat-num">01</div>
+      <div class="strat-icon core-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="7" stroke="#0E7C5A" stroke-width="1.5"/><path d="M9 5v4l2.5 2.5" stroke="#0E7C5A" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+      <div class="strat-name">TOU Arbitrage</div><span class="strat-tag t-core">Core</span>
+    </div>
+    <div class="strat-card core">
+      <div class="strat-num">02</div>
+      <div class="strat-icon core-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 13L6 7l3 4 2.5-5L15 13" stroke="#0E7C5A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="2" y1="15" x2="16" y2="15" stroke="#0E7C5A" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+      <div class="strat-name">Demand Charge Management</div><span class="strat-tag t-core">Core</span>
+    </div>
+    <div class="strat-card core">
+      <div class="strat-num">03</div>
+      <div class="strat-icon core-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="3.5" stroke="#0E7C5A" stroke-width="1.5"/><path d="M9 1v2M9 15v2M1 9h2M15 9h2M3.2 3.2l1.4 1.4M13.4 13.4l1.4 1.4M3.2 14.8l1.4-1.4M13.4 4.6l1.4-1.4" stroke="#0E7C5A" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+      <div class="strat-name">PV Self-Consumption</div><span class="strat-tag t-core">Core</span>
+    </div>
+    <div class="strat-card core">
+      <div class="strat-num">04</div>
+      <div class="strat-icon core-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2C5.13 2 2 5.13 2 9s3.13 7 7 7 7-3.13 7-7" stroke="#0E7C5A" stroke-width="1.5" stroke-linecap="round"/><path d="M13 2l3 3-3 3M16 5H9" stroke="#0E7C5A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="strat-name">Grid-Tie / Island Transition</div><span class="strat-tag t-core">Core</span>
+    </div>
+    <div class="strat-card core">
+      <div class="strat-num">05</div>
+      <div class="strat-icon core-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2l6 3v5c0 3.3-2.6 5.8-6 6.9C3.6 15.8 1 13.3 1 10V5l8-3z" stroke="#0E7C5A" stroke-width="1.5" stroke-linejoin="round"/><path d="M6 9l2 2 4-4" stroke="#0E7C5A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="strat-name">Anti-Islanding Protection</div><span class="strat-tag t-core">Core</span>
+    </div>
+    <div class="strat-card core">
+      <div class="strat-num">06</div>
+      <div class="strat-icon core-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="5" y="2" width="8" height="14" rx="2" stroke="#0E7C5A" stroke-width="1.5"/><rect x="7" y="1" width="4" height="2" rx="1" stroke="#0E7C5A" stroke-width="1.2"/><rect x="6.5" y="9" width="5" height="5.5" rx="1" fill="#0E7C5A" opacity="0.3"/><rect x="6.5" y="9" width="5" height="5.5" rx="1" stroke="#0E7C5A" stroke-width="0.8"/><line x1="9" y1="4" x2="9" y2="7" stroke="#0E7C5A" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+      <div class="strat-name">SOC Floor Enforcement</div><span class="strat-tag t-core">Core</span>
+    </div>
+    <div class="strat-card core">
+      <div class="strat-num">07</div>
+      <div class="strat-icon core-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 14V8a5 5 0 0 1 10 0v6" stroke="#0E7C5A" stroke-width="1.5" stroke-linecap="round"/><path d="M4 10h10M4 12h10" stroke="#0E7C5A" stroke-width="1.2" stroke-linecap="round"/><circle cx="4" cy="14" r="1.2" fill="#0E7C5A"/><circle cx="14" cy="14" r="1.2" fill="#0E7C5A"/></svg></div>
+      <div class="strat-name">Battery Balancing Control</div><span class="strat-tag t-core">Core</span>
+    </div>
+    <div class="strat-card core">
+      <div class="strat-num">08</div>
+      <div class="strat-icon core-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="7" stroke="#0E7C5A" stroke-width="1.5"/><path d="M5.5 5.5l7 7M12.5 5.5l-7 7" stroke="#0E7C5A" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+      <div class="strat-name">Anti-Backfeed Protection</div><span class="strat-tag t-core">Core</span>
+    </div>
+    <div class="strat-card core">
+      <div class="strat-num">09</div>
+      <div class="strat-icon core-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M10 2L4 10h5l-1 6 7-9h-5l1-5z" stroke="#0E7C5A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="strat-name">Overload Protection</div><span class="strat-tag t-core">Core</span>
+    </div>
+    <div class="strat-card core">
+      <div class="strat-num">10</div>
+      <div class="strat-icon core-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="7" stroke="#0E7C5A" stroke-width="1.5"/><rect x="7" y="7" width="4" height="4" rx="1" fill="#0E7C5A"/></svg></div>
+      <div class="strat-name">Emergency Shutdown (ESD)</div><span class="strat-tag t-core">Core</span>
+    </div>
+    <div class="strat-card">
+      <div class="strat-num">11</div>
+      <div class="strat-icon adv-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="3" y="10" width="12" height="6" rx="1.5" stroke="#1A5FBF" stroke-width="1.5"/><path d="M7 10V8a2 2 0 0 1 4 0v2" stroke="#1A5FBF" stroke-width="1.5" stroke-linecap="round"/><circle cx="9" cy="5" r="2" stroke="#1A5FBF" stroke-width="1.3"/><path d="M6 2.5C6 2.5 6 1.5 9 1.5s3 1 3 1" stroke="#1A5FBF" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+      <div class="strat-name">Diesel Generator Coordination</div><span class="strat-tag t-adv">Advanced</span>
+    </div>
+    <div class="strat-card">
+      <div class="strat-num">12</div>
+      <div class="strat-icon adv-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 12 Q5 6 9 9 Q13 12 16 5" stroke="#1A5FBF" stroke-width="1.5" stroke-linecap="round" fill="none"/><circle cx="9" cy="9" r="1.5" fill="#1A5FBF"/><path d="M2 15h14" stroke="#1A5FBF" stroke-width="1" stroke-linecap="round" stroke-dasharray="2 2"/></svg></div>
+      <div class="strat-name">Load Following Dispatch</div><span class="strat-tag t-adv">Advanced</span>
+    </div>
+    <div class="strat-card">
+      <div class="strat-num">13</div>
+      <div class="strat-icon adv-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="3" y="7" width="5" height="8" rx="1" stroke="#1A5FBF" stroke-width="1.4"/><rect x="10" y="4" width="5" height="11" rx="1" stroke="#1A5FBF" stroke-width="1.4"/><path d="M5.5 5C5.5 3.6 6.6 2.5 8 2.5s2.5 1.1 2.5 2.5" stroke="#1A5FBF" stroke-width="1.3" stroke-linecap="round"/><circle cx="8" cy="5" r="1" fill="#1A5FBF"/></svg></div>
+      <div class="strat-name">AI Power Optimization</div><span class="strat-tag t-adv">Advanced</span>
+    </div>
+    <div class="strat-card">
+      <div class="strat-num">14</div>
+      <div class="strat-icon adv-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="7" stroke="#1A5FBF" stroke-width="1.5"/><circle cx="9" cy="9" r="3" stroke="#1A5FBF" stroke-width="1.3"/><path d="M9 2v2M9 14v2M2 9h2M14 9h2" stroke="#1A5FBF" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+      <div class="strat-name">Remote Override / VPP API</div><span class="strat-tag t-adv">Advanced</span>
+    </div>
+    <div class="strat-card">
+      <div class="strat-num">15</div>
+      <div class="strat-icon adv-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M7 3H4a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1z" stroke="#1A5FBF" stroke-width="1.4"/><path d="M14 3h-3a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1z" stroke="#1A5FBF" stroke-width="1.4"/><path d="M7 10H4a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1z" stroke="#1A5FBF" stroke-width="1.4"/><path d="M12.5 10v5M10 12.5h5" stroke="#1A5FBF" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+      <div class="strat-name">Flexible Strategy Triggering</div><span class="strat-tag t-adv">Advanced</span>
+    </div>
+  </div>
+  <p style="margin-top:16px;font-size:12px;color:var(--text-ter)">Core modules included with all license tiers. Advanced modules available as add-on SaaS subscriptions per site per module.</p>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── INTERLOCK ──────────────────────────── -->
+<section class="section-gap" id="interlock">
+<div class="container">
+  <div class="section-eyebrow">C1–C7 Interlock Chain</div>
+  <h2 class="section-title">No blind closes. Every time.</h2>
+  <p class="section-sub">All grid-connection close operations require seven conditions to be satisfied simultaneously. This is enforced in hardware and software — not a configuration option.</p>
+  <div class="interlock-layout reveal">
+    <div>
+      <div class="interlock-chain" id="ilockChain">
+        <div class="ic-row is-met">
+          <div class="ic-code">C1</div>
+          <div class="ic-body"><div class="ic-title">Grid Stable ≥ 60 s</div><div class="ic-desc">Voltage 210–260 V; Frequency 59.5–60.5 Hz sustained ≥ 60 s</div><div class="ic-src">← CM-UFD relay / utility-grade meter</div></div>
+        </div>
+        <div class="ic-row is-met">
+          <div class="ic-code">C2</div>
+          <div class="ic-body"><div class="ic-title">Zero Export Verified</div><div class="ic-desc">Active power &lt; ±50 W; no reverse injection to utility PCC</div><div class="ic-src">← Revenue-grade meter (Modbus TCP)</div></div>
+        </div>
+        <div class="ic-row is-met">
+          <div class="ic-code">C3</div>
+          <div class="ic-body"><div class="ic-title">BESS Idle or Charging</div><div class="ic-desc">PCS state = Idle or Charging only; no active discharge command</div><div class="ic-src">← PCS controller status register</div></div>
+        </div>
+        <div class="ic-row is-checking">
+          <div class="ic-code">C4</div>
+          <div class="ic-body"><div class="ic-title">Close Authorized</div><div class="ic-desc">Administrator confirmed via UI; role and session verified</div><div class="ic-src">← Local or Remote UI (role check)</div></div>
+        </div>
+        <div class="ic-row is-blocked">
+          <div class="ic-code">C5</div>
+          <div class="ic-body"><div class="ic-title">Phase Sync Completed</div><div class="ic-desc">Phase angle difference ≤ 5°; sync relay output confirmed</div><div class="ic-src">← Phase synchronizer / sync-check relay</div></div>
+        </div>
+        <div class="ic-row is-blocked">
+          <div class="ic-code">C6</div>
+          <div class="ic-body"><div class="ic-title">Breaker Currently Open</div><div class="ic-desc">52b auxiliary contact confirmed OPEN; prevents duplicate close</div><div class="ic-src">← Breaker 52b DI hardwired</div></div>
+        </div>
+        <div class="ic-row is-blocked">
+          <div class="ic-code">C7</div>
+          <div class="ic-body"><div class="ic-title">Admin Role Verified</div><div class="ic-desc">Active session = Administrator; operator-level close rejected</div><div class="ic-src">← UI role and permission module</div></div>
+        </div>
+      </div>
+      <div class="ic-result locked" id="ilockResult" style="margin-top:10px">
+        <button class="ic-close-btn locked" id="ilockBtn" disabled>CLOSE LOCKED</button>
+        <div class="ic-result-text" id="ilockText">Conditions C4, C5, C6, C7 not satisfied. Close command blocked.</div>
+      </div>
+    </div>
+
+    <div class="interlock-notes">
+      <div class="in-card">
+        <div class="in-title">Protection stays with the relay.</div>
+        <div class="in-body">EnergizeOS™ does not replace or overlap with the protection relay. The relay holds protection engineering responsibility. The EMS holds close authorization. These are separate, non-overlapping responsibilities enforced at every level of the system.</div>
+      </div>
+      <div class="in-card">
+        <div class="in-title" style="color:var(--green)">Triple-redundant trip architecture.</div>
+        <div class="in-body">Every PCC breaker has three independent trip paths: EMS DO signal (software), UVT undervoltage trip (hardware fail-safe activated on UPS loss), and manual field button (hardwired, network-independent). All three operate independently and do not conflict.</div>
+      </div>
+      <div class="in-card">
+        <div class="in-title" style="color:var(--blue)">Full audit trail — utility-ready.</div>
+        <div class="in-body">Every close, trip, mode change, and blocking condition is logged with timestamp, source attribution, and outcome. Exportable in structured format. Accepted by SDG&E and Black &amp; Veatch for Rule 21 interconnection documentation.</div>
+      </div>
+      <div class="in-card">
+        <div class="in-title" style="color:var(--amber)">Fully offline-capable.</div>
+        <div class="in-body">All strategy execution runs on the embedded Local Runtime Engine. Cloud connectivity is optional and used only for OTA updates and remote O&M. If the network drops, the plant continues operating with full interlock enforcement.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── CASES ──────────────────────────────── -->
+<section class="section-gap" id="cases">
+<div class="container">
+  <div class="section-eyebrow">Proven in the Field</div>
+  <h2 class="section-title">Real projects. Real utility acceptance.</h2>
+  <p class="section-sub">Deployed and operating across North America and Europe. Results from live systems.</p>
+  <div class="cases-layout reveal">
+    <div class="cases-col">
+      <div class="case-card featured">
+        <div class="case-tag">Rule 21 Accepted</div>
+        <div class="case-flag">🇺🇸</div>
+        <div class="case-title">PepsiCo EV Depot — San Diego, California</div>
+        <div class="case-meta">SDG&E SERVICE TERRITORY · 1 MW / 2 MWh BESS · 56 EV CHARGERS · BLACK &amp; VEATCH EPC</div>
+        <div class="case-metrics">
+          <div><div class="cm-val">28–35%</div><div class="cm-label">Energy bill reduction</div></div>
+          <div><div class="cm-val" style="color:var(--green)">0</div><div class="cm-label">Delivery interruptions during outage</div></div>
+          <div><div class="cm-val">&lt;150ms</div><div class="cm-label">Island transition (relay hardware)</div></div>
+        </div>
+        <div class="case-quote">
+          "Our trucks can't wait for the grid. EnergizeOS™ gave us control, savings, and resilience — all without adding a generator."
+          <cite>— Site Energy Manager, PepsiCo North America</cite>
+        </div>
+      </div>
+      <div class="case-card">
+        <div class="case-flag">🇺🇸</div>
+        <div class="case-title">Nevada Copper Mine — Off-Grid Microgrid</div>
+        <div class="case-meta">ISLANDED · PV + BESS + DUAL DIESEL GENERATOR COORDINATION</div>
+        <div class="case-metrics">
+          <div><div class="cm-val">–31.9%</div><div class="cm-label">Monthly diesel consumption</div></div>
+          <div><div class="cm-val">+29.4%</div><div class="cm-label">Generation efficiency (kWh/L)</div></div>
+          <div><div class="cm-val">$16.1K</div><div class="cm-label">Saved per month at $1.40/L</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="cases-col">
+      <div class="case-card">
+        <div class="case-flag">🏝</div>
+        <div class="case-title">Caribbean Agro-Industrial Microgrid</div>
+        <div class="case-meta">OFF-GRID · PV + BESS + DIESEL COORDINATION</div>
+        <div class="case-metrics">
+          <div><div class="cm-val" style="color:var(--green)">48%</div><div class="cm-label">Max diesel reduction</div></div>
+          <div><div class="cm-val">–40%</div><div class="cm-label">Generator runtime</div></div>
+        </div>
+        <div class="case-quote">
+          "For our diesel-based site, ROI in under 3 months. This integrated controller + strategy package is ideal for remote off-grid operations."
+          <cite>— Project Lead, North American Mining Company</cite>
+        </div>
+      </div>
+      <div class="case-card">
+        <div class="case-flag">🇪🇸</div>
+        <div class="case-title">Madrid EV Fast-Charging Station</div>
+        <div class="case-meta">GRID-TIED · DEMAND CHARGE MANAGEMENT</div>
+        <div class="case-metrics">
+          <div><div class="cm-val">$130K+</div><div class="cm-label">Annual penalties avoided</div></div>
+          <div><div class="cm-val">22%</div><div class="cm-label">Electricity cost reduction</div></div>
+        </div>
+      </div>
+      <div class="case-card">
+        <div class="case-flag">🇺🇸</div>
+        <div class="case-title">Florida EV Network — 6 Sites</div>
+        <div class="case-meta">MULTI-SITE · CENTRAL OTA FLEET MANAGEMENT</div>
+        <div class="case-metrics">
+          <div><div class="cm-val">&lt;1h</div><div class="cm-label">Fleet-wide strategy update time</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── COMPLIANCE ─────────────────────────── -->
+<section class="section-gap-sm" id="compliance">
+<div class="container">
+  <div class="section-eyebrow">Compliance Architecture</div>
+  <h2 class="section-title">Built to interconnection standards.</h2>
+  <p class="section-sub">EnergizeOS™ is designed against US and EU grid interconnection requirements. Utility-accepted documentation packages available for all supported standards.</p>
+  <div class="compliance-grid reveal">
+    <div class="cbadge"><span class="cbadge-check">✓</span><div><div class="cbadge-name">IEEE 1547-2018</div><div class="cbadge-sub">DER Interconnection · US Federal</div></div></div>
+    <div class="cbadge"><span class="cbadge-check">✓</span><div><div class="cbadge-name">UL 1741 SB</div><div class="cbadge-sub">Smart Inverter · Rule 21 Aligned</div></div></div>
+    <div class="cbadge"><span class="cbadge-check">✓</span><div><div class="cbadge-name">CPUC Rule 21</div><div class="cbadge-sub">California Interconnection</div></div></div>
+    <div class="cbadge"><span class="cbadge-check">✓</span><div><div class="cbadge-name">IEC 62898</div><div class="cbadge-sub">Microgrid Architecture · International</div></div></div>
+    <div class="cbadge"><span class="cbadge-check">✓</span><div><div class="cbadge-name">EN 50549-1/2</div><div class="cbadge-sub">Anti-Islanding · EU Generator Connection</div></div></div>
+    <div class="cbadge"><span class="cbadge-check">✓</span><div><div class="cbadge-name">G98 / G99</div><div class="cbadge-sub">DNO Connection Req. · United Kingdom</div></div></div>
+    <div class="cbadge"><span class="cbadge-check">✓</span><div><div class="cbadge-name">UL 508A</div><div class="cbadge-sub">Industrial Control Panel Construction</div></div></div>
+    <div class="cbadge"><span class="cbadge-check">✓</span><div><div class="cbadge-name">IEC 62443</div><div class="cbadge-sub">Industrial Cybersecurity Architecture</div></div></div>
+  </div>
+  <p style="margin-top:16px;font-size:12px;color:var(--text-ter)">Compliance architecture documentation available on request. Third-party certification status per applicable standard — contact sales for details.</p>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── HARDWARE ───────────────────────────── -->
+<section class="section-gap" id="hardware">
+<div class="container">
+  <div class="section-eyebrow">Hardware</div>
+  <h2 class="section-title">Choose your control panel.</h2>
+  <p class="section-sub">One-time hardware purchase. Factory pre-configured and FAT-tested. All models include 1-year software license.</p>
+  <div class="hw-grid reveal">
+    <div class="hw-card">
+      <div class="hw-header">
+        <div class="hw-eyebrow">ECP Lite</div>
+        <div class="hw-name">Lite Panel</div>
+        <div class="hw-desc">Indoor C&I control rooms, labs, and pilot projects. Compact wall-mount.</div>
+      </div>
+      <div class="hw-body">
+        <div class="hw-spec"><span class="hw-spec-k">Enclosure</span><span class="hw-spec-v">300×400×150 mm</span></div>
+        <div class="hw-spec"><span class="hw-spec-k">Outputs (DO)</span><span class="hw-spec-v">4 × DO (24 VDC logic)</span></div>
+        <div class="hw-spec"><span class="hw-spec-k">Inputs (DI)</span><span class="hw-spec-v">6 × DI</span></div>
+        <div class="hw-spec"><span class="hw-spec-k">Ethernet</span><span class="hw-spec-v">2 × Industrial</span></div>
+        <div class="hw-spec"><span class="hw-spec-k">RS485</span><span class="hw-spec-v">1 × Channel</span></div>
+        <div class="hw-spec"><span class="hw-spec-k">UPS</span><span class="hw-spec-v">Built-in, 7 Ah optional</span></div>
+        <div class="hw-spec"><span class="hw-spec-k">Cooling</span><span class="hw-spec-v">Passive / Indoor</span></div>
+      </div>
+      <div class="hw-footer">
+        <div class="hw-price-note">Starting from</div>
+        <div class="hw-price">$8,000 <span>+ subscription</span></div>
+        <a class="hw-btn hw-btn-out" href="mailto:sales@energizeos.com?subject=ECP Lite Inquiry">Request Quote →</a>
+      </div>
+    </div>
+
+    <div class="hw-card featured">
+      <div class="hw-header">
+        <div class="hw-eyebrow" style="color:var(--bg-navy)">ECP Pro · Most Specified</div>
+        <div class="hw-name">Pro Panel</div>
+        <div class="hw-desc">Outdoor, industrial sites, battery containers. Full I/O for complex DER systems.</div>
+      </div>
+      <div class="hw-body">
+        <div class="hw-spec"><span class="hw-spec-k">Enclosure</span><span class="hw-spec-v">800×600×250 mm</span></div>
+        <div class="hw-spec"><span class="hw-spec-k">Outputs (DO)</span><span class="hw-spec-v">8 × DO (24 VDC logic)</span></div>
+        <div class="hw-spec"><span class="hw-spec-k">Inputs (DI)</span><span class="hw-spec-v">10 × DI</span></div>
+        <div class="hw-spec"><span class="hw-spec-k">Ethernet</span><span class="hw-spec-v">4 × Industrial</span></div>
+        <div class="hw-spec"><span class="hw-spec-k">RS485</span><span class="hw-spec-v">2 × Channels</span></div>
+        <div class="hw-spec"><span class="hw-spec-k">UPS</span><span class="hw-spec-v">Dual battery + UVT output</span></div>
+        <div class="hw-spec"><span class="hw-spec-k">Cooling</span><span class="hw-spec-v">Active fan + temp/humidity sensor</span></div>
+      </div>
+      <div class="hw-footer">
+        <div class="hw-price-note">Starting from</div>
+        <div class="hw-price">$15,000 <span>+ subscription</span></div>
+        <a class="hw-btn hw-btn-main" href="mailto:sales@energizeos.com?subject=ECP Pro Inquiry">Request Quote →</a>
+      </div>
+    </div>
+
+    <div class="hw-card">
+      <div class="hw-header">
+        <div class="hw-eyebrow">OEM Embedded</div>
+        <div class="hw-name">OEM Module</div>
+        <div class="hw-desc">Integrated into OEM BESS panels. SDK license. Custom integration agreement.</div>
+      </div>
+      <div class="hw-body">
+        <div class="hw-spec"><span class="hw-spec-k">Enclosure</span><span class="hw-spec-v">Per OEM spec</span></div>
+        <div class="hw-spec"><span class="hw-spec-k">I/O</span><span class="hw-spec-v">Expandable interface board</span></div>
+        <div class="hw-spec"><span class="hw-spec-k">Protocols</span><span class="hw-spec-v">Modbus TCP / CAN / USB</span></div>
+        <div class="hw-spec"><span class="hw-spec-k">Power</span><span class="hw-spec-v">External / client-provided</span></div>
+        <div class="hw-spec"><span class="hw-spec-k">License</span><span class="hw-spec-v">OEM SDK Agreement</span></div>
+        <div class="hw-spec"><span class="hw-spec-k">Pricing</span><span class="hw-spec-v">Volume tiers available</span></div>
+      </div>
+      <div class="hw-footer">
+        <div class="hw-price-note">Volume pricing available</div>
+        <div class="hw-price">Custom <span>per agreement</span></div>
+        <a class="hw-btn hw-btn-out" href="mailto:sales@energizeos.com?subject=OEM Integration Inquiry">Contact OEM Team →</a>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ── DARK CTA ────────────────────────────── -->
+<div class="cta-dark" id="contact">
+  <div class="container" style="position:relative;z-index:1">
+    <div class="section-eyebrow" style="color:#6BA4E0;justify-content:center"><span style="width:24px;height:1px;background:#6BA4E0;display:inline-block"></span>Get Started</div>
+    <h2 class="cta-title-dark">Your next project ships<br>faster with EnergizeOS™.</h2>
+    <p class="cta-sub-dark">Factory pre-configured. First strategy active in under a day. Remote commissioning included as standard.</p>
+    <div class="cta-steps-dark">
+      <div class="cta-step-dark">
+        <div class="step-n">STEP 01</div>
+        <div class="step-t">Talk to an engineer</div>
+        <div class="step-s">Free technical consultation</div>
+      </div>
+      <div class="cta-step-dark">
+        <div class="step-n">STEP 02</div>
+        <div class="step-t">Select model + strategies</div>
+        <div class="step-s">Receive BOM and quotation</div>
+      </div>
+      <div class="cta-step-dark">
+        <div class="step-n">STEP 03</div>
+        <div class="step-t">Activate &amp; deploy</div>
+        <div class="step-s">Pre-configured, OTA strategy push</div>
+      </div>
+    </div>
+    <div class="cta-btns">
+      <a class="btn-inv-main" href="./manual">
+        Read Full Technical Spec
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7h9M8 3.5l3.5 3.5L8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="btn-inv-out" href="mailto:sales@energizeos.com">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 3l5 4 5-4M2 3h10v9H2V3z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        sales@energizeos.com
+      </a>
+    </div>
+    <div class="cta-note">Response from a licensed application engineer within 1 business day. No commitment required.</div>
+  </div>
+</div>
+
+<!-- ── FOOTER ─────────────────────────────── -->
+<footer>
+  <div class="footer-brand">
+    EnergizeOS™
+    <span>A product of Energize Solutions Inc. · energizeos.com</span>
+  </div>
+  <div class="footer-links">
+    <a href="./manual">Full Technical Spec</a>
+    <a href="mailto:sales@energizeos.com">Sales</a>
+    <a href="mailto:support@energizeos.com">Support</a>
+    <a href="https://energizeos.com">Website</a>
+  </div>
+  <div class="footer-legal">
+    © 2026 Energize Solutions Inc. All rights reserved.<br>
+    EnergizeOS™ is a trademark of Energize Solutions Inc.
+  </div>
+</footer>
+
+<script>
+/* Scroll reveal */
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.07 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+/* Interlock live animation */
+const rows = document.querySelectorAll('#ilockChain .ic-row');
+const result = document.getElementById('ilockResult');
+const btn = document.getElementById('ilockBtn');
+const txt = document.getElementById('ilockText');
+let cur = 3;
+
+function updateInterlock() {
+  rows.forEach((r, i) => {
+    r.className = 'ic-row ' + (i < cur ? 'is-met' : i === cur ? 'is-checking' : 'is-blocked');
+  });
+  if (cur >= rows.length) {
+    result.className = 'ic-result ready';
+    btn.className = 'ic-close-btn ready';
+    btn.disabled = false;
+    btn.textContent = 'CLOSE AUTHORIZED';
+    txt.textContent = 'All 7 conditions satisfied. Close command issued. Awaiting 52a feedback.';
+  } else {
+    result.className = 'ic-result locked';
+    btn.className = 'ic-close-btn locked';
+    btn.disabled = true;
+    btn.textContent = 'CLOSE LOCKED';
+    const n = rows.length - cur;
+    txt.textContent = `${n} condition${n>1?'s':''} not satisfied. Close command blocked. Advisory shown on HMI.`;
+  }
+  cur = cur >= rows.length ? 0 : cur + 1;
+}
+updateInterlock();
+setInterval(updateInterlock, 1600);
+</script>
+</body>
+</html>
