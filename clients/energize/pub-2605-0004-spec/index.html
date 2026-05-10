@@ -34,7 +34,7 @@
 
   <article><h2>文档信息</h2>
 <figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">文件名称：EnergizeOS EMS All-in-one BESS 最终接线与接口指导文件
-版本：v1.5
+版本：v1.6
 状态：Final
 适用对象：BESS 厂家 / 微电网系统集成方 / EPC / 软件团队 / 电表厂家 / 保护继电器厂家 / EMS 控制柜厂家 / 调试团队
 产品归属：ENERGIZEOS
@@ -155,11 +155,11 @@ SEL700G → EMS (Monitoring Only)</code></pre></figure>
         └── Optional Communication → EMS Monitoring Only</code></pre></figure>
 <h2>5. 接口总表（Single Source of Truth）</h2>
 <figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">Signal / Device                    Route / Destination
-PCC Breaker 52a                    → 52A_COM / 52A_NO → TB0401.1-2 / TB0401-2 → EMS DI1
-PCC Breaker 52b                    → 52B_COM / 52B_NC → TB0401.1-3 / TB0401-3 → EMS DI2
-EMS DO1                            → RL-01 Trip Interposing Relay → PCC / Main Breaker Trip Circuit
-EMS DO2                            → RL-02 Close Interposing Relay → PCC_CLOSE_CIRCUIT_COM / PCC_CLOSE_CIRCUIT_NO → TB0507-3 / TB0507-4 → PCC / Main Breaker Close Circuit
-SEL700G Trip Output                → SEL_TRIP_COM / SEL_TRIP_NO → TB0507-1 / TB0507-2 → PCC / Main Breaker Trip Circuit
+PCC Breaker 52a                    → PCC_DI1_52A_COM / PCC_DI1_52A_NO → EMS DI1
+PCC Breaker 52b                    → PCC_DI2_52B_COM / PCC_DI2_52B_NC → EMS DI2
+EMS DO1                            → RL-01 Trip Interposing Relay → PCC_DO1_TRIP_COM / PCC_DO1_TRIP_NO → PCC / Main Breaker Trip Circuit
+EMS DO2                            → RL-02 Close Interposing Relay → PCC_DO2_CLOSE_COM / PCC_DO2_CLOSE_NO → PCC / Main Breaker Close Circuit
+SEL700G Trip Output                → PCC / Main Breaker Trip Circuit by EPC / Protection Engineer; not routed through EMS cabinet external cable schedule
 SEL700G Optional Communication     → EMS Monitoring Only
 SEL735 Measurement                 → EMS ETH-1 via Modbus TCP
 BESS PLC                           → EMS ETH-2 via Modbus TCP
@@ -256,10 +256,9 @@ Field wiring shall terminate at designated EMS panel terminal blocks.</code></pr
 4. EMS 可读取的电网测量数据点表
 5. 电网稳定性判断所需数据质量
 6. 通信地址、寄存器、倍率、单位确认</code></pre></figure>
-<h2>7. EMS Control Panel 保留的硬接线接口</h2>
-<p>本项目 EMS Control Panel 仅保留以下硬接线接口。</p>
-<p>厂家最终柜门贴纸请以 PUB-2605-0003-SPEC 第 16 章《贴柜子表格（Cabinet Door Label Tables）》为准。主文档只保留系统接口基线，具体门贴表格由厂家执行文件承接。</p>
-<p>工程师确认的项目端子与线缆标签如下。本节用于更新柜内端子表、线号表和图纸标识。</p>
+<h2>7. EMS Control Panel 外部电缆接口</h2>
+<p>本项目 EMS Control Panel 对外项目电缆仅按外部设备边界定义。主文档不规定厂家柜内端子落点，柜内端子由 Panel Builder 按最终图纸执行。</p>
+<p>厂家最终柜门贴纸请以 PUB-2605-0003-SPEC 第 16 章《贴柜子表格（Cabinet Door Label Tables）》为准。</p>
 <figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">RL-01 and RL-02 are internal to the EMS Control Panel.
 EMS DO1 / DO2 shall drive RL-01 / RL-02 relay coils first.
 RL-01 / RL-02 relay outputs shall then route to the designated breaker trip / close terminal blocks.</code></pre></figure>
@@ -292,14 +291,10 @@ DO2 = EMS_OPERATIONAL_CLOSE_TO_RL02
 RL01 = TRIP_INTERPOSING_RELAY
 RL02 = CLOSE_INTERPOSING_RELAY</code></pre></figure>
 <h3>7.4 Breaker 控制端子</h3>
-<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">TB0507-1     SEL_TRIP_COM
-TB0507-2     SEL_TRIP_NO
-TB0507-3     PCC_CLOSE_CIRCUIT_COM
-TB0507-4     PCC_CLOSE_CIRCUIT_NO
-TB0401.1-2   52A_COM
-TB0401-2     52A_NO
-TB0401.1-3   52B_COM
-TB0401-3     52B_NC</code></pre></figure>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">PCC_DO1_TRIP_COM / PCC_DO1_TRIP_NO      → EMS Operational Trip to PCC / Main Breaker Trip Circuit
+PCC_DO2_CLOSE_COM / PCC_DO2_CLOSE_NO    → EMS Operational Close to PCC / Main Breaker Close Circuit
+PCC_DI1_52A_COM / PCC_DI1_52A_NO        ← PCC / Main Breaker 52a Closed Feedback
+PCC_DI2_52B_COM / PCC_DI2_52B_NC        ← PCC / Main Breaker 52b Open Feedback</code></pre></figure>
 <h3>7.5 Protection Relay 接口</h3>
 <figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">TB404-1   SEL700G_TRIP_OUT      → PCC / Main Breaker Trip Circuit
 TB404-2   SEL700G_COMMON        → Trip Circuit Common</code></pre></figure>
@@ -309,10 +304,10 @@ PROTECTION_TRIP_PRIMARY
 NO_CLOSE_FUNCTION
 NO_AUTO_RECLOSE</code></pre></figure>
 <h3>7.6 Ethernet / Modbus TCP 接口</h3>
-<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">ENS0306:ETH-1   ETH_SEL735_TO_EMS        ↔ SEL-735 / Grid Meter
-ENS0306:ETH-2   ETH_BESSGW_WAN_TO_EMS    ↔ BESS Gateway / All-in-one BESS PLC
-ENS0306:ETH-4   ETH_SEL700G_TO_EMS       ↔ SEL-700G / Protection Relay Monitoring
-ETH-3           REMOTE_ACCESS_OPTIONAL   ↔ Router / VPN / Local HMI（Optional）</code></pre></figure>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">ETH_SEL735_TO_EMS        ↔ SEL-735 / Grid Meter Measurement Only
+ETH_BESSGW_WAN_TO_EMS    ↔ BESS Gateway / All-in-one BESS PLC Communication
+ETH_SEL700G_TO_EMS       ↔ SEL-700G / Protection Relay EMS Monitoring Only
+ETH_REMOTE_ACCESS_OPTIONAL ↔ Router / VPN / Local HMI（Optional）</code></pre></figure>
 <p>如 EMS Controller 物理网口不足，应采用工业交换机：</p>
 <figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">EMS Controller / ENS0306
    ├── ETH-1  ↔ SEL-735 / Grid Meter

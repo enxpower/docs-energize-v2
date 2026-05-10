@@ -34,7 +34,7 @@
 
   <article><h2>文档信息</h2>
 <figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">文件名称：EMS 控制柜厂家柜门标签与接口整改说明
-版本：v1.2
+版本：v1.3
 状态：Final
 Based on: PUB-2605-0004-SPEC v1.5
 文档定位：本文件为主接口指导文件的厂家执行版，用于柜门标签、端子表、线号表和图纸 wording 整改。
@@ -180,10 +180,9 @@ DO2 → RL-02 → Close Circuit
 EMS DO shall not directly drive breaker coils</code></pre></figure>
 <p>建议在柜内增加以下简短说明：</p>
 <figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">Breaker Control
-Trip Primary: SEL700G / Protection Relay → TB0507:1/2
-Trip Optional: EMS DO1 → RL-01 (If Enabled)
-Close Only: EMS DO2 → RL-02 → TB0507:3/4
-Feedback Required: 52A / 52B → EMS DI1 / DI2</code></pre></figure>
+Trip Command: EMS DO1 → RL-01 → PCC_DO1_TRIP_COM / PCC_DO1_TRIP_NO
+Close Command: EMS DO2 → RL-02 → PCC_DO2_CLOSE_COM / PCC_DO2_CLOSE_NO
+Feedback Required: PCC_DI1_52A / PCC_DI2_52B → EMS DI1 / DI2</code></pre></figure>
 <h2>10. 禁止出现的标签文字</h2>
 <p>柜门、端子表、线号表、图纸中禁止出现以下误导性 wording：</p>
 <figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">Anti-islanding Trip (for EMS)
@@ -198,8 +197,8 @@ DG Start / Stop</code></pre></figure>
 <p>第16章为厂家最终贴柜门、端子表、线号表和图纸说明的唯一执行表格。本章仅保留原则：</p>
 <figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">1. 52A = PCC / Main Breaker 52a Closed Feedback
 2. 52B = PCC / Main Breaker 52b Open Feedback
-3. SEL_TRIP_COM / SEL_TRIP_NO = SEL700G Primary Protection Trip Circuit
-4. PCC_CLOSE_CIRCUIT_COM / PCC_CLOSE_CIRCUIT_NO = EMS Operational Close via RL-02
+3. PCC_DO1_TRIP_COM / PCC_DO1_TRIP_NO = EMS Operational Trip via RL-01
+4. PCC_DO2_CLOSE_COM / PCC_DO2_CLOSE_NO = EMS Operational Close via RL-02
 5. SEL735 = Measurement Only / No Trip / No Close
 6. SEL700G Ethernet = EMS Monitoring Only / Not Trip Path
 7. RS485 CH1–CH8 = Spare / Reserved (No project assignment)</code></pre></figure>
@@ -259,11 +258,11 @@ Incorrect labels may cause incorrect site wiring and wrong commissioning assumpt
 <h3>16.3 Breaker Control / DO Wiring Guide</h3>
 <div class="table-wrap"><table><thead><tr><th>No</th><th>External Cable Label</th><th>Connector Port</th><th>Port Description</th><th>Corresponding Function</th></tr></thead><tbody><tr><td>1</td><td>SEL_TRIP_COM</td><td>TB0507:1</td><td>SEL700G Trip Output COM</td><td>SEL700G Primary Protection Trip Circuit</td></tr><tr><td>1</td><td>SEL_TRIP_NO</td><td>TB0507:2</td><td>SEL700G Trip Output NO</td><td>SEL700G Primary Protection Trip Circuit</td></tr><tr><td>2</td><td>PCC_CLOSE_CIRCUIT_COM</td><td>TB0507:3</td><td>DO2 / RL-02 Close Relay COM</td><td>EMS Operational Close / PCC Breaker Close Command</td></tr><tr><td>2</td><td>PCC_CLOSE_CIRCUIT_NO</td><td>TB0507:4</td><td>DO2 / RL-02 Close Relay NO</td><td>EMS Operational Close / PCC Breaker Close Command</td></tr></tbody></table></div>
 <p>Notes:</p>
-<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">TB0507:1/2 = SEL700G Protection Trip Circuit
-TB0507:3/4 = PCC / Main Breaker Close Circuit
-TB0507:1/2 shall not be marked as EMS Operational Trip.
-EMS DO shall not directly drive breaker trip/close circuits.
-EMS Operational Trip via RL-01 is reserved / not field-wired unless enabled by project design.</code></pre></figure>
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">TB0507:1/2 = PCC_DO1_TRIP_COM / PCC_DO1_TRIP_NO
+TB0507:3/4 = PCC_DO2_CLOSE_COM / PCC_DO2_CLOSE_NO
+TB0507:1/2 = EMS Operational Trip via RL-01
+TB0507:3/4 = EMS Operational Close via RL-02
+EMS DO shall not directly drive breaker trip/close circuits.</code></pre></figure>
 <h3>16.4 RS485 Wiring Guide</h3>
 <div class="table-wrap"><table><thead><tr><th>No</th><th>RS485 Address</th><th>Corresponding Function</th><th>Connector Port</th></tr></thead><tbody><tr><td>1</td><td>CH1 RxD-(A) / CH1 RxD-(B)</td><td>RS485 CH1 Spare / Reserved (No project assignment)</td><td>TB508:1 Lower / Upper</td></tr><tr><td>2</td><td>CH2 RxD-(A) / CH2 RxD-(B)</td><td>RS485 CH2 Spare / Reserved (No project assignment)</td><td>TB508:2 Lower / Upper</td></tr><tr><td>3</td><td>CH3 RxD-(A) / CH3 RxD-(B)</td><td>RS485 CH3 Spare / Reserved (No project assignment)</td><td>TB508:3 Lower / Upper</td></tr><tr><td>4</td><td>CH4 RxD-(A) / CH4 RxD-(B)</td><td>RS485 CH4 Spare / Reserved (No project assignment)</td><td>TB508:4 Lower / Upper</td></tr><tr><td>5</td><td>CH5 RxD-(A) / CH5 RxD-(B)</td><td>RS485 CH5 Spare / Reserved (No project assignment)</td><td>TB508:5 Lower / Upper</td></tr><tr><td>6</td><td>CH6 RxD-(A) / CH6 RxD-(B)</td><td>RS485 CH6 Spare / Reserved (No project assignment)</td><td>TB508:6 Lower / Upper</td></tr><tr><td>7</td><td>CH7 RxD-(A) / CH7 RxD-(B)</td><td>RS485 CH7 Spare / Reserved (No project assignment)</td><td>TB508:7 Lower / Upper</td></tr><tr><td>8</td><td>CH8 RxD-(A) / CH8 RxD-(B)</td><td>RS485 CH8 Spare / Reserved (No project assignment)</td><td>TB508:8 Lower / Upper</td></tr></tbody></table></div>
 <p>Notes:</p>
@@ -277,17 +276,17 @@ EMS communicates with BESS via Ethernet / Modbus TCP only.</code></pre></figure>
 BESSGW = BESS Gateway / All-in-one BESS PLC communication.
 SEL700G Ethernet = EMS monitoring only. Not protection trip path.</code></pre></figure>
 <h3>16.6 Cabinet Label Key Notes</h3>
-<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">Protection Trip:
-SEL_TRIP_COM / SEL_TRIP_NO → TB0507:1 / TB0507:2
-SEL700G Primary Protection Trip Circuit
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">Operational Trip:
+PCC_DO1_TRIP_COM / PCC_DO1_TRIP_NO → TB0507:1 / TB0507:2
+EMS Operational Trip via RL-01
 
 Operational Close:
-PCC_CLOSE_CIRCUIT_COM / PCC_CLOSE_CIRCUIT_NO → TB0507:3 / TB0507:4
+PCC_DO2_CLOSE_COM / PCC_DO2_CLOSE_NO → TB0507:3 / TB0507:4
 EMS DO2 → RL-02 Close Relay → PCC / Main Breaker Close Circuit
 
 Breaker Feedback:
-52A_COM / 52A_NO → TB0401.1:2 / TB0401:2 → EMS DI1
-52B_COM / 52B_NC → TB0401.1:3 / TB0401:3 → EMS DI2
+PCC_DI1_52A_COM / PCC_DI1_52A_NO → TB0401.1:2 / TB0401:2 → EMS DI1
+PCC_DI2_52B_COM / PCC_DI2_52B_NC → TB0401.1:3 / TB0401:3 → EMS DI2
 
 Ethernet:
 SEL735 → ENS0306:ETH-1
@@ -297,8 +296,8 @@ SEL700G → ENS0306:ETH-4
 RS485:
 Spare / Reserved. No project assignment.</code></pre></figure>
 <p>必须确认：</p>
-<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">52B = PCC / Main Breaker 52b Open Feedback
-SEL_TRIP_COM / SEL_TRIP_NO = SEL700G Primary Protection Trip Circuit
+<figure class="code-figure"><pre class="n-code-notion"><code class="language-plain text">PCC_DI2_52B = PCC / Main Breaker 52b Open Feedback
+PCC_DO1_TRIP = EMS Operational Trip via RL-01
 ETH_SEL700G_TO_EMS = ENS0306:ETH-4</code></pre></figure>
 </article>
 
