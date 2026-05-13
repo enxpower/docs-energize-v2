@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://docs.energizeos.com/ems/manual/">
 <meta property="og:title" content="EnergizeOS™ EMS — Full Technical Specification">
 <meta property="og:description" content="13-section engineering spec: architecture, C1–C7 interlocks, 15 strategy modules, IEEE 1547 compliance, FAT protocol, case studies. SPEC-EOS-EMS-001 Rev 1.0">
-<meta property="og:image" content="https://docs.energizeos.com/ems/manual/og-manual.png">
+<meta property="og:image" content="https://docs.energizeos.com/ems/manual/og-manual.svg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:site_name" content="EnergizeOS™ by Energize Solutions Inc.">
@@ -25,7 +25,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="EnergizeOS™ EMS — Full Technical Specification">
 <meta name="twitter:description" content="13-section engineering spec. SPEC-EOS-EMS-001 Rev 1.0">
-<meta name="twitter:image" content="https://docs.energizeos.com/ems/manual/og-manual.png">
+<meta name="twitter:image" content="https://docs.energizeos.com/ems/manual/og-manual.svg">
 
 <meta name="theme-color" content="#F7F6F2">
 
@@ -525,12 +525,16 @@ td:first-child { font-weight:600; color:var(--text-pri); white-space:nowrap; }
   <div class="code">
 <span class="cc">// EnergizeOS™ Immutable Control Principles</span>
 
-<span class="ck">Protection Trip</span>  = <span class="cv">Relay Primary</span>       <span class="cc">// protection relay owns protection engineering responsibility</span>
+<span class="ck">Protection Trip</span>  = <span class="cv">Relay Primary</span>       <span class="cc">// relay owns protection; EMS observes and logs only</span>
 <span class="ck">Operational Trip</span> = <span class="cv">EMS Optional</span>        <span class="cc">// controlled disconnection for commissioning / maintenance only</span>
 <span class="ck">Breaker Close</span>    = <span class="cv">EMS Exclusive</span>       <span class="cc">// no blind close; no auto-reclose by default</span>
 <span class="ck">Close Gate</span>       = <span class="cv">C1–C7 All Met</span>       <span class="cc">// all seven interlock conditions must be satisfied simultaneously</span>
-<span class="ck">Feedback</span>         = <span class="cv">Physical 52a/52b</span>    <span class="cc">// completion confirmed by hardware, not by command issuance</span>
+<span class="ck">Feedback</span>         = <span class="cv">Physical 52a/52b</span>    <span class="cc">// completion confirmed by hardware DI, not by command issuance</span>
 <span class="ck">Measurement Gap</span>  = <span class="cv">Block High-Risk</span>     <span class="cc">// stale or conflicting data blocks close; never acts on incomplete data</span>
+<span class="ck">Comm Timeout</span>     = <span class="cv">Safe Frozen State</span>   <span class="cc">// Modbus loss ≥ 5s → freeze setpoints, invalidate C1, raise P1 alarm</span>
+<span class="ck">PCS Island Mode</span>  = <span class="cv">Grid-Forming</span>        <span class="cc">// EMS commands PCS mode-switch before island; verifies confirmation</span>
+<span class="ck">SOC Threshold</span>    = <span class="cv">±2% Hysteresis</span>      <span class="cc">// deadband on all SOC boundaries prevents charge/discharge oscillation</span>
+<span class="ck">Priority Order</span>   = <span class="cv">Safety&gt;Protection&gt;Grid&gt;Storage&gt;Economy</span> <span class="cc">// immutable dispatch hierarchy</span>
   </div>
 
   <div class="note n-warn">
@@ -538,6 +542,23 @@ td:first-child { font-weight:600; color:var(--text-pri); white-space:nowrap; }
     <div class="body">
       <strong>Responsibility separation is fundamental.</strong> Protection responsibility — including protection relay settings, protection coordination, and fault current analysis — remains with the protection relay, site protection design, and licensed protection engineers. EnergizeOS™ does not overlap with or absorb protection engineering responsibility. The EMS holds control and supervisory responsibility only.
     </div>
+  </div>
+
+  <h3>2.4 Grid-Forming vs. Grid-Following</h3>
+  <p>This is the single most commonly misconfigured parameter in BESS/microgrid commissioning. EnergizeOS™ explicitly manages PCS operating mode as part of the grid-tie/island transition sequence.</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>PCS Mode</th><th>When Active</th><th>Voltage / Frequency Source</th><th>EnergizeOS™ Action</th></tr></thead>
+      <tbody>
+        <tr><td style="color:var(--blue)">Grid-Following (Current Source)</td><td>Grid-connected operation</td><td>Utility grid sets V and f; PCS synchronizes and injects current</td><td>Normal dispatch: charge/discharge setpoint commands via Modbus</td></tr>
+        <tr><td style="color:var(--green)">Grid-Forming (Voltage Source)</td><td>Islanded operation</td><td>PCS establishes V and f reference for island bus; all other DERs follow</td><td>Issues mode-switch command on island detection; verifies mode confirmation register before enabling island loads; raises alarm if PCS fails to confirm within 2 s</td></tr>
+        <tr><td style="color:var(--amber)">Grid-Forming + Droop</td><td>Multi-PCS island (parallel)</td><td>Each PCS participates in load sharing via active power droop (P-f) and reactive power droop (Q-V)</td><td>Configures droop parameters per PCS before island; monitors frequency deviation for instability indication</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note n-warn">
+    <div class="ico">⚠</div>
+    <div class="body"><strong>Critical commissioning verification:</strong> Grid-forming mode must be explicitly tested under load during SAT. A PCS left in grid-following mode cannot island — it will trip on loss of grid reference. This failure mode is silent during grid-connected operation and only discovered during the first actual grid outage. Do not assume — verify.</div>
   </div>
 
   <h3>2.3 System Topology</h3>
@@ -622,7 +643,51 @@ td:first-child { font-weight:600; color:var(--text-pri); white-space:nowrap; }
     </table>
   </div>
 
-  <h3>4.2 C1–C7 Breaker Close Interlock Chain</h3>
+  <h3>4.2 Control Priority Hierarchy</h3>
+  <p>When multiple strategy modules issue conflicting commands simultaneously, EnergizeOS™ resolves conflicts via an immutable priority hierarchy. Higher-priority functions always override lower-priority functions. This prevents race conditions and undefined states.</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Priority</th><th>Function Class</th><th>Examples</th><th>Override Behavior</th></tr></thead>
+      <tbody>
+        <tr><td style="color:var(--red);font-weight:700">P1 — Safety</td><td>Emergency actions that protect personnel and equipment</td><td>ESD (Module 10), thermal runaway response, UVT trip, manual field stop</td><td>Immediately overrides all lower-priority commands; cannot be blocked by any strategy</td></tr>
+        <tr><td style="color:var(--red);font-weight:600">P2 — Protection</td><td>Anti-islanding, anti-backfeed, overload protection</td><td>Modules 05, 08, 09; relay trip response</td><td>Overrides grid strategy and economic dispatch; blocked only by P1</td></tr>
+        <tr><td style="color:var(--amber);font-weight:600">P3 — Grid Compliance</td><td>IEEE 1547 / Rule 21 operational limits</td><td>Voltage ride-through, frequency ride-through, ramp rates, export limits</td><td>Overrides economic strategy; cannot be disabled by operator during grid-connected operation</td></tr>
+        <tr><td style="color:var(--blue);font-weight:600">P4 — Storage Management</td><td>SOC floor enforcement, battery balancing, thermal limits</td><td>Modules 06, 07; BMS alarm response</td><td>Limits economic dispatch; SOC floor blocks discharge regardless of TOU strategy</td></tr>
+        <tr><td style="color:var(--green);font-weight:600">P5 — Economic Dispatch</td><td>Revenue-optimizing strategies</td><td>TOU (01), Demand (02), PV Self-Consumption (03), AI Optimization (13)</td><td>Lowest priority; operates only within constraints set by P1–P4</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>4.3 Communication Watchdog & Fallback States</h3>
+  <p>Loss of communication to field devices is one of the most common root causes of EMS misoperation in the field. EnergizeOS™ implements per-device watchdog timers with defined fallback behaviors for each device class.</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Device</th><th>Watchdog Timeout</th><th>Fallback Action</th><th>Alarm Level</th><th>Resume Condition</th></tr></thead>
+      <tbody>
+        <tr><td>Revenue Meter (eGauge / PM)</td><td>5 s (configurable)</td><td>Freeze last valid power reading; invalidate C1 and C2 close conditions; block any new close</td><td style="color:var(--red)">P1 — Critical</td><td>3 consecutive valid Modbus polls; close conditions re-evaluated</td></tr>
+        <tr><td>BESS / PCS</td><td>5 s (configurable)</td><td>Freeze last dispatch setpoint; disable new charge/discharge commands; raise alarm</td><td style="color:var(--red)">P1 — Critical</td><td>3 consecutive valid polls; operator acknowledgment required before resuming dispatch</td></tr>
+        <tr><td>Anti-Islanding Relay</td><td>10 s (configurable)</td><td>Treat grid status as UNKNOWN; block all close operations; alert operator</td><td style="color:var(--red)">P1 — Critical</td><td>Relay comms restored and status confirmed stable</td></tr>
+        <tr><td>Diesel Generator Controller</td><td>10 s (configurable)</td><td>Assume DG at last known state; disable remote start/stop; raise alarm</td><td style="color:var(--amber)">P2 — Warning</td><td>Comm restored; DG state re-confirmed before resuming coordination</td></tr>
+        <tr><td>Cloud / OTA Platform</td><td>No impact on control</td><td>All local strategies continue unaffected; cloud-only features (OTA, remote portal) suspended</td><td style="color:var(--blue)">P3 — Info</td><td>Automatic reconnection; no operator action required</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>4.4 SOC Boundary Hysteresis — Preventing Oscillation</h3>
+  <p>A BESS operating at an SOC threshold without hysteresis will toggle between charge and discharge states at the control loop frequency. This is not a theoretical concern — it is a documented failure mode that destroys PCS contactors and causes DC bus voltage instability. EnergizeOS™ mandates hysteresis on all SOC thresholds.</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Threshold Type</th><th>Default Value</th><th>Hysteresis Band</th><th>Behavior</th></tr></thead>
+      <tbody>
+        <tr><td>SOC Floor (discharge limit)</td><td>20% (configurable)</td><td>±2% (configurable)</td><td>Discharge stops at 20%; discharge cannot resume until SOC ≥ 22%. Prevents floor-hunting.</td></tr>
+        <tr><td>SOC Ceiling (charge limit)</td><td>90% (configurable)</td><td>±2% (configurable)</td><td>Charge stops at 90%; charge cannot resume until SOC ≤ 88%. Prevents ceiling-hunting.</td></tr>
+        <tr><td>DG Start Threshold</td><td>30% (configurable)</td><td>±3% (configurable)</td><td>DG starts when SOC ≤ 30%; DG stop not permitted until SOC ≥ 33%. Prevents short-cycle starts.</td></tr>
+        <tr><td>Island-Enable Threshold</td><td>25% (configurable)</td><td>±2%</td><td>Island mode only permitted when SOC ≥ 25%; disabled if SOC drops below 23% during island operation.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>4.5 C1–C7 Breaker Close Interlock Chain</h3>
   <p>All PCC breaker close operations must satisfy seven conditions simultaneously. This chain is enforced in hardware (52b DI, sync-check relay output) and software (EMS logic, role check) in series. No individual condition can be bypassed without administrator intervention and a logged override event.</p>
   <div class="tbl-wrap">
     <table>
@@ -741,7 +806,56 @@ td:first-child { font-weight:600; color:var(--text-pri); white-space:nowrap; }
     </table>
   </div>
 
-  <h3>5.3 Abnormal State Handling</h3>
+  <h3>5.3 Harmonic Management</h3>
+  <p>EnergizeOS™ does not perform active harmonic filtering — this is the responsibility of the PCS hardware and site power quality design. However, the EMS monitors Total Harmonic Distortion (THD) via the revenue meter and manages dispatch to avoid conditions known to amplify harmonic content.</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Parameter</th><th>IEEE 519-2022 Limit</th><th>EMS Monitoring</th><th>EMS Action on Exceedance</th></tr></thead>
+      <tbody>
+        <tr><td>Total Demand Distortion (TDD)</td><td>≤ 5% at PCC (for I<sub>SC</sub>/I<sub>L</sub> &lt;20)</td><td>Reads THD-I from revenue meter if supported</td><td>Logs event; operator alert; does not automatically curtail (site engineer decision)</td></tr>
+        <tr><td>Voltage THD at PCC</td><td>≤ 5% (LV), ≤ 3% (MV)</td><td>Reads V-THD if meter supports</td><td>Logs event; if V-THD &gt; 8%, raises P2 alarm and notifies operator</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note n-warn">
+    <div class="ico">⚠</div>
+    <div class="body"><strong>Site engineer responsibility:</strong> IEEE 519-2022 compliance requires a harmonic study and mitigation plan prepared by the site electrical engineer. EnergizeOS™ provides measurement visibility and logging. Harmonic filter design, capacitor bank coordination, and resonance analysis are outside the EMS scope.</div>
+  </div>
+
+  <h3>5.4 Multi-PCS Parallel Operation — Circulating Current Control</h3>
+  <p>When two or more PCS units operate in parallel on the same DC or AC bus, circulating currents can flow between units due to output voltage mismatch. This is a real commissioning hazard — not a theoretical one.</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Risk</th><th>Root Cause</th><th>EnergizeOS™ Mitigation</th><th>Site Engineer Responsibility</th></tr></thead>
+      <tbody>
+        <tr><td>AC circulating current (grid-connected)</td><td>Output voltage setpoint mismatch between parallel PCS units</td><td>Issues synchronized setpoint commands to all parallel PCS; staggers ramp rates to prevent transient mismatch</td><td>PCS output impedance matching; hardware droop resistors or virtual impedance settings in PCS firmware</td></tr>
+        <tr><td>Active power sharing imbalance (island)</td><td>P-f droop curve mismatch between PCS units</td><td>Configures identical droop parameters across all parallel PCS before island mode; monitors individual PCS output for &gt;15% imbalance</td><td>Droop curve design and coordination; cable impedance balancing</td></tr>
+        <tr><td>DC bus circulating current (shared DC)</td><td>SOC imbalance between parallel battery strings on common DC bus</td><td>Module 07 (Battery Balancing): equalizes SOC across strings; prevents simultaneous charge/discharge across strings</td><td>String isolation diodes or DC contactors per string (hardware design)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>5.5 Thermal Runaway Response Hierarchy</h3>
+  <p>EnergizeOS™ does not perform cell-level thermal management — this is the BMS hardware responsibility. The EMS coordinates system-level response when the BMS raises thermal alarms.</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>BMS Alarm Level</th><th>Condition</th><th>EnergizeOS™ Response</th><th>Response Time</th></tr></thead>
+      <tbody>
+        <tr><td style="color:var(--amber)">Warning</td><td>Cell temperature &gt; Warning threshold (configurable, typ. 45°C)</td><td>Derate BESS dispatch (reduce charge/discharge rate by 50%); raise P2 alarm; log event</td><td>&lt; 2 s after alarm receipt</td></tr>
+        <tr><td style="color:var(--red)">Fault</td><td>Cell temperature &gt; Fault threshold (typ. 55°C) or BMS fault flag</td><td>Issue immediate BESS shutdown command (ESD sequence); trip PCC breaker if islanded; raise P1 alarm</td><td>&lt; 500 ms after fault receipt</td></tr>
+        <tr><td style="color:var(--red);font-weight:700">Thermal Runaway</td><td>BMS thermal runaway flag or smoke/fire sensor input</td><td>Emergency shutdown all DERs; trip all controllable breakers; send emergency notification; lock out all restart commands</td><td>&lt; 200 ms</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note n-warn">
+    <div class="ico">⚠</div>
+    <div class="body"><strong>NFPA 855 and UL 9540A compliance:</strong> Thermal runaway suppression, fire detection, and evacuation systems are beyond EMS scope and must be designed by the site mechanical/fire protection engineer. EnergizeOS™ provides the electrical shutdown path and alarm output only.</div>
+  </div>
+
+  <h3>5.6 Arc Flash Boundary</h3>
+  <p>Arc flash hazard analysis per NFPA 70E is required for all ECP panel installations and must be performed by a qualified electrical engineer based on the specific site short-circuit current, upstream protection device clearing times, and working distance. EnergizeOS™ ECP panels are factory-built to UL 508A, but arc flash labeling must be completed by the site EPC after the site-specific arc flash study.</p>
+
+  <h3>5.7 Abnormal State Handling</h3>
   <div class="tbl-wrap">
     <table>
       <thead><tr><th>Condition</th><th>Automatic EMS Response</th><th>Operator Notification</th></tr></thead>
@@ -753,6 +867,8 @@ td:first-child { font-weight:600; color:var(--text-pri); white-space:nowrap; }
         <tr><td>Stale or Conflicting Measurement</td><td>C1/C2 interlock conditions invalidated; close blocked; high-risk actions suspended pending measurement recovery</td><td>UI advisory: "Measurement Unavailable — Close Blocked"</td></tr>
         <tr><td>OTA Strategy Signature Failure</td><td>Strategy update package rejected; current active version maintained unchanged</td><td>Alert: "Invalid Strategy Signature — Update Rejected"</td></tr>
         <tr><td>Unknown Breaker Position</td><td>Both 52a and 52b read indeterminate; close blocked; operator prompt to verify field state</td><td>UI alert: "Breaker Position Unknown — Manual Verification Required"</td></tr>
+        <tr><td>Grid Restoration after Extended Outage (Black Start)</td><td>On grid restoration detection (C1 satisfied), EMS initiates reconnect sequence: verify BESS SOC ≥ island-enable threshold; ramp BESS to idle; phase-sync; close via C1–C7 chain; transition PCS from grid-forming to grid-following</td><td>UI: "Grid Restored — Reconnect Sequence Initiated"; each step logged</td></tr>
+        <tr><td>Frequency Outside Ride-Through Range</td><td>If grid frequency departs IEEE 1547 Table 2 limits and no relay trip has occurred, EMS logs event and alerts operator; does not trip (relay has primary responsibility)</td><td>P2 alarm: "Grid Frequency Anomaly — Monitor"; relay trip logged separately if relay acts</td></tr>
       </tbody>
     </table>
   </div>
@@ -879,6 +995,12 @@ td:first-child { font-weight:600; color:var(--text-pri); white-space:nowrap; }
     <div class="sbadge"><span class="sbadge-check">✓</span><div><div class="sbadge-name">NEMA 4 / IEC IP55</div><div class="sbadge-sub">Pro Panel Outdoor Enclosure Rating</div></div></div>
     <div class="sbadge"><span class="sbadge-check">✓</span><div><div class="sbadge-name">IEC 62443</div><div class="sbadge-sub">Industrial Cybersecurity Architecture</div></div></div>
     <div class="sbadge"><span class="sbadge-check">✓</span><div><div class="sbadge-name">IEC 61010-1</div><div class="sbadge-sub">Electrical Safety · Control Equipment</div></div></div>
+    <div class="sbadge"><span class="sbadge-check">✓</span><div><div class="sbadge-name">NFPA 855</div><div class="sbadge-sub">Energy Storage System Installation · Fire Safety</div></div></div>
+    <div class="sbadge"><span class="sbadge-check">✓</span><div><div class="sbadge-name">NFPA 70E</div><div class="sbadge-sub">Arc Flash Hazard Analysis Required (site EPC)</div></div></div>
+    <div class="sbadge"><span class="sbadge-check">✓</span><div><div class="sbadge-name">IEEE 519-2022</div><div class="sbadge-sub">Harmonic Limits at PCC (site engineer)</div></div></div>
+    <div class="sbadge"><span class="sbadge-check">✓</span><div><div class="sbadge-name">NEC Article 706</div><div class="sbadge-sub">Energy Storage Systems · US NEC</div></div></div>
+    <div class="sbadge"><span class="sbadge-check">✓</span><div><div class="sbadge-name">NEC Article 690 / 705</div><div class="sbadge-sub">PV Systems / Interconnected Power Sources</div></div></div>
+    <div class="sbadge"><span class="sbadge-check">✓</span><div><div class="sbadge-name">ISA-18.2</div><div class="sbadge-sub">Alarm Management · Alarm Priority Framework</div></div></div>
   </div>
   <div class="note n-warn">
     <div class="ico">⚠</div>
@@ -928,7 +1050,44 @@ td:first-child { font-weight:600; color:var(--text-pri); white-space:nowrap; }
     </table>
   </div>
 
-  <h3>9.3 Support Tiers</h3>
+  <h3>9.3 Site Acceptance Test (SAT) Protocol</h3>
+  <p>The SAT is performed after installation at the live site, with all field devices connected. It verifies that the as-installed system performs correctly against the as-designed specification. The SAT must be completed and signed before commercial operation is declared.</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>#</th><th>Test</th><th>Procedure</th><th>Pass Criterion</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">S1</td><td>Live Modbus Communication</td><td>Poll all field devices at installed IP/address; verify correct register values against device displays</td><td style="color:var(--green);font-weight:600">All registers match device readouts; zero Modbus exceptions</td></tr>
+        <tr><td class="mono">S2</td><td>52a/52b Feedback Verification</td><td>Manually operate PCC breaker; verify 52a and 52b DI states match breaker physical position at all positions</td><td style="color:var(--green);font-weight:600">DI state matches breaker position; no false-state at any position</td></tr>
+        <tr><td class="mono">S3</td><td>Anti-Islanding Relay Integration</td><td>Verify relay trip output wired to correct breaker trip coil; simulate relay trip; verify breaker opens and EMS logs with source "relay trip"</td><td style="color:var(--green);font-weight:600">Breaker opens; log attributes to relay; EMS does not re-close automatically</td></tr>
+        <tr><td class="mono">S4</td><td>Grid-Forming Mode Verification</td><td>With grid available, island the site manually; verify PCS switches to grid-forming mode; measure island bus V and f stability under step load change</td><td style="color:var(--green);font-weight:600">PCS confirms grid-forming; V ∈ [0.95–1.05 pu]; f ∈ [59.5–60.5 Hz] after transient</td></tr>
+        <tr><td class="mono">S5</td><td>SOC Floor Enforcement</td><td>Discharge BESS to SOC floor threshold; verify discharge stops; verify alarm raised; verify charge does not resume until SOC &gt; floor + hysteresis</td><td style="color:var(--green);font-weight:600">Discharge stops at floor; hysteresis confirmed; no oscillation at threshold</td></tr>
+        <tr><td class="mono">S6</td><td>Comm Loss Fallback</td><td>Disconnect Modbus cable from revenue meter with system running; verify watchdog triggers, C1 invalidated, alarm raised; reconnect and verify recovery</td><td style="color:var(--green);font-weight:600">Fallback within 5 s; alarm raised; no close issued during comm loss; recovery correct</td></tr>
+        <tr><td class="mono">S7</td><td>TOU Strategy Functional Test</td><td>Configure a test TOU schedule; verify BESS charges/discharges per schedule; verify event log entries with correct strategy attribution</td><td style="color:var(--green);font-weight:600">Dispatch matches schedule; log entries present; no spurious alarms</td></tr>
+        <tr><td class="mono">S8</td><td>Demand Control Functional Test</td><td>With site load active, configure demand threshold below current load; verify BESS discharges to keep demand below threshold</td><td style="color:var(--green);font-weight:600">Site demand stays below threshold during test; BESS output responds within 2 s of threshold approach</td></tr>
+        <tr><td class="mono">S9</td><td>UVT / Manual Trip Verification</td><td>Test UVT path by removing UPS AC supply with system running; test manual button; verify both trip breaker independently of EMS software</td><td style="color:var(--green);font-weight:600">Both paths trip breaker; EMS software state is irrelevant to trip execution</td></tr>
+        <tr><td class="mono">S10</td><td>Full System Handover</td><td>Complete punch list; verify all alarms cleared; deliver FAT + SAT signed reports; train site operator on HMI; confirm remote access functional</td><td style="color:var(--green);font-weight:600">Zero open punch list items; operator trained and signed off; reports delivered</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>9.4 Alarm Priority Framework</h3>
+  <p>A well-designed alarm system is the difference between operators who respond to alarms and operators who silence everything. EnergizeOS™ implements a three-tier alarm priority framework per ISA-18.2.</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Priority</th><th>Color</th><th>Response Time</th><th>Typical Triggers</th><th>Auto-Clear</th></tr></thead>
+      <tbody>
+        <tr><td style="color:var(--red);font-weight:700">P1 — Critical</td><td>Red</td><td>Immediate (&lt; 10 min)</td><td>Comm loss to meter/PCS/relay; thermal fault; UVT trip; grid-forming confirmation failure; breaker position unknown</td><td>No — requires operator acknowledgment</td></tr>
+        <tr><td style="color:var(--amber);font-weight:600">P2 — Warning</td><td>Amber</td><td>Within 1 hour</td><td>SOC approaching floor/ceiling; DG comm loss; V-THD &gt; 8%; demand threshold &gt; 90% of limit; strategy conflict detected</td><td>Yes — if condition clears within 30 min</td></tr>
+        <tr><td style="color:var(--blue)">P3 — Info</td><td>Blue</td><td>Next business day</td><td>Cloud connectivity loss; OTA update available; strategy version mismatch; scheduled maintenance due</td><td>Yes — on condition resolution</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note n-info">
+    <div class="ico">ℹ</div>
+    <div class="body">Alarm flood suppression: EnergizeOS™ applies a 30-second suppression window after a P1 alarm is raised, during which related consequential alarms are grouped under the root cause alarm rather than generating independent alarm entries. This prevents 50-alarm floods from a single Modbus cable disconnect.</div>
+  </div>
+
+  <h3>9.5 Support Tiers</h3>
   <div class="tbl-wrap">
     <table>
       <thead><tr><th>Tier</th><th>Scope</th><th>Response Target</th><th>Availability</th></tr></thead>
