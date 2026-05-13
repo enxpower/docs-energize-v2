@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://docs.energizeos.com/ems/">
 <meta property="og:title" content="EnergizeOS™ EMS — Commercial Energy Management System">
 <meta property="og:description" content="15 strategy modules. C1–C7 interlock chain. IEEE 1547 compliant. Factory pre-configured. Deployed at PepsiCo, SDG&E territory and beyond.">
-<meta property="og:image" content="https://docs.energizeos.com/ems/og-ems.png">
+<meta property="og:image" content="https://docs.energizeos.com/ems/og-ems.svg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:site_name" content="EnergizeOS™ by Energize Solutions Inc.">
@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="EnergizeOS™ EMS — Commercial Energy Management System">
 <meta name="twitter:description" content="15 strategy modules. C1–C7 interlock chain. IEEE 1547 compliant. Ships pre-configured.">
-<meta name="twitter:image" content="https://docs.energizeos.com/ems/og-ems.png">
+<meta name="twitter:image" content="https://docs.energizeos.com/ems/og-ems.svg">
 
 <!-- Theme color for mobile browser chrome -->
 <meta name="theme-color" content="#F7F6F2">
@@ -271,7 +271,7 @@ nav {
 .section-gap-sm { padding: 60px 0; }
 
 /* ─── PROBLEM CARDS ─── */
-.problem-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:48px; }
+.problem-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:48px; }
 .prob-card {
   background: var(--bg-white); border: 1px solid var(--rule);
   border-radius: 12px; padding: 32px 28px;
@@ -610,7 +610,7 @@ footer {
   .section-title { font-size: 28px; }
   .section-sub { font-size: 14px; }
 
-  .problem-grid { grid-template-columns: 1fr; gap: 12px; }
+  .problem-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
 
   .arch-layout { grid-template-columns: 1fr; gap: 40px; }
 
@@ -760,7 +760,7 @@ footer {
   <div class="ns-item">
     <div class="ns-val">&lt;2<sup>s</sup></div>
     <div class="ns-label">Grid/Island Transition</div>
-    <div class="ns-note">per IEEE 1547 / typically &lt;150 ms with relay hardware</div>
+    <div class="ns-note">IEEE 1547 §6.5.1 reconnect ≥300s; island detect &lt;2s; relay trip &lt;160ms typ.</div>
   </div>
   <div class="ns-item">
     <div class="ns-val">48<sup>%</sup></div>
@@ -876,6 +876,14 @@ footer {
       <div class="phil-block">
         <div class="phil-rule rule-blue">Operational Trip = EMS Optional</div>
         <div class="phil-desc">Controlled disconnection for commissioning or maintenance may be issued by EMS when site design permits. This is a control action — not a protection function — and is clearly distinguished in all event logs.</div>
+      </div>
+      <div class="phil-block">
+        <div class="phil-rule rule-blue">PCS Mode = Grid-Forming in Island</div>
+        <div class="phil-desc">When islanded, the PCS must operate in grid-forming (voltage-source) mode to establish voltage and frequency reference for the island bus. EnergizeOS™ issues explicit mode-switch commands to the PCS on island transition and verifies mode confirmation before enabling island loads.</div>
+      </div>
+      <div class="phil-block">
+        <div class="phil-rule rule-warn">Comm Timeout = Safe Fallback</div>
+        <div class="phil-desc">If Modbus communication to any critical device is lost for ≥ configurable timeout (default 5 s), the LRE enters a defined safe fallback state: active setpoints are frozen, close interlock C1 is invalidated, and an alarm is raised. The system never acts on stale data.</div>
       </div>
       <div class="phil-block" style="border:none;padding-top:14px">
         <div style="background:var(--bg-raised);border-radius:8px;padding:14px 16px;font-size:12px;color:var(--text-sec);line-height:1.6">
@@ -1024,20 +1032,20 @@ footer {
 
     <div class="interlock-notes">
       <div class="in-card">
-        <div class="in-title">Protection stays with the relay.</div>
-        <div class="in-body">EnergizeOS™ does not replace or overlap with the protection relay. The relay holds protection engineering responsibility. The EMS holds close authorization. These are separate, non-overlapping responsibilities enforced at every level of the system.</div>
+        <div class="in-title">Protection relay owns protection.</div>
+        <div class="in-body">EnergizeOS™ does not absorb protection engineering responsibility. Relay settings, protection coordination studies, and fault-current analysis remain with the site protection engineer. The EMS holds close authorization only — a supervisory function, not a protective one.</div>
       </div>
       <div class="in-card">
-        <div class="in-title" style="color:var(--green)">Triple-redundant trip architecture.</div>
-        <div class="in-body">Every PCC breaker has three independent trip paths: EMS DO signal (software), UVT undervoltage trip (hardware fail-safe activated on UPS loss), and manual field button (hardwired, network-independent). All three operate independently and do not conflict.</div>
+        <div class="in-title" style="color:var(--green)">Triple-redundant trip. Hardware primary.</div>
+        <div class="in-body">Path 1: EMS DO → trip coil (software-initiated, condition-verified). Path 2: UVT → trip coil (hardware, activates on UPS DC bus collapse — no software required). Path 3: Manual field button (hardwired directly to trip coil, always available). All three paths are independent and do not share a common failure mode.</div>
       </div>
       <div class="in-card">
-        <div class="in-title" style="color:var(--blue)">Full audit trail — utility-ready.</div>
-        <div class="in-body">Every close, trip, mode change, and blocking condition is logged with timestamp, source attribution, and outcome. Exportable in structured format. Accepted by SDG&E and Black &amp; Veatch for Rule 21 interconnection documentation.</div>
+        <div class="in-title" style="color:var(--blue)">SOC hysteresis prevents oscillation.</div>
+        <div class="in-body">Charge/discharge mode transitions enforce a configurable deadband (default ±2% SOC) around all threshold boundaries. Without hysteresis, a BESS at exactly the SOC floor would toggle charge/discharge state at the control loop frequency — destroying PCS contactors and destabilizing the bus. This is a common commissioning failure mode that EnergizeOS™ eliminates by design.</div>
       </div>
       <div class="in-card">
-        <div class="in-title" style="color:var(--amber)">Fully offline-capable.</div>
-        <div class="in-body">All strategy execution runs on the embedded Local Runtime Engine. Cloud connectivity is optional and used only for OTA updates and remote O&M. If the network drops, the plant continues operating with full interlock enforcement.</div>
+        <div class="in-title" style="color:var(--amber)">Comm loss → safe frozen state.</div>
+        <div class="in-body">Modbus timeout to any critical device (PCS, meter, relay) triggers a safe fallback: active power setpoints are frozen at last valid value, the C1 grid-stable condition is invalidated blocking any close, and a priority alarm is raised. The system never issues a command or makes a close decision based on stale or absent measurement data.</div>
       </div>
     </div>
   </div>
@@ -1086,7 +1094,7 @@ footer {
         <div class="case-title">Caribbean Agro-Industrial Microgrid</div>
         <div class="case-meta">OFF-GRID · PV + BESS + DIESEL COORDINATION</div>
         <div class="case-metrics">
-          <div><div class="cm-val" style="color:var(--green)">48%</div><div class="cm-label">Max diesel reduction</div></div>
+          <div><div class="cm-val" style="color:var(--green)">48%</div><div class="cm-label">Diesel reduction (PV penetration &gt;60%, DG coordination + load-following active)</div></div>
           <div><div class="cm-val">–40%</div><div class="cm-label">Generator runtime</div></div>
         </div>
         <div class="case-quote">
@@ -1133,8 +1141,11 @@ footer {
     <div class="cbadge"><span class="cbadge-check">✓</span><div><div class="cbadge-name">G98 / G99</div><div class="cbadge-sub">DNO Connection Req. · United Kingdom</div></div></div>
     <div class="cbadge"><span class="cbadge-check">✓</span><div><div class="cbadge-name">UL 508A</div><div class="cbadge-sub">Industrial Control Panel Construction</div></div></div>
     <div class="cbadge"><span class="cbadge-check">✓</span><div><div class="cbadge-name">IEC 62443</div><div class="cbadge-sub">Industrial Cybersecurity Architecture</div></div></div>
+    <div class="cbadge"><span class="cbadge-check">✓</span><div><div class="cbadge-name">NFPA 70E</div><div class="cbadge-sub">Arc Flash Boundary Labeling Required</div></div></div>
+    <div class="cbadge"><span class="cbadge-check">✓</span><div><div class="cbadge-name">IEEE 519-2022</div><div class="cbadge-sub">Harmonic Limits — Site Engineer Responsible</div></div></div>
+    <div class="cbadge"><span class="cbadge-check">✓</span><div><div class="cbadge-name">NEC 706 / 690 / 705</div><div class="cbadge-sub">Energy Storage · PV · Interconnected Systems</div></div></div>
   </div>
-  <p style="margin-top:16px;font-size:12px;color:var(--text-ter)">Compliance architecture documentation available on request. Third-party certification status per applicable standard — contact sales for details.</p>
+  <p style="margin-top:16px;font-size:12px;color:var(--text-ter)">Compliance architecture documentation available on request. Third-party certification status per applicable standard — contact sales for details. Note: IEEE 1547 / UL 1741 SB compliance requires site-specific protection relay settings, interconnection study approval, and utility acceptance. EnergizeOS™ provides the control architecture and documentation framework; protection engineering and utility approval are the responsibility of the site engineer of record and the interconnecting utility.</p>
 </div>
 </section>
 
