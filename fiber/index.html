@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>North America Fiber Infrastructure Platform</title>
+<meta name="description" content="从中国制造能力到北美工程体系的长期供应商位置。三方合作框架、90天启动计划、Year 1执行预算。">
+
+<!-- OG / WeChat / Social -->
+<meta property="og:title" content="North America Fiber Infrastructure Platform">
+<meta property="og:description" content="From manufacturing capability to North America vendor position. 三方合作框架 · 90天启动计划 · Year 1预算方案。">
+<meta property="og:image" content="https://docs.energizeos.com/fiber/assets/og-image.png">
+<meta property="og:url" content="https://docs.energizeos.com/fiber/">
+<meta property="og:type" content="website">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="North America Fiber Infrastructure Platform">
+<meta name="twitter:image" content="https://docs.energizeos.com/fiber/assets/og-image.png">
+
+<style>
+/* ════════════════════════════════
+   TOKENS
+════════════════════════════════ */
+:root {
+  --navy:    #1F3A5F;
+  --teal:    #2A9D8F;
+  --sky:     #7BBDE8;
+  --green:   #A7D7C5;
+  --amber:   #F2C078;
+  --paper:   #F7FAFC;
+  --white:   #FFFFFF;
+  --slate:   #4A6580;
+  --mist:    #8BA4B8;
+  --rule:    rgba(31,58,95,0.10);
+  --card-bg: #FFFFFF;
+  --f-en:    Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  --f-zh:    'PingFang SC', 'Microsoft YaHei', 'Hiragino Sans GB', sans-serif;
+  --r:       12px;
+  --shadow:  0 2px 12px rgba(31,58,95,0.08);
+  --shadow-md: 0 4px 24px rgba(31,58,95,0.11);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  background: var(--paper);
+  color: var(--navy);
+  font-family: var(--f-en);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ── Utility ── */
+.en { font-family: var(--f-en); }
+.zh { font-family: var(--f-zh); }
+.tag {
+  display: inline-flex; align-items: center;
+  padding: 4px 12px; border-radius: 100px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+}
+.tag-teal  { background: rgba(42,157,143,0.12); color: var(--teal); }
+.tag-navy  { background: rgba(31,58,95,0.08);   color: var(--navy); }
+.tag-sky   { background: rgba(123,189,232,0.15); color: #3a7fad; }
+.tag-amber { background: rgba(242,192,120,0.2);  color: #a0622b; }
+.tag-green { background: rgba(167,215,197,0.25); color: #2a7a62; }
+
+a { color: var(--teal); text-decoration: none; }
+
+/* ── Layout ── */
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 28px; }
+
+/* ── Divider ── */
+.section-divider { height: 1px; background: var(--rule); margin: 0 28px; }
+
+/* ── Section labels ── */
+.section-eyebrow {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 20px;
+}
+.section-eyebrow-num {
+  font-family: var(--f-en); font-size: 11px; font-weight: 700;
+  color: var(--teal); letter-spacing: 0.2em;
+}
+.section-eyebrow-label {
+  font-size: 11px; font-weight: 600; color: var(--mist);
+  letter-spacing: 0.15em; text-transform: uppercase;
+}
+.section-eyebrow-line { flex: 1; height: 1px; background: var(--rule); }
+
+/* ── Headings ── */
+.h-section {
+  font-size: clamp(22px, 3vw, 30px); font-weight: 800;
+  letter-spacing: -0.03em; line-height: 1.2; color: var(--navy);
+}
+.h-section .accent { color: var(--teal); }
+.h-sub {
+  font-size: 15px; color: var(--slate); font-weight: 400;
+  margin-top: 10px; max-width: 600px; line-height: 1.7;
+}
+.h-sub .zh { font-size: 14px; color: var(--mist); display: block; margin-top: 4px; }
+
+/* ════════════════════════════════
+   TOPBAR
+════════════════════════════════ */
+.topbar {
+  background: var(--white);
+  border-bottom: 1px solid var(--rule);
+  padding: 14px 28px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 1px 6px rgba(31,58,95,0.06);
+}
+.topbar-brand {
+  font-size: 13px; font-weight: 700; color: var(--navy); letter-spacing: -0.01em;
+}
+.topbar-brand span { color: var(--teal); }
+.topbar-status {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; color: var(--mist); font-family: var(--f-en);
+}
+.topbar-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--teal); }
+
+/* ════════════════════════════════
+   HERO
+════════════════════════════════ */
+.hero {
+  background: linear-gradient(135deg, #EDF4FB 0%, #E8F4F0 50%, #F0FAF7 100%);
+  padding: 72px 28px 64px;
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    radial-gradient(circle at 80% 30%, rgba(42,157,143,0.08) 0%, transparent 55%),
+    radial-gradient(circle at 20% 80%, rgba(123,189,232,0.07) 0%, transparent 50%);
+  pointer-events: none;
+}
+/* Network line decorations */
+.hero-net {
+  position: absolute; top: 0; right: 0; bottom: 0; width: 50%;
+  pointer-events: none; overflow: hidden; opacity: 0.35;
+}
+
+.hero-inner { max-width: 1080px; margin: 0 auto; position: relative; z-index: 1; }
+.hero-kicker {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(42,157,143,0.1); border: 1px solid rgba(42,157,143,0.2);
+  border-radius: 100px; padding: 5px 14px;
+  font-size: 11px; font-weight: 700; color: var(--teal); letter-spacing: 0.15em;
+  text-transform: uppercase; margin-bottom: 28px;
+}
+.hero-kicker-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); }
+.hero-title {
+  font-size: clamp(32px, 5.5vw, 58px); font-weight: 900;
+  letter-spacing: -0.04em; line-height: 1.05; color: var(--navy);
+  margin-bottom: 12px;
+}
+.hero-title .line2 { color: var(--teal); }
+.hero-subtitle-en {
+  font-size: clamp(15px, 2vw, 18px); color: var(--slate);
+  font-weight: 400; max-width: 640px; line-height: 1.7; margin-bottom: 6px;
+}
+.hero-subtitle-zh {
+  font-family: var(--f-zh); font-size: 14px; color: var(--mist);
+  max-width: 560px; line-height: 1.8; margin-bottom: 36px;
+}
+.hero-pillars {
+  display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px;
+}
+.hero-pillar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 18px; border-radius: 10px;
+  font-size: 13px; font-weight: 700; letter-spacing: 0.02em;
+}
+.hp-1 { background: var(--navy); color: #fff; }
+.hp-plus { color: var(--teal); font-size: 20px; font-weight: 300; padding: 0 4px; align-self: center; }
+.hp-2 { background: var(--teal); color: #fff; }
+.hp-3 { background: var(--sky); color: var(--navy); }
+.hero-cta {
+  background: var(--white);
+  border: 1.5px solid rgba(42,157,143,0.3);
+  border-radius: 14px; padding: 20px 24px;
+  display: inline-flex; align-items: flex-start; gap: 14px;
+  max-width: 620px; box-shadow: var(--shadow);
+}
+.hero-cta-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+.hero-cta-label {
+  font-size: 11px; font-weight: 700; color: var(--teal); letter-spacing: 0.15em;
+  text-transform: uppercase; margin-bottom: 4px;
+}
+.hero-cta-text {
+  font-size: 14px; font-weight: 600; color: var(--navy); line-height: 1.5;
+}
+.hero-cta-text-zh {
+  font-family: var(--f-zh); font-size: 13px; color: var(--slate);
+  margin-top: 3px; line-height: 1.6;
+}
+
+/* ════════════════════════════════
+   SECTIONS — shared spacing
+════════════════════════════════ */
+.section { padding: 64px 0; }
+.section-alt { background: var(--white); }
+
+/* ════════════════════════════════
+   S1 — WHY NOW
+════════════════════════════════ */
+.market-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 12px; margin-top: 32px;
+}
+.market-card {
+  background: var(--card-bg);
+  border: 1px solid var(--rule);
+  border-radius: var(--r); padding: 22px 20px;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.market-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.market-icon { font-size: 26px; margin-bottom: 10px; }
+.market-name { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+.market-name-zh { font-family: var(--f-zh); font-size: 12px; color: var(--mist); margin-bottom: 8px; }
+.market-desc { font-size: 12px; color: var(--slate); line-height: 1.65; }
+
+.why-note {
+  margin-top: 28px; padding: 18px 22px;
+  background: rgba(42,157,143,0.06); border-left: 3px solid var(--teal);
+  border-radius: 0 var(--r) var(--r) 0;
+}
+.why-note p { font-size: 13px; color: var(--navy); line-height: 1.7; }
+.why-note p span { font-family: var(--f-zh); }
+
+/* ════════════════════════════════
+   S2 — WHAT THIS IS
+════════════════════════════════ */
+.equation-wrap {
+  margin-top: 32px; display: flex; align-items: center;
+  flex-wrap: wrap; gap: 0;
+  background: var(--card-bg); border: 1px solid var(--rule);
+  border-radius: 16px; overflow: hidden; box-shadow: var(--shadow);
+}
+.eq-item {
+  flex: 1; min-width: 140px; padding: 28px 20px; text-align: center;
+  position: relative;
+}
+.eq-item:not(:last-child)::after {
+  content: '+';
+  position: absolute; right: -12px; top: 50%; transform: translateY(-50%);
+  font-size: 22px; font-weight: 300; color: var(--teal); z-index: 1;
+}
+.eq-item.eq-result { background: var(--navy); }
+.eq-item.eq-result .eq-icon { color: rgba(255,255,255,0.7); }
+.eq-item.eq-result .eq-label { color: #fff; }
+.eq-item.eq-result .eq-sub { color: rgba(255,255,255,0.5); }
+.eq-equals {
+  padding: 28px 16px; font-size: 26px; font-weight: 300; color: var(--teal);
+}
+.eq-icon { font-size: 28px; margin-bottom: 10px; }
+.eq-label { font-size: 13px; font-weight: 700; color: var(--navy); line-height: 1.4; }
+.eq-sub { font-family: var(--f-zh); font-size: 11px; color: var(--mist); margin-top: 4px; }
+
+.position-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 28px; }
+.position-card {
+  padding: 22px 24px; border-radius: var(--r); border: 1px solid var(--rule);
+  background: var(--card-bg); box-shadow: var(--shadow);
+}
+.pc-cross { font-size: 20px; margin-bottom: 8px; opacity: 0.4; }
+.pc-bad { font-size: 13px; font-weight: 600; color: #b85c38; text-decoration: line-through; opacity: 0.65; }
+.pc-bad-zh { font-family: var(--f-zh); font-size: 11px; color: var(--mist); }
+.pc-divider { height: 1px; background: var(--rule); margin: 12px 0; }
+.pc-check { font-size: 20px; margin-bottom: 8px; }
+.pc-good { font-size: 13px; font-weight: 700; color: var(--navy); }
+.pc-good-zh { font-family: var(--f-zh); font-size: 12px; color: var(--slate); margin-top: 3px; }
+
+/* ════════════════════════════════
+   S3 — THREE-PARTY MODEL
+════════════════════════════════ */
+.three-party-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 16px; margin-top: 32px;
+}
+.party-card {
+  background: var(--card-bg); border: 1px solid var(--rule);
+  border-radius: 16px; overflow: hidden; box-shadow: var(--shadow);
+}
+.party-header {
+  padding: 22px 22px 18px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.ph-navy  { background: var(--navy); }
+.ph-teal  { background: var(--teal); }
+.ph-sky   { background: #5a9dc4; }
+.party-icon { font-size: 24px; margin-bottom: 4px; }
+.party-title { font-size: 15px; font-weight: 800; color: #fff; line-height: 1.3; }
+.party-title-zh { font-family: var(--f-zh); font-size: 12px; color: rgba(255,255,255,0.6); }
+.party-body { padding: 20px 22px; }
+.party-items { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.party-items li {
+  display: flex; align-items: flex-start; gap: 8px;
+  font-size: 13px; color: var(--slate); line-height: 1.5;
+}
+.party-items li::before {
+  content: '›'; color: var(--teal); font-size: 16px; font-weight: 700;
+  flex-shrink: 0; margin-top: -1px;
+}
+.party-note {
+  margin: 14px 0 0; padding: 12px 14px;
+  background: var(--paper); border-radius: 8px;
+  font-family: var(--f-zh); font-size: 12px; color: var(--mist); line-height: 1.6;
+}
+
+/* ════════════════════════════════
+   S4 — MARKET FOCUS
+════════════════════════════════ */
+.focus-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 32px; }
+.focus-card {
+  border-radius: 16px; overflow: hidden; border: 1px solid var(--rule);
+  box-shadow: var(--shadow);
+}
+.focus-header {
+  padding: 18px 22px; display: flex; align-items: center; gap: 10px;
+}
+.fh-do   { background: var(--navy); }
+.fh-later { background: var(--paper); border-bottom: 1px solid var(--rule); }
+.focus-header-icon { font-size: 18px; }
+.focus-header-title { font-size: 13px; font-weight: 800; color: #fff; }
+.fh-later .focus-header-title { color: var(--mist); }
+.focus-header-sub { font-family: var(--f-zh); font-size: 11px; color: rgba(255,255,255,0.55); }
+.fh-later .focus-header-sub { color: var(--mist); }
+.focus-body { padding: 18px 22px; background: var(--card-bg); }
+.focus-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 0; border-bottom: 1px solid var(--rule);
+}
+.focus-item:last-child { border-bottom: none; }
+.focus-dot-do    { width: 7px; height: 7px; border-radius: 50%; background: var(--teal); flex-shrink: 0; }
+.focus-dot-later { width: 7px; height: 7px; border-radius: 50%; background: var(--rule); border: 1.5px solid var(--mist); flex-shrink: 0; }
+.focus-item-text { font-size: 13px; color: var(--navy); font-weight: 500; }
+.focus-item-text-later { font-size: 13px; color: var(--mist); }
+.focus-deferred {
+  margin-top: 12px; padding: 8px 14px;
+  background: rgba(31,58,95,0.04); border-radius: 6px;
+  font-size: 11px; color: var(--mist); font-family: var(--f-zh);
+}
+
+/* ════════════════════════════════
+   S5 — EXECUTION SYSTEM
+════════════════════════════════ */
+.flow-wrap { margin-top: 32px; }
+.flow-steps {
+  display: flex; align-items: stretch; flex-wrap: nowrap;
+  gap: 0; overflow-x: auto; padding-bottom: 4px;
+}
+.flow-step {
+  flex: 1; min-width: 110px; position: relative;
+  background: var(--card-bg); border: 1px solid var(--rule);
+  border-radius: var(--r); padding: 16px 12px; text-align: center;
+  box-shadow: var(--shadow);
+}
+.flow-step:not(:last-child) { margin-right: 10px; }
+.flow-step:not(:last-child)::after {
+  content: '→';
+  position: absolute; right: -18px; top: 50%; transform: translateY(-50%);
+  color: var(--teal); font-size: 16px; z-index: 1;
+}
+.flow-num {
+  font-size: 10px; font-weight: 700; color: var(--teal); letter-spacing: 0.15em;
+  margin-bottom: 6px;
+}
+.flow-label { font-size: 11px; font-weight: 700; color: var(--navy); line-height: 1.4; }
+.flow-label-zh { font-family: var(--f-zh); font-size: 10px; color: var(--mist); margin-top: 3px; }
+
+.sla-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 24px; }
+.sla-card {
+  background: rgba(42,157,143,0.05); border: 1px solid rgba(42,157,143,0.15);
+  border-radius: var(--r); padding: 16px; text-align: center;
+}
+.sla-val { font-size: 20px; font-weight: 900; color: var(--navy); letter-spacing: -0.02em; }
+.sla-label { font-size: 11px; color: var(--teal); font-weight: 600; margin-top: 2px; letter-spacing: 0.05em; }
+.sla-label-zh { font-family: var(--f-zh); font-size: 10px; color: var(--mist); margin-top: 2px; }
+
+/* ════════════════════════════════
+   S6 — FACTORY GOVERNANCE
+════════════════════════════════ */
+.factory-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 32px; }
+.factory-item {
+  background: var(--card-bg); border: 1px solid var(--rule);
+  border-radius: var(--r); padding: 18px 16px;
+  box-shadow: var(--shadow);
+  display: flex; flex-direction: column; gap: 8px;
+}
+.fi-icon { font-size: 22px; }
+.fi-label { font-size: 12px; font-weight: 700; color: var(--navy); line-height: 1.4; }
+.fi-label-zh { font-family: var(--f-zh); font-size: 11px; color: var(--mist); }
+
+/* ════════════════════════════════
+   S7 — BUDGET
+════════════════════════════════ */
+.budget-hero {
+  background: var(--navy); border-radius: 16px; padding: 32px 36px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 20px; margin-top: 32px; margin-bottom: 24px;
+}
+.budget-hero-label { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.5); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 6px; }
+.budget-hero-val { font-size: clamp(28px,4vw,42px); font-weight: 900; color: #fff; letter-spacing: -0.03em; }
+.budget-hero-val span { color: var(--teal); }
+.budget-hero-sub { font-family: var(--f-zh); font-size: 13px; color: rgba(255,255,255,0.45); margin-top: 4px; }
+.budget-hero-note { text-align: right; }
+.budget-hero-note-label { font-size: 11px; color: rgba(255,255,255,0.4); font-family: var(--f-zh); }
+.budget-hero-note-val { font-size: 17px; font-weight: 700; color: rgba(255,255,255,0.8); margin-top: 4px; }
+
+.budget-table {
+  width: 100%; border-collapse: collapse;
+  background: var(--card-bg); border-radius: var(--r);
+  overflow: hidden; box-shadow: var(--shadow);
+  border: 1px solid var(--rule);
+}
+.budget-table th {
+  text-align: left; padding: 12px 16px;
+  background: #F0F5FA; font-size: 10px; font-weight: 700;
+  color: var(--mist); letter-spacing: 0.12em; text-transform: uppercase;
+  border-bottom: 1px solid var(--rule);
+}
+.budget-table th:last-child { text-align: right; }
+.budget-table td {
+  padding: 13px 16px; font-size: 13px; color: var(--slate);
+  border-bottom: 1px solid var(--rule);
+}
+.budget-table td:last-child { text-align: right; font-family: var(--f-en); font-weight: 600; color: var(--navy); }
+.budget-table tr:last-child td { border-bottom: none; }
+.budget-table tr:hover td { background: rgba(42,157,143,0.03); }
+.td-name { font-weight: 600; color: var(--navy); }
+.td-name-zh { font-family: var(--f-zh); font-size: 11px; color: var(--mist); display: block; margin-top: 1px; }
+
+.monthly-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 24px; }
+.monthly-card {
+  border-radius: var(--r); padding: 22px 20px; text-align: center;
+  border: 1px solid var(--rule); box-shadow: var(--shadow);
+}
+.mc-conservative { background: var(--card-bg); }
+.mc-recommended  { background: var(--navy); }
+.mc-accelerated  { background: var(--teal); }
+.monthly-mode { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+.mc-conservative .monthly-mode { color: var(--mist); }
+.mc-recommended  .monthly-mode { color: rgba(255,255,255,0.5); }
+.mc-accelerated  .monthly-mode { color: rgba(255,255,255,0.65); }
+.monthly-val { font-size: 22px; font-weight: 900; letter-spacing: -0.02em; }
+.mc-conservative .monthly-val { color: var(--navy); }
+.mc-recommended  .monthly-val { color: #fff; }
+.mc-accelerated  .monthly-val { color: #fff; }
+.monthly-sub { font-size: 11px; margin-top: 4px; font-family: var(--f-zh); }
+.mc-conservative .monthly-sub { color: var(--mist); }
+.mc-recommended  .monthly-sub { color: rgba(255,255,255,0.45); }
+.mc-accelerated  .monthly-sub { color: rgba(255,255,255,0.55); }
+.monthly-note {
+  margin-top: 20px; padding: 14px 18px;
+  background: rgba(42,157,143,0.06); border-radius: var(--r);
+  border-left: 3px solid var(--teal);
+  font-size: 13px; color: var(--slate); line-height: 1.7;
+}
+.monthly-note .zh { font-family: var(--f-zh); display: block; font-size: 12px; color: var(--mist); margin-top: 4px; }
+
+/* ════════════════════════════════
+   S8 — 90-DAY PLAN
+════════════════════════════════ */
+.timeline-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; }
+.tl-card {
+  background: var(--card-bg); border: 1px solid var(--rule);
+  border-radius: 16px; overflow: hidden; box-shadow: var(--shadow);
+}
+.tl-header { padding: 18px 20px; }
+.tlh-1 { background: rgba(31,58,95,0.07); }
+.tlh-2 { background: rgba(42,157,143,0.08); }
+.tlh-3 { background: rgba(123,189,232,0.12); }
+.tl-days { font-size: 22px; font-weight: 900; color: var(--navy); letter-spacing: -0.03em; }
+.tl-range { font-size: 12px; color: var(--teal); font-weight: 600; margin-top: 2px; }
+.tl-theme { font-family: var(--f-zh); font-size: 12px; color: var(--slate); margin-top: 4px; }
+.tl-body { padding: 16px 20px; }
+.tl-items { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+.tl-items li {
+  display: flex; align-items: flex-start; gap: 8px;
+  font-size: 12px; color: var(--slate); line-height: 1.5;
+}
+.tl-items li::before {
+  content: '✓'; color: var(--teal); font-size: 11px; font-weight: 700;
+  flex-shrink: 0; margin-top: 1px;
+}
+
+/* ════════════════════════════════
+   S9 — GOVERNANCE
+════════════════════════════════ */
+.gov-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 32px; }
+.gov-card {
+  background: var(--card-bg); border: 1px solid var(--rule);
+  border-radius: 16px; padding: 24px; box-shadow: var(--shadow);
+}
+.gov-title { font-size: 14px; font-weight: 800; color: var(--navy); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.gov-title .icon { font-size: 18px; }
+.gov-items { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.gov-items li {
+  display: flex; align-items: flex-start; gap: 8px;
+  font-size: 13px; color: var(--slate); line-height: 1.5;
+  padding: 8px 12px; background: var(--paper); border-radius: 8px;
+}
+.gov-items li::before {
+  content: '›'; color: var(--teal); font-size: 16px; font-weight: 700;
+  flex-shrink: 0; margin-top: -1px;
+}
+
+/* ════════════════════════════════
+   S10 — FINAL CTA
+════════════════════════════════ */
+.cta-section {
+  background: linear-gradient(135deg, var(--navy) 0%, #163050 100%);
+  padding: 72px 28px;
+}
+.cta-inner { max-width: 1080px; margin: 0 auto; }
+.cta-eyebrow {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+  color: rgba(255,255,255,0.35); margin-bottom: 20px;
+}
+.cta-title {
+  font-size: clamp(24px, 4vw, 40px); font-weight: 900; color: #fff;
+  letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 10px;
+}
+.cta-subtitle-zh {
+  font-family: var(--f-zh); font-size: 15px; color: rgba(255,255,255,0.5);
+  margin-bottom: 40px; line-height: 1.7;
+}
+.cta-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+.cta-item {
+  background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--r); padding: 18px 16px; text-align: center;
+  transition: background 0.2s;
+}
+.cta-item:hover { background: rgba(255,255,255,0.11); }
+.cta-num { font-size: 11px; font-weight: 700; color: var(--teal); letter-spacing: 0.15em; margin-bottom: 8px; }
+.cta-action { font-size: 12px; font-weight: 700; color: #fff; line-height: 1.4; }
+.cta-action-zh { font-family: var(--f-zh); font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 4px; }
+.cta-bottom {
+  margin-top: 36px; padding-top: 28px; border-top: 1px solid rgba(255,255,255,0.08);
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+}
+.cta-bottom-text { font-size: 13px; color: rgba(255,255,255,0.35); }
+.cta-bottom-text .zh { font-family: var(--f-zh); }
+
+/* ════════════════════════════════
+   FOOTER
+════════════════════════════════ */
+.footer {
+  background: #111E30; padding: 24px 28px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 10px;
+}
+.footer-text { font-size: 11px; color: rgba(255,255,255,0.2); letter-spacing: 0.05em; }
+.footer-link { font-size: 11px; color: rgba(42,157,143,0.6); }
+
+/* ════════════════════════════════
+   ANIMATIONS
+════════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.ao { opacity: 0; }
+.ao.visible { animation: fadeUp 0.6s ease forwards; }
+.ao.d1 { animation-delay: 0.05s; } .ao.d2 { animation-delay: 0.12s; }
+.ao.d3 { animation-delay: 0.19s; } .ao.d4 { animation-delay: 0.26s; }
+.ao.d5 { animation-delay: 0.33s; } .ao.d6 { animation-delay: 0.40s; }
+
+/* ════════════════════════════════
+   RESPONSIVE
+════════════════════════════════ */
+@media (max-width: 900px) {
+  .market-grid       { grid-template-columns: 1fr 1fr; }
+  .three-party-grid  { grid-template-columns: 1fr; }
+  .sla-grid          { grid-template-columns: 1fr 1fr; }
+  .factory-grid      { grid-template-columns: 1fr 1fr; }
+  .timeline-grid     { grid-template-columns: 1fr; }
+  .gov-grid          { grid-template-columns: 1fr; }
+  .cta-grid          { grid-template-columns: 1fr 1fr; }
+  .equation-wrap     { flex-direction: column; }
+  .eq-item:not(:last-child)::after { display: none; }
+  .eq-equals         { display: none; }
+  .focus-grid        { grid-template-columns: 1fr; }
+  .position-cards    { grid-template-columns: 1fr; }
+  .monthly-grid      { grid-template-columns: 1fr; }
+  .budget-hero       { flex-direction: column; text-align: center; }
+  .budget-hero-note  { text-align: center; }
+  .flow-steps        { flex-direction: column; }
+  .flow-step:not(:last-child)::after { content: '↓'; right: auto; left: 50%; transform: translateX(-50%); top: auto; bottom: -18px; }
+  .flow-step { margin-right: 0; margin-bottom: 14px; }
+}
+@media (max-width: 600px) {
+  .market-grid    { grid-template-columns: 1fr; }
+  .factory-grid   { grid-template-columns: 1fr 1fr; }
+  .sla-grid       { grid-template-columns: 1fr 1fr; }
+  .cta-grid       { grid-template-columns: 1fr; }
+  .hero { padding: 48px 20px 44px; }
+  .section-inner, .wrap { padding-left: 16px; padding-right: 16px; }
+  .topbar { padding: 12px 16px; }
+  .budget-table th:nth-child(2),
+  .budget-table td:nth-child(2) { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="topbar-brand">Fiber <span>Infrastructure Platform</span> · 合作执行方案</div>
+  <div class="topbar-status">
+    <div class="topbar-dot"></div>
+    <span class="zh" style="font-family:var(--f-zh)">内部讨论文件 · 2026</span>
+  </div>
+</header>
+
+<!-- ════ HERO ════ -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-kicker ao d1">
+      <div class="hero-kicker-dot"></div>
+      North America Infrastructure Platform · 合作执行提案
+    </div>
+    <h1 class="hero-title ao d2">
+      North America<br>
+      <span class="line2">Fiber Infrastructure</span><br>
+      Platform
+    </h1>
+    <p class="hero-subtitle-en ao d3">
+      From China's manufacturing strength to a recognized, purchasable,
+      traceable vendor position in North America's engineering supply chain.
+    </p>
+    <p class="hero-subtitle-zh ao d3 zh">
+      把中国光通信制造能力，转化为北美工程体系可接受、可采购、可提交、可追溯、可长期服务的市场化平台能力。
+    </p>
+    <div class="hero-pillars ao d4">
+      <div class="hero-pillar hp-1">🏭 Manufacturing</div>
+      <div class="hp-plus">+</div>
+      <div class="hero-pillar hp-2">🌎 North America Market Access</div>
+      <div class="hp-plus">+</div>
+      <div class="hero-pillar hp-3">⚙️ Engineering Execution</div>
+    </div>
+    <div class="hero-cta ao d5">
+      <div class="hero-cta-icon">🎯</div>
+      <div>
+        <div class="hero-cta-label">Next Step</div>
+        <div class="hero-cta-text">Confirm Budget · Assign Owners · Launch 90-Day Plan</div>
+        <div class="hero-cta-text-zh zh">确认预算 · 指定负责人 · 启动 90 天执行计划</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ════ S1 — WHY NOW ════ -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-eyebrow ao">
+      <span class="section-eyebrow-num">01</span>
+      <span class="section-eyebrow-label">Why Now · 为什么现在</span>
+      <div class="section-eyebrow-line"></div>
+    </div>
+    <h2 class="h-section ao">北美市场正在打开<br><span class="accent">六个真实切入口</span></h2>
+    <p class="h-sub ao">
+      不是要正面进攻 hyperscaler，而是从区域工程供应链切入，建立可持续的供应商位置。
+      <span class="zh">Regional ISP · Contractors · Campus Fiber · FTTX 是当前最现实的起点。</span>
+    </p>
+    <div class="market-grid">
+      <div class="market-card ao d1">
+        <div class="market-icon">🏗️</div>
+        <div class="market-name">AI Data Centers</div>
+        <div class="market-name-zh">AI数据中心基础设施</div>
+        <div class="market-desc">园区级暗光纤、园区互联、边缘接入层——非 Hyperscaler 内部 Fabric，是工程公司可参与的外围市场。</div>
+      </div>
+      <div class="market-card ao d2">
+        <div class="market-icon">🏠</div>
+        <div class="market-name">FTTX / Broadband</div>
+        <div class="market-name-zh">宽带光纤到户</div>
+        <div class="market-desc">联邦 BEAD 项目驱动，区域 ISP 和建设承包商正在大规模扩张，产品认证与工程文件是核心门槛。</div>
+      </div>
+      <div class="market-card ao d3">
+        <div class="market-icon">🌑</div>
+        <div class="market-name">Dark Fiber</div>
+        <div class="market-name-zh">暗光纤部署</div>
+        <div class="market-desc">市政、公用事业、运营商的暗光纤建设持续增长，对 OSP 产品质量与可追溯性要求明确。</div>
+      </div>
+      <div class="market-card ao d4">
+        <div class="market-icon">🎓</div>
+        <div class="market-name">Campus Fiber</div>
+        <div class="market-name-zh">园区光纤网络</div>
+        <div class="market-desc">大学、医院、工业园区——采购决策链短、工程公司主导、产品认证要求标准可预期。</div>
+      </div>
+      <div class="market-card ao d5">
+        <div class="market-icon">⚡</div>
+        <div class="market-name">Utility Telecom</div>
+        <div class="market-name-zh">公用事业通信</div>
+        <div class="market-desc">电力与公用事业公司的通信光纤升级，采购流程规范，对长期供应商资质认可度高。</div>
+      </div>
+      <div class="market-card ao d6">
+        <div class="market-icon">🔌</div>
+        <div class="market-name">Structured Cabling</div>
+        <div class="market-name-zh">结构化综合布线</div>
+        <div class="market-desc">商业楼宇、数据中心结构化布线——采购量稳定，承包商关系是核心资产，产品文件齐全即可进入。</div>
+      </div>
+    </div>
+    <div class="why-note ao">
+      <p>战略切入点：<strong>不打最难的市场，先建立可持续的供应商位置。</strong><br>
+      <span class="zh">从 Regional ISP、Campus Fiber、FTTX 工程商供应链切入，积累工程提交记录、客户关系和产品认可度，再逐步向高端市场延伸。</span></p>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ════ S2 — WHAT THIS IS ════ -->
+<section class="section section-alt">
+  <div class="wrap">
+    <div class="section-eyebrow ao">
+      <span class="section-eyebrow-num">02</span>
+      <span class="section-eyebrow-label">What This Really Is · 这件事的本质</span>
+      <div class="section-eyebrow-line"></div>
+    </div>
+    <h2 class="h-section ao">这不是贸易，<br><span class="accent">是北美供应商位置建设</span></h2>
+
+    <div class="equation-wrap ao">
+      <div class="eq-item">
+        <div class="eq-icon">🏭</div>
+        <div class="eq-label">China<br>Manufacturing</div>
+        <div class="eq-sub">中国制造能力</div>
+      </div>
+      <div class="eq-item">
+        <div class="eq-icon">🌎</div>
+        <div class="eq-label">North America<br>Market Access</div>
+        <div class="eq-sub">北美市场准入</div>
+      </div>
+      <div class="eq-item">
+        <div class="eq-icon">📋</div>
+        <div class="eq-label">Engineering<br>Documentation</div>
+        <div class="eq-sub">工程文件体系</div>
+      </div>
+      <div class="eq-item">
+        <div class="eq-icon">✅</div>
+        <div class="eq-label">Compliance<br>& QA</div>
+        <div class="eq-sub">认证与质量管控</div>
+      </div>
+      <div class="eq-equals">=</div>
+      <div class="eq-item eq-result">
+        <div class="eq-icon">🏆</div>
+        <div class="eq-label">Vendor<br>Platform</div>
+        <div class="eq-sub">北美供应商平台</div>
+      </div>
+    </div>
+
+    <div class="position-cards ao">
+      <div class="position-card">
+        <div class="pc-cross">✗</div>
+        <div class="pc-bad">A trading business</div>
+        <div class="pc-bad-zh">一次性出口贸易</div>
+        <div class="pc-bad">A one-time export project</div>
+        <div class="pc-bad-zh">单次项目合作</div>
+        <div class="pc-divider"></div>
+        <div class="pc-check">✓</div>
+        <div class="pc-good">A North America vendor-position building strategy</div>
+        <div class="pc-good-zh zh">在北美工程体系中建立长期供应商位置的系统性战略</div>
+      </div>
+      <div class="position-card">
+        <div class="pc-cross">✗</div>
+        <div class="pc-bad">Just selling cable</div>
+        <div class="pc-bad-zh">卖光缆</div>
+        <div class="pc-bad">Competing on price alone</div>
+        <div class="pc-bad-zh">单纯价格竞争</div>
+        <div class="pc-divider"></div>
+        <div class="pc-check">✓</div>
+        <div class="pc-good">Building recognized, purchasable, traceable vendor capability</div>
+        <div class="pc-good-zh zh">建立可被工程体系认可、采购、追溯的系统性供应商能力</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ════ S3 — THREE-PARTY MODEL ════ -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-eyebrow ao">
+      <span class="section-eyebrow-num">03</span>
+      <span class="section-eyebrow-label">Three-Party Cooperation · 三方合作模型</span>
+      <div class="section-eyebrow-line"></div>
+    </div>
+    <h2 class="h-section ao">三方共同构建，<br><span class="accent">各司其职，缺一不可</span></h2>
+    <p class="h-sub ao">This is a joint-build, not a buyer–supplier arrangement. Each party brings irreplaceable capability.
+      <span class="zh">这不是甲乙方关系，而是三方共建——每一方都是不可替代的核心价值来源。</span>
+    </p>
+
+    <div class="three-party-grid">
+
+      <!-- Party 1: Manufacturer -->
+      <div class="party-card ao d1">
+        <div class="party-header ph-navy">
+          <div class="party-icon">🏭</div>
+          <div class="party-title">Manufacturer / Factory</div>
+          <div class="party-title-zh">厂家端 · 制造与供应链</div>
+        </div>
+        <div class="party-body">
+          <ul class="party-items">
+            <li>Manufacturing capacity &amp; product quality</li>
+            <li>Competitive cost &amp; delivery reliability</li>
+            <li>Material consistency &amp; reel traceability</li>
+            <li>OTDR archives &amp; QC documentation</li>
+            <li>Testing support &amp; sample dispatch</li>
+            <li>Monthly platform resource support</li>
+          </ul>
+          <div class="party-note">厂家端不仅提供制造与供应链能力，也作为北美平台早期市场建设的主要资源支持方，通过月度预算保障平台连续执行。</div>
+        </div>
+      </div>
+
+      <!-- Party 2: North America Platform -->
+      <div class="party-card ao d2">
+        <div class="party-header ph-teal">
+          <div class="party-icon">🌎</div>
+          <div class="party-title">North America Platform</div>
+          <div class="party-title-zh">北美平台 · 工程执行与市场</div>
+        </div>
+        <div class="party-body">
+          <ul class="party-items">
+            <li>Product definition &amp; SKU roadmap</li>
+            <li>Datasheets, submittals &amp; catalog</li>
+            <li>UL / ETL compliance coordination</li>
+            <li>Contractor &amp; ISP network development</li>
+            <li>Technical support &amp; customer relations</li>
+            <li>QA governance &amp; traceability system</li>
+            <li>RFQ response &amp; project submittals</li>
+          </ul>
+          <div class="party-note">北美平台是核心执行主体，负责将制造能力转化为工程体系可接受的产品与服务能力。</div>
+        </div>
+      </div>
+
+      <!-- Party 3: Coordination Partner -->
+      <div class="party-card ao d3">
+        <div class="party-header ph-sky">
+          <div class="party-icon">🤝</div>
+          <div class="party-title">Coordination Partner</div>
+          <div class="party-title-zh">协调合伙人 · 关系与对齐</div>
+        </div>
+        <div class="party-body">
+          <ul class="party-items">
+            <li>Relationship coordination &amp; key introductions</li>
+            <li>Communication bridge between parties</li>
+            <li>Factory–platform alignment support</li>
+            <li>Strategic resource introductions</li>
+            <li>Monthly governance participation</li>
+          </ul>
+          <div class="party-note">协调合伙人是三方沟通的桥梁与推进者——负责关系协调、关键对接和月度对齐，不承担复杂日常运营责任。</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ════ S4 — MARKET FOCUS ════ -->
+<section class="section section-alt">
+  <div class="wrap">
+    <div class="section-eyebrow ao">
+      <span class="section-eyebrow-num">04</span>
+      <span class="section-eyebrow-label">First Stage Focus · 第一阶段市场聚焦</span>
+      <div class="section-eyebrow-line"></div>
+    </div>
+    <h2 class="h-section ao">先做能做的，<br><span class="accent">推迟难做的</span></h2>
+    <p class="h-sub ao">Strategic prioritization: build position first, expand later.
+      <span class="zh">先聚焦，后延伸——平台未成熟之前，不分散资源。</span>
+    </p>
+    <div class="focus-grid">
+      <div class="focus-card ao d1">
+        <div class="focus-header fh-do">
+          <div class="focus-header-icon">🟢</div>
+          <div>
+            <div class="focus-header-title">Do First — Start Now</div>
+            <div class="focus-header-sub">立即启动</div>
+          </div>
+        </div>
+        <div class="focus-body">
+          <div class="focus-item"><div class="focus-dot-do"></div><span class="focus-item-text">Outdoor Fiber Cable (OSP)</span></div>
+          <div class="focus-item"><div class="focus-dot-do"></div><span class="focus-item-text">Campus &amp; Enterprise Fiber</span></div>
+          <div class="focus-item"><div class="focus-dot-do"></div><span class="focus-item-text">FTTX Passive Products</span></div>
+          <div class="focus-item"><div class="focus-dot-do"></div><span class="focus-item-text">Regional ISP Supply Chain</span></div>
+          <div class="focus-item"><div class="focus-dot-do"></div><span class="focus-item-text">Broadband Contractors</span></div>
+          <div class="focus-item"><div class="focus-dot-do"></div><span class="focus-item-text">Structured Cabling Contractors</span></div>
+          <div class="focus-item"><div class="focus-dot-do"></div><span class="focus-item-text">Dark Fiber Deployment</span></div>
+        </div>
+      </div>
+      <div class="focus-card ao d2">
+        <div class="focus-header fh-later">
+          <div class="focus-header-icon">⏸</div>
+          <div>
+            <div class="focus-header-title">Deferred Until Platform Maturity</div>
+            <div class="focus-header-sub">待平台成熟后再进入</div>
+          </div>
+        </div>
+        <div class="focus-body">
+          <div class="focus-item"><div class="focus-dot-later"></div><span class="focus-item-text-later">800G / 1.6T Active Optics</span></div>
+          <div class="focus-item"><div class="focus-dot-later"></div><span class="focus-item-text-later">Hyperscale Inside Fabric</span></div>
+          <div class="focus-item"><div class="focus-dot-later"></div><span class="focus-item-text-later">Direct Hyperscaler Sales</span></div>
+          <div class="focus-item"><div class="focus-dot-later"></div><span class="focus-item-text-later">Heavy Inventory Push</span></div>
+          <div class="focus-item"><div class="focus-dot-later"></div><span class="focus-item-text-later">Full Product Catalog (Day 1)</span></div>
+          <div class="focus-deferred">以上市场等平台建立足够认可度与执行能力后，作为第二阶段延伸目标。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ════ S5 — EXECUTION SYSTEM ════ -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-eyebrow ao">
+      <span class="section-eyebrow-num">05</span>
+      <span class="section-eyebrow-label">Execution System · 执行系统</span>
+      <div class="section-eyebrow-line"></div>
+    </div>
+    <h2 class="h-section ao">从产品定义到<span class="accent">复购订单</span><br>每个环节闭环管理</h2>
+    <div class="flow-wrap">
+      <div class="flow-steps ao">
+        <div class="flow-step"><div class="flow-num">01</div><div class="flow-label">Product<br>Definition</div><div class="flow-label-zh">产品定义</div></div>
+        <div class="flow-step"><div class="flow-num">02</div><div class="flow-label">Compliance<br>Roadmap</div><div class="flow-label-zh">认证路径</div></div>
+        <div class="flow-step"><div class="flow-num">03</div><div class="flow-label">Datasheet &amp;<br>Submittal</div><div class="flow-label-zh">工程文件</div></div>
+        <div class="flow-step"><div class="flow-num">04</div><div class="flow-label">Sample<br>Kit</div><div class="flow-label-zh">样品工具包</div></div>
+        <div class="flow-step"><div class="flow-num">05</div><div class="flow-label">Contractor<br>Outreach</div><div class="flow-label-zh">承包商开发</div></div>
+        <div class="flow-step"><div class="flow-num">06</div><div class="flow-label">RFQ &amp;<br>Trial Order</div><div class="flow-label-zh">报价与试单</div></div>
+        <div class="flow-step"><div class="flow-num">07</div><div class="flow-label">QA &amp;<br>Traceability</div><div class="flow-label-zh">质量追溯</div></div>
+        <div class="flow-step"><div class="flow-num">08</div><div class="flow-label">Repeat<br>Orders</div><div class="flow-label-zh">复购订单</div></div>
+      </div>
+    </div>
+    <div class="sla-grid ao">
+      <div class="sla-card"><div class="sla-val">24–48h</div><div class="sla-label">Technical Response</div><div class="sla-label-zh">技术咨询响应</div></div>
+      <div class="sla-card"><div class="sla-val">24–72h</div><div class="sla-label">RFQ Response</div><div class="sla-label-zh">报价单响应</div></div>
+      <div class="sla-card"><div class="sla-val">48h</div><div class="sla-label">Sample Dispatch Init</div><div class="sla-label-zh">样品发货启动</div></div>
+      <div class="sla-card"><div class="sla-val">Monthly</div><div class="sla-label">Governance Review</div><div class="sla-label-zh">月度治理复盘</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ════ S6 — FACTORY GOVERNANCE ════ -->
+<section class="section section-alt">
+  <div class="wrap">
+    <div class="section-eyebrow ao">
+      <span class="section-eyebrow-num">06</span>
+      <span class="section-eyebrow-label">Factory Governance · 工厂质量治理</span>
+      <div class="section-eyebrow-line"></div>
+    </div>
+    <h2 class="h-section ao">工厂不只是供货，<br><span class="accent">工厂是质量系统的一部分</span></h2>
+    <p class="h-sub ao">
+      Factory governance is what separates a vendor platform from a simple reseller.
+      <span class="zh">系统化工厂治理，是建立北美客户长期信任的根本。</span>
+    </p>
+    <div class="factory-grid">
+      <div class="factory-item ao d1"><div class="fi-icon">🔍</div><div class="fi-label">Factory Audit</div><div class="fi-label-zh">工厂审核</div></div>
+      <div class="factory-item ao d2"><div class="fi-icon">🧪</div><div class="fi-label">Material Change Control</div><div class="fi-label-zh">原材料变更管控</div></div>
+      <div class="factory-item ao d3"><div class="fi-icon">🧴</div><div class="fi-label">Jacket Resin Governance</div><div class="fi-label-zh">护套树脂治理</div></div>
+      <div class="factory-item ao d4"><div class="fi-icon">🖨️</div><div class="fi-label">Printing Governance</div><div class="fi-label-zh">印字标记管控</div></div>
+      <div class="factory-item ao d5"><div class="fi-icon">📡</div><div class="fi-label">OTDR Archive</div><div class="fi-label-zh">OTDR测试存档</div></div>
+      <div class="factory-item ao d6"><div class="fi-icon">🔖</div><div class="fi-label">Reel-Level Traceability</div><div class="fi-label-zh">线盘级可追溯</div></div>
+      <div class="factory-item ao d1"><div class="fi-icon">📦</div><div class="fi-label">Packaging Governance</div><div class="fi-label-zh">包装规范管控</div></div>
+      <div class="factory-item ao d2"><div class="fi-icon">📄</div><div class="fi-label">QC Documentation</div><div class="fi-label-zh">质检文件体系</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ════ S7 — BUDGET ════ -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-eyebrow ao">
+      <span class="section-eyebrow-num">07</span>
+      <span class="section-eyebrow-label">Year 1 Budget · 第一年预算</span>
+      <div class="section-eyebrow-line"></div>
+    </div>
+    <h2 class="h-section ao">钱花在哪里，<br><span class="accent">清清楚楚</span></h2>
+    <p class="h-sub ao">
+      A realistic budget for building real market position — not a minimal test, not an over-investment.
+      <span class="zh">建立真实市场位置所需的合理预算，每一笔都有明确用途。</span>
+    </p>
+
+    <div class="budget-hero ao">
+      <div>
+        <div class="budget-hero-label">Recommended Year 1 Investment</div>
+        <div class="budget-hero-val">USD <span>700k – 1.0M</span></div>
+        <div class="budget-hero-sub">第一年北美平台建设总预算（建议范围）</div>
+      </div>
+      <div class="budget-hero-note">
+        <div class="budget-hero-note-label">资金性质</div>
+        <div class="budget-hero-note-val">Manufacturer-backed<br>platform resource support</div>
+      </div>
+    </div>
+
+    <table class="budget-table ao">
+      <thead>
+        <tr>
+          <th>Budget Item</th>
+          <th>预算项目</th>
+          <th>USD Range</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="td-name">Company / Legal / Insurance</span><span class="td-name-zh">公司注册、法务、保险</span></td><td class="zh" style="font-family:var(--f-zh);font-size:12px;color:var(--mist)">合规基础设施</td><td>$20k – $45k</td></tr>
+        <tr><td><span class="td-name">Website / Datasheet / Catalog</span><span class="td-name-zh">网站、产品文件、目录</span></td><td class="zh" style="font-family:var(--f-zh);font-size:12px;color:var(--mist)">品牌与工程文件</td><td>$25k – $60k</td></tr>
+        <tr><td><span class="td-name">Sample + Demo Kit</span><span class="td-name-zh">样品工具包</span></td><td class="zh" style="font-family:var(--f-zh);font-size:12px;color:var(--mist)">市场开发工具</td><td>$40k – $120k</td></tr>
+        <tr><td><span class="td-name">Office + Showroom</span><span class="td-name-zh">办公室与展示间</span></td><td class="zh" style="font-family:var(--f-zh);font-size:12px;color:var(--mist)">本地实体存在</td><td>$80k – $220k</td></tr>
+        <tr><td><span class="td-name">UL / ETL / Compliance</span><span class="td-name-zh">产品认证费用</span></td><td class="zh" style="font-family:var(--f-zh);font-size:12px;color:var(--mist)">进入工程体系的门票</td><td>$60k – $230k</td></tr>
+        <tr><td><span class="td-name">QA / Traceability System</span><span class="td-name-zh">质量追溯系统</span></td><td class="zh" style="font-family:var(--f-zh);font-size:12px;color:var(--mist)">平台可信度基础</td><td>$20k – $70k</td></tr>
+        <tr><td><span class="td-name">Market Team</span><span class="td-name-zh">市场与BD团队</span></td><td class="zh" style="font-family:var(--f-zh);font-size:12px;color:var(--mist)">最核心的执行资源</td><td>$235k – $430k</td></tr>
+        <tr><td><span class="td-name">Trade Shows</span><span class="td-name-zh">行业展会</span></td><td class="zh" style="font-family:var(--f-zh);font-size:12px;color:var(--mist)">客户接触与品牌曝光</td><td>$45k – $145k</td></tr>
+        <tr><td><span class="td-name">Travel &amp; Customer Meetings</span><span class="td-name-zh">差旅与客户拜访</span></td><td class="zh" style="font-family:var(--f-zh);font-size:12px;color:var(--mist)">关系建立</td><td>$30k – $80k</td></tr>
+        <tr><td><span class="td-name">Technical Support Reserve</span><span class="td-name-zh">技术支持储备</span></td><td class="zh" style="font-family:var(--f-zh);font-size:12px;color:var(--mist)">快速响应保障</td><td>$20k – $60k</td></tr>
+      </tbody>
+    </table>
+
+    <div style="margin-top:32px">
+      <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:14px" class="ao">月度运营支持 · Monthly Operating Support</div>
+      <div class="monthly-grid">
+        <div class="monthly-card mc-conservative ao d1">
+          <div class="monthly-mode">Conservative</div>
+          <div class="monthly-val">$50k–60k</div>
+          <div class="monthly-sub">/ month · 保守方案</div>
+        </div>
+        <div class="monthly-card mc-recommended ao d2">
+          <div class="monthly-mode">Recommended</div>
+          <div class="monthly-val">$65k–85k</div>
+          <div class="monthly-sub">/ month · 建议方案</div>
+        </div>
+        <div class="monthly-card mc-accelerated ao d3">
+          <div class="monthly-mode">Accelerated</div>
+          <div class="monthly-val">$90k–120k</div>
+          <div class="monthly-sub">/ month · 加速方案</div>
+        </div>
+      </div>
+      <div class="monthly-note ao">
+        <strong>Manufacturer-backed monthly platform resource support</strong> — 厂家端支持的月度平台资源预算。<br>
+        <span class="zh">厂家端作为制造与供应链核心，通过月度预算支持北美平台早期运营，保障连续执行能力，避免因资金断续导致执行节奏受损。</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ════ S8 — 90-DAY PLAN ════ -->
+<section class="section section-alt">
+  <div class="wrap">
+    <div class="section-eyebrow ao">
+      <span class="section-eyebrow-num">08</span>
+      <span class="section-eyebrow-label">90-Day Launch Plan · 90天启动计划</span>
+      <div class="section-eyebrow-line"></div>
+    </div>
+    <h2 class="h-section ao">启动不是开会，<br><span class="accent">启动是执行</span></h2>
+    <p class="h-sub ao">Three phases, each with clear deliverables and ownership.
+      <span class="zh">三个阶段，每个阶段有清晰可交付成果，不是路线图，是执行清单。</span>
+    </p>
+    <div class="timeline-grid">
+      <div class="tl-card ao d1">
+        <div class="tl-header tlh-1">
+          <div class="tl-days">Days 0–30</div>
+          <div class="tl-range">Foundation & Alignment</div>
+          <div class="tl-theme">基础对齐与架构确认</div>
+        </div>
+        <div class="tl-body">
+          <ul class="tl-items">
+            <li>Confirm cooperation structure</li>
+            <li>Confirm monthly operating support amount</li>
+            <li>Assign factory contact &amp; coordination rhythm</li>
+            <li>Confirm first-stage SKUs (5–8 products)</li>
+            <li>Create datasheet templates</li>
+            <li>Define showroom city</li>
+          </ul>
+        </div>
+      </div>
+      <div class="tl-card ao d2">
+        <div class="tl-header tlh-2">
+          <div class="tl-days">Days 30–60</div>
+          <div class="tl-range">Build & Recruit</div>
+          <div class="tl-theme">资产建设与团队组建</div>
+        </div>
+        <div class="tl-body">
+          <ul class="tl-items">
+            <li>Build product catalog &amp; sample kit</li>
+            <li>Recruit BD &amp; technical team members</li>
+            <li>Build contractor &amp; ISP target list</li>
+            <li>Start LinkedIn &amp; industry outreach</li>
+            <li>Begin UL / ETL preliminary review</li>
+            <li>Set up CRM &amp; pipeline tracking</li>
+          </ul>
+        </div>
+      </div>
+      <div class="tl-card ao d3">
+        <div class="tl-header tlh-3">
+          <div class="tl-days">Days 60–90</div>
+          <div class="tl-range">Launch & Execute</div>
+          <div class="tl-theme">市场启动与首批执行</div>
+        </div>
+        <div class="tl-body">
+          <ul class="tl-items">
+            <li>Send first sample kits to contractors</li>
+            <li>Hold first customer meetings</li>
+            <li>Register trade shows (year calendar)</li>
+            <li>Push contractor onboarding</li>
+            <li>Receive first RFQs &amp; prepare submittals</li>
+            <li>Complete first factory audit</li>
+            <li>Push first trial orders</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ════ S9 — GOVERNANCE ════ -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-eyebrow ao">
+      <span class="section-eyebrow-num">09</span>
+      <span class="section-eyebrow-label">Monthly Governance · 月度治理机制</span>
+      <div class="section-eyebrow-line"></div>
+    </div>
+    <h2 class="h-section ao">每月一次对齐，<br><span class="accent">三方在同一频道</span></h2>
+    <p class="h-sub ao">Transparency and accountability built into the rhythm — not improvised.
+      <span class="zh">月度治理不是形式，是保持三方信息对称、资源对齐、决策透明的核心机制。</span>
+    </p>
+    <div class="gov-grid">
+      <div class="gov-card ao d1">
+        <div class="gov-title"><span class="icon">📋</span> Monthly Governance Meeting Agenda</div>
+        <ul class="gov-items">
+          <li>RFQ pipeline review — 当月报价单进展</li>
+          <li>Customer pipeline — 客户开发进展</li>
+          <li>Shipment status — 发货与交付状态</li>
+          <li>QA issues &amp; resolutions — 质量问题处理</li>
+          <li>Certification progress — 认证推进进度</li>
+          <li>Market execution summary — 市场执行小结</li>
+          <li>Decision items — 需三方确认的决策事项</li>
+        </ul>
+      </div>
+      <div class="gov-card ao d2">
+        <div class="gov-title"><span class="icon">📊</span> Monthly Report Must Include</div>
+        <ul class="gov-items">
+          <li>费用报告 — Expense report with breakdown</li>
+          <li>客户进展 — Customer pipeline &amp; meetings log</li>
+          <li>样品进展 — Sample kit dispatch &amp; response</li>
+          <li>RFQ &amp; submittal 数量 — Volume metrics</li>
+          <li>认证进展 — Certification milestone update</li>
+          <li>下月重点任务 — Priority actions for next 30 days</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ CTA ════ -->
+<section class="cta-section">
+  <div class="cta-inner">
+    <div class="cta-eyebrow ao">Final Call to Action · 行动号召</div>
+    <h2 class="cta-title ao">
+      The next step is not<br>more discussion.<br>The next step is execution.
+    </h2>
+    <p class="cta-subtitle-zh ao zh">
+      下一步不是继续讨论方向，<br>而是确认预算、指定负责人、启动 90 天执行。
+    </p>
+    <div class="cta-grid">
+      <div class="cta-item ao d1">
+        <div class="cta-num">ACTION 01</div>
+        <div class="cta-action">Confirm Year 1 Budget</div>
+        <div class="cta-action-zh">确认第一年预算</div>
+      </div>
+      <div class="cta-item ao d2">
+        <div class="cta-num">ACTION 02</div>
+        <div class="cta-action">Assign Factory Contact</div>
+        <div class="cta-action-zh">指定工厂对接人</div>
+      </div>
+      <div class="cta-item ao d3">
+        <div class="cta-num">ACTION 03</div>
+        <div class="cta-action">Assign NA BD / Technical Lead</div>
+        <div class="cta-action-zh">指定北美BD/技术负责人</div>
+      </div>
+      <div class="cta-item ao d4">
+        <div class="cta-num">ACTION 04</div>
+        <div class="cta-action">Approve First 5–8 SKUs</div>
+        <div class="cta-action-zh">确认首批产品型号</div>
+      </div>
+      <div class="cta-item ao d5">
+        <div class="cta-num">ACTION 05</div>
+        <div class="cta-action">Start 90-Day Launch Plan</div>
+        <div class="cta-action-zh">启动90天计划</div>
+      </div>
+    </div>
+    <div class="cta-bottom ao">
+      <div class="cta-bottom-text">Prepared for internal cooperation discussion · <span class="zh">内部合作讨论文件 · 2026</span></div>
+      <div class="cta-bottom-text">docs.energizeos.com/fiber</div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-text">CONFIDENTIAL · INTERNAL COOPERATION PROPOSAL · 2026</div>
+  <a class="footer-link" href="https://docs.energizeos.com/">docs.energizeos.com</a>
+</footer>
+
+<script>
+// Scroll-triggered fade-in
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.ao').forEach(el => obs.observe(el));
+
+// Disable right-click & copy shortcuts
+document.addEventListener('contextmenu', e => e.preventDefault());
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && ['u','s'].includes(e.key.toLowerCase())) e.preventDefault();
+});
+</script>
+</body>
+</html>
