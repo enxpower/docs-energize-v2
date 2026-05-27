@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>华信北美光通信基础设施平台 · 本地化运营与BABA路线</title>
+<meta name="description" content="华信北美本地化运营平台：品牌提升、市场份额、本地团队、工程整合、仓储售后与BABA兼容型美国制造路线。">
+<meta property="og:title" content="华信北美光通信基础设施平台">
+<meta property="og:description" content="从中国制造商到北美本地化基础设施供应商：品牌提升、本地化运营、BABA兼容制造路径。">
+<meta property="og:image" content="https://docs.energizeos.com/fiber-v3/assets/og-image.png">
+<meta property="og:url" content="https://docs.energizeos.com/fiber-v3/">
+<meta property="og:type" content="website">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="华信北美光通信基础设施平台">
+<meta name="twitter:image" content="https://docs.energizeos.com/fiber-v3/assets/og-image.png">
+<style>
+/* ══════════════════════════════
+   TOKENS — 与 v2 保持一致
+══════════════════════════════ */
+:root{
+  --navy:#1F3A5F; --navy2:#152c4a;
+  --teal:#2A9D8F; --teal2:#1f7a6e;
+  --sky:#7BBDE8;
+  --amber:#F2C078;
+  --paper:#F5F8FB; --paper2:#EDF5F2;
+  --white:#FFFFFF;
+  --slate:#4A6580; --mist:#8BA4B8;
+  --line:rgba(31,58,95,0.09);
+  --card:#FFFFFF;
+  --shadow:0 1px 8px rgba(31,58,95,0.07),0 2px 20px rgba(31,58,95,0.05);
+  --shadow-h:0 4px 20px rgba(31,58,95,0.12);
+  --r:10px; --r2:14px;
+  --f:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
+  --fz:'PingFang SC','Microsoft YaHei','Hiragino Sans GB',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  background:var(--paper);color:var(--navy);
+  font-family:var(--fz);font-size:15px;line-height:1.65;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+.en{font-family:var(--f)}
+.wrap{max-width:1040px;margin:0 auto;padding:0 24px}
+.rule{height:1px;background:var(--line)}
+.rule-w{margin:0 24px}
+
+/* ── Section chrome ── */
+.ey{display:flex;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.ey-n{font-size:10px;font-weight:800;color:var(--teal);letter-spacing:.22em;font-family:var(--f)}
+.ey-t{font-size:10px;font-weight:700;color:var(--mist);letter-spacing:.12em;text-transform:uppercase;font-family:var(--f)}
+.ey-l{flex:1;height:1px;background:var(--line);min-width:20px}
+.ey-tag{display:inline-flex;align-items:center;padding:3px 11px;border-radius:100px;font-size:10px;font-weight:700;font-family:var(--f)}
+.ey-tag-teal{background:rgba(42,157,143,.1);color:var(--teal);border:1px solid rgba(42,157,143,.2)}
+.h-sec{font-size:clamp(20px,2.8vw,28px);font-weight:800;letter-spacing:-.03em;line-height:1.2}
+.h-sec .ac{color:var(--teal)}
+.h-sub{font-size:14px;color:var(--slate);margin-top:9px;line-height:1.75;max-width:600px}
+.h-sub-en{font-family:var(--f);font-size:13px;color:var(--mist);display:block;margin-top:4px}
+
+/* ══════════════════════════════
+   TOPBAR
+══════════════════════════════ */
+.topbar{
+  background:var(--white);border-bottom:1px solid var(--line);
+  padding:13px 24px;position:sticky;top:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 1px 4px rgba(31,58,95,.05);
+}
+.tb-brand{font-size:13px;font-weight:800;color:var(--navy)}
+.tb-brand span{color:var(--teal)}
+.tb-right{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--mist)}
+.tb-dot{width:6px;height:6px;border-radius:50%;background:var(--teal)}
+
+/* ══════════════════════════════
+   HERO
+══════════════════════════════ */
+.hero{
+  background:linear-gradient(140deg,#EEF4FB 0%,#E9F3F0 60%,#EEF8F5 100%);
+  padding:56px 24px 48px;position:relative;overflow:hidden;
+}
+.hero::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 85% 20%,rgba(42,157,143,.07) 0%,transparent 55%),
+             radial-gradient(ellipse at 15% 85%,rgba(123,189,232,.06) 0%,transparent 50%);
+  pointer-events:none;
+}
+.hero-in{max-width:1040px;margin:0 auto;position:relative;z-index:1}
+.hero-kick{
+  display:inline-flex;align-items:center;gap:7px;margin-bottom:22px;
+  background:rgba(42,157,143,.09);border:1px solid rgba(42,157,143,.18);
+  border-radius:100px;padding:5px 14px;
+  font-size:10px;font-weight:800;color:var(--teal);letter-spacing:.15em;
+  font-family:var(--f);
+}
+.hero-kick-dot{width:5px;height:5px;border-radius:50%;background:var(--teal)}
+.hero-title{
+  font-size:clamp(28px,5.5vw,54px);font-weight:900;
+  letter-spacing:-.04em;line-height:1.0;margin-bottom:6px;
+}
+.hero-title .t2{color:var(--teal)}
+.hero-en{font-family:var(--f);font-size:14px;color:var(--slate);font-weight:500;margin-bottom:8px}
+.hero-sub{font-size:14px;color:var(--slate);line-height:1.75;max-width:600px;margin-bottom:26px}
+.pillars{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:26px}
+.pill{padding:8px 15px;border-radius:9px;font-size:12px;font-weight:800;white-space:nowrap}
+.pi1{background:var(--navy);color:#fff}
+.pi2{background:var(--teal);color:#fff}
+.pi3{background:rgba(123,189,232,.3);color:var(--navy)}
+.pp{color:var(--teal);font-size:18px;font-weight:300;line-height:1}
+.hero-cta{
+  background:var(--white);border:1.5px solid rgba(42,157,143,.22);
+  border-radius:var(--r2);padding:16px 20px;
+  display:inline-flex;align-items:flex-start;gap:12px;
+  max-width:580px;box-shadow:var(--shadow);
+}
+.hc-i{font-size:19px;flex-shrink:0;margin-top:1px}
+.hc-l{font-family:var(--f);font-size:10px;font-weight:800;color:var(--teal);letter-spacing:.18em;text-transform:uppercase;margin-bottom:3px}
+.hc-t{font-size:13px;font-weight:700;line-height:1.55}
+.hc-z{font-family:var(--f);font-size:11px;color:var(--slate);margin-top:2px}
+
+/* ══════════════════════════════
+   SECTIONS
+══════════════════════════════ */
+.sec{padding:52px 0}
+.sec-alt{background:var(--white)}
+.sec-dark{background:var(--navy)}
+
+/* ══════════════════════════════
+   S1 会后五个核心议题 — CARDS
+══════════════════════════════ */
+.q-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:28px}
+.q-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:20px 18px;box-shadow:var(--shadow);
+  transition:transform .2s,box-shadow .2s;
+  display:flex;flex-direction:column;gap:6px;
+}
+.q-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-h)}
+.q-num{font-family:var(--f);font-size:11px;font-weight:800;color:var(--teal);letter-spacing:.12em}
+.q-title{font-size:14px;font-weight:800;line-height:1.3}
+.q-en{font-family:var(--f);font-size:11px;color:var(--teal);font-weight:600}
+.q-desc{font-size:12px;color:var(--slate);line-height:1.65;margin-top:4px}
+/* last card spans if needed */
+.q-card-wide{grid-column:span 1}
+
+/* ══════════════════════════════
+   S2 战略升级 — THREE LEVELS
+══════════════════════════════ */
+.levels-wrap{margin-top:28px;display:flex;flex-direction:column;gap:0;border-radius:var(--r2);overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow)}
+.level{
+  display:flex;align-items:stretch;gap:0;
+  border-bottom:1px solid var(--line);
+}
+.level:last-child{border-bottom:none}
+.level-badge{
+  width:120px;flex-shrink:0;padding:24px 18px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px;
+}
+.lb1{background:rgba(31,58,95,.06)}
+.lb2{background:rgba(42,157,143,.07)}
+.lb3{background:var(--navy)}
+.level-badge-num{font-family:var(--f);font-size:10px;font-weight:800;letter-spacing:.15em}
+.lb1 .level-badge-num,.lb2 .level-badge-num{color:var(--mist)}
+.lb3 .level-badge-num{color:rgba(255,255,255,.4)}
+.level-badge-icon{font-size:22px}
+.level-badge-label{font-size:12px;font-weight:800;line-height:1.3}
+.lb1 .level-badge-label,.lb2 .level-badge-label{color:var(--navy)}
+.lb3 .level-badge-label{color:#fff}
+.level-badge-sub{font-family:var(--f);font-size:10px}
+.lb1 .level-badge-sub,.lb2 .level-badge-sub{color:var(--mist)}
+.lb3 .level-badge-sub{color:rgba(255,255,255,.4)}
+.level-body{flex:1;padding:22px 24px;background:var(--card)}
+.lb3+.level-body{background:rgba(31,58,95,.02)}
+.level-name{font-size:15px;font-weight:800;margin-bottom:4px}
+.level-en{font-family:var(--f);font-size:12px;color:var(--teal);font-weight:600;margin-bottom:8px}
+.level-desc{font-size:13px;color:var(--slate);line-height:1.7}
+.level-tag{
+  display:inline-flex;align-items:center;margin-top:10px;padding:3px 10px;
+  border-radius:100px;font-size:10px;font-weight:700;font-family:var(--f);
+}
+.lt-gray{background:rgba(31,58,95,.07);color:var(--slate)}
+.lt-teal{background:rgba(42,157,143,.1);color:var(--teal)}
+.lt-gold{background:rgba(242,192,120,.2);color:#8a5b1a}
+
+/* ══════════════════════════════
+   S3 BABA — WHAT IT MEANS
+══════════════════════════════ */
+.baba-hero{
+  background:var(--navy);border-radius:var(--r2);padding:28px 30px;
+  margin-top:28px;margin-bottom:20px;
+  display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start;
+}
+.baba-main{flex:1;min-width:200px}
+.baba-tag{font-family:var(--f);font-size:10px;font-weight:800;color:rgba(255,255,255,.35);letter-spacing:.18em;text-transform:uppercase;margin-bottom:10px}
+.baba-headline{font-size:clamp(18px,3vw,26px);font-weight:900;color:#fff;line-height:1.2;margin-bottom:6px}
+.baba-headline .ac{color:var(--teal)}
+.baba-sub{font-family:var(--f);font-size:12px;color:rgba(255,255,255,.45);line-height:1.7}
+.baba-note{
+  background:rgba(242,192,120,.12);border:1px solid rgba(242,192,120,.25);
+  border-radius:var(--r);padding:16px 18px;min-width:220px;
+}
+.baba-note-label{font-family:var(--f);font-size:10px;font-weight:800;color:rgba(242,192,120,.8);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+.baba-note-text{font-size:12px;color:rgba(255,255,255,.6);line-height:1.65}
+
+.baba-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.baba-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px 16px;box-shadow:var(--shadow)}
+.baba-icon{font-size:22px;margin-bottom:8px}
+.baba-name{font-size:13px;font-weight:800;margin-bottom:4px}
+.baba-en{font-family:var(--f);font-size:11px;color:var(--teal);font-weight:600;margin-bottom:6px}
+.baba-desc{font-size:12px;color:var(--slate);line-height:1.65}
+
+/* ══════════════════════════════
+   S4 本地化运营体系 — FIVE SYSTEMS
+══════════════════════════════ */
+.ops-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:28px}
+.ops-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:20px 14px;box-shadow:var(--shadow);text-align:center;
+  transition:transform .2s,box-shadow .2s;display:flex;flex-direction:column;align-items:center;gap:7px;
+}
+.ops-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-h)}
+.ops-icon{font-size:26px}
+.ops-name{font-size:13px;font-weight:800}
+.ops-en{font-family:var(--f);font-size:10px;color:var(--teal);font-weight:600}
+.ops-desc{font-size:11px;color:var(--slate);line-height:1.6;text-align:left;margin-top:4px}
+.ops-slogan{
+  margin-top:20px;text-align:center;padding:16px 20px;
+  background:var(--navy);border-radius:var(--r);
+}
+.ops-slogan-en{font-family:var(--f);font-size:14px;font-weight:800;color:#fff;letter-spacing:.02em}
+.ops-slogan-zh{font-size:14px;font-weight:700;color:rgba(255,255,255,.5);margin-top:4px}
+
+/* ══════════════════════════════
+   S5 品牌策略
+══════════════════════════════ */
+.brand-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:28px}
+.brand-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;box-shadow:var(--shadow)}
+.brand-hd{padding:18px 20px}
+.bh1{background:var(--navy)}
+.bh2{background:var(--teal)}
+.bh3{background:#5190b8}
+.brand-opt{font-family:var(--f);font-size:10px;font-weight:800;color:rgba(255,255,255,.4);letter-spacing:.15em;margin-bottom:4px}
+.brand-title{font-size:14px;font-weight:900;color:#fff;line-height:1.3}
+.brand-en{font-family:var(--f);font-size:11px;color:rgba(255,255,255,.5);margin-top:2px}
+.brand-body{padding:18px 20px}
+.brand-pros,.brand-cons{margin-bottom:12px}
+.bc-label{font-family:var(--f);font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.bc-pros-label{color:var(--teal)}
+.bc-cons-label{color:#b85c38}
+.brand-li{display:flex;align-items:flex-start;gap:6px;font-size:12px;color:var(--slate);line-height:1.55;margin-bottom:4px}
+.brand-li::before{content:'›';font-size:14px;font-weight:800;flex-shrink:0;margin-top:-1px}
+.bpros .brand-li::before{color:var(--teal)}
+.bcons .brand-li::before{color:#b85c38;opacity:.65}
+.brand-note{
+  margin-top:10px;padding:10px 12px;background:var(--paper);
+  border-radius:7px;font-size:11px;color:var(--slate);line-height:1.65;
+}
+.brand-rec{
+  margin-top:20px;padding:16px 18px;
+  background:rgba(42,157,143,.06);border-left:3px solid var(--teal);
+  border-radius:0 var(--r) var(--r) 0;
+  font-size:13px;color:var(--navy);line-height:1.7;
+}
+
+/* ══════════════════════════════
+   S6 三方运营模型
+══════════════════════════════ */
+.party-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:28px}
+.party-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;box-shadow:var(--shadow)}
+.party-hd{padding:20px 20px 16px}
+.ph-n{background:var(--navy)}
+.ph-t{background:var(--teal)}
+.ph-s{background:#5190b8}
+.party-icon{font-size:22px;margin-bottom:4px}
+.party-title{font-size:14px;font-weight:900;color:#fff;line-height:1.3}
+.party-sub{font-family:var(--f);font-size:11px;color:rgba(255,255,255,.5);margin-top:2px}
+.party-body{padding:18px 20px}
+.party-list{list-style:none;display:flex;flex-direction:column;gap:7px}
+.party-list li{display:flex;align-items:flex-start;gap:7px;font-size:12px;color:var(--slate);line-height:1.55}
+.party-list li::before{content:'›';color:var(--teal);font-size:14px;font-weight:800;flex-shrink:0;margin-top:-1px}
+.party-note{margin-top:12px;padding:10px 13px;background:var(--paper);border-radius:7px;font-size:11px;color:var(--mist);line-height:1.65}
+
+/* ══════════════════════════════
+   S7 三阶段路线图
+══════════════════════════════ */
+.phase-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:28px}
+.phase-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;box-shadow:var(--shadow)}
+.phase-hd{padding:18px 20px}
+.phd1{background:rgba(31,58,95,.07)}
+.phd2{background:rgba(42,157,143,.08)}
+.phd3{background:linear-gradient(135deg,rgba(31,58,95,.1) 0%,rgba(42,157,143,.08) 100%)}
+.phase-num{font-family:var(--f);font-size:10px;font-weight:800;color:var(--teal);letter-spacing:.15em;margin-bottom:4px}
+.phase-title{font-size:16px;font-weight:900;letter-spacing:-.02em}
+.phase-en{font-family:var(--f);font-size:11px;color:var(--teal);font-weight:600;margin-top:2px}
+.phase-time{font-family:var(--f);font-size:11px;color:var(--mist);margin-top:3px}
+.phase-goal{font-size:12px;font-weight:700;color:var(--navy);margin-top:4px}
+.phase-body{padding:16px 20px}
+.phase-list{list-style:none;display:flex;flex-direction:column;gap:6px}
+.phase-list li{display:flex;align-items:flex-start;gap:7px;font-size:12px;color:var(--slate);line-height:1.5}
+.phase-list li::before{content:'✓';color:var(--teal);font-size:10px;font-weight:800;flex-shrink:0;margin-top:2px;font-family:var(--f)}
+.phase-note{
+  margin-top:14px;padding:10px 13px;
+  background:rgba(242,192,120,.08);border:1px solid rgba(242,192,120,.2);
+  border-radius:7px;font-size:11px;color:var(--slate);line-height:1.65;
+}
+.phase-arrow{
+  display:flex;align-items:center;justify-content:center;gap:0;margin:0;
+}
+
+/* ══════════════════════════════
+   S8 90天计划
+══════════════════════════════ */
+.tl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:28px}
+.tl{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;box-shadow:var(--shadow)}
+.tl-hd{padding:16px 18px}
+.tlh1{background:rgba(31,58,95,.07)}
+.tlh2{background:rgba(42,157,143,.08)}
+.tlh3{background:rgba(123,189,232,.12)}
+.tl-days{font-size:20px;font-weight:900;letter-spacing:-.03em}
+.tl-range{font-family:var(--f);font-size:11px;color:var(--teal);font-weight:700;margin-top:2px}
+.tl-theme{font-size:11px;color:var(--slate);margin-top:3px}
+.tl-body{padding:14px 18px}
+.tl-list{list-style:none;display:flex;flex-direction:column;gap:6px}
+.tl-list li{display:flex;align-items:flex-start;gap:7px;font-size:12px;color:var(--slate);line-height:1.5}
+.tl-list li::before{content:'✓';color:var(--teal);font-family:var(--f);font-size:10px;font-weight:800;flex-shrink:0;margin-top:2px}
+
+/* ══════════════════════════════
+   S9 BUDGET
+══════════════════════════════ */
+.budget-banner{
+  background:var(--navy);border-radius:var(--r2);padding:26px 28px;
+  margin-top:28px;margin-bottom:20px;
+}
+.bb-top{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:16px}
+.bb-label{font-family:var(--f);font-size:10px;font-weight:800;color:rgba(255,255,255,.35);letter-spacing:.18em;text-transform:uppercase;margin-bottom:6px}
+.bb-val{font-size:clamp(22px,4vw,36px);font-weight:900;color:#fff;letter-spacing:-.03em}
+.bb-val span{color:var(--teal)}
+.bb-zh{font-size:12px;color:rgba(255,255,255,.35);margin-top:3px}
+.bb-note-label{font-size:10px;color:rgba(255,255,255,.3);margin-bottom:3px}
+.bb-note-val{font-size:13px;font-weight:700;color:rgba(255,255,255,.65);line-height:1.5}
+.phased-row{display:flex;align-items:center;gap:8px;padding-top:14px;border-top:1px solid rgba(255,255,255,.08);flex-wrap:wrap}
+.phased-b{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;background:rgba(42,157,143,.2);border:1px solid rgba(42,157,143,.3);border-radius:100px;font-family:var(--f);font-size:11px;font-weight:700;color:rgba(255,255,255,.75)}
+.phased-t{font-size:11px;color:rgba(255,255,255,.3)}
+.btable{width:100%;border-collapse:collapse;background:var(--card);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--line);margin-bottom:18px}
+.btable th{text-align:left;padding:10px 14px;background:#EEF4FA;font-family:var(--f);font-size:9px;font-weight:800;color:var(--mist);letter-spacing:.14em;text-transform:uppercase;border-bottom:1px solid var(--line)}
+.btable th:last-child{text-align:right}
+.btable td{padding:10px 14px;font-size:12px;color:var(--slate);border-bottom:1px solid var(--line)}
+.btable td:last-child{text-align:right;font-family:var(--f);font-weight:700;color:var(--navy)}
+.btable tr:last-child td{border-bottom:none}
+.btable tr:hover td{background:rgba(42,157,143,.02)}
+.td-n{font-weight:700;color:var(--navy);display:block}
+.td-z{font-family:var(--f);font-size:10px;color:var(--mist);display:block;margin-top:1px}
+.monthly-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.mo{border-radius:var(--r);padding:17px 15px;text-align:center;border:1px solid var(--line);box-shadow:var(--shadow)}
+.mo-a{background:var(--card)}
+.mo-b{background:var(--navy)}
+.mo-c{background:var(--teal)}
+.mo-lbl{font-family:var(--f);font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.mo-a .mo-lbl{color:var(--mist)}
+.mo-b .mo-lbl,.mo-c .mo-lbl{color:rgba(255,255,255,.45)}
+.mo-val{font-family:var(--f);font-size:19px;font-weight:900;letter-spacing:-.02em}
+.mo-a .mo-val{color:var(--navy)}
+.mo-b .mo-val,.mo-c .mo-val{color:#fff}
+.mo-sub{font-size:11px;margin-top:3px}
+.mo-a .mo-sub{color:var(--mist)}
+.mo-b .mo-sub,.mo-c .mo-sub{color:rgba(255,255,255,.4)}
+.mo-note{margin-top:14px;padding:12px 16px;background:rgba(42,157,143,.05);border-left:3px solid var(--teal);border-radius:0 var(--r) var(--r) 0;font-size:12px;color:var(--slate);line-height:1.7}
+.mo-note .en{font-family:var(--f);display:block;font-size:11px;color:var(--mist);margin-top:2px}
+
+/* ══════════════════════════════
+   FINAL CTA
+══════════════════════════════ */
+.cta-sec{background:linear-gradient(140deg,var(--navy) 0%,var(--navy2) 100%);padding:60px 24px}
+.cta-in{max-width:1040px;margin:0 auto}
+.cta-ey{font-family:var(--f);font-size:10px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:14px}
+.cta-title{font-size:clamp(22px,4vw,34px);font-weight:900;color:#fff;letter-spacing:-.03em;line-height:1.15;margin-bottom:8px}
+.cta-zh{font-family:var(--f);font-size:13px;color:rgba(255,255,255,.4);margin-bottom:28px;line-height:1.7}
+
+/* Meeting checklist */
+.meeting{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:var(--r2);padding:22px 24px;margin-bottom:28px}
+.meeting-title{font-size:13px;font-weight:800;color:#fff;margin-bottom:3px}
+.meeting-sub{font-family:var(--f);font-size:11px;color:rgba(255,255,255,.35);margin-bottom:14px;line-height:1.6}
+.meeting-list{list-style:none;display:flex;flex-direction:column;gap:7px}
+.meeting-list li{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:rgba(255,255,255,.65);line-height:1.5}
+.meeting-list li::before{content:'';width:15px;height:15px;border-radius:4px;border:1.5px solid rgba(42,157,143,.5);flex-shrink:0;margin-top:1px;background:rgba(42,157,143,.08)}
+
+.action-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:28px}
+.action-item{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09);border-radius:var(--r);padding:15px 12px;text-align:center;transition:background .15s}
+.action-item:hover{background:rgba(255,255,255,.1)}
+.a-num{font-family:var(--f);font-size:10px;font-weight:800;color:var(--teal);letter-spacing:.15em;margin-bottom:6px}
+.a-txt{font-size:12px;font-weight:800;color:#fff;line-height:1.4}
+.a-en{font-family:var(--f);font-size:10px;color:rgba(255,255,255,.3);margin-top:2px}
+.cta-foot{padding-top:20px;border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.cta-foot-t{font-size:11px;color:rgba(255,255,255,.2)}
+
+/* ══════════════════════════════
+   FOOTER
+══════════════════════════════ */
+.footer{background:#111E30;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.footer-l{font-family:var(--f);font-size:10px;color:rgba(255,255,255,.18);letter-spacing:.06em}
+.footer-r{font-family:var(--f);font-size:10px;color:rgba(42,157,143,.55)}
+
+/* ══════════════════════════════
+   ANIMATE
+══════════════════════════════ */
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.ao{opacity:0}
+.ao.vis{animation:fadeUp .55s ease forwards}
+.ao.d1{animation-delay:.05s}.ao.d2{animation-delay:.1s}.ao.d3{animation-delay:.15s}
+.ao.d4{animation-delay:.2s}.ao.d5{animation-delay:.25s}.ao.d6{animation-delay:.3s}
+
+/* ══════════════════════════════
+   RESPONSIVE
+══════════════════════════════ */
+@media(max-width:960px){
+  .q-grid{grid-template-columns:1fr 1fr}
+  .ops-grid{grid-template-columns:1fr 1fr;gap:10px}
+  .brand-grid{grid-template-columns:1fr}
+  .party-grid{grid-template-columns:1fr}
+  .phase-grid{grid-template-columns:1fr}
+  .tl-grid{grid-template-columns:1fr}
+  .action-grid{grid-template-columns:1fr 1fr}
+  .monthly-grid{grid-template-columns:1fr}
+  .baba-grid{grid-template-columns:1fr 1fr}
+  .baba-hero{flex-direction:column}
+  .bb-top{flex-direction:column}
+  .levels-wrap .level{flex-direction:column}
+  .level-badge{width:100%;flex-direction:row;justify-content:flex-start;gap:14px;padding:16px 18px}
+}
+@media(max-width:600px){
+  .q-grid{grid-template-columns:1fr}
+  .baba-grid{grid-template-columns:1fr}
+  .action-grid{grid-template-columns:1fr}
+  .ops-grid{grid-template-columns:1fr}
+  .hero{padding:40px 16px 36px}
+  .sec{padding:40px 0}
+  .wrap{padding:0 16px}
+  .topbar{padding:11px 16px}
+  .cta-sec{padding:44px 16px}
+  .btable th:nth-child(2),.btable td:nth-child(2){display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="tb-brand">华信 <span>北美光通信基础设施平台</span></div>
+  <div class="tb-right">
+    <div class="tb-dot"></div>
+    <span>战略合作执行方案 · 2026</span>
+  </div>
+</header>
+
+<!-- ════ HERO ════ -->
+<section class="hero">
+<div class="hero-in">
+  <div class="hero-kick ao d1"><div class="hero-kick-dot"></div>会后升级版 · Strategic Cooperation Proposal V3 · 2026</div>
+  <h1 class="hero-title ao d2">华信北美<br><span class="t2">光通信基础设施平台</span></h1>
+  <p class="hero-en ao d2 en">Huaxin North America Fiber Infrastructure Platform</p>
+  <p class="hero-sub ao d3">帮助华信快速提升北美品牌形象、扩大北美市场份额，并通过本地化运营与阶段性美国制造路线，进入更高价值的基础设施与数据中心供应链。</p>
+  <div class="pillars ao d4">
+    <div class="pill pi1">🏷 品牌提升</div>
+    <div class="pp">+</div>
+    <div class="pill pi2">🏢 本地化运营</div>
+    <div class="pp">+</div>
+    <div class="pill pi3">🇺🇸 BABA兼容制造路径</div>
+  </div>
+  <div class="hero-cta ao d5">
+    <div class="hc-i">🎯</div>
+    <div>
+      <div class="hc-l">下一步行动</div>
+      <div class="hc-t">确认本地化平台结构 · 明确品牌归属 · 启动90天执行</div>
+      <div class="hc-z en">Confirm Local Platform · Define Brand Ownership · Launch 90-Day Execution</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="rule rule-w"></div>
+
+<!-- ════ S1 会后五个核心议题 ════ -->
+<section class="sec">
+<div class="wrap">
+  <div class="ey ao"><span class="ey-n">01</span><span class="ey-t">会后核心议题 · Meeting Consensus</span><div class="ey-l"></div><span class="ey-tag ey-tag-teal en">5 Key Questions</span></div>
+  <h2 class="h-sec ao">这次会议形成了<span class="ac">五个核心共识</span></h2>
+  <p class="h-sub ao">这五个问题，是华信真正进入北美市场的关键，也是接下来所有行动的出发点。<span class="h-sub-en en">These are not abstract questions. Each one blocks or enables real market progress.</span></p>
+  <div class="q-grid">
+    <div class="q-card ao d1">
+      <div class="q-num en">Q 01</div>
+      <div class="q-title">如何提升华信北美品牌形象</div>
+      <div class="q-en en">Brand Elevation in North America</div>
+      <div class="q-desc">华信在北美市场的品牌认知几乎为零。品牌提升不是靠广告，而是靠本地化运营能力、工程文件体系和可信的供应商形象建立。</div>
+    </div>
+    <div class="q-card ao d2">
+      <div class="q-num en">Q 02</div>
+      <div class="q-title">如何提高华信北美市场份额</div>
+      <div class="q-en en">Market Share Growth</div>
+      <div class="q-desc">份额提升不是靠低价，而是靠进入工程供应链——成为承包商、ISP、工程公司认可的可采购供应商。</div>
+    </div>
+    <div class="q-card ao d3">
+      <div class="q-num en">Q 03</div>
+      <div class="q-title">如何解决本地化运营</div>
+      <div class="q-en en">Local Operations Integration</div>
+      <div class="q-desc">市场整合、销售整合、工程整合、售后整合、仓储整合——五个维度全部落地，才是真正的本地化，而不是贸易。</div>
+    </div>
+    <div class="q-card ao d4">
+      <div class="q-num en">Q 04</div>
+      <div class="q-title">如何建设本地团队</div>
+      <div class="q-en en">Local Team Building</div>
+      <div class="q-desc">需要本地销售、工程技术、售后支持、市场推广、行政运营等多方向人才。没有本地团队，就没有本地运营。</div>
+    </div>
+    <div class="q-card ao d5" style="grid-column:span 1">
+      <div class="q-num en">Q 05</div>
+      <div class="q-title">本地化品牌归属</div>
+      <div class="q-en en">Brand Ownership Structure</div>
+      <div class="q-desc">华信持有？平台持有？联合品牌？这个问题直接影响客户资产、渠道归属和双方长期利益，必须通过协议明确。</div>
+    </div>
+    <div class="q-card ao d6" style="background:rgba(42,157,143,.04);border-color:rgba(42,157,143,.15)">
+      <div class="q-num en" style="color:var(--navy)">核心判断</div>
+      <div class="q-title" style="color:var(--teal)">五个问题，一个方向</div>
+      <div class="q-desc" style="font-weight:600;color:var(--navy)">华信北美成功的路径只有一条：<strong>本地化运营能力建设</strong>，而非出口贸易扩张。</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="rule rule-w"></div>
+
+<!-- ════ S2 战略升级 — 三层路径 ════ -->
+<section class="sec sec-alt">
+<div class="wrap">
+  <div class="ey ao"><span class="ey-n">02</span><span class="ey-t">战略升级 · Strategic Shift</span><div class="ey-l"></div></div>
+  <h2 class="h-sec ao">不是出口，<span class="ac">是成为北美本地化供应商</span></h2>
+  <p class="h-sub ao">三个层级，代表三种不同的市场准入深度与客户价值天花板。<span class="h-sub-en en">Each level unlocks a different tier of customers, projects, and long-term value.</span></p>
+  <div class="levels-wrap ao">
+    <div class="level">
+      <div class="level-badge lb1">
+        <div class="level-badge-num en">LEVEL 1</div>
+        <div class="level-badge-icon">📦</div>
+        <div class="level-badge-label">普通出口销售</div>
+        <div class="level-badge-sub en">Export Sales</div>
+      </div>
+      <div class="level-body">
+        <div class="level-name">出口销售模式</div>
+        <div class="level-en en">Standard Export Sales</div>
+        <div class="level-desc">能做一些项目，但依赖价格优势，无法进入工程提交体系，客户关系依附于中间商，品牌积累极慢，市场份额难以持续增长。</div>
+        <span class="level-tag lt-gray en">Current Mode</span>
+      </div>
+    </div>
+    <div class="level">
+      <div class="level-badge lb2">
+        <div class="level-badge-num en">LEVEL 2</div>
+        <div class="level-badge-icon">🏢</div>
+        <div class="level-badge-label">北美本地化运营</div>
+        <div class="level-badge-sub en">Local Platform</div>
+      </div>
+      <div class="level-body">
+        <div class="level-name">北美本地化运营平台</div>
+        <div class="level-en en">North America Local Operating Platform</div>
+        <div class="level-desc">建立本地销售、工程文件、认证体系、仓储、售后，才能进入更大的承包商、ISP和工程公司体系。品牌在北美直接沉淀，客户资产归属清晰。</div>
+        <span class="level-tag lt-teal en">Target: Year 1–2</span>
+      </div>
+    </div>
+    <div class="level" style="border-bottom:none">
+      <div class="level-badge lb3">
+        <div class="level-badge-num en">LEVEL 3</div>
+        <div class="level-badge-icon">🇺🇸</div>
+        <div class="level-badge-label">BABA兼容<br>本地制造</div>
+        <div class="level-badge-sub en">U.S. Manufacturing</div>
+      </div>
+      <div class="level-body" style="background:rgba(31,58,95,.02)">
+        <div class="level-name">BABA兼容型美国本地制造</div>
+        <div class="level-en en">BABA-Compatible U.S. Manufacturing Pathway</div>
+        <div class="level-desc">有机会真正进入微软、谷歌、联邦政府项目、BEAD宽带项目、公用事业等高价值客户体系。没有美国本地制造或本地化供应体系，这些门永远不会打开。<br><br><strong>但建厂不是第一步。先有客户，再有制造。</strong></div>
+        <span class="level-tag lt-gold en">Target: Year 2–4</span>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="rule rule-w"></div>
+
+<!-- ════ S3 为什么 BABA 重要 ════ -->
+<section class="sec">
+<div class="wrap">
+  <div class="ey ao"><span class="ey-n">03</span><span class="ey-t">为什么 BABA 重要 · Why BABA Matters</span><div class="ey-l"></div></div>
+  <h2 class="h-sec ao">BABA 不是一个标识，<span class="ac">而是市场准入逻辑</span></h2>
+  <div class="baba-hero ao">
+    <div class="baba-main">
+      <div class="baba-tag en">BABA · Buy America Build America</div>
+      <div class="baba-headline">进入高价值市场的<span class="ac">路径，不是认证</span></div>
+      <div class="baba-sub en">Not a logo. Not a checkbox. A market access pathway toward the highest-value infrastructure customers in North America.</div>
+    </div>
+    <div class="baba-note">
+      <div class="baba-note-label en">重要说明</div>
+      <div class="baba-note-text">本文件不声称华信当前符合BABA。所有表述均为<strong>阶段性路线</strong>与<strong>兼容路径</strong>，需结合法律顾问实际评估。</div>
+    </div>
+  </div>
+  <div class="baba-grid ao">
+    <div class="baba-card">
+      <div class="baba-icon">🏛️</div>
+      <div class="baba-name">联邦项目与BEAD宽带</div>
+      <div class="baba-en en">Federal & BEAD Projects</div>
+      <div class="baba-desc">BABA/Buy America影响联邦资金项目、BEAD宽带、政府宽带基础设施和公用事业项目。没有本地化供应体系，根本进不了这类项目采购名单。</div>
+    </div>
+    <div class="baba-card">
+      <div class="baba-icon">🏢</div>
+      <div class="baba-name">微软、谷歌等大厂供应链</div>
+      <div class="baba-en en">Hyperscaler Supply Chain</div>
+      <div class="baba-desc">对超大规模数据中心而言，美国本地制造、本地供应链、可追溯性和供应链安全越来越重要。这是进入高价值采购体系的必要条件，而非加分项。</div>
+    </div>
+    <div class="baba-card">
+      <div class="baba-icon">🗺️</div>
+      <div class="baba-name">阶段性路线，不是第一步</div>
+      <div class="baba-en en">Staged Roadmap, Not Day One</div>
+      <div class="baba-desc">美国本地制造是华信的长期战略方向，但第一步是建立北美本地化运营平台，验证客户入口和销售管线，再评估制造投入时机。</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="rule rule-w"></div>
+
+<!-- ════ S4 本地化运营体系 ════ -->
+<section class="sec sec-alt">
+<div class="wrap">
+  <div class="ey ao"><span class="ey-n">04</span><span class="ey-t">本地化运营体系 · Localized Operations</span><div class="ey-l"></div></div>
+  <h2 class="h-sec ao">五个维度全部落地，<span class="ac">才是真正的本地化</span></h2>
+  <p class="h-sub ao">本地化销售，不是贸易。每个维度都有独立的能力要求，缺一则整体能力残缺。<span class="h-sub-en en">Five integration pillars — all must be built for the platform to function as a real local supplier.</span></p>
+  <div class="ops-grid">
+    <div class="ops-card ao d1">
+      <div class="ops-icon">🎯</div>
+      <div class="ops-name">市场整合</div>
+      <div class="ops-en en">Market Integration</div>
+      <div class="ops-desc">整合北美目标客户、渠道、展会、行业资源，建立市场认知与品牌曝光。</div>
+    </div>
+    <div class="ops-card ao d2">
+      <div class="ops-icon">💼</div>
+      <div class="ops-name">销售整合</div>
+      <div class="ops-en en">Sales Integration</div>
+      <div class="ops-desc">从贸易报价转向本地销售、RFQ响应、客户跟进和项目管线管理。</div>
+    </div>
+    <div class="ops-card ao d3">
+      <div class="ops-icon">📋</div>
+      <div class="ops-name">工程整合</div>
+      <div class="ops-en en">Engineering Integration</div>
+      <div class="ops-desc">建立 datasheet、submittal、认证、OTDR、traceability 完整工程文件体系。</div>
+    </div>
+    <div class="ops-card ao d4">
+      <div class="ops-icon">🛠️</div>
+      <div class="ops-name">售后整合</div>
+      <div class="ops-en en">After-Sales Integration</div>
+      <div class="ops-desc">建立北美客户支持、质量问题闭环、RMA处理与本地技术响应机制。</div>
+    </div>
+    <div class="ops-card ao d5">
+      <div class="ops-icon">🏭</div>
+      <div class="ops-name">仓储整合</div>
+      <div class="ops-en en">Warehouse Integration</div>
+      <div class="ops-desc">样品、快动SKU、项目备货、线盘管理、本地包装与快速发货能力。</div>
+    </div>
+  </div>
+  <div class="ops-slogan ao">
+    <div class="ops-slogan-en en">Local Sales. Not Trading.</div>
+    <div class="ops-slogan-zh">本地化销售，不是贸易。</div>
+  </div>
+</div>
+</section>
+
+<div class="rule rule-w"></div>
+
+<!-- ════ S5 品牌策略 ════ -->
+<section class="sec">
+<div class="wrap">
+  <div class="ey ao"><span class="ey-n">05</span><span class="ey-t">本地化品牌策略 · Brand Ownership Strategy</span><div class="ey-l"></div></div>
+  <h2 class="h-sec ao">品牌归属，<span class="ac">需要在合作初期明确</span></h2>
+  <p class="h-sub ao">这是三方合作中最敏感、也最关键的问题。不同的品牌结构，直接影响客户资产归属、双方长期动力和合作稳定性。<span class="h-sub-en en">Brand ownership determines who builds equity, who controls customer relationships, and what happens if the structure changes.</span></p>
+  <div class="brand-grid">
+    <div class="brand-card ao d1">
+      <div class="brand-hd bh1">
+        <div class="brand-opt en">Option A</div>
+        <div class="brand-title">华信持有北美品牌</div>
+        <div class="brand-en en">Huaxin-Owned Brand</div>
+      </div>
+      <div class="brand-body">
+        <div class="brand-pros bpros">
+          <div class="bc-label bc-pros-label en">优势</div>
+          <div class="brand-li">厂家品牌全球一致性强</div>
+          <div class="brand-li">华信对北美市场控制力高</div>
+          <div class="brand-li">品牌投入直接积累到华信</div>
+        </div>
+        <div class="brand-cons bcons">
+          <div class="bc-label bc-cons-label en">风险</div>
+          <div class="brand-li">北美平台运营动力不足</div>
+          <div class="brand-li">本地团队缺乏品牌 ownership</div>
+          <div class="brand-li">客户关系资产归属容易模糊</div>
+        </div>
+      </div>
+    </div>
+    <div class="brand-card ao d2">
+      <div class="brand-hd bh2">
+        <div class="brand-opt en">Option B</div>
+        <div class="brand-title">北美平台持有品牌</div>
+        <div class="brand-en en">Platform-Owned Brand</div>
+      </div>
+      <div class="brand-body">
+        <div class="brand-pros bpros">
+          <div class="bc-label bc-pros-label en">优势</div>
+          <div class="brand-li">更容易北美本地化</div>
+          <div class="brand-li">客户和渠道资产归属清晰</div>
+          <div class="brand-li">平台动力更强，扩展更灵活</div>
+        </div>
+        <div class="brand-cons bcons">
+          <div class="bc-label bc-cons-label en">风险</div>
+          <div class="brand-li">华信担心丧失品牌控制权</div>
+          <div class="brand-li">需要协议保护制造方权益</div>
+          <div class="brand-li">合作结构变化时风险较高</div>
+        </div>
+      </div>
+    </div>
+    <div class="brand-card ao d3">
+      <div class="brand-hd bh3">
+        <div class="brand-opt en">Option C · Recommended</div>
+        <div class="brand-title">联合品牌结构</div>
+        <div class="brand-en en">Co-Branded Structure</div>
+      </div>
+      <div class="brand-body">
+        <div class="brand-note" style="margin-bottom:14px;background:rgba(42,157,143,.06);border-left:3px solid var(--teal)">
+          <strong>建议第一阶段优先考虑：</strong><br>
+          华信制造背书 + 北美平台运营<br>
+          <span style="font-family:var(--f);font-size:11px;color:var(--mist)">Huaxin Manufacturing · Operated by North America Platform</span>
+        </div>
+        <div class="brand-pros bpros">
+          <div class="bc-label bc-pros-label en">核心逻辑</div>
+          <div class="brand-li">第一阶段通过联合/授权品牌推进市场验证</div>
+          <div class="brand-li">品牌、客户、渠道和本地资产归属通过协议明确</div>
+          <div class="brand-li">随市场成熟再锁定最终品牌归属结构</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="brand-rec ao">
+    <strong>关键原则：</strong>第一阶段不急于锁死品牌归属。先通过联合品牌或授权品牌方式推进市场验证，品牌、客户资产、渠道和本地资产归属<strong>必须通过合作协议明确保护双方权益</strong>。
+  </div>
+</div>
+</section>
+
+<div class="rule rule-w"></div>
+
+<!-- ════ S6 三方运营模型 ════ -->
+<section class="sec sec-alt">
+<div class="wrap">
+  <div class="ey ao"><span class="ey-n">06</span><span class="ey-t">三方运营模型 · Three-Party Model</span><div class="ey-l"></div></div>
+  <h2 class="h-sec ao">三方共建，<span class="ac">各司其职，缺一不可</span></h2>
+  <p class="h-sub ao">这不是甲乙方关系，是三方共同建设的平台。每一方都是不可替代的核心价值贡献者。</p>
+  <div class="party-grid">
+    <div class="party-card ao d1">
+      <div class="party-hd ph-n">
+        <div class="party-icon">🏭</div>
+        <div class="party-title">华信 · 制造与供应链端</div>
+        <div class="party-sub en">Huaxin / Factory · Platform Co-Builder</div>
+      </div>
+      <div class="party-body">
+        <ul class="party-list">
+          <li>工程级制造能力与产品质量</li>
+          <li>长期生产一致性与交期可靠性</li>
+          <li>面向北美的制造适配与支持</li>
+          <li>认证申请协助与工程数据支持</li>
+          <li>OTDR存档与质检文件体系</li>
+          <li>样品快速发货支持</li>
+          <li>月度平台资源支持</li>
+          <li>未来美国本地制造可行性评估</li>
+        </ul>
+        <div class="party-note">华信不只是供货方，而是北美平台的共同建设者与资源支持方。</div>
+      </div>
+    </div>
+    <div class="party-card ao d2">
+      <div class="party-hd ph-t">
+        <div class="party-icon">🌎</div>
+        <div class="party-title">北美平台 · 本地化执行主体</div>
+        <div class="party-sub en">North America Platform · Local Operations</div>
+      </div>
+      <div class="party-body">
+        <ul class="party-list">
+          <li>本地销售团队与客户关系</li>
+          <li>工程文件、数据手册与提交体系</li>
+          <li>UL/ETL认证协调推进</li>
+          <li>承包商与ISP网络开发</li>
+          <li>仓储与本地发货能力</li>
+          <li>售后支持与质量问题闭环</li>
+          <li>品牌资产与展示间建设</li>
+          <li>RFQ响应与项目管线管理</li>
+        </ul>
+        <div class="party-note">北美平台是核心执行界面，将华信制造能力转化为北美工程体系可接受的供应商能力。</div>
+      </div>
+    </div>
+    <div class="party-card ao d3">
+      <div class="party-hd ph-s">
+        <div class="party-icon">🤝</div>
+        <div class="party-title">战略协调合伙人</div>
+        <div class="party-sub en">Strategic Coordination Partner</div>
+      </div>
+      <div class="party-body">
+        <ul class="party-list">
+          <li>维持三方协同与长期信任关系</li>
+          <li>华信与北美平台的执行节奏对齐</li>
+          <li>关键资源引荐与战略协调</li>
+          <li>三方沟通桥梁与问题推进</li>
+          <li>月度治理参与与决策支持</li>
+        </ul>
+        <div class="party-note">战略协调合伙人维持三方协同、长期信任关系、执行节奏与关键协调——不承担复杂日常运营责任。</div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="rule rule-w"></div>
+
+<!-- ════ S7 三阶段路线图 ════ -->
+<section class="sec">
+<div class="wrap">
+  <div class="ey ao"><span class="ey-n">07</span><span class="ey-t">三阶段路线图 · Three-Phase Roadmap</span><div class="ey-l"></div></div>
+  <h2 class="h-sec ao">先本地化运营，<span class="ac">再评估美国制造</span></h2>
+  <p class="h-sub ao">没有客户入口，不要先建厂。没有本地运营，不可能真正进入大厂。三个阶段，每步都有前提条件。<span class="h-sub-en en">Market validation before manufacturing investment. No customer pipeline, no factory.</span></p>
+  <div class="phase-grid">
+    <div class="phase-card ao d1">
+      <div class="phase-hd phd1">
+        <div class="phase-num en">PHASE 01</div>
+        <div class="phase-title">北美本地化运营平台</div>
+        <div class="phase-en en">North America Platform Launch</div>
+        <div class="phase-time en">0–12 months</div>
+        <div class="phase-goal">目标：建立本地化运营基础</div>
+      </div>
+      <div class="phase-body">
+        <ul class="phase-list">
+          <li>品牌网站与展示间建设</li>
+          <li>华信北美产品目录与样品工具包</li>
+          <li>本地销售与工程团队招募</li>
+          <li>承包商与ISP客户开发</li>
+          <li>RFQ管线启动，首批试验订单</li>
+          <li>UL/ETL认证预审启动</li>
+          <li>月度三方治理机制建立</li>
+        </ul>
+        <div class="phase-note">⚠️ 第一阶段优先级最高。没有本地运营基础，后续阶段无从谈起。</div>
+      </div>
+    </div>
+    <div class="phase-card ao d2">
+      <div class="phase-hd phd2">
+        <div class="phase-num en">PHASE 02</div>
+        <div class="phase-title">轻本地化</div>
+        <div class="phase-en en">Light Localization</div>
+        <div class="phase-time en">12–24 months</div>
+        <div class="phase-goal">目标：从本地销售升级为本地服务</div>
+      </div>
+      <div class="phase-body">
+        <ul class="phase-list">
+          <li>建立美国本地仓储</li>
+          <li>本地截断与线盘管理能力</li>
+          <li>美国标签与本地包装</li>
+          <li>本地QA检验与测试</li>
+          <li>Final kitting与快速发货</li>
+          <li>扩大承包商与工程商网络</li>
+          <li>完成首批UL/ETL认证</li>
+        </ul>
+        <div class="phase-note">前提条件：Phase 1已有稳定客户管线与月度营收，才进入本阶段投入。</div>
+      </div>
+    </div>
+    <div class="phase-card ao d3">
+      <div class="phase-hd phd3">
+        <div class="phase-num en">PHASE 03</div>
+        <div class="phase-title">BABA兼容型美国制造</div>
+        <div class="phase-en en">BABA-Compatible U.S. Manufacturing</div>
+        <div class="phase-time en">24–48 months</div>
+        <div class="phase-goal">目标：进入高价值客户体系</div>
+      </div>
+      <div class="phase-body">
+        <ul class="phase-list">
+          <li>评估美国本地组装或制造可行性</li>
+          <li>国内内容追溯与供应链文件体系</li>
+          <li>BABA兼容文件与路线规划</li>
+          <li>公用事业、BEAD、联邦项目进入</li>
+          <li>向超大规模数据中心供应链路径开放</li>
+          <li>本地供应链整合</li>
+        </ul>
+        <div class="phase-note">⚠️ 美国建厂绝对不是第一步。只有当Phase 1–2已经验证了客户入口与市场规模，才评估Phase 3投入。</div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="rule rule-w"></div>
+
+<!-- ════ S8 90天执行计划 ════ -->
+<section class="sec sec-alt">
+<div class="wrap">
+  <div class="ey ao"><span class="ey-n">08</span><span class="ey-t">90天启动计划 · First 90 Days</span><div class="ey-l"></div></div>
+  <h2 class="h-sec ao">启动不是开会，<span class="ac">启动是执行</span></h2>
+  <p class="h-sub ao">三个阶段，每个阶段有清晰可交付成果。不是路线图，是执行清单。<span class="h-sub-en en">Execution, not planning. Each phase has deliverables, not just discussions.</span></p>
+  <div class="tl-grid">
+    <div class="tl ao d1">
+      <div class="tl-hd tlh1"><div class="tl-days">Day 0–30</div><div class="tl-range en">基础对齐与架构确认</div><div class="tl-theme">Foundation & Alignment</div></div>
+      <div class="tl-body">
+        <ul class="tl-list">
+          <li>确认三方合作结构</li>
+          <li>确认月度运营支持金额</li>
+          <li>明确品牌策略方向（Option A/B/C）</li>
+          <li>指定华信工厂对接人</li>
+          <li>指定北美平台负责人</li>
+          <li>确认首批SKU（5–8个产品）</li>
+          <li>准备数据手册模板</li>
+          <li>启动展示间城市选择</li>
+        </ul>
+      </div>
+    </div>
+    <div class="tl ao d2">
+      <div class="tl-hd tlh2"><div class="tl-days">Day 30–60</div><div class="tl-range en">资产建设与团队组建</div><div class="tl-theme">Build & Recruit</div></div>
+      <div class="tl-body">
+        <ul class="tl-list">
+          <li>建立华信北美产品演示材料</li>
+          <li>建立样品工具包</li>
+          <li>建立目标客户名单</li>
+          <li>启动承包商与ISP外展</li>
+          <li>启动认证差距审查</li>
+          <li>明确仓储/展示间需求</li>
+          <li>起草战略合作协议框架</li>
+        </ul>
+      </div>
+    </div>
+    <div class="tl ao d3">
+      <div class="tl-hd tlh3"><div class="tl-days">Day 60–90</div><div class="tl-range en">市场启动与首批执行</div><div class="tl-theme">Launch & Execute</div></div>
+      <div class="tl-body">
+        <ul class="tl-list">
+          <li>首批客户会议</li>
+          <li>首批RFQ收集</li>
+          <li>首批样品发货</li>
+          <li>首套工程提交文件包</li>
+          <li>首次工厂文件资料包</li>
+          <li>首次月度三方治理会议</li>
+          <li>品牌归属决策节点确认</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="rule rule-w"></div>
+
+<!-- ════ BUDGET ════ -->
+<section class="sec">
+<div class="wrap">
+  <div class="ey ao"><span class="ey-n">09</span><span class="ey-t">第一年预算 · Year 1 Budget</span><div class="ey-l"></div></div>
+  <h2 class="h-sec ao">这不是贸易费用，<span class="ac">是本地化运营能力建设费用</span></h2>
+  <p class="h-sub ao">每一笔预算都指向本地运营能力的具体建设。按月度推进，不是一次性大投入。<span class="h-sub-en en">This budget builds local operating capability. Monthly deployment, not a one-time burn.</span></p>
+  <div class="budget-banner ao">
+    <div class="bb-top">
+      <div>
+        <div class="bb-label en">第一年本地化运营能力建设预算</div>
+        <div class="bb-val en">USD <span>700k – 1.0M</span></div>
+        <div class="bb-zh">Recommended Year 1 Local Operations Investment</div>
+      </div>
+      <div>
+        <div class="bb-note-label">资金性质</div>
+        <div class="bb-note-val">厂家端支持的北美<br>本地化平台资源预算</div>
+      </div>
+    </div>
+    <div class="phased-row">
+      <div class="phased-b en">📅 按阶段月度推进</div>
+      <span class="phased-t en">Phased Monthly Deployment · 月度复盘 · 随执行进度动态调整</span>
+    </div>
+  </div>
+  <table class="btable ao">
+    <thead><tr><th>预算项目</th><th>说明</th><th>金额范围 (USD)</th></tr></thead>
+    <tbody>
+      <tr><td><span class="td-n">办公室与展示间</span><span class="td-z en">Office + Showroom</span></td><td style="font-size:11px;color:var(--mist)">本地实体存在</td><td>$80k – $220k</td></tr>
+      <tr><td><span class="td-n">本地销售团队</span><span class="td-z en">Local Sales Team</span></td><td style="font-size:11px;color:var(--mist)">最核心的执行资源</td><td>$200k – $380k</td></tr>
+      <tr><td><span class="td-n">工程文件体系建设</span><span class="td-z en">Engineering Documentation</span></td><td style="font-size:11px;color:var(--mist)">产品文件与工程提交</td><td>$25k – $60k</td></tr>
+      <tr><td><span class="td-n">产品认证 (UL/ETL)</span><span class="td-z en">Certification Coordination</span></td><td style="font-size:11px;color:var(--mist)">进入工程体系的门票</td><td>$60k – $230k</td></tr>
+      <tr><td><span class="td-n">样品工具包</span><span class="td-z en">Sample Kit</span></td><td style="font-size:11px;color:var(--mist)">客户开发工具</td><td>$40k – $120k</td></tr>
+      <tr><td><span class="td-n">行业展会</span><span class="td-z en">Trade Shows</span></td><td style="font-size:11px;color:var(--mist)">品牌曝光与客户接触</td><td>$45k – $145k</td></tr>
+      <tr><td><span class="td-n">差旅与客户拜访</span><span class="td-z en">Travel & Customer Meetings</span></td><td style="font-size:11px;color:var(--mist)">关系建立</td><td>$30k – $80k</td></tr>
+      <tr><td><span class="td-n">仓储规划启动</span><span class="td-z en">Local Warehouse Planning</span></td><td style="font-size:11px;color:var(--mist)">Phase 2准备</td><td>$20k – $60k</td></tr>
+      <tr><td><span class="td-n">质量追溯系统</span><span class="td-z en">QA / Traceability</span></td><td style="font-size:11px;color:var(--mist)">供应商可信度基础</td><td>$20k – $70k</td></tr>
+      <tr><td><span class="td-n">品牌资产建设</span><span class="td-z en">Brand Assets</span></td><td style="font-size:11px;color:var(--mist)">网站、目录、CRM</td><td>$25k – $60k</td></tr>
+    </tbody>
+  </table>
+  <div style="margin-bottom:10px;font-size:13px;font-weight:700;color:var(--navy)" class="ao">月度运营支持 · Monthly Operating Support</div>
+  <div class="monthly-grid ao">
+    <div class="mo mo-a"><div class="mo-lbl en">保守方案</div><div class="mo-val en">$50k–60k</div><div class="mo-sub">/ month</div></div>
+    <div class="mo mo-b"><div class="mo-lbl en">建议方案</div><div class="mo-val en">$65k–85k</div><div class="mo-sub">/ month</div></div>
+    <div class="mo mo-c"><div class="mo-lbl en">加速方案</div><div class="mo-val en">$90k–120k</div><div class="mo-sub">/ month</div></div>
+  </div>
+  <div class="mo-note ao">
+    <strong>厂家端支持的北美本地化平台资源预算</strong> — Manufacturer-backed local platform support<br>
+    <span class="en">通过月度预算支持本地化运营能力持续建设——按月推进、按月复盘、根据执行进度动态调整资源投入。</span>
+  </div>
+</div>
+</section>
+
+<!-- ════ FINAL CTA ════ -->
+<section class="cta-sec">
+<div class="cta-in">
+  <div class="cta-ey ao en">最终行动号召 · Final Call to Action</div>
+  <h2 class="cta-title ao">下一步不是<br>继续讨论。<br>下一步是确认与执行。</h2>
+  <p class="cta-zh ao en">The next step is not more discussion — it is confirming ownership, budget, and launching execution.</p>
+
+  <div class="meeting ao">
+    <div class="meeting-title">📅 下一次会议议程</div>
+    <div class="meeting-sub en">目标：完成以下确认项，会议结束即启动执行。Not another direction discussion — execution alignment.</div>
+    <ul class="meeting-list">
+      <li>确认月度平台资源支持金额 — Confirm monthly platform support</li>
+      <li>明确品牌策略选择 (A/B/C) — Confirm brand strategy</li>
+      <li>指定华信工厂对接人 — Assign factory contact</li>
+      <li>指定北美执行负责人 — Assign North America execution owner</li>
+      <li>确认首批SKU产品列表 — Approve first SKU list</li>
+      <li>启动本地化运营搭建 — Start local operations setup</li>
+      <li>启动战略合作协议起草 — Draft strategic cooperation agreement</li>
+    </ul>
+  </div>
+
+  <div class="action-grid ao">
+    <div class="action-item"><div class="a-num en">ACTION 01</div><div class="a-txt">确认品牌策略</div><div class="a-en en">Confirm Brand Strategy</div></div>
+    <div class="action-item"><div class="a-num en">ACTION 02</div><div class="a-txt">确认月度平台支持</div><div class="a-en en">Confirm Monthly Support</div></div>
+    <div class="action-item"><div class="a-num en">ACTION 03</div><div class="a-txt">指定双方负责人</div><div class="a-en en">Assign Owners</div></div>
+    <div class="action-item"><div class="a-num en">ACTION 04</div><div class="a-txt">确认首批产品型号</div><div class="a-en en">Approve First SKUs</div></div>
+    <div class="action-item"><div class="a-num en">ACTION 05</div><div class="a-txt">启动本地化运营搭建</div><div class="a-en en">Start Local Ops Setup</div></div>
+    <div class="action-item"><div class="a-num en">ACTION 06</div><div class="a-txt">起草战略合作协议</div><div class="a-en en">Draft Cooperation Agreement</div></div>
+    <div class="action-item"><div class="a-num en">ACTION 07</div><div class="a-txt">启动90天执行计划</div><div class="a-en en">Launch 90-Day Plan</div></div>
+    <div class="action-item"><div class="a-num en">ACTION 08</div><div class="a-txt">设定首次月度复盘</div><div class="a-en en">Schedule First Gov Review</div></div>
+  </div>
+
+  <div class="cta-foot ao">
+    <div class="cta-foot-t">内部合作讨论文件 · 保密 · 华信 · 2026</div>
+    <div class="cta-foot-t en">docs.energizeos.com/fiber-v3</div>
+  </div>
+</div>
+</section>
+
+<footer class="footer">
+  <div class="footer-l en">CONFIDENTIAL · STRATEGIC COOPERATION PROPOSAL · HUAXIN · 2026</div>
+  <div class="footer-r en">docs.energizeos.com</div>
+</footer>
+
+<script>
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target);}});
+},{threshold:0.08,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.ao').forEach(el=>io.observe(el));
+document.addEventListener('contextmenu',e=>e.preventDefault());
+document.addEventListener('keydown',e=>{
+  if((e.ctrlKey||e.metaKey)&&['u','s','p'].includes(e.key.toLowerCase()))e.preventDefault();
+  if(e.key==='F12')e.preventDefault();
+});
+document.addEventListener('dragstart',e=>e.preventDefault());
+</script>
+</body>
+</html>
