@@ -52,7 +52,7 @@ body{
 .tag-teal{background:rgba(42,157,143,.1);color:var(--teal);border:1px solid rgba(42,157,143,.2)}
 .tag-amber{background:rgba(242,192,120,.15);color:#8a5b1a;border:1px solid rgba(242,192,120,.3)}
 .tag-navy{background:rgba(31,58,95,.07);color:var(--navy);border:1px solid rgba(31,58,95,.12)}
-.h-sec{font-size:clamp(20px,2.8vw,28px);font-weight:800;letter-spacing:-.03em;line-height:1.2}
+.h-sec{font-size:clamp(20px,2.8vw,28px);font-weight:800;letter-spacing:-.03em;line-height:1.35}
 .h-sec .ac{color:var(--teal)}
 .h-sub{font-size:14px;color:var(--slate);margin-top:9px;line-height:1.85;max-width:620px}
 .h-sub-en{font-family:var(--f);font-size:12px;color:var(--mist);display:block;margin-top:4px}
@@ -88,7 +88,7 @@ body{
   font-family:var(--f);font-size:10px;font-weight:800;color:var(--teal);letter-spacing:.15em;
 }
 .hero-kick-dot{width:5px;height:5px;border-radius:50%;background:var(--teal)}
-.hero-title{font-size:clamp(28px,5.5vw,54px);font-weight:900;letter-spacing:-.04em;line-height:1.0;margin-bottom:6px}
+.hero-title{font-size:clamp(28px,5.5vw,54px);font-weight:900;letter-spacing:-.04em;line-height:1.15;margin-bottom:10px}
 .hero-title .t2{color:var(--teal)}
 .hero-en{font-family:var(--f);font-size:14px;color:var(--slate);font-weight:500;margin-bottom:12px}
 /* Market alert strip */
@@ -116,9 +116,9 @@ body{
 /* CTA box */
 .hero-cta{
   background:var(--white);border:1.5px solid rgba(42,157,143,.22);
-  border-radius:var(--r2);padding:16px 20px;
-  display:inline-flex;align-items:flex-start;gap:12px;
-  max-width:580px;box-shadow:var(--sh);
+  border-radius:var(--r2);padding:18px 22px;
+  display:flex;align-items:flex-start;gap:14px;
+  width:100%;box-shadow:var(--sh);
 }
 .hc-i{font-size:19px;flex-shrink:0;margin-top:1px}
 .hc-l{font-family:var(--f);font-size:10px;font-weight:800;color:var(--teal);letter-spacing:.18em;text-transform:uppercase;margin-bottom:3px}
@@ -302,21 +302,21 @@ body{
 
 /* ══════════════ S7 三方模型 ══════════════ */
 .party-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:28px}
-.party{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;box-shadow:var(--sh)}
-.party-hd{padding:20px 20px 16px}
+.party{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;box-shadow:var(--sh);display:flex;flex-direction:column}
+.party-hd{padding:20px 20px 16px;min-height:110px;display:flex;flex-direction:column;justify-content:flex-end}
 .ph-n{background:var(--navy)}.ph-t{background:var(--teal)}.ph-s{background:#4e80a8}
-.party-icon{font-size:22px;margin-bottom:4px}
-.party-title{font-size:14px;font-weight:900;color:#fff;line-height:1.3}
+.party-icon{font-size:22px;margin-bottom:6px}
+.party-title{font-size:14px;font-weight:900;color:#fff;line-height:1.35}
 .party-sub{font-family:var(--f);font-size:11px;color:rgba(255,255,255,.45);margin-top:2px}
-.party-body{padding:20px 20px}
-.party-list{list-style:none;display:flex;flex-direction:column;gap:9px}
+.party-body{padding:20px 20px;flex:1;display:flex;flex-direction:column}
+.party-list{list-style:none;display:flex;flex-direction:column;gap:9px;flex:1}
 .party-list li{display:flex;align-items:flex-start;gap:7px;font-size:12px;color:var(--slate);line-height:1.65}
 .party-list li::before{content:'›';color:var(--teal);font-size:14px;font-weight:800;flex-shrink:0;margin-top:-1px}
-.party-note{margin-top:12px;padding:10px 12px;background:var(--paper);border-radius:7px;font-size:11px;color:var(--mist);line-height:1.65}
+.party-note{margin-top:14px;padding:10px 12px;background:var(--paper);border-radius:7px;font-size:11px;color:var(--mist);line-height:1.65}
 
 /* ══════════════ S8 三阶段路线 ══════════════ */
 .phase-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:28px}
-.phase{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;box-shadow:var(--sh)}
+.phase{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;box-shadow:var(--sh);display:flex;flex-direction:column}
 .phase-hd{padding:18px 20px}
 .phd1{background:rgba(31,58,95,.07)}
 .phd2{background:rgba(42,157,143,.08)}
@@ -325,12 +325,12 @@ body{
 .ph-title{font-size:15px;font-weight:900;letter-spacing:-.02em}
 .ph-en{font-family:var(--f);font-size:11px;color:var(--teal);font-weight:600;margin-top:2px}
 .ph-time{font-family:var(--f);font-size:11px;color:var(--mist);margin-top:2px}
-.ph-goal{font-size:12px;font-weight:700;color:var(--navy);margin-top:4px}
-.phase-body{padding:16px 20px 20px}
-.phase-list{list-style:none;display:flex;flex-direction:column;gap:8px}
+.ph-goal{font-size:12px;font-weight:700;color:var(--navy);margin-top:6px}
+.phase-body{padding:16px 20px 20px;flex:1;display:flex;flex-direction:column}
+.phase-list{list-style:none;display:flex;flex-direction:column;gap:8px;flex:1}
 .phase-list li{display:flex;align-items:flex-start;gap:7px;font-size:12px;color:var(--slate);line-height:1.65}
 .phase-list li::before{content:'✓';color:var(--teal);font-family:var(--f);font-size:10px;font-weight:800;flex-shrink:0;margin-top:2px}
-.phase-note{margin-top:12px;padding:9px 13px;border-radius:7px;font-size:11px;line-height:1.65}
+.phase-note{margin-top:16px;padding:10px 13px;border-radius:7px;font-size:11px;line-height:1.65}
 .pn-warn{background:rgba(242,192,120,.1);border-left:2px solid var(--amber);color:#6b4510}
 .pn-info{background:rgba(42,157,143,.06);border-left:2px solid var(--teal);color:var(--slate)}
 
@@ -407,7 +407,39 @@ body{
 .cta-foot{padding-top:18px;border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
 .cta-foot-t{font-size:11px;color:rgba(255,255,255,.2)}
 
-/* ══════════════ FOOTER ══════════════ */
+/* ══════════════ EXECUTION FLOW (from v2) ══════════════ */
+.flow-wrap{margin-top:28px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+.flow-inner{display:flex;align-items:stretch;min-width:600px;gap:0}
+.flow-step{
+  flex:1;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--r);padding:14px 10px;text-align:center;
+  margin-right:10px;position:relative;box-shadow:var(--sh);
+}
+.flow-step:last-child{margin-right:0}
+.flow-step:not(:last-child)::after{
+  content:'→';position:absolute;right:-14px;top:50%;transform:translateY(-50%);
+  color:var(--teal);font-size:14px;z-index:1;font-family:var(--f);
+}
+.fs-num{font-family:var(--f);font-size:9px;font-weight:800;color:var(--teal);letter-spacing:.18em;margin-bottom:5px}
+.fs-lbl{font-size:12px;font-weight:700;color:var(--navy);line-height:1.35}
+.fs-zh{font-family:var(--f);font-size:9px;color:var(--mist);margin-top:3px}
+.sla-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:20px}
+.sla{background:rgba(42,157,143,.05);border:1px solid rgba(42,157,143,.13);border-radius:var(--r);padding:14px;text-align:center}
+.sla-v{font-family:var(--f);font-size:18px;font-weight:900;color:var(--navy);letter-spacing:-.02em}
+.sla-l{font-family:var(--f);font-size:10px;color:var(--teal);font-weight:700;margin-top:2px;letter-spacing:.04em}
+.sla-zh{font-size:11px;color:var(--mist);margin-top:2px}
+
+/* ══════════════ GAP CARDS (mobile version of table) ══════════════ */
+.gap-table-desktop{display:table}
+.gap-cards-mobile{display:none;flex-direction:column;gap:10px}
+.gap-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--sh)}
+.gc-dim{font-size:13px;font-weight:800;color:var(--navy);margin-bottom:10px}
+.gc-row{margin-bottom:6px}
+.gc-now{font-size:12px;color:#b85c38;font-style:italic;font-family:var(--f)}
+.gc-target{font-size:12px;color:var(--teal);font-weight:600}
+.gc-why{margin-top:8px;padding:7px 10px;background:var(--paper);border-radius:6px;font-family:var(--f);font-size:11px;color:var(--mist)}
+
+
 .footer{background:#111E30;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
 .footer-l{font-family:var(--f);font-size:10px;color:rgba(255,255,255,.18);letter-spacing:.06em}
 .footer-r{font-family:var(--f);font-size:10px;color:rgba(42,157,143,.5)}
@@ -451,8 +483,11 @@ body{
   .topbar{padding:11px 16px}
   .cta-sec{padding:44px 16px}
   .btable th:nth-child(2),.btable td:nth-child(2){display:none}
-  .capability-table .ct-now{display:none}
   .gv-label{width:70px;font-size:11px}
+  /* Switch table to cards on mobile */
+  .gap-table-desktop{display:none}
+  .gap-cards-mobile{display:flex}
+  .sla-grid{grid-template-columns:1fr 1fr}
 }
 </style>
 </head>
@@ -590,11 +625,11 @@ body{
 
 <div class="rule rule-w"></div>
 
-<!-- ════ S2 五个真实市场窗口 ════ -->
+<!-- ════ S2 六个真实市场窗口 ════ -->
 <section class="sec sec-alt">
 <div class="wrap">
   <div class="ey ao"><span class="ey-n">02</span><span class="ey-t">市场切入窗口 · Entry Windows</span><div class="ey-l"></div></div>
-  <h2 class="h-sec ao">五个窗口，优先级不同，<span class="ac">节奏不一样</span></h2>
+  <h2 class="h-sec ao">六个窗口，优先级不同，<span class="ac">节奏不一样</span></h2>
   <p class="h-sub ao">不是每个市场都要同时进入。有些窗口现在就开着，有些需要先建好能力才能进。<span class="h-sub-en">Not all windows are open at the same time. Sequence matters more than scale.</span></p>
   <div class="window-grid">
     <div class="wc ao d1">
@@ -644,20 +679,18 @@ body{
       </div>
       <div class="wc-name">公用事业通信网络</div>
       <div class="wc-en en">Utility Telecom Networks</div>
-      <div class="wc-desc">电力公司、天然气公司的通信光纤升级——采购流程规范，但认证要求严格，供应商资质审查周期长。进入周期18–24个月，但一旦进入，订单长期稳定。</div>
+      <div class="wc-desc">电力公司、天然气公司的通信光纤升级——采购流程规范，认证要求严格，供应商资质审查周期长。进入周期18–24个月，但一旦进入，订单长期稳定。</div>
       <div class="wc-signal"><strong>长线布局：</strong>第一年建立基础认证，第二年开始推进供应商资质</div>
     </div>
-    <div class="wc wc-wide ao d6">
-      <div class="wc-icon">🚀</div>
-      <div class="wc-wide-body">
-        <div class="wc-name" style="font-size:14px">为什么现在是最好的时机？</div>
-        <div class="wc-desc" style="margin-top:6px">Corning正在扩产、Prysmian在北美建新厂、中国主要厂排单到2027——现有供应商都在追需求，没有人有多余精力去精心服务中等规模承包商。<strong>这正是华信的机会：有货、有文件、有服务。</strong></div>
+    <div class="wc ao d6" style="background:rgba(42,157,143,.04);border-color:rgba(42,157,143,.15)">
+      <div class="wc-header">
+        <div class="wc-icon">🚀</div>
+        <span class="wc-timing wt-now" style="background:rgba(242,192,120,.15);color:#8a5b1a">为什么现在？</span>
       </div>
-      <div class="wc-wide-stats">
-        <div class="wcs"><div class="wcs-val" style="color:var(--teal)">36×</div><div class="wcs-label">AI机架vs传统光纤用量</div></div>
-        <div class="wcs"><div class="wcs-val">5yr</div><div class="wcs-label">BEAD建设窗口期</div></div>
-        <div class="wcs"><div class="wcs-val" style="color:var(--navy)">$13B</div><div class="wcs-label">全球光纤市场2025</div></div>
-      </div>
+      <div class="wc-name" style="color:var(--teal)">供给短缺窗口期</div>
+      <div class="wc-en en">The Supply Gap Window</div>
+      <div class="wc-desc">Corning扩产、Prysmian建新厂、中国主要厂排单到2027——现有供应商都在追需求，没有多余精力服务中等规模承包商。<strong>这正是华信的机会：有货、有文件、有服务。</strong></div>
+      <div class="wc-signal"><strong>核心逻辑：</strong>供给短缺时，能交货就是竞争力，不需要靠低价打败 Corning</div>
     </div>
   </div>
 </div>
@@ -721,7 +754,9 @@ body{
   <h2 class="h-sec ao">华信现在有什么，<span class="ac">还缺什么</span></h2>
   <p class="h-sub ao">从「制造商」到「北美工程供应商」，差的不是产品，差的是这些系统性能力。本地化平台要建的，就是这些。</p>
   <div class="gap-model ao">
-    <table class="capability-table ct">
+
+    <!-- Desktop: table view -->
+    <table class="capability-table ct gap-table-desktop">
       <thead>
         <tr>
           <th>能力维度</th>
@@ -739,9 +774,50 @@ body{
         <tr><td class="ct-dim">售后与技术支持</td><td class="ct-now">无本地支持</td><td class="ct-target">技术响应24–48h、RMA处理、本地工程支持</td><td class="ct-why">项目出问题时没有本地支持=丢掉复购机会</td></tr>
       </tbody>
     </table>
+
+    <!-- Mobile: card view -->
+    <div class="gap-cards-mobile">
+      <div class="gap-card">
+        <div class="gc-dim">📄 工程文件体系</div>
+        <div class="gc-row"><span class="gc-now">现在：中文规格书，无北美格式</span></div>
+        <div class="gc-row"><span class="gc-target">需要：UL/ETL规格 · Submittal Package · 工程数据手册</span></div>
+        <div class="gc-why">承包商和工程师不读中文规格书</div>
+      </div>
+      <div class="gap-card">
+        <div class="gc-dim">✅ 产品认证</div>
+        <div class="gc-row"><span class="gc-now">现在：国内认证，无UL/ETL</span></div>
+        <div class="gc-row"><span class="gc-target">需要：UL/ETL认证是项目提交的前提条件</span></div>
+        <div class="gc-why">没有UL/ETL，进不了大多数工程采购名单</div>
+      </div>
+      <div class="gap-card">
+        <div class="gc-dim">🤝 本地销售界面</div>
+        <div class="gc-row"><span class="gc-now">现在：依赖中间商或展会</span></div>
+        <div class="gc-row"><span class="gc-target">需要：本地销售团队 · 展示间 · 样品工具包</span></div>
+        <div class="gc-why">北美客户要的是本地能沟通、能服务的人</div>
+      </div>
+      <div class="gap-card">
+        <div class="gc-dim">📦 交货与仓储</div>
+        <div class="gc-row"><span class="gc-now">现在：FOB出厂，12–16周</span></div>
+        <div class="gc-row"><span class="gc-target">需要：本地库存 + 快速发货（1–2周以内）</span></div>
+        <div class="gc-why">供给短缺时交货速度=竞争力</div>
+      </div>
+      <div class="gap-card">
+        <div class="gc-dim">🔍 品牌可信度</div>
+        <div class="gc-row"><span class="gc-now">现在：北美市场几乎零认知</span></div>
+        <div class="gc-row"><span class="gc-target">需要：可被搜索到 · 有案例 · 有工程参考</span></div>
+        <div class="gc-why">客户采购前会搜索，搜不到等于不存在</div>
+      </div>
+      <div class="gap-card">
+        <div class="gc-dim">🛠️ 售后与技术支持</div>
+        <div class="gc-row"><span class="gc-now">现在：无本地支持</span></div>
+        <div class="gc-row"><span class="gc-target">需要：技术响应24–48h · RMA处理 · 本地工程支持</span></div>
+        <div class="gc-why">项目出问题时没有本地支持=丢掉复购机会</div>
+      </div>
+    </div>
+
     <div class="gap-insight">
       <div class="gi-icon">💡</div>
-      <div class="gi-text">这张表就是北美本地化平台要做的事的完整清单。<strong>华信不缺产品，缺的是这六个维度的本地化能力。</strong>这也是为什么光靠出口贸易永远无法真正建立北美市场份额——贸易不解决这六个问题，本地化平台才解决。</div>
+      <div class="gi-text">这六项就是北美本地化平台要做的事的完整清单。<strong>华信不缺产品，缺的是这六个维度的本地化能力。</strong>贸易不解决这六个问题，本地化平台才解决。</div>
     </div>
   </div>
 </div>
@@ -786,6 +862,37 @@ body{
       <div class="ops-en en">Warehouse Integration</div>
       <div class="ops-desc">本地样品库、快动SKU备货、线盘管理、本地包装与快速发货能力。交货速度是核心竞争力。</div>
     </div>
+  </div>
+</div>
+</section>
+
+<div class="rule rule-w"></div>
+
+<!-- ════ S5b 执行系统闭环（移植自v2）════ -->
+<section class="sec">
+<div class="wrap">
+  <div class="ey ao"><span class="ey-n">05+</span><span class="ey-t">执行系统 · Execution System</span><div class="ey-l"></div></div>
+  <h2 class="h-sec ao">从产品定义到复购订单，<span class="ac">每个环节闭环</span></h2>
+  <p class="h-sub ao">不是线性流程，是可复用的执行循环。每个客户从进入到复购，走的是同一条路径。</p>
+
+  <div class="flow-wrap ao">
+    <div class="flow-inner">
+      <div class="flow-step"><div class="fs-num en">01</div><div class="fs-lbl">产品定义</div><div class="fs-zh en">Product Definition</div></div>
+      <div class="flow-step"><div class="fs-num en">02</div><div class="fs-lbl">认证路径</div><div class="fs-zh en">Compliance Roadmap</div></div>
+      <div class="flow-step"><div class="fs-num en">03</div><div class="fs-lbl">工程文件</div><div class="fs-zh en">Datasheet & Submittal</div></div>
+      <div class="flow-step"><div class="fs-num en">04</div><div class="fs-lbl">样品工具包</div><div class="fs-zh en">Sample Kit</div></div>
+      <div class="flow-step"><div class="fs-num en">05</div><div class="fs-lbl">承包商开发</div><div class="fs-zh en">Contractor Outreach</div></div>
+      <div class="flow-step"><div class="fs-num en">06</div><div class="fs-lbl">报价与试单</div><div class="fs-zh en">RFQ & Trial Order</div></div>
+      <div class="flow-step"><div class="fs-num en">07</div><div class="fs-lbl">质量追溯</div><div class="fs-zh en">QA & Traceability</div></div>
+      <div class="flow-step"><div class="fs-num en">08</div><div class="fs-lbl">复购订单</div><div class="fs-zh en">Repeat Orders</div></div>
+    </div>
+  </div>
+
+  <div class="sla-grid ao">
+    <div class="sla"><div class="sla-v en">24–48h</div><div class="sla-l en">Technical Response</div><div class="sla-zh">技术咨询响应</div></div>
+    <div class="sla"><div class="sla-v en">24–72h</div><div class="sla-l en">RFQ Response</div><div class="sla-zh">报价单响应</div></div>
+    <div class="sla"><div class="sla-v en">48h</div><div class="sla-l en">Sample Dispatch</div><div class="sla-zh">样品发货启动</div></div>
+    <div class="sla"><div class="sla-v">月度</div><div class="sla-l en">Governance Review</div><div class="sla-zh">三方治理复盘</div></div>
   </div>
 </div>
 </section>
