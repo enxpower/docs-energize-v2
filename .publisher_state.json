@@ -34,9 +34,9 @@
   },
   "build_stats": {
     "last_run": {
-      "ts": "2026-06-01T02:14:02.826Z",
-      "run_id": "26731595958",
-      "pages_total": 69,
+      "ts": "2026-06-02T02:14:36.044Z",
+      "run_id": "26794134290",
+      "pages_total": 71,
       "pages_built": 0,
       "pages_skipped": 7,
       "pages_failed": 17,
