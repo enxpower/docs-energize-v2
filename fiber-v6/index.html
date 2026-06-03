@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>把华信带进北美工程供应链 · 合作执行方案 V6</title>
+<meta name="description" content="北美光纤市场正在缺货，华信有货、有质量、有成本优势。我们来建本地化平台，90天验证，低风险启动，让华信在北美站稳脚跟。">
+<meta property="og:title" content="把华信带进北美工程供应链">
+<meta property="og:description" content="市场正在缺货，华信有货。工程商需要文件，我们来建。90天验证，低风险启动。">
+<meta property="og:image" content="https://docs.energizeos.com/fiber-v6/assets/og-image.png">
+<meta property="og:url" content="https://docs.energizeos.com/fiber-v6/">
+<meta property="og:type" content="website">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://docs.energizeos.com/fiber-v6/assets/og-image.png">
+<style>
+:root{
+  --navy:#1F3A5F; --navy2:#152c4a;
+  --teal:#2A9D8F; --sky:#7BBDE8;
+  --amber:#F2C078; --amber-d:#8a5b1a;
+  --paper:#F5F8FB; --white:#fff;
+  --slate:#4A6580; --mist:#8BA4B8;
+  --line:rgba(31,58,95,.09);
+  --sh:0 2px 12px rgba(31,58,95,.07);
+  --sh2:0 4px 24px rgba(31,58,95,.12);
+  --r:12px; --r2:16px;
+  --f:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
+  --fz:'PingFang SC','Microsoft YaHei','Hiragino Sans GB',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  background:var(--white);color:var(--navy);
+  font-family:var(--fz);font-size:15px;line-height:1.7;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+.en{font-family:var(--f)}
+.wrap{max-width:960px;margin:0 auto;padding:0 24px}
+.rule{height:1px;background:var(--line);margin:0 24px}
+
+/* ── TOPBAR ── */
+.topbar{
+  position:sticky;top:0;z-index:100;
+  background:rgba(255,255,255,.96);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);
+  padding:14px 24px;display:flex;align-items:center;justify-content:space-between;
+}
+.tb-logo{font-size:14px;font-weight:800;color:var(--navy);letter-spacing:-.01em}
+.tb-logo span{color:var(--teal)}
+.tb-tag{
+  font-family:var(--f);font-size:11px;font-weight:700;
+  color:var(--teal);background:rgba(42,157,143,.08);
+  border:1px solid rgba(42,157,143,.2);border-radius:100px;
+  padding:4px 12px;letter-spacing:.05em;
+}
+
+/* ── HERO ── */
+.hero{
+  background:linear-gradient(140deg,#EEF5FC 0%,#E6F2EE 100%);
+  padding:64px 24px 52px;position:relative;overflow:hidden;
+}
+.hero::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at 90% 10%,rgba(42,157,143,.08) 0%,transparent 60%),
+             radial-gradient(ellipse at 5% 95%,rgba(123,189,232,.07) 0%,transparent 55%);
+}
+.hero-in{max-width:960px;margin:0 auto;position:relative;z-index:1}
+.hero-kicker{
+  display:inline-flex;align-items:center;gap:7px;margin-bottom:20px;
+  background:rgba(42,157,143,.1);border:1px solid rgba(42,157,143,.2);
+  border-radius:100px;padding:5px 14px;
+  font-family:var(--f);font-size:10px;font-weight:800;color:var(--teal);letter-spacing:.15em;
+}
+.hero-kicker-dot{width:6px;height:6px;border-radius:50%;background:var(--teal);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+.hero-title{
+  font-size:clamp(32px,6vw,62px);font-weight:900;
+  letter-spacing:-.04em;line-height:1.1;margin-bottom:8px;
+}
+.hero-title .line2{color:var(--teal)}
+.hero-sub{
+  font-size:clamp(14px,2vw,17px);color:var(--slate);
+  max-width:560px;line-height:1.75;margin-bottom:32px;
+}
+
+/* Signal strip */
+.signal-strip{
+  display:flex;flex-wrap:wrap;gap:10px;margin-bottom:32px;
+}
+.signal{
+  display:flex;align-items:center;gap:8px;
+  background:var(--white);border:1px solid var(--line);
+  border-radius:10px;padding:10px 16px;box-shadow:var(--sh);
+  flex:1;min-width:160px;
+}
+.signal-val{
+  font-family:var(--f);font-size:18px;font-weight:900;
+  color:var(--navy);letter-spacing:-.02em;white-space:nowrap;
+}
+.signal-val.teal{color:var(--teal)}
+.signal-val.amber{color:var(--amber-d)}
+.signal-lbl{font-size:11px;color:var(--slate);line-height:1.4}
+.signal-src{font-family:var(--f);font-size:9px;color:var(--mist);font-style:italic;margin-top:1px}
+
+/* Hero CTA */
+.hero-cta{
+  display:inline-flex;align-items:center;gap:12px;
+  background:var(--navy);color:var(--white);
+  border-radius:var(--r);padding:16px 24px;
+  font-size:14px;font-weight:700;cursor:default;
+  box-shadow:0 4px 20px rgba(31,58,95,.25);
+  width:100%;max-width:580px;
+}
+.hc-icon{font-size:20px;flex-shrink:0}
+.hc-main{font-size:14px;font-weight:700;line-height:1.5}
+.hc-sub{font-family:var(--f);font-size:11px;color:rgba(255,255,255,.5);margin-top:2px}
+
+/* ── SECTIONS ── */
+.sec{padding:52px 0}
+.sec-dark{background:var(--navy)}
+.sec-teal{background:var(--teal)}
+.sec-paper{background:var(--paper)}
+
+/* Section header */
+.sh{display:flex;align-items:baseline;gap:12px;margin-bottom:28px;flex-wrap:wrap}
+.sh-num{font-family:var(--f);font-size:11px;font-weight:800;color:var(--teal);letter-spacing:.2em}
+.sh-title{font-size:clamp(18px,2.5vw,24px);font-weight:800;letter-spacing:-.03em;line-height:1.3}
+.sh-title .ac{color:var(--teal)}
+.sh-line{flex:1;height:1px;background:var(--line);min-width:20px}
+
+/* Body text */
+.body-txt{font-size:14px;color:var(--slate);line-height:1.8;max-width:680px}
+.body-txt strong{color:var(--navy)}
+.note{font-family:var(--f);font-size:11px;color:var(--mist);font-style:italic;margin-top:8px;line-height:1.6}
+
+/* ── THREE TRUTHS (hero section) ── */
+.truth-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:28px}
+.truth{
+  background:var(--white);border:1px solid var(--line);border-radius:var(--r2);
+  padding:24px 20px;box-shadow:var(--sh);
+  border-top:3px solid var(--teal);
+}
+.truth-num{font-family:var(--f);font-size:11px;font-weight:800;color:var(--teal);letter-spacing:.15em;margin-bottom:8px}
+.truth-head{font-size:15px;font-weight:800;margin-bottom:8px;line-height:1.3}
+.truth-body{font-size:13px;color:var(--slate);line-height:1.7}
+.truth-tag{
+  display:inline-flex;margin-top:12px;padding:3px 10px;
+  background:rgba(42,157,143,.08);border-radius:100px;
+  font-family:var(--f);font-size:10px;font-weight:700;color:var(--teal);
+}
+
+/* ── WHAT WE BUILD (checklist style) ── */
+.build-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:28px}
+.build-card{
+  background:var(--white);border:1px solid var(--line);border-radius:var(--r);
+  padding:20px;box-shadow:var(--sh);
+}
+.bc-icon{font-size:22px;margin-bottom:8px}
+.bc-name{font-size:14px;font-weight:800;margin-bottom:6px}
+.bc-en{font-family:var(--f);font-size:11px;color:var(--teal);font-weight:600;margin-bottom:10px}
+.bc-list{list-style:none;display:flex;flex-direction:column;gap:6px}
+.bc-list li{
+  display:flex;align-items:flex-start;gap:8px;
+  font-size:12px;color:var(--slate);line-height:1.55;
+}
+.bc-list li::before{
+  content:'✓';color:var(--teal);font-family:var(--f);
+  font-size:11px;font-weight:800;flex-shrink:0;margin-top:1px;
+}
+
+/* ── WHY HUAXIN WINS ── */
+.win-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:28px}
+.win{
+  display:flex;gap:14px;
+  background:var(--white);border:1px solid var(--line);border-radius:var(--r);
+  padding:20px;box-shadow:var(--sh);
+}
+.win-icon{font-size:28px;flex-shrink:0;margin-top:2px}
+.win-name{font-size:14px;font-weight:800;margin-bottom:4px}
+.win-body{font-size:12px;color:var(--slate);line-height:1.65}
+.win-punch{
+  margin-top:8px;padding:6px 10px;
+  background:rgba(42,157,143,.07);border-radius:7px;
+  font-family:var(--f);font-size:11px;font-weight:700;color:var(--navy);
+}
+
+/* ── 90-DAY PLAN ── */
+.plan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:28px;
+           border-radius:var(--r2);overflow:hidden;border:1px solid var(--line);box-shadow:var(--sh)}
+.plan-col{background:var(--white);border-right:1px solid var(--line)}
+.plan-col:last-child{border-right:none}
+.plan-hd{padding:18px 20px}
+.ph1{background:rgba(31,58,95,.06)}
+.ph2{background:rgba(42,157,143,.07)}
+.ph3{background:rgba(123,189,232,.1)}
+.plan-days{font-size:20px;font-weight:900;letter-spacing:-.02em}
+.plan-theme{font-family:var(--f);font-size:11px;color:var(--teal);font-weight:700;margin-top:2px}
+.plan-goal{font-size:11px;color:var(--slate);margin-top:3px}
+.plan-body{padding:16px 20px 20px}
+.plan-list{list-style:none;display:flex;flex-direction:column;gap:7px}
+.plan-list li{
+  display:flex;align-items:flex-start;gap:7px;
+  font-size:12px;color:var(--slate);line-height:1.55;
+}
+.plan-list li::before{
+  content:'→';color:var(--teal);font-family:var(--f);
+  font-size:12px;font-weight:700;flex-shrink:0;
+}
+/* metrics row */
+.metrics-row{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px;
+  padding:16px;background:var(--paper);border-radius:var(--r);
+}
+.mtr{text-align:center}
+.mtr-val{font-family:var(--f);font-size:15px;font-weight:900;color:var(--navy)}
+.mtr-lbl{font-size:11px;color:var(--mist);margin-top:2px}
+
+/* ── THREE PARTIES ── */
+.party-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:28px}
+.party{
+  background:var(--white);border:1px solid var(--line);border-radius:var(--r2);
+  overflow:hidden;box-shadow:var(--sh);display:flex;flex-direction:column;
+}
+.party-hd{padding:20px;min-height:100px;display:flex;flex-direction:column;justify-content:flex-end}
+.ph-n{background:var(--navy)}.ph-t{background:var(--teal)}.ph-s{background:#4e80a8}
+.party-icon{font-size:22px;margin-bottom:6px}
+.party-name{font-size:14px;font-weight:900;color:#fff;line-height:1.3}
+.party-sub{font-family:var(--f);font-size:11px;color:rgba(255,255,255,.45);margin-top:2px}
+.party-body{padding:18px 20px;flex:1;display:flex;flex-direction:column}
+.party-list{list-style:none;display:flex;flex-direction:column;gap:7px;flex:1}
+.party-list li{
+  display:flex;align-items:flex-start;gap:7px;
+  font-size:12px;color:var(--slate);line-height:1.55;
+}
+.party-list li::before{content:'›';color:var(--teal);font-size:15px;font-weight:800;flex-shrink:0;margin-top:-1px}
+.party-note{margin-top:12px;padding:10px 12px;background:var(--paper);border-radius:8px;font-size:11px;color:var(--mist);line-height:1.6}
+
+/* ── BRAND STRATEGY ── */
+.brand-row{display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:12px;margin-top:28px}
+.brand-opt{
+  background:var(--white);border:1px solid var(--line);border-radius:var(--r);
+  padding:20px;box-shadow:var(--sh);
+}
+.bo-label{font-family:var(--f);font-size:10px;font-weight:800;color:var(--mist);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+.bo-title{font-size:14px;font-weight:800;margin-bottom:8px}
+.bo-desc{font-size:12px;color:var(--slate);line-height:1.65}
+.bo-rec{
+  background:var(--navy);border:none;
+  box-shadow:0 4px 20px rgba(31,58,95,.2);
+}
+.bo-rec .bo-label{color:rgba(255,255,255,.4)}
+.bo-rec .bo-title{color:#fff}
+.bo-rec .bo-desc{color:rgba(255,255,255,.6)}
+.rec-badge{
+  display:inline-flex;align-items:center;gap:5px;margin-top:10px;
+  padding:4px 10px;background:rgba(42,157,143,.2);border-radius:100px;
+  font-family:var(--f);font-size:10px;font-weight:700;color:var(--teal);
+}
+
+/* ── BUDGET ── */
+.budget-hero{
+  background:var(--navy);border-radius:var(--r2);padding:28px;
+  display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start;
+  margin-top:28px;
+}
+.bh-main{flex:1;min-width:200px}
+.bh-label{font-family:var(--f);font-size:10px;font-weight:800;color:rgba(255,255,255,.35);letter-spacing:.18em;text-transform:uppercase;margin-bottom:8px}
+.bh-val{font-size:clamp(28px,4vw,42px);font-weight:900;color:#fff;letter-spacing:-.03em;line-height:1}
+.bh-val span{color:var(--teal)}
+.bh-note{font-size:13px;color:rgba(255,255,255,.45);margin-top:6px;line-height:1.6}
+.bh-phase{
+  display:inline-flex;align-items:center;gap:6px;margin-top:12px;
+  background:rgba(42,157,143,.2);border:1px solid rgba(42,157,143,.3);
+  border-radius:100px;padding:5px 14px;
+  font-family:var(--f);font-size:11px;font-weight:700;color:rgba(255,255,255,.8);
+}
+.monthly-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px}
+.mo{border-radius:var(--r);padding:16px;text-align:center;border:1px solid var(--line);background:var(--white)}
+.mo-b{background:var(--navy)}.mo-c{background:var(--teal)}
+.mo-lbl{font-family:var(--f);font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px}
+.mo .mo-lbl{color:var(--mist)}
+.mo-b .mo-lbl,.mo-c .mo-lbl{color:rgba(255,255,255,.4)}
+.mo-val{font-family:var(--f);font-size:19px;font-weight:900}
+.mo .mo-val{color:var(--navy)}
+.mo-b .mo-val,.mo-c .mo-val{color:#fff}
+.mo-sub{font-size:11px;margin-top:2px}
+.mo .mo-sub{color:var(--mist)}
+.mo-b .mo-sub,.mo-c .mo-sub{color:rgba(255,255,255,.4)}
+
+/* ── FINAL CTA ── */
+.cta-sec{
+  background:linear-gradient(140deg,var(--navy) 0%,var(--navy2) 100%);
+  padding:64px 24px;
+}
+.cta-in{max-width:960px;margin:0 auto}
+.cta-headline{
+  font-size:clamp(24px,4vw,38px);font-weight:900;
+  color:#fff;letter-spacing:-.03em;line-height:1.15;
+  margin-bottom:8px;
+}
+.cta-headline .ac{color:var(--teal)}
+.cta-sub{font-size:14px;color:rgba(255,255,255,.45);margin-bottom:32px;max-width:560px;line-height:1.7}
+/* 4 action items */
+.action-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:32px}
+.action{
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);
+  border-radius:var(--r);padding:18px 14px;text-align:center;
+  transition:background .15s;
+}
+.action:hover{background:rgba(255,255,255,.11)}
+.action-n{font-family:var(--f);font-size:10px;font-weight:800;color:var(--teal);letter-spacing:.15em;margin-bottom:8px}
+.action-t{font-size:13px;font-weight:800;color:#fff;line-height:1.4}
+.action-e{font-family:var(--f);font-size:10px;color:rgba(255,255,255,.3);margin-top:3px}
+/* meeting checklist */
+.meeting{
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
+  border-radius:var(--r2);padding:24px;
+}
+.mtg-title{font-size:14px;font-weight:800;color:#fff;margin-bottom:4px}
+.mtg-sub{font-family:var(--f);font-size:11px;color:rgba(255,255,255,.3);margin-bottom:14px}
+.mtg-list{list-style:none;display:flex;flex-direction:column;gap:8px}
+.mtg-list li{
+  display:flex;align-items:flex-start;gap:10px;
+  font-size:13px;color:rgba(255,255,255,.65);line-height:1.55;
+}
+.mtg-list li::before{
+  content:'';width:16px;height:16px;border-radius:4px;flex-shrink:0;margin-top:1px;
+  border:1.5px solid rgba(42,157,143,.45);background:rgba(42,157,143,.08);
+}
+.cta-foot{
+  margin-top:28px;padding-top:20px;border-top:1px solid rgba(255,255,255,.07);
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;
+}
+.cf-txt{font-size:11px;color:rgba(255,255,255,.2)}
+
+/* ── DATA NOTICE ── */
+.notice{
+  background:var(--paper);padding:28px 24px;
+  border-top:1px solid var(--line);
+}
+.notice-in{max-width:960px;margin:0 auto}
+.notice-title{font-size:12px;font-weight:800;color:var(--navy);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.notice-body{font-size:11px;color:var(--mist);line-height:1.75;font-family:var(--f)}
+
+/* ── FOOTER ── */
+.footer{
+  background:#111E30;padding:16px 24px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;
+}
+.footer-l{font-family:var(--f);font-size:10px;color:rgba(255,255,255,.18);letter-spacing:.06em}
+.footer-r{font-family:var(--f);font-size:10px;color:rgba(42,157,143,.5)}
+
+/* ── ANIMATE ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.ao{opacity:0}
+.ao.v{animation:fadeUp .5s ease forwards}
+.d1{animation-delay:.05s}.d2{animation-delay:.1s}.d3{animation-delay:.15s}
+.d4{animation-delay:.2s}.d5{animation-delay:.25s}.d6{animation-delay:.3s}
+
+/* ── RESPONSIVE ── */
+@media(max-width:840px){
+  .truth-grid,.party-grid,.plan-grid,.brand-row{grid-template-columns:1fr}
+  .plan-col{border-right:none;border-bottom:1px solid var(--line)}
+  .plan-col:last-child{border-bottom:none}
+  .win-grid,.build-grid,.action-row{grid-template-columns:1fr 1fr}
+  .monthly-row{grid-template-columns:1fr}
+  .metrics-row{grid-template-columns:1fr 1fr}
+  .budget-hero{flex-direction:column}
+}
+@media(max-width:520px){
+  .win-grid,.build-grid,.action-row,.signal-strip{grid-template-columns:1fr}
+  .hero{padding:44px 16px 40px}
+  .sec{padding:40px 0}
+  .wrap{padding:0 16px}
+  .topbar{padding:11px 16px}
+  .cta-sec{padding:48px 16px}
+  .metrics-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="tb-logo">华信 <span>北美合作平台</span></div>
+  <div class="tb-tag en">V6 · 2026</div>
+</header>
+
+<!-- ════ HERO ════ -->
+<section class="hero">
+<div class="hero-in">
+  <div class="hero-kicker ao d1">
+    <div class="hero-kicker-dot"></div>
+    华信北美合作执行方案 · 2026
+  </div>
+
+  <h1 class="hero-title ao d2">
+    把华信<br>
+    <span class="line2">带进北美工程供应链</span>
+  </h1>
+
+  <p class="hero-sub ao d3">
+    北美光纤市场正在缺货，华信有货、有质量、有成本优势。<br>
+    我们来建本地化平台，把这个优势变成真实的北美市场份额。
+  </p>
+
+  <div class="signal-strip ao d4">
+    <div class="signal">
+      <div>
+        <div class="signal-val teal">~22–25%</div>
+        <div class="signal-lbl">北美需求增长信号/年</div>
+        <div class="signal-src en">Industry estimates · For planning only</div>
+      </div>
+    </div>
+    <div class="signal">
+      <div>
+        <div class="signal-val">20wk–1yr</div>
+        <div class="signal-lbl">主流供应商交货等待期</div>
+        <div class="signal-src en">Industry reports · Varies by supplier</div>
+      </div>
+    </div>
+    <div class="signal">
+      <div>
+        <div class="signal-val amber">+76%</div>
+        <div class="signal-lbl">AI数据中心光纤需求增长</div>
+        <div class="signal-src en">CRU Group 2025 estimate</div>
+      </div>
+    </div>
+    <div class="signal">
+      <div>
+        <div class="signal-val teal">90天</div>
+        <div class="signal-lbl">低风险验证启动周期</div>
+        <div class="signal-src en">Validate before scaling</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-cta ao d5">
+    <div class="hc-icon">🎯</div>
+    <div>
+      <div class="hc-main">下一步：确认90天启动预算 · 指定双方负责人 · 启动验证</div>
+      <div class="hc-sub en">Confirm 90-day budget · Assign owners · Launch validation plan</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ════ S1 三个真相 ════ -->
+<section class="sec sec-paper">
+<div class="wrap">
+  <div class="sh ao">
+    <span class="sh-num">01</span>
+    <h2 class="sh-title">为什么现在是对的时机，<span class="ac">华信是对的选择</span></h2>
+    <div class="sh-line"></div>
+  </div>
+  <div class="truth-grid">
+    <div class="truth ao d1">
+      <div class="truth-num en">TRUTH 01</div>
+      <div class="truth-head">市场正在缺货</div>
+      <div class="truth-body">Corning、Prysmian 都在追需求，交货期拉到6个月甚至1年。区域ISP、园区工程商、暗光纤承包商——他们在找可靠的备位供应商，不是在找最便宜的。</div>
+      <span class="truth-tag">补位窗口已开</span>
+    </div>
+    <div class="truth ao d2">
+      <div class="truth-num en">TRUTH 02</div>
+      <div class="truth-head">华信有真实竞争基础</div>
+      <div class="truth-body">工程级制造一致性、线盘级可追溯体系、OTDR存档——这些不是加分项，是进入北美工程采购体系的基础资质。华信已经具备，大多数中小供应商没有。</div>
+      <span class="truth-tag">制造能力已就位</span>
+    </div>
+    <div class="truth ao d3">
+      <div class="truth-num en">TRUTH 03</div>
+      <div class="truth-head">缺的只有本地化能力</div>
+      <div class="truth-body">华信现在缺的不是产品，是本地工程文件、北美认证/标准路径、本地销售团队和仓储能力。这就是这个平台要建的——90天先验证，跑通再扩大。</div>
+      <span class="truth-tag">这就是我们要做的</span>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ════ S2 我们来建什么 ════ -->
+<section class="sec">
+<div class="wrap">
+  <div class="sh ao">
+    <span class="sh-num">02</span>
+    <h2 class="sh-title">我们来建什么，<span class="ac">华信得到什么</span></h2>
+    <div class="sh-line"></div>
+  </div>
+  <p class="body-txt ao">不是做贸易，是建立华信在北美的<strong>系统性工程供应商位置</strong>。每一项能力，都直接对应华信拿不到的订单。</p>
+
+  <div class="build-grid">
+    <div class="build-card ao d1">
+      <div class="bc-icon">📋</div>
+      <div class="bc-name">工程文件体系</div>
+      <div class="bc-en en">Engineering Documentation</div>
+      <ul class="bc-list">
+        <li>北美格式 datasheet 与 submittal package</li>
+        <li>认证/标准适用性评估与状态表</li>
+        <li>OTDR/Factory Test Report 样本文件</li>
+        <li>Reel-level traceability 文件包</li>
+      </ul>
+    </div>
+    <div class="build-card ao d2">
+      <div class="bc-icon">🎯</div>
+      <div class="bc-name">本地销售与客户管线</div>
+      <div class="bc-en en">Local Sales & Pipeline</div>
+      <ul class="bc-list">
+        <li>区域ISP、承包商、园区工程商开发</li>
+        <li>RFQ响应、项目提交、客户跟进</li>
+        <li>CRM/pipeline + 样品工具包</li>
+        <li>行业展会 + LinkedIn外展</li>
+      </ul>
+    </div>
+    <div class="build-card ao d3">
+      <div class="bc-icon">📦</div>
+      <div class="bc-name">本地仓储与快速交货</div>
+      <div class="bc-en en">Local 3PL & Fast Delivery</div>
+      <ul class="bc-list">
+        <li>快动SKU小库存 + 样品库</li>
+        <li>3PL分拨试运行，实现1–2周交货</li>
+        <li>供给短缺时的补位交货能力</li>
+        <li>本地打标、包装、发货管理</li>
+      </ul>
+    </div>
+    <div class="build-card ao d4">
+      <div class="bc-icon">✅</div>
+      <div class="bc-name">认证/标准路径与合规</div>
+      <div class="bc-en en">Compliance & Standards Roadmap</div>
+      <ul class="bc-list">
+        <li>UL/cUL/ETL/CSA 等适用认证路径评估</li>
+        <li>OFNR/OFNP、Telcordia/ICEA/TIA 标准适用性</li>
+        <li>项目提交所需的工程文件与认证状态</li>
+        <li>BABA/Buy America 逐项核查机制</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ════ S3 为什么华信能赢 ════ -->
+<section class="sec sec-paper">
+<div class="wrap">
+  <div class="sh ao">
+    <span class="sh-num">03</span>
+    <h2 class="sh-title">华信的四个<span class="ac">真实竞争优势</span></h2>
+    <div class="sh-line"></div>
+  </div>
+  <div class="win-grid">
+    <div class="win ao d1">
+      <div class="win-icon">🏭</div>
+      <div>
+        <div class="win-name">工程级制造一致性</div>
+        <div class="win-body">OTDR存档、线盘级追溯、原材料变更管控——北美工程商要的不只是好产品，是每批一致、有案可查。华信已有，大多数中国厂商没有系统化到这个程度。</div>
+        <div class="win-punch">可追溯性文件 = 工程提交的前提</div>
+      </div>
+    </div>
+    <div class="win ao d2">
+      <div class="win-icon">⚡</div>
+      <div>
+        <div class="win-name">缺货时的交货能力</div>
+        <div class="win-body">建立本地样品库 + 项目排产 + 3PL分拨之后，华信就能在 Corning 说"等6个月"的时候，拿出一个能交货的方案。供给短缺时，能交货比低价更重要。</div>
+        <div class="win-punch">补位不是价格战，是交货能力</div>
+      </div>
+    </div>
+    <div class="win ao d3">
+      <div class="win-icon">📐</div>
+      <div>
+        <div class="win-name">产品覆盖宽，适配快</div>
+        <div class="win-body">OSP室外光缆、园区光纤、FTTX无源产品——华信覆盖了北美第一阶段最需要的产品类别，而且工厂具备快速适配北美规格的能力，不需要从零开发。</div>
+        <div class="win-punch">首批5–8个SKU，90天内完成资料</div>
+      </div>
+    </div>
+    <div class="win ao d4">
+      <div class="win-icon">💰</div>
+      <div>
+        <div class="win-name">成本结构支撑本地运营</div>
+        <div class="win-body">在同等质量下，华信的成本结构能给本地平台留出足够的运营、认证、销售和售后空间，不是把利润全压在出厂价上。这是可持续的，不是一次性价格战。</div>
+        <div class="win-punch">毛利空间 = 本地化运营的财务基础</div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ════ S4 三方合作 ════ -->
+<section class="sec">
+<div class="wrap">
+  <div class="sh ao">
+    <span class="sh-num">04</span>
+    <h2 class="sh-title">三方各司其职，<span class="ac">缺一不可</span></h2>
+    <div class="sh-line"></div>
+  </div>
+  <p class="body-txt ao">这不是甲乙方买卖，是三方共建平台。每方都不可替代，职责边界清楚，才能减少摩擦、快速执行。</p>
+  <div class="party-grid">
+    <div class="party ao d1">
+      <div class="party-hd ph-n">
+        <div class="party-icon">🏭</div>
+        <div class="party-name">华信 · 制造与供应链</div>
+        <div class="party-sub en">Huaxin · Factory & Supply Chain</div>
+      </div>
+      <div class="party-body">
+        <ul class="party-list">
+          <li>工程级制造能力与产品一致性</li>
+          <li>工厂文件、OTDR档案与质量追溯</li>
+          <li>认证/标准适用性配合与工程数据</li>
+          <li>样品快速支持与规格适配</li>
+          <li>价格与交期支持</li>
+          <li>月度平台资源支持</li>
+        </ul>
+        <div class="party-note">华信是平台的根基，不只是供货方。</div>
+      </div>
+    </div>
+    <div class="party ao d2">
+      <div class="party-hd ph-t">
+        <div class="party-icon">🌎</div>
+        <div class="party-name">北美平台 · 本地执行主体</div>
+        <div class="party-sub en">NA Platform · Local Operations</div>
+      </div>
+      <div class="party-body">
+        <ul class="party-list">
+          <li>市场定位、产品定义、北美资料体系</li>
+          <li>认证/标准路径协调推进</li>
+          <li>客户开发：ISP、承包商、工程商</li>
+          <li>RFQ响应、样品工具包、CRM管理</li>
+          <li>本地3PL库存与快速发货</li>
+          <li>售后技术响应与RMA流程</li>
+        </ul>
+        <div class="party-note">北美平台把华信制造能力转化为订单。</div>
+      </div>
+    </div>
+    <div class="party ao d3">
+      <div class="party-hd ph-s">
+        <div class="party-icon">🤝</div>
+        <div class="party-name">战略协调合伙人</div>
+        <div class="party-sub en">Strategic Coordination Partner</div>
+      </div>
+      <div class="party-body">
+        <ul class="party-list">
+          <li>三方信任关系与沟通桥梁</li>
+          <li>工厂与北美平台节奏对齐</li>
+          <li>关键资源引荐与推进</li>
+          <li>月度治理参与与决策支持</li>
+        </ul>
+        <div class="party-note"><strong>不承担复杂日常运营责任</strong>——协调、对齐、推进。</div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ════ S5 品牌策略 ════ -->
+<section class="sec sec-paper">
+<div class="wrap">
+  <div class="sh ao">
+    <span class="sh-num">05</span>
+    <h2 class="sh-title">品牌归属，<span class="ac">建议双品牌结构</span></h2>
+    <div class="sh-line"></div>
+  </div>
+  <p class="body-txt ao">品牌不只是商标，是客户资产和利益归属。第一阶段不急于锁死，但必须通过协议把各方权益说清楚。</p>
+  <div class="brand-row ao">
+    <div class="brand-opt">
+      <div class="bo-label en">Option A</div>
+      <div class="bo-title">华信持有北美品牌</div>
+      <div class="bo-desc">品牌积累直接归华信，控制力强。但北美平台和本地团队的主动性可能不足，客户资产归属容易模糊。</div>
+    </div>
+    <div class="brand-opt">
+      <div class="bo-label en">Option B</div>
+      <div class="bo-title">平台持有北美品牌</div>
+      <div class="bo-desc">本地化灵活，团队主动性强，客户资产清晰。但华信担心品牌控制权，制造方权益需协议保护。</div>
+    </div>
+    <div class="brand-opt bo-rec">
+      <div class="bo-label en">Option C · Recommended</div>
+      <div class="bo-title">双品牌结构</div>
+      <div class="bo-desc">
+        华信制造背书 + 北美平台运营品牌<br><br>
+        <em style="font-family:var(--f);font-size:11px;color:rgba(255,255,255,.45)">"Manufactured by Nanjing Wasin Fujikura<br>Operated by [NA Platform]"</em><br><br>
+        双方共建市场认知，品牌·客户·渠道资产归属通过书面协议明确保护，市场验证后再锁定最终结构。
+      </div>
+      <div class="rec-badge">建议第一阶段采用</div>
+    </div>
+  </div>
+  <div class="note ao" style="margin-top:14px">⚠️ 无论哪种结构，客户关系、渠道、本地资产归属都必须书面约定，不能靠默契。</div>
+</div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ════ S6 90天计划 ════ -->
+<section class="sec">
+<div class="wrap">
+  <div class="sh ao">
+    <span class="sh-num">06</span>
+    <h2 class="sh-title">90天先验证，<span class="ac">跑通再扩大</span></h2>
+    <div class="sh-line"></div>
+  </div>
+  <p class="body-txt ao">不是一上来就全国铺开。先用90天验证：产品对不对、文件够不够、客户认不认、节奏跑不跑得动。验证通过，再推Year 1完整建设。</p>
+  <div class="plan-grid ao">
+    <div class="plan-col">
+      <div class="plan-hd ph1">
+        <div class="plan-days">Day 0–30</div>
+        <div class="plan-theme en">对齐 · Alignment</div>
+        <div class="plan-goal">确认架构、预算、SKU、模板</div>
+      </div>
+      <div class="plan-body">
+        <ul class="plan-list">
+          <li>确认三方合作结构与预算</li>
+          <li>指定华信工厂对接人</li>
+          <li>指定北美平台负责人</li>
+          <li>确认首批5–8个SKU</li>
+          <li>建立认证/标准适用性检查表</li>
+          <li>建立北美格式 datasheet 模板</li>
+          <li>建立目标客户分类表</li>
+          <li>品牌策略初步方向确认</li>
+        </ul>
+      </div>
+    </div>
+    <div class="plan-col">
+      <div class="plan-hd ph2">
+        <div class="plan-days">Day 30–60</div>
+        <div class="plan-theme en">建设 · Build</div>
+        <div class="plan-goal">资料、样品、工具包、客户外展</div>
+      </div>
+      <div class="plan-body">
+        <ul class="plan-list">
+          <li>完成首批SKU北美资料包</li>
+          <li>建立样品工具包</li>
+          <li>建立RFQ与submittal模板</li>
+          <li>搭建CRM / pipeline</li>
+          <li>启动承包商、ISP、campus、dark fiber外展</li>
+          <li>启动北美认证/标准路径预审</li>
+          <li>BD与技术人员招募启动</li>
+        </ul>
+      </div>
+    </div>
+    <div class="plan-col">
+      <div class="plan-hd ph3">
+        <div class="plan-days">Day 60–90</div>
+        <div class="plan-theme en">验证 · Validate</div>
+        <div class="plan-goal">客户、RFQ、样品、复盘</div>
+      </div>
+      <div class="plan-body">
+        <ul class="plan-list">
+          <li>发送首批样品工具包</li>
+          <li>完成首批客户会议</li>
+          <li>收集首批RFQ</li>
+          <li>准备首批项目提交文件</li>
+          <li>跑通3PL试发货流程</li>
+          <li>输出90天验证复盘报告</li>
+          <li>三方共同决定：进入Year 1？</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- metrics -->
+  <div class="metrics-row ao" style="margin-top:16px">
+    <div class="mtr"><div class="mtr-val">联系客户数</div><div class="mtr-lbl">Prospects contacted</div></div>
+    <div class="mtr"><div class="mtr-val">RFQ收到数量</div><div class="mtr-lbl">RFQs received</div></div>
+    <div class="mtr"><div class="mtr-val">客户认可SKU数</div><div class="mtr-lbl">SKUs validated</div></div>
+    <div class="mtr"><div class="mtr-val">样品包发出数</div><div class="mtr-lbl">Sample kits sent</div></div>
+    <div class="mtr"><div class="mtr-val">认证缺口清单</div><div class="mtr-lbl">Compliance gap list</div></div>
+    <div class="mtr"><div class="mtr-val">试单机会数量</div><div class="mtr-lbl">Trial order opportunities</div></div>
+  </div>
+</div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ════ S7 预算框架 ════ -->
+<section class="sec sec-paper">
+<div class="wrap">
+  <div class="sh ao">
+    <span class="sh-num">07</span>
+    <h2 class="sh-title">按阶段投入，<span class="ac">不是一次性烧钱</span></h2>
+    <div class="sh-line"></div>
+  </div>
+  <div class="budget-hero ao">
+    <div class="bh-main">
+      <div class="bh-label en">Year 1 Budget Envelope · 第一年预算框架</div>
+      <div class="bh-val">USD <span>700k–1.0M</span></div>
+      <div class="bh-note">先启动90天验证，根据客户pipeline、RFQ和样品反馈，再决定后续投入规模。<br><span class="en" style="font-size:12px;opacity:.7">Validate first · Scale based on results · Not a one-time commitment</span></div>
+      <div class="bh-phase">📅 先验证，再追加</div>
+    </div>
+    <div style="min-width:200px;flex:1">
+      <div style="font-family:var(--f);font-size:10px;font-weight:800;color:rgba(255,255,255,.35);letter-spacing:.15em;text-transform:uppercase;margin-bottom:12px">关键预算项</div>
+      <div style="display:flex;flex-direction:column;gap:8px;font-size:12px;color:rgba(255,255,255,.6)">
+        <div>本地销售与技术团队 <span style="color:var(--teal);float:right;font-family:var(--f)">$200k–380k</span></div>
+        <div>3PL / 本地展示 / 轻量办公 <span style="color:var(--teal);float:right;font-family:var(--f)">$30k–120k</span></div>
+        <div>北美认证/标准路径 <span style="color:var(--teal);float:right;font-family:var(--f)">$60k–230k</span></div>
+        <div>工程文件 + 样品工具包 <span style="color:var(--teal);float:right;font-family:var(--f)">$65k–180k</span></div>
+        <div>展会 + 差旅 + 客户拜访 <span style="color:var(--teal);float:right;font-family:var(--f)">$75k–225k</span></div>
+        <div>品牌 + 官网 + CRM <span style="color:var(--teal);float:right;font-family:var(--f)">$25k–60k</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="monthly-row ao">
+    <div class="mo"><div class="mo-lbl">保守</div><div class="mo-val">$50k–60k</div><div class="mo-sub">/ month</div></div>
+    <div class="mo mo-b"><div class="mo-lbl">建议</div><div class="mo-val">$65k–85k</div><div class="mo-sub">/ month</div></div>
+    <div class="mo mo-c"><div class="mo-lbl">加速</div><div class="mo-val">$90k–120k</div><div class="mo-sub">/ month</div></div>
+  </div>
+</div>
+</section>
+
+<!-- ════ FINAL CTA ════ -->
+<section class="cta-sec">
+<div class="cta-in">
+  <h2 class="cta-headline ao">
+    市场窗口已开。<br>
+    <span class="ac">90天验证，现在启动。</span>
+  </h2>
+  <p class="cta-sub ao en">The supply gap is real. Huaxin has the manufacturing foundation. The only missing piece is local platform execution — and that's what we're here to build together.</p>
+
+  <div class="action-row ao">
+    <div class="action">
+      <div class="action-n en">01</div>
+      <div class="action-t">确认90天启动预算</div>
+      <div class="action-e en">Confirm 90-Day Budget</div>
+    </div>
+    <div class="action">
+      <div class="action-n en">02</div>
+      <div class="action-t">指定三方负责人</div>
+      <div class="action-e en">Assign Owners</div>
+    </div>
+    <div class="action">
+      <div class="action-n en">03</div>
+      <div class="action-t">确认首批SKU</div>
+      <div class="action-e en">Approve First 5–8 SKUs</div>
+    </div>
+    <div class="action">
+      <div class="action-n en">04</div>
+      <div class="action-t">启动90天验证</div>
+      <div class="action-e en">Launch Validation Plan</div>
+    </div>
+  </div>
+
+  <div class="meeting ao">
+    <div class="mtg-title">📅 下一次会议，只需要确认这7件事</div>
+    <div class="mtg-sub en">Not another direction discussion — just confirm these and we start.</div>
+    <ul class="mtg-list">
+      <li>确认90天启动预算</li>
+      <li>指定华信工厂对接人</li>
+      <li>指定北美平台负责人</li>
+      <li>确认战略协调合伙人职责边界</li>
+      <li>确认首批5–8个SKU</li>
+      <li>确认品牌结构初步方向（A/B/C）</li>
+      <li>正式启动90天验证计划</li>
+    </ul>
+  </div>
+
+  <div class="cta-foot ao">
+    <div class="cf-txt">内部合作讨论文件 · 保密 · 华信 · 2026</div>
+    <div class="cf-txt en">docs.energizeos.com/fiber-v6</div>
+  </div>
+</div>
+</section>
+
+<!-- DATA NOTICE -->
+<div class="notice">
+<div class="notice-in">
+  <div class="notice-title">⚠️ 数据来源与边界说明</div>
+  <div class="notice-body">本方案中的市场数据来自公开行业资料、媒体报道、厂商披露、市场研究机构摘要及行业访谈，用于战略判断，不构成精确市场预测、销售承诺或投资保证。涉及 BEAD / Buy America / BABA、UL/cUL/ETL/CSA、Telcordia/ICEA/TIA 等认证与合规事项，正式项目执行前必须按具体产品、客户、州别、项目资金来源和安装环境逐项核查。<br>Market figures are based on public industry sources and used for strategic planning only. They do not constitute a sales forecast, compliance opinion, or investment guarantee.</div>
+</div>
+</div>
+
+<footer class="footer">
+  <div class="footer-l en">CONFIDENTIAL · HUAXIN COOPERATION PROPOSAL · V6 · 2026</div>
+  <div class="footer-r en">docs.energizeos.com</div>
+</footer>
+
+<script>
+const io = new IntersectionObserver(es=>{
+  es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('v');io.unobserve(e.target);}});
+},{threshold:0.08,rootMargin:'0px 0px -24px 0px'});
+document.querySelectorAll('.ao').forEach(el=>io.observe(el));
+document.addEventListener('contextmenu',e=>e.preventDefault());
+document.addEventListener('keydown',e=>{
+  if((e.ctrlKey||e.metaKey)&&['u','s','p'].includes(e.key.toLowerCase()))e.preventDefault();
+  if(e.key==='F12')e.preventDefault();
+});
+document.addEventListener('dragstart',e=>e.preventDefault());
+</script>
+</body>
+</html>
