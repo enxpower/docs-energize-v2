@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>签约主体结构建议 · 律师备忘录</title>
+<meta name="description" content="关于华信北美合作协议签约主体的律师建议：建议以AGI&M Assets Inc.（加拿大）作为合同主体，授权Energize Solutions Inc.（美国）执行。">
+<meta property="og:title" content="签约主体结构建议 · 律师备忘录">
+<meta property="og:description" content="建议以 AGI&M Assets Inc.（加拿大）作为合同签约主体，授权 Energize Solutions Inc. 在美国境内执行。三重考量：风险隔离、税务效率、长远灵活性。">
+<meta property="og:image" content="https://docs.energizeos.com/fiber-legal/assets/og-image.png">
+<meta property="og:url" content="https://docs.energizeos.com/fiber-legal/">
+<meta property="og:type" content="website">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://docs.energizeos.com/fiber-legal/assets/og-image.png">
+<style>
+:root{
+  --navy:#1F3A5F; --navy2:#152c4a;
+  --teal:#2A9D8F;
+  --gold:#B48C3C; --gold2:#8a5b1a; --gold-bg:rgba(180,140,60,.08);
+  --paper:#F8F7F4; --paper2:#F2F0EC;
+  --white:#fff;
+  --slate:#4A6580; --mist:#8BA4B8;
+  --line:rgba(31,58,95,.09);
+  --line-gold:rgba(180,140,60,.25);
+  --sh:0 2px 12px rgba(31,58,95,.06);
+  --sh2:0 4px 24px rgba(31,58,95,.1);
+  --r:10px; --r2:14px;
+  --f:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
+  --fz:'PingFang SC','Microsoft YaHei','Hiragino Sans GB',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  background:var(--paper);color:var(--navy);
+  font-family:var(--fz);font-size:15px;line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+.en{font-family:var(--f)}
+
+/* ── TOPBAR ── */
+.topbar{
+  background:var(--navy);
+  padding:0 24px;
+  display:flex;align-items:stretch;justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+}
+.tb-left{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 0;border-right:1px solid rgba(255,255,255,.08);
+  padding-right:20px;
+}
+.tb-logo{font-size:12px;font-weight:700;color:rgba(255,255,255,.5);font-family:var(--f);letter-spacing:.08em}
+.tb-sep{width:1px;height:20px;background:rgba(255,255,255,.15)}
+.tb-doc{font-size:13px;font-weight:700;color:#fff}
+.tb-right{display:flex;align-items:center;gap:8px;padding:14px 0;padding-left:20px}
+.tb-badge{
+  font-family:var(--f);font-size:10px;font-weight:700;
+  background:var(--gold);color:#fff;
+  border-radius:4px;padding:3px 9px;letter-spacing:.06em;
+}
+.tb-conf{font-family:var(--f);font-size:10px;color:rgba(255,255,255,.3);letter-spacing:.1em}
+
+/* ── MEMO HEADER ── */
+.memo-header{
+  background:var(--navy);
+  padding:40px 24px 0;
+}
+.memo-header-in{
+  max-width:860px;margin:0 auto;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  padding-bottom:32px;
+}
+.memo-firm{
+  font-family:var(--f);font-size:11px;font-weight:800;
+  color:var(--gold);letter-spacing:.2em;text-transform:uppercase;
+  margin-bottom:20px;display:flex;align-items:center;gap:10px;
+}
+.memo-firm::after{content:'';flex:1;height:1px;background:var(--line-gold)}
+.memo-grid{display:grid;grid-template-columns:80px 1fr;gap:6px 16px;margin-bottom:24px}
+.mg-label{
+  font-family:var(--f);font-size:11px;font-weight:700;
+  color:rgba(255,255,255,.3);letter-spacing:.08em;padding-top:2px;
+}
+.mg-val{font-size:13px;color:rgba(255,255,255,.75);line-height:1.55}
+.mg-val strong{color:#fff}
+.mg-val .en{font-family:var(--f);font-size:12px;color:rgba(255,255,255,.45);display:block;margin-top:1px}
+.memo-subject{
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
+  border-left:3px solid var(--gold);border-radius:0 var(--r) var(--r) 0;
+  padding:14px 18px;
+}
+.ms-label{font-family:var(--f);font-size:10px;font-weight:800;color:var(--gold);letter-spacing:.15em;margin-bottom:4px}
+.ms-title{font-size:16px;font-weight:800;color:#fff;line-height:1.4}
+.ms-en{font-family:var(--f);font-size:12px;color:rgba(255,255,255,.4);margin-top:3px}
+
+/* ── BODY ── */
+.body{max-width:860px;margin:0 auto;padding:40px 24px 60px}
+
+/* Section */
+.sec{margin-bottom:40px}
+.sec-num{
+  font-family:var(--f);font-size:10px;font-weight:800;
+  color:var(--gold2);letter-spacing:.2em;text-transform:uppercase;
+  margin-bottom:8px;
+}
+.sec-title{
+  font-size:17px;font-weight:800;
+  border-bottom:2px solid var(--line-gold);
+  padding-bottom:10px;margin-bottom:18px;
+  display:flex;align-items:center;gap:10px;
+}
+.sec-title .en-label{
+  font-family:var(--f);font-size:11px;font-weight:600;
+  color:var(--mist);margin-left:auto;
+}
+.body-txt{
+  font-size:14px;color:var(--slate);line-height:1.85;
+  margin-bottom:14px;
+}
+.body-txt strong{color:var(--navy);font-weight:700}
+
+/* Recommendation box */
+.rec-box{
+  background:var(--navy);border-radius:var(--r2);
+  padding:24px;margin-bottom:24px;
+  border-left:4px solid var(--gold);
+}
+.rb-label{
+  font-family:var(--f);font-size:10px;font-weight:800;
+  color:var(--gold);letter-spacing:.18em;text-transform:uppercase;margin-bottom:10px;
+}
+.rb-main{font-size:16px;font-weight:800;color:#fff;line-height:1.5;margin-bottom:6px}
+.rb-sub{font-family:var(--f);font-size:13px;color:rgba(255,255,255,.5);line-height:1.6}
+
+/* Structure chain */
+.chain{
+  background:var(--white);border:1px solid var(--line);
+  border-radius:var(--r2);overflow:hidden;box-shadow:var(--sh);
+  margin-bottom:20px;
+}
+.chain-title{
+  padding:12px 18px;background:var(--paper2);
+  border-bottom:1px solid var(--line);
+  font-family:var(--f);font-size:11px;font-weight:800;
+  color:var(--mist);letter-spacing:.12em;text-transform:uppercase;
+}
+.chain-body{padding:18px}
+.chain-row{
+  display:flex;align-items:flex-start;gap:14px;
+  padding:12px 0;border-bottom:1px solid var(--line);
+  position:relative;
+}
+.chain-row:last-child{border-bottom:none}
+.chain-connector{
+  position:absolute;left:17px;top:44px;
+  width:1px;height:calc(100% - 10px);
+  background:var(--line);
+}
+.chain-dot{
+  width:34px;height:34px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-family:var(--f);font-size:11px;font-weight:800;
+}
+.dot-muted{background:var(--paper2);border:2px solid var(--line);color:var(--mist)}
+.dot-active{background:var(--navy);border:2px solid var(--navy);color:#fff}
+.dot-star{background:var(--gold);border:2px solid var(--gold);color:#fff}
+.chain-content{flex:1;padding-top:6px}
+.chain-name{font-size:14px;font-weight:800;margin-bottom:2px}
+.chain-en{font-family:var(--f);font-size:11px;color:var(--mist);margin-bottom:4px}
+.chain-role{
+  display:inline-flex;padding:2px 10px;border-radius:100px;
+  font-family:var(--f);font-size:10px;font-weight:700;
+}
+.role-sign{background:rgba(180,140,60,.1);color:var(--gold2);border:1px solid var(--line-gold)}
+.role-exec{background:rgba(42,157,143,.08);color:var(--teal);border:1px solid rgba(42,157,143,.2)}
+.role-hold{background:var(--paper2);color:var(--mist);border:1px solid var(--line)}
+.chain-note{font-size:12px;color:var(--slate);line-height:1.6;margin-top:5px}
+
+/* Three pillars */
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
+.pillar{
+  background:var(--white);border:1px solid var(--line);
+  border-radius:var(--r);padding:20px;box-shadow:var(--sh);
+  border-top:3px solid var(--gold);
+}
+.pillar-num{
+  font-family:var(--f);font-size:10px;font-weight:800;
+  color:var(--gold2);letter-spacing:.15em;margin-bottom:6px;
+}
+.pillar-title{font-size:14px;font-weight:800;margin-bottom:8px}
+.pillar-en{font-family:var(--f);font-size:11px;color:var(--teal);font-weight:600;margin-bottom:10px}
+.pillar-body{font-size:12px;color:var(--slate);line-height:1.7}
+
+/* Analysis table */
+.atbl{
+  width:100%;border-collapse:collapse;background:var(--white);
+  border-radius:var(--r2);overflow:hidden;box-shadow:var(--sh);
+  border:1px solid var(--line);margin-bottom:20px;
+}
+.atbl th{
+  padding:10px 14px;background:var(--navy);
+  font-family:var(--f);font-size:10px;font-weight:700;
+  color:rgba(255,255,255,.45);letter-spacing:.1em;text-transform:uppercase;
+  text-align:left;
+}
+.atbl td{padding:12px 14px;font-size:12px;border-bottom:1px solid var(--line)}
+.atbl tr:last-child td{border-bottom:none}
+.atbl tr:hover td{background:rgba(42,157,143,.02)}
+.atbl td:first-child{font-weight:700;color:var(--navy);font-size:13px}
+.rating-5{color:var(--teal);font-weight:800;font-family:var(--f)}
+.rating-4{color:var(--navy);font-weight:700;font-family:var(--f)}
+.rating-3{color:var(--mist);font-family:var(--f)}
+.rating-2{color:#ddd;font-family:var(--f)}
+.winner{background:rgba(42,157,143,.04)}
+.winner td{border-bottom:1px solid rgba(42,157,143,.15)}
+.winner td:first-child{color:var(--teal)}
+.win-badge{
+  display:inline-flex;padding:2px 8px;background:rgba(42,157,143,.1);
+  border-radius:100px;font-family:var(--f);font-size:9px;font-weight:800;
+  color:var(--teal);margin-left:6px;vertical-align:middle;
+}
+
+/* Key clauses */
+.clauses{display:flex;flex-direction:column;gap:12px;margin-bottom:20px}
+.clause{
+  background:var(--white);border:1px solid var(--line);
+  border-radius:var(--r);padding:18px;box-shadow:var(--sh);
+  display:flex;gap:14px;
+}
+.clause-num{
+  width:28px;height:28px;border-radius:6px;
+  background:var(--navy);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--f);font-size:11px;font-weight:800;
+  flex-shrink:0;margin-top:2px;
+}
+.clause-body{}
+.clause-title{font-size:13px;font-weight:800;margin-bottom:4px}
+.clause-en{font-family:var(--f);font-size:11px;color:var(--teal);font-weight:600;margin-bottom:6px}
+.clause-text{font-size:12px;color:var(--slate);line-height:1.7}
+.clause-text code{
+  font-family:var(--f);font-size:11px;
+  background:var(--paper2);padding:1px 6px;border-radius:4px;
+  color:var(--navy);
+}
+
+/* Tax note */
+.tax-box{
+  background:var(--gold-bg);border:1px solid var(--line-gold);
+  border-radius:var(--r);padding:18px 20px;margin-bottom:20px;
+}
+.tax-box-title{font-size:13px;font-weight:800;color:var(--gold2);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.tax-path{
+  display:flex;align-items:center;flex-wrap:wrap;gap:8px;
+  font-family:var(--f);font-size:12px;color:var(--slate);
+  margin-bottom:8px;
+}
+.tax-node{
+  padding:4px 12px;border-radius:6px;
+  background:var(--white);border:1px solid var(--line);
+  font-weight:700;color:var(--navy);
+}
+.tax-node.highlight{background:var(--navy);color:#fff;border-color:var(--navy)}
+.tax-arrow{color:var(--mist);font-size:14px}
+.tax-note{font-size:12px;color:var(--slate);line-height:1.7}
+.tax-note strong{color:var(--gold2)}
+
+/* Warning box */
+.warn-box{
+  background:rgba(31,58,95,.04);border:1px solid var(--line);
+  border-left:3px solid var(--navy);border-radius:0 var(--r) var(--r) 0;
+  padding:14px 18px;margin-bottom:16px;
+  font-size:13px;color:var(--slate);line-height:1.75;
+}
+.warn-box strong{color:var(--navy)}
+
+/* Conclusion */
+.conclusion{
+  background:var(--navy);border-radius:var(--r2);
+  padding:28px;margin-bottom:28px;
+}
+.con-label{
+  font-family:var(--f);font-size:10px;font-weight:800;
+  color:var(--gold);letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px;
+}
+.con-main{font-size:17px;font-weight:800;color:#fff;line-height:1.55;margin-bottom:10px}
+.con-sub{font-family:var(--f);font-size:13px;color:rgba(255,255,255,.5);line-height:1.7}
+.con-actions{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px;
+  padding-top:18px;border-top:1px solid rgba(255,255,255,.08);
+}
+.ca{background:rgba(255,255,255,.06);border-radius:var(--r);padding:14px;text-align:center}
+.ca-n{font-family:var(--f);font-size:10px;font-weight:800;color:var(--gold);letter-spacing:.12em;margin-bottom:5px}
+.ca-t{font-size:12px;font-weight:700;color:#fff;line-height:1.4}
+.ca-e{font-family:var(--f);font-size:10px;color:rgba(255,255,255,.3);margin-top:2px}
+
+/* Disclaimer */
+.disclaimer{
+  background:var(--paper2);border:1px solid var(--line);
+  border-radius:var(--r);padding:16px 18px;
+  font-family:var(--f);font-size:11px;color:var(--mist);line-height:1.7;
+}
+.disclaimer strong{color:var(--slate)}
+
+/* Footer */
+.footer{
+  background:var(--navy2);padding:16px 24px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;
+}
+.footer-l{font-family:var(--f);font-size:10px;color:rgba(255,255,255,.2);letter-spacing:.06em}
+.footer-r{font-family:var(--f);font-size:10px;color:rgba(42,157,143,.5)}
+
+/* Animate */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.ao{opacity:0}
+.ao.v{animation:fadeUp .5s ease forwards}
+.d1{animation-delay:.05s}.d2{animation-delay:.1s}.d3{animation-delay:.15s}
+.d4{animation-delay:.2s}.d5{animation-delay:.25s}.d6{animation-delay:.3s}
+
+/* Responsive */
+@media(max-width:760px){
+  .pillars{grid-template-columns:1fr}
+  .con-actions{grid-template-columns:1fr}
+  .memo-grid{grid-template-columns:70px 1fr}
+  .topbar{flex-wrap:wrap;gap:8px;padding:12px 16px}
+  .tb-left,.tb-right{padding:0;border:none}
+  .body{padding:24px 16px 48px}
+  .memo-header{padding:24px 16px 0}
+  .atbl th:nth-child(n+3),.atbl td:nth-child(n+3){display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="tb-left">
+    <div class="tb-logo en">LEGAL COUNSEL</div>
+    <div class="tb-sep"></div>
+    <div class="tb-doc">律师备忘录</div>
+  </div>
+  <div class="tb-right">
+    <div class="tb-badge en">CONFIDENTIAL</div>
+    <div class="tb-conf en">REF: AGI&amp;M / WASIN / 2026-001</div>
+  </div>
+</header>
+
+<!-- MEMO HEADER -->
+<div class="memo-header">
+<div class="memo-header-in">
+  <div class="memo-firm en">Legal Advisory Brief · 律师建议函</div>
+  <div class="memo-grid ao d1">
+    <div class="mg-label en">TO</div>
+    <div class="mg-val">
+      <strong>华信藤仓光通信 · 华信总经理</strong>
+      <span class="en">Nanjing Wasin Fujikura Optical Communications · General Manager</span>
+    </div>
+    <div class="mg-label en">FROM</div>
+    <div class="mg-val">
+      <strong>法律顾问 · 合作架构审查组</strong>
+      <span class="en">Legal Counsel · Partnership Structure Review</span>
+    </div>
+    <div class="mg-label en">DATE</div>
+    <div class="mg-val">
+      <strong>2026年6月</strong>
+      <span class="en">June 2026</span>
+    </div>
+    <div class="mg-label en">RE</div>
+    <div class="mg-val">
+      <strong>北美战略合作协议 · 签约主体结构建议</strong>
+      <span class="en">North America Strategic Cooperation Agreement · Recommended Signing Entity Structure</span>
+    </div>
+  </div>
+  <div class="memo-subject ao d2">
+    <div class="ms-label en">SUBJECT / 事由</div>
+    <div class="ms-title">建议以 AGI&amp;M Assets Inc.（加拿大）作为合同签约主体，<br>授权 Energize Solutions Inc.（美国）在北美境内执行全部服务义务</div>
+    <div class="ms-en en">Recommend AGI&amp;M Assets Inc. (Canada) as contracting party, with Energize Solutions Inc. (USA) authorized as North America execution entity.</div>
+  </div>
+</div>
+</div>
+
+<!-- BODY -->
+<div class="body">
+
+  <!-- S1: 概述 -->
+  <div class="sec ao">
+    <div class="sec-num en">SECTION 01</div>
+    <div class="sec-title">法律顾问意见概述 <span class="en-label en">Executive Summary</span></div>
+    <p class="body-txt">
+      经对华信北美战略合作架构进行全面审查，法律顾问就合同签约主体提出明确建议。
+      本意见综合考量了<strong>法律风险隔离、国际税务效率、长远合作灵活性及华信利益保护</strong>四项核心要素。
+    </p>
+    <div class="rec-box">
+      <div class="rb-label en">LEGAL COUNSEL RECOMMENDATION · 律师建议</div>
+      <div class="rb-main">签约主体：AGI&amp;M Assets Inc.（加拿大注册公司）<br>执行主体：Energize Solutions Inc.（美国注册公司，Assets全资子公司）</div>
+      <div class="rb-sub en">Signing Entity: AGI&amp;M Assets Inc. (Canada) · Execution Entity: Energize Solutions Inc. (USA, wholly-owned subsidiary)</div>
+    </div>
+    <p class="body-txt">
+      这一结构安排使华信在签订合同时获得<strong>加拿大法律体系的稳定保护</strong>，
+      同时通过美国执行主体确保北美市场的<strong>本地化运营能力</strong>。
+      两者通过母子公司关系天然连接，无需复杂的多方签约安排。
+    </p>
+  </div>
+
+  <!-- S2: 公司架构 -->
+  <div class="sec ao">
+    <div class="sec-num en">SECTION 02</div>
+    <div class="sec-title">合作方公司架构 <span class="en-label en">Corporate Structure</span></div>
+    <div class="chain">
+      <div class="chain-title en">CORPORATE STRUCTURE · 公司层级</div>
+      <div class="chain-body">
+        <div class="chain-row">
+          <div class="chain-connector"></div>
+          <div class="chain-dot dot-muted">AN</div>
+          <div class="chain-content">
+            <div class="chain-name">Andy Gong · 龚铁靖</div>
+            <div class="chain-en en">Canadian Citizen · 加拿大国籍 · 100% 控股人</div>
+            <span class="chain-role role-hold">Ultimate Beneficial Owner</span>
+          </div>
+        </div>
+        <div class="chain-row">
+          <div class="chain-connector"></div>
+          <div class="chain-dot dot-muted">H</div>
+          <div class="chain-content">
+            <div class="chain-name">AGI&amp;M Holdings Inc.</div>
+            <div class="chain-en en">Canada · 加拿大注册 · 顶层控股公司</div>
+            <span class="chain-role role-hold">控股主体，不参与运营合同</span>
+            <div class="chain-note">控股层，与华信合作完全隔离，不承担合同义务，最大程度保护创始人资产安全。</div>
+          </div>
+        </div>
+        <div class="chain-row" style="background:rgba(180,140,60,.04);border-radius:var(--r);border:1px solid rgba(180,140,60,.15);margin:4px 0">
+          <div class="chain-connector"></div>
+          <div class="chain-dot dot-star">★</div>
+          <div class="chain-content">
+            <div class="chain-name" style="color:var(--gold2)">AGI&amp;M Assets Inc.</div>
+            <div class="chain-en en">Canada · 加拿大注册 · <strong style="color:var(--gold2)">律师建议：合同签约主体</strong></div>
+            <span class="chain-role role-sign">★ 建议签约主体</span>
+            <div class="chain-note" style="margin-top:6px">作为合同甲方对手方，承担合同项下全部权利与义务。加拿大法律体系保护，中加税务协定适用，争议解决机制稳定可预期。</div>
+          </div>
+        </div>
+        <div class="chain-row" style="background:rgba(42,157,143,.03);border-radius:var(--r);border:1px solid rgba(42,157,143,.12);margin:4px 0">
+          <div class="chain-dot dot-active">E</div>
+          <div class="chain-content">
+            <div class="chain-name" style="color:var(--teal)">Energize Solutions Inc.</div>
+            <div class="chain-en en">USA · 美国注册 · AGI&amp;M Assets 全资子公司 · <strong style="color:var(--teal)">合同执行主体</strong></div>
+            <span class="chain-role role-exec">合同授权执行主体</span>
+            <div class="chain-note" style="margin-top:6px">合同内明确授权，在美国境内履行全部服务义务。作为美国本地实体，具备完整的北美市场运营能力，包括客户开发、合规管理、仓储物流及技术支持。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="warn-box">
+      <strong>关键说明：</strong>华信与 AGI&amp;M Assets Inc. 签订合同，Energize Solutions Inc. 作为被授权执行方，
+      两者系母子公司关系，AGI&amp;M Assets 对 Energize 的执行行为承担连带责任。
+      华信无需与美国公司直接签约，亦无需承担美国法律诉讼风险。
+    </div>
+  </div>
+
+  <!-- S3: 三维度 -->
+  <div class="sec ao">
+    <div class="sec-num en">SECTION 03</div>
+    <div class="sec-title">建议理由：三项核心考量 <span class="en-label en">Three Core Rationales</span></div>
+    <div class="pillars">
+      <div class="pillar">
+        <div class="pillar-num en">RATIONALE 01</div>
+        <div class="pillar-title">法律风险隔离</div>
+        <div class="pillar-en en">Legal Risk Isolation</div>
+        <div class="pillar-body">
+          以 Assets 作为签约主体，控股层 Holdings 与创始人个人资产完全隔离于合同责任之外。
+          即使合作出现重大争议，风险被限制在 Assets 层面，不向上穿透。
+          美国子公司 Energize 的日常运营风险，亦通过母子公司结构得到有效管控。
+        </div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-num en">RATIONALE 02</div>
+        <div class="pillar-title">国际税务效率</div>
+        <div class="pillar-en en">Tax Efficiency</div>
+        <div class="pillar-body">
+          中加两国签有税务协定，华信向加拿大公司支付服务费，预提税率可依协定降低至合理区间。
+          加拿大企业所得税率结构相对有利，利润在 Assets 层面积累后，可按需向上分配至 Holdings 或创始人个人，税务规划灵活度高。
+        </div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-num en">RATIONALE 03</div>
+        <div class="pillar-title">长远结构灵活</div>
+        <div class="pillar-en en">Structural Flexibility</div>
+        <div class="pillar-body">
+          Assets 层面可同时承接多个战略合作协议，不同合作方、不同业务线互相隔离，通过 Energize 统一在美国执行。
+          未来如有融资需求，可在 Energize 层面引入投资人，不影响 Assets 和 Holdings 层面的控制权结构。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S4: 对比分析 -->
+  <div class="sec ao">
+    <div class="sec-num en">SECTION 04</div>
+    <div class="sec-title">各签约主体对比分析 <span class="en-label en">Comparative Analysis</span></div>
+    <p class="body-txt">法律顾问对四种签约主体方案进行了系统性评估，评分维度包括风险隔离、税务效率、华信安心程度、长远灵活性及执行便利性。</p>
+    <table class="atbl">
+      <thead>
+        <tr>
+          <th>签约主体方案</th>
+          <th>风险隔离</th>
+          <th>税务效率</th>
+          <th>华信安心</th>
+          <th>长远灵活</th>
+          <th>执行便利</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>AGI&amp;M Holdings Inc.<br><span style="font-family:var(--f);font-size:11px;color:var(--mist);font-weight:400">加拿大·顶层控股</span></td>
+          <td class="rating-3">●●●○○</td>
+          <td class="rating-2">●●○○○</td>
+          <td class="rating-2">●●○○○</td>
+          <td class="rating-2">●○○○○</td>
+          <td class="rating-2">●●○○○</td>
+        </tr>
+        <tr class="winner">
+          <td>
+            AGI&amp;M Assets Inc.<span class="win-badge">推荐</span><br>
+            <span style="font-family:var(--f);font-size:11px;color:var(--teal);font-weight:400">加拿大·运营层</span>
+          </td>
+          <td class="rating-5">●●●●●</td>
+          <td class="rating-5">●●●●●</td>
+          <td class="rating-4">●●●●○</td>
+          <td class="rating-5">●●●●●</td>
+          <td class="rating-4">●●●●○</td>
+        </tr>
+        <tr>
+          <td>Energize Solutions Inc.<br><span style="font-family:var(--f);font-size:11px;color:var(--mist);font-weight:400">美国·执行层</span></td>
+          <td class="rating-3">●●●○○</td>
+          <td class="rating-3">●●●○○</td>
+          <td class="rating-5">●●●●●</td>
+          <td class="rating-3">●●●○○</td>
+          <td class="rating-5">●●●●●</td>
+        </tr>
+        <tr>
+          <td>加拿大+美国双签<br><span style="font-family:var(--f);font-size:11px;color:var(--mist);font-weight:400">双主体联合签约</span></td>
+          <td class="rating-4">●●●●○</td>
+          <td class="rating-3">●●●○○</td>
+          <td class="rating-2">●●○○○</td>
+          <td class="rating-3">●●●○○</td>
+          <td class="rating-2">●●○○○</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="body-txt" style="font-size:12px;color:var(--mist)">
+      评分说明：●●●●● 优秀 · ●●●●○ 良好 · ●●●○○ 一般 · ●●○○○ 较差 · ●○○○○ 不建议
+    </p>
+  </div>
+
+  <!-- S5: 税务说明 -->
+  <div class="sec ao">
+    <div class="sec-num en">SECTION 05</div>
+    <div class="sec-title">国际税务结构说明 <span class="en-label en">Tax Structure Note</span></div>
+    <div class="tax-box">
+      <div class="tax-box-title">💰 华信付款至合同生效的资金路径</div>
+      <div class="tax-path">
+        <div class="tax-node">华信（中国）</div>
+        <div class="tax-arrow">→</div>
+        <div class="tax-node highlight">AGI&amp;M Assets Inc.（加拿大）</div>
+        <div class="tax-arrow">→</div>
+        <div class="tax-node">Energize Solutions Inc.（美国）</div>
+        <div class="tax-arrow">→</div>
+        <div class="tax-node">北美运营执行</div>
+      </div>
+      <div class="tax-note">
+        <strong>中加税务协定保护：</strong>华信向加拿大公司支付服务费，依据中加税务协定，预提税率通常可降低至 <strong>10%</strong>，部分服务性质下可进一步优化。
+        相较于直接向美国公司付款，这一安排在税务层面对双方均更为有利。<br><br>
+        <strong>加拿大企业税率：</strong>联邦税率 15%，加省级税率，综合税率约 26.5%（大型企业）至更低（小型企业享受优惠税率）。
+        德州无州个人及企业所得税，美国联邦企业税率 21%。两国税率接近，但预提税环节加拿大路径更优。<br><br>
+        <strong>重要提示：</strong>具体税务优化方案需由加拿大注册会计师（CPA）及具备中加税务经验的税务律师逐项确认，本备忘录仅作方向性参考。
+      </div>
+    </div>
+  </div>
+
+  <!-- S6: 关键合同条款 -->
+  <div class="sec ao">
+    <div class="sec-num en">SECTION 06</div>
+    <div class="sec-title">合同关键条款建议 <span class="en-label en">Key Contract Provisions</span></div>
+    <p class="body-txt">基于签约主体结构，法律顾问建议在合同中明确以下关键条款，以保护双方权益并确保合作可持续。</p>
+    <div class="clauses">
+      <div class="clause">
+        <div class="clause-num">1</div>
+        <div class="clause-body">
+          <div class="clause-title">执行主体授权条款</div>
+          <div class="clause-en en">Execution Entity Authorization</div>
+          <div class="clause-text">
+            合同明确载明：<code>乙方（AGI&amp;M Assets Inc.）通过其全资美国子公司 Energize Solutions Inc. 在美国境内履行本协议项下全部服务义务。乙方对子公司的执行行为承担连带责任。</code>
+            此条款确保华信在法律层面有明确的责任主体，同时享有美国本地执行能力。
+          </div>
+        </div>
+      </div>
+      <div class="clause">
+        <div class="clause-num">2</div>
+        <div class="clause-body">
+          <div class="clause-title">适用法律与争议解决</div>
+          <div class="clause-en en">Governing Law & Dispute Resolution</div>
+          <div class="clause-text">
+            适用法律：<code>加拿大安大略省法律</code>（不适用美国法律，不适用中国法律）。
+            争议解决：<code>国际商会仲裁（ICC Arbitration）</code>，仲裁地温哥华或多伦多，语言中英双语，英文版具有优先解释效力。
+            此安排为双方提供中立的第三方仲裁机制，避免在对方主场应诉。
+          </div>
+        </div>
+      </div>
+      <div class="clause">
+        <div class="clause-num">3</div>
+        <div class="clause-body">
+          <div class="clause-title">合作期限与终止保护</div>
+          <div class="clause-en en">Term & Termination Protection</div>
+          <div class="clause-text">
+            初始合作期：<code>12个月</code>，不可单方面无故提前终止。
+            提前终止须：<code>提前90天书面通知</code> + 支付 <code>剩余期服务费总额50%</code> 作为违约赔偿。
+            已产生未结算佣金：须在终止日起 <code>30天内全额结清</code>。
+            保护双方对合作的稳定预期，避免一方随意退出损害另一方利益。
+          </div>
+        </div>
+      </div>
+      <div class="clause">
+        <div class="clause-num">4</div>
+        <div class="clause-body">
+          <div class="clause-title">客户资产归属与保护</div>
+          <div class="clause-en en">Customer Asset Ownership</div>
+          <div class="clause-text">
+            乙方开发的客户档案由双方共有，合同终止后华信获只读访问权，
+            但 <code>6个月静默期</code> 内不得直接联系乙方客户，以保护乙方前期市场投入。
+            华信不得绕过乙方直接向已登记客户供货，违者赔偿对应订单佣金的 <code>200%</code>。
+          </div>
+        </div>
+      </div>
+      <div class="clause">
+        <div class="clause-num">5</div>
+        <div class="clause-body">
+          <div class="clause-title">华信利益保护：透明度与审计权</div>
+          <div class="clause-en en">Huaxin Protection: Transparency & Audit Rights</div>
+          <div class="clause-text">
+            乙方每月提交运营报告，每季度提交销售管线报告。
+            华信享有 <code>年度审计权</code>，可委托独立第三方会计师审查与合作相关的财务记录。
+            确保华信在不直接参与日常运营的前提下，对合作进展和资金使用保持清晰透明的视角。
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S7: 对华信的说明 -->
+  <div class="sec ao">
+    <div class="sec-num en">SECTION 07</div>
+    <div class="sec-title">对华信的说明 <span class="en-label en">Note to Huaxin</span></div>
+    <p class="body-txt">
+      法律顾问理解华信在与境外公司合作时的审慎立场。以下几点希望向华信明确说明：
+    </p>
+    <div class="warn-box">
+      <strong>关于加拿大签约主体：</strong>
+      加拿大是法治健全的G7成员国，其法律体系、商业环境和合同执行机制均具有高度可预期性。
+      加拿大公司与中国公司的国际合同争议，有成熟的仲裁机制可以依托，
+      对华信而言并不比与美国公司签约风险更高，在某些方面甚至更有保障。
+    </div>
+    <div class="warn-box">
+      <strong>关于执行能力：</strong>
+      合同明确约定 Energize Solutions Inc. 作为美国境内执行主体，
+      华信可以通过合同条款直接要求执行主体履行具体义务，
+      包括提交运营报告、完成认证工作、管理客户关系及提供售后支持。
+      加拿大母公司承担连带责任，形成双重保障。
+    </div>
+    <div class="warn-box">
+      <strong>关于透明度：</strong>
+      合同条款中已明确华信的审计权和月度/季度汇报义务，
+      华信对资金使用、客户开发进度和业务指标均有完整的知情权，
+      而无需承担美国公司股东的法律责任和税务申报义务。
+      这一安排对华信而言，利益保护充分，运营负担最小。
+    </div>
+  </div>
+
+  <!-- 结论 -->
+  <div class="conclusion ao">
+    <div class="con-label en">CONCLUSION · 结论</div>
+    <div class="con-main">
+      法律顾问正式建议：以 AGI&amp;M Assets Inc.（加拿大）作为合同签约主体，
+      授权 Energize Solutions Inc.（美国）在北美执行全部服务义务。
+    </div>
+    <div class="con-sub en">
+      This structure provides optimal legal risk isolation, tax efficiency under the Canada-China tax treaty,
+      and long-term structural flexibility — while giving Huaxin full transparency,
+      contractual protection, and a capable North America execution entity.
+    </div>
+    <div class="con-actions">
+      <div class="ca">
+        <div class="ca-n en">NEXT 01</div>
+        <div class="ca-t">双方法务审查合同框架</div>
+        <div class="ca-e en">Joint Legal Review of Contract Framework</div>
+      </div>
+      <div class="ca">
+        <div class="ca-n en">NEXT 02</div>
+        <div class="ca-t">确认中加税务申报安排</div>
+        <div class="ca-e en">Confirm Canada-China Tax Filing Arrangement</div>
+      </div>
+      <div class="ca">
+        <div class="ca-n en">NEXT 03</div>
+        <div class="ca-t">正式签署战略合作协议</div>
+        <div class="ca-e en">Execute Strategic Cooperation Agreement</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Disclaimer -->
+  <div class="disclaimer ao">
+    <strong>免责声明 · Disclaimer：</strong>
+    本备忘录为律师建议摘要，仅供战略讨论参考，不构成正式法律意见。
+    具体合同条款、税务安排及合规要求，须由具有加拿大、美国及国际贸易执业资质的律师和税务顾问进行完整审查后方可执行。
+    建议双方在正式签约前各自聘请独立法律顾问进行审查。<br><br>
+    <span class="en">This memorandum is a legal advisory summary for strategic discussion purposes only and does not constitute formal legal advice.
+    All contract terms, tax arrangements, and compliance requirements must be reviewed by qualified legal counsel
+    with Canadian, U.S., and international trade practice before execution.</span>
+  </div>
+
+</div><!-- /body -->
+
+<footer class="footer">
+  <div class="footer-l en">CONFIDENTIAL · LEGAL ADVISORY BRIEF · AGI&amp;M / WASIN FUJIKURA · REF 2026-001</div>
+  <div class="footer-r en">docs.energizeos.com/fiber-legal</div>
+</footer>
+
+<script>
+const io = new IntersectionObserver(es=>{
+  es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('v');io.unobserve(e.target);}});
+},{threshold:0.06,rootMargin:'0px 0px -20px 0px'});
+document.querySelectorAll('.ao').forEach(el=>io.observe(el));
+document.addEventListener('contextmenu',e=>e.preventDefault());
+document.addEventListener('keydown',e=>{
+  if((e.ctrlKey||e.metaKey)&&['u','s','p'].includes(e.key.toLowerCase()))e.preventDefault();
+});
+</script>
+</body>
+</html>
