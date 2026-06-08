@@ -1,0 +1,8 @@
+<svg width="220" height="56" viewBox="0 0 220 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="4" width="22" height="22" fill="#1A2B3C"/>
+  <rect x="26" y="4" width="22" height="22" fill="#D4840A"/>
+  <rect x="0" y="30" width="22" height="22" fill="#D4840A"/>
+  <rect x="26" y="30" width="22" height="22" fill="#1A2B3C"/>
+  <text x="60" y="22" font-family="'Helvetica Neue',Helvetica,Arial,sans-serif" font-size="16" font-weight="700" fill="#1A2B3C" letter-spacing="1.5">EnergizeOS</text>
+  <text x="60" y="42" font-family="'Helvetica Neue',Helvetica,Arial,sans-serif" font-size="10" font-weight="400" fill="#D4840A" letter-spacing="2">ENERGIZE SOLUTIONS INC.</text>
+</svg>

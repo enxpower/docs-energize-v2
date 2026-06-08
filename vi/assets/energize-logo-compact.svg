@@ -1,0 +1,7 @@
+<svg width="160" height="28" viewBox="0 0 160 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="12" height="12" fill="#1A2B3C"/>
+  <rect x="15" y="0" width="12" height="12" fill="#D4840A"/>
+  <rect x="0" y="16" width="12" height="12" fill="#D4840A"/>
+  <rect x="15" y="16" width="12" height="12" fill="#1A2B3C"/>
+  <text x="35" y="20" font-family="'Helvetica Neue',Helvetica,Arial,sans-serif" font-size="14" font-weight="700" fill="#1A2B3C" letter-spacing="1">EnergizeOS</text>
+</svg>
