@@ -110,14 +110,15 @@ a{color:inherit;text-decoration:none}
 .no-results{padding:48px 24px;color:var(--muted);font-size:14px;display:none;align-items:center;gap:12px}
 
 /* ── FOOTER ── */
-.foot{border-top:1px solid var(--rule);padding:28px 0;margin-top:auto;background:#fff}
-.foot-inner{max-width:1200px;margin:0 auto;padding:0 48px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
-.foot-brand{display:flex;align-items:center;gap:8px}
-.foot-brand-name{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate)}
-.foot-copy{font-size:11px;color:#b0b8c4;letter-spacing:.04em}
-.foot-links{display:flex;gap:24px;list-style:none;flex-wrap:wrap}
-.foot-links a{font-size:11px;color:#b0b8c4;letter-spacing:.04em;transition:color .15s}
-.foot-links a:hover{color:var(--slate)}
+.foot{background:var(--slate);position:relative;margin-top:auto}
+.foot::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--volt)}
+.foot-inner{max-width:1200px;margin:0 auto;padding:32px 48px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.foot-brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.foot-brand-name{font-size:13px;font-weight:700;letter-spacing:.02em;color:#fff}
+.foot-copy{font-size:11px;color:rgba(255,255,255,.3);letter-spacing:.04em}
+.foot-links{display:flex;gap:28px;list-style:none;flex-wrap:wrap}
+.foot-links a{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.35);transition:color .15s}
+.foot-links a:hover{color:#fff}
 
 /* ── RESPONSIVE ── */
 @media(max-width:900px){
@@ -127,7 +128,7 @@ a{color:inherit;text-decoration:none}
   .hero-sub{font-size:13px}
   .nav-back{display:none}
   .nav-toggle{display:flex}
-  .foot-inner{flex-direction:column;align-items:flex-start;gap:12px}
+  .foot-inner{padding-left:24px;padding-right:24px;flex-direction:column;align-items:flex-start;gap:12px}
 }
 @media(max-width:480px){
   .nav-inner,.w,.tabs,.docs-inner,.foot-inner,.info-inner{padding-left:16px;padding-right:16px}
@@ -219,19 +220,19 @@ a{color:inherit;text-decoration:none}
 <footer class="foot">
   <div class="foot-inner">
     <div class="foot-brand">
-      <svg width="20" height="20" viewBox="0 0 48 48" fill="none">
-        <rect x="0" y="0" width="21" height="21" fill="#1A2B3C"/>
-        <rect x="27" y="0" width="21" height="21" fill="#D4840A"/>
-        <rect x="0" y="27" width="21" height="21" fill="#D4840A"/>
-        <rect x="27" y="27" width="21" height="21" fill="#1A2B3C"/>
+      <svg width="22" height="22" viewBox="0 0 48 48" fill="none">
+        <rect x="0" y="0" width="21" height="21" fill="#fff"/>
+        <rect x="27" y="0" width="21" height="21" fill="rgba(255,255,255,.4)"/>
+        <rect x="0" y="27" width="21" height="21" fill="rgba(255,255,255,.4)"/>
+        <rect x="27" y="27" width="21" height="21" fill="#fff"/>
       </svg>
       <span class="foot-brand-name">EnergizeOS</span>
     </div>
-    <span class="foot-copy">© <span id="yr"></span> Energize Solutions Inc. · <a href="https://agim.ca" style="color:#b0b8c4;text-decoration:underline">AGI&amp;M ASSETS INC.</a></span>
+    <span class="foot-copy">© 2019–<span id="yr"></span> Energize Solutions Inc.</span>
     <ul class="foot-links">
       <li><a href="https://energizeos.com">energizeos.com</a></li>
-      <li><a href="https://agim.ca">AGI&amp;M</a></li>
       <li><a href="https://www.linkedin.com/in/gongtiejing" target="_blank" rel="noopener">LinkedIn</a></li>
+    </ul>
     </ul>
   </div>
 </footer>
