@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Overview — EnergizeOS Microgrid EMS</title>
+<meta name="description" content="AI-driven Microgrid EMS for commercial and industrial BESS projects. Deterministic control with an AI intelligence layer.">
+<meta property="og:title" content="Overview — EnergizeOS Microgrid EMS">
+<meta property="og:description" content="AI-driven Microgrid EMS for commercial and industrial BESS projects. Deterministic control with an AI intelligence layer.">
+<meta property="og:image" content="https://docs.energizeos.com/microgrid/og-image.png">
+<meta property="og:url" content="https://docs.energizeos.com/microgrid/index.html">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="hwrap">
+    <a class="brand" href="index.html" aria-label="EnergizeOS Microgrid EMS">
+      <div class="mark"><i></i><i></i><i></i><i></i></div>
+      <b>EnergizeOS</b><span>Microgrid EMS</span>
+    </a>
+    <nav class="main" aria-label="Primary"><a href="index.html" class="on">Overview</a><a href="architecture.html" class="">Architecture</a><a href="use-case.html" class="">C&I Use Case</a><a href="ai-kernel.html" class="">AI Kernel</a><a href="ems-core.html" class="">EMS Core</a><a href="data-model.html" class="">Data Model</a><a href="workflows.html" class="">Operator Workflows</a><a href="safety.html" class="">Safety</a><a href="roadmap.html" class="">Roadmap</a><a href="developers.html" class="">Developers</a></nav>
+    <button class="burger" onclick="tnav()" aria-label="Toggle navigation"><i></i><i></i><i></i></button>
+  </div>
+  <div class="mnav" id="mnav"><a href="index.html" class="on">Overview</a><a href="architecture.html" class="">Architecture</a><a href="use-case.html" class="">C&I Use Case</a><a href="ai-kernel.html" class="">AI Kernel</a><a href="ems-core.html" class="">EMS Core</a><a href="data-model.html" class="">Data Model</a><a href="workflows.html" class="">Operator Workflows</a><a href="safety.html" class="">Safety</a><a href="roadmap.html" class="">Roadmap</a><a href="developers.html" class="">Developers</a></div>
+</header>
+
+<div class="hero">
+  <div class="eyebrow">AI-Driven Microgrid EMS · Commercial &amp; Industrial BESS</div>
+  <h1>Deterministic control.<br><em>Intelligent</em> operation.</h1>
+  <p class="lede">EnergizeOS combines a deterministic EMS core with an AI intelligence layer
+  for dispatch optimization, revenue explanation, battery health, alarm diagnosis,
+  and operator decision support — built for C&amp;I BESS and microgrid projects in
+  North American utility territories.</p>
+  <a class="cta" href="architecture.html">Explore the architecture</a>
+  <a class="cta ghost" href="use-case.html">See the C&amp;I use case</a>
+</div>
+
+<div class="wrap"><div class="doc">
+
+<section class="blk">
+  <div class="eyebrow">Why it exists</div>
+  <h2>Three questions every site must answer</h2>
+  <p>Most EMS platforms log data. Very few help an operator or asset owner answer the
+  questions that actually matter:</p>
+  <ul>
+    <li><b>What happened?</b> — Faithful, complete operational records of every dispatch, alarm, and grid event.</li>
+    <li><b>Why did it happen?</b> — Root-cause explanation of revenue gaps, trips, and underperformance in plain language.</li>
+    <li><b>What should we do next?</b> — Recommended actions, dispatch plans, and risk-aware decision support.</li>
+  </ul>
+  <p>EnergizeOS Microgrid EMS is designed around these three questions — for
+  PepsiCo-class C&amp;I programs, EPC engineering teams, and BESS integrators.</p>
+</section>
+
+<section class="blk">
+  <div class="eyebrow">Architecture at a glance</div>
+  <h2>AI above the gate. Determinism below it.</h2>
+  
+<div class="stack">
+  <div class="layer ai"><span class="tag">L5</span><div><b>User Interface</b><br><span>Operators, asset owners, engineers — web HMI, reports, chat copilot</span></div></div>
+  <div class="layer ai"><span class="tag">L4</span><div><b>LLM Orchestration Layer</b><br><span>Intent understanding, status explanation, report generation, tool coordination</span></div></div>
+  <div class="layer ai"><span class="tag">L3</span><div><b>Energy Domain AI Layer</b><br><span>Dispatch recommendation, revenue optimization, forecasting, degradation &amp; anomaly analytics</span></div></div>
+  <div class="gate"><i></i><b>Safety Gate · Operator Approval · Audit Log</b><i></i></div>
+  <div class="layer det"><span class="tag">L2</span><div><b>EMS Core — Deterministic Control</b><br><span>Real-time control, PCS commands, interlocks, protection interfaces, fail-safe behavior</span></div></div>
+  <div class="layer det"><span class="tag">L1</span><div><b>Device &amp; Data Integration Layer</b><br><span>Modbus TCP, DNP3, IEC&nbsp;61850 — PCS, BMS, relays, meters, breakers, SCADA</span></div></div>
+  <div class="layer det"><span class="tag">L0</span><div><b>Physical Assets</b><br><span>BESS, PCS, transformers, switchgear, protection relays, site loads</span></div></div>
+</div>
+
+  <p>The large language model never participates in safety-critical real-time control
+  loops, and never writes Modbus commands to equipment. Every AI recommendation passes
+  through deterministic EMS safety gates before anything reaches a device.
+  <a href="safety.html">Read the safety model →</a></p>
+</section>
+
+<section class="blk">
+  <div class="eyebrow">Field-proven foundation</div>
+  <h2>Built from real interconnection work</h2>
+  <p>The platform's deterministic core is derived from deployed C&amp;I BESS engineering
+  in the SDG&amp;E service territory under CA Rule&nbsp;21 and IEEE&nbsp;1547-2018, including
+  hardwired permissive interlock chains, SEL-class protection relay and revenue meter
+  integration, and utility interconnection evidence requirements.</p>
+  <div class="cards">
+    <a class="card" href="ai-kernel.html"><div class="eyebrow">AI Kernel</div><h3>8 intelligence modules</h3><p>Site Copilot, Revenue Gap Analyzer, Dispatch Recommendation, Battery Health, and more.</p></a>
+    <a class="card" href="ems-core.html"><div class="eyebrow">EMS Core</div><h3>Deterministic control</h3><p>Operating modes, interlocks, limits, fault handling, fail-safe and comm-loss behavior.</p></a>
+    <a class="card" href="workflows.html"><div class="eyebrow">Workflows</div><h3>Operator-first design</h3><p>From "why did the site underperform yesterday?" to a generated customer report.</p></a>
+  </div>
+</section>
+
+</div></div>
+<footer><div class="fwrap">
+  <div>© 2026 Energize Solutions Inc. · EnergizeOS Microgrid EMS</div>
+  <div><a href="mailto:info@energizeos.com">info@energizeos.com</a> · <a href="https://energizeos.com">energizeos.com</a></div>
+</div></footer>
+<script>
+function tnav(){var m=document.getElementById('mnav');m.classList.toggle('open');}
+</script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Kernel — EnergizeOS Microgrid EMS</title>
+<meta name="description" content="Eight AI Kernel modules: Site Copilot, Revenue Gap Analyzer, Dispatch Recommendation, Battery Health, and more.">
+<meta property="og:title" content="AI Kernel — EnergizeOS Microgrid EMS">
+<meta property="og:description" content="Eight AI Kernel modules: Site Copilot, Revenue Gap Analyzer, Dispatch Recommendation, Battery Health, and more.">
+<meta property="og:image" content="https://docs.energizeos.com/microgrid/og-image.png">
+<meta property="og:url" content="https://docs.energizeos.com/microgrid/ai-kernel.html">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="hwrap">
+    <a class="brand" href="index.html" aria-label="EnergizeOS Microgrid EMS">
+      <div class="mark"><i></i><i></i><i></i><i></i></div>
+      <b>EnergizeOS</b><span>Microgrid EMS</span>
+    </a>
+    <nav class="main" aria-label="Primary"><a href="index.html" class="">Overview</a><a href="architecture.html" class="">Architecture</a><a href="use-case.html" class="">C&I Use Case</a><a href="ai-kernel.html" class="on">AI Kernel</a><a href="ems-core.html" class="">EMS Core</a><a href="data-model.html" class="">Data Model</a><a href="workflows.html" class="">Operator Workflows</a><a href="safety.html" class="">Safety</a><a href="roadmap.html" class="">Roadmap</a><a href="developers.html" class="">Developers</a></nav>
+    <button class="burger" onclick="tnav()" aria-label="Toggle navigation"><i></i><i></i><i></i></button>
+  </div>
+  <div class="mnav" id="mnav"><a href="index.html" class="">Overview</a><a href="architecture.html" class="">Architecture</a><a href="use-case.html" class="">C&I Use Case</a><a href="ai-kernel.html" class="on">AI Kernel</a><a href="ems-core.html" class="">EMS Core</a><a href="data-model.html" class="">Data Model</a><a href="workflows.html" class="">Operator Workflows</a><a href="safety.html" class="">Safety</a><a href="roadmap.html" class="">Roadmap</a><a href="developers.html" class="">Developers</a></div>
+</header>
+
+<div class="hero" style="padding-bottom:8px">
+  <div class="eyebrow">AI Kernel</div>
+  <h1 style="font-size:2.4rem">Strategy, analytics,<br>and explanation.</h1>
+</div>
+
+<div class="wrap"><div class="doc">
+
+<section class="blk">
+  <div class="eyebrow">AI Kernel</div>
+  <h2>A strategy, analytics, and explanation layer on top of deterministic EMS control</h2>
+  <p>The AI Kernel is the intelligence layer of EnergizeOS. It reads audited
+  operational data, produces recommendations and explanations, and routes every
+  actionable suggestion through EMS safety gates. It holds no direct device
+  authority of any kind.</p>
+</section>
+<section class="blk">
+  <h2>Initial modules</h2>
+  
+  <h3>Site Copilot</h3>
+  <div class="tablewrap"><table>
+    <tr><th style="width:30%">Aspect</th><th>Definition</th></tr>
+    <tr><td>Purpose</td><td>Conversational interface for operators and owners: answers questions about site state, history, performance, and risk in plain language.</td></tr>
+    <tr><td>Input data</td><td>EMS states, alarms, events, dispatch results, meter data, reports, documentation.</td></tr>
+    <tr><td>Output</td><td>Natural-language answers with citations to underlying records.</td></tr>
+    <tr><td>Decisions supported</td><td>Daily operations, shift handover, owner inquiries, incident review.</td></tr>
+    <tr><td>Must not control</td><td>No device commands, no setpoint writes, no alarm acknowledgement on equipment.</td></tr>
+  </table></div>
+  
+  <h3>Revenue Gap Analyzer</h3>
+  <div class="tablewrap"><table>
+    <tr><th style="width:30%">Aspect</th><th>Definition</th></tr>
+    <tr><td>Purpose</td><td>Quantifies and explains the difference between expected and realized revenue or savings.</td></tr>
+    <tr><td>Input data</td><td>Tariff/price signals, dispatch plans vs. results, meter data, availability and derating records.</td></tr>
+    <tr><td>Output</td><td>Ranked gap attribution (e.g., derate, missed window, forecast error) with monetary impact.</td></tr>
+    <tr><td>Decisions supported</td><td>Commercial review, performance guarantees, operational improvement priorities.</td></tr>
+    <tr><td>Must not control</td><td>Cannot modify dispatch or tariffs; analysis only.</td></tr>
+  </table></div>
+  
+  <h3>Dispatch Recommendation Engine</h3>
+  <div class="tablewrap"><table>
+    <tr><th style="width:30%">Aspect</th><th>Definition</th></tr>
+    <tr><td>Purpose</td><td>Produces day-ahead and intraday dispatch plans optimized for value within hard constraints.</td></tr>
+    <tr><td>Input data</td><td>Load forecast, price/tariff signals, weather forecast, SOC, power limits, degradation cost model.</td></tr>
+    <tr><td>Output</td><td>Candidate dispatch plan with constraint check results and expected value.</td></tr>
+    <tr><td>Decisions supported</td><td>Plan approval by operator; automated execution only via gated EMS scheduler.</td></tr>
+    <tr><td>Must not control</td><td>Cannot push commands to PCS; plans execute only through the deterministic EMS scheduler after safety-gate validation.</td></tr>
+  </table></div>
+  
+  <h3>Battery Health Advisor</h3>
+  <div class="tablewrap"><table>
+    <tr><th style="width:30%">Aspect</th><th>Definition</th></tr>
+    <tr><td>Purpose</td><td>Tracks degradation and recommends operating adjustments that protect asset life.</td></tr>
+    <tr><td>Input data</td><td>BMS rack data, SOC/temperature/current histories, cycle counts, health snapshots.</td></tr>
+    <tr><td>Output</td><td>Health trend, anomaly flags, recommended operating envelope adjustments.</td></tr>
+    <tr><td>Decisions supported</td><td>Warranty management, derate decisions, maintenance scheduling.</td></tr>
+    <tr><td>Must not control</td><td>Cannot change BMS or PCS limits; limit changes are engineering-controlled EMS configuration.</td></tr>
+  </table></div>
+  
+  <h3>Alarm &amp; Fault Explanation Engine</h3>
+  <div class="tablewrap"><table>
+    <tr><th style="width:30%">Aspect</th><th>Definition</th></tr>
+    <tr><td>Purpose</td><td>Explains alarms and faults: cause, criticality, affected functions, recommended response.</td></tr>
+    <tr><td>Input data</td><td>Alarm/event streams, relay status, interlock states, device fault codes, historical patterns.</td></tr>
+    <tr><td>Output</td><td>Structured explanation with severity classification and response guidance.</td></tr>
+    <tr><td>Decisions supported</td><td>Operator triage, escalation decisions, post-event reporting.</td></tr>
+    <tr><td>Must not control</td><td>Cannot acknowledge, suppress, or reset alarms or trip lockouts on equipment.</td></tr>
+  </table></div>
+  
+  <h3>Microgrid Scenario Analyzer</h3>
+  <div class="tablewrap"><table>
+    <tr><th style="width:30%">Aspect</th><th>Definition</th></tr>
+    <tr><td>Purpose</td><td>Simulates operating scenarios: outage response, peak events, export-limit stress, capacity changes.</td></tr>
+    <tr><td>Input data</td><td>Site data model, historical profiles, forecast data, asset parameters.</td></tr>
+    <tr><td>Output</td><td>Scenario outcomes, risk scores, sensitivity analysis.</td></tr>
+    <tr><td>Decisions supported</td><td>Planning, capacity decisions, operating procedure design.</td></tr>
+    <tr><td>Must not control</td><td>Simulation only; no interaction with live control.</td></tr>
+  </table></div>
+  
+  <h3>Commissioning Assistant</h3>
+  <div class="tablewrap"><table>
+    <tr><th style="width:30%">Aspect</th><th>Definition</th></tr>
+    <tr><td>Purpose</td><td>Supports FAT/SAT execution: test sequencing, expected results, evidence capture.</td></tr>
+    <tr><td>Input data</td><td>Test procedures, interlock definitions, live status during supervised tests, prior results.</td></tr>
+    <tr><td>Output</td><td>Step-by-step guidance, pass/fail evidence records, deviation flags.</td></tr>
+    <tr><td>Decisions supported</td><td>Commissioning engineers during witnessed tests.</td></tr>
+    <tr><td>Must not control</td><td>Cannot initiate tests or operate devices; humans execute, the assistant documents and verifies.</td></tr>
+  </table></div>
+  
+  <h3>Operator Report Generator</h3>
+  <div class="tablewrap"><table>
+    <tr><th style="width:30%">Aspect</th><th>Definition</th></tr>
+    <tr><td>Purpose</td><td>Generates daily, monthly, and incident reports for owners and stakeholders.</td></tr>
+    <tr><td>Input data</td><td>Audited operational records, meter data, dispatch results, alarm history, revenue analytics.</td></tr>
+    <tr><td>Output</td><td>Formatted reports with verified figures and plain-language narrative.</td></tr>
+    <tr><td>Decisions supported</td><td>Customer communication, compliance records, management review.</td></tr>
+    <tr><td>Must not control</td><td>Read-only; reports cite audited records and never alter them.</td></tr>
+  </table></div>
+</section>
+
+</div></div>
+<footer><div class="fwrap">
+  <div>© 2026 Energize Solutions Inc. · EnergizeOS Microgrid EMS</div>
+  <div><a href="mailto:info@energizeos.com">info@energizeos.com</a> · <a href="https://energizeos.com">energizeos.com</a></div>
+</div></footer>
+<script>
+function tnav(){var m=document.getElementById('mnav');m.classList.toggle('open');}
+</script>
+</body>
+</html>

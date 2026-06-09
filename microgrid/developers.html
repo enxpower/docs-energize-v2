@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Developers — EnergizeOS Microgrid EMS</title>
+<meta name="description" content="Repository structure, contribution guide, and deployment to docs.energizeos.com/microgrid.">
+<meta property="og:title" content="Developers — EnergizeOS Microgrid EMS">
+<meta property="og:description" content="Repository structure, contribution guide, and deployment to docs.energizeos.com/microgrid.">
+<meta property="og:image" content="https://docs.energizeos.com/microgrid/og-image.png">
+<meta property="og:url" content="https://docs.energizeos.com/microgrid/developers.html">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="hwrap">
+    <a class="brand" href="index.html" aria-label="EnergizeOS Microgrid EMS">
+      <div class="mark"><i></i><i></i><i></i><i></i></div>
+      <b>EnergizeOS</b><span>Microgrid EMS</span>
+    </a>
+    <nav class="main" aria-label="Primary"><a href="index.html" class="">Overview</a><a href="architecture.html" class="">Architecture</a><a href="use-case.html" class="">C&I Use Case</a><a href="ai-kernel.html" class="">AI Kernel</a><a href="ems-core.html" class="">EMS Core</a><a href="data-model.html" class="">Data Model</a><a href="workflows.html" class="">Operator Workflows</a><a href="safety.html" class="">Safety</a><a href="roadmap.html" class="">Roadmap</a><a href="developers.html" class="on">Developers</a></nav>
+    <button class="burger" onclick="tnav()" aria-label="Toggle navigation"><i></i><i></i><i></i></button>
+  </div>
+  <div class="mnav" id="mnav"><a href="index.html" class="">Overview</a><a href="architecture.html" class="">Architecture</a><a href="use-case.html" class="">C&I Use Case</a><a href="ai-kernel.html" class="">AI Kernel</a><a href="ems-core.html" class="">EMS Core</a><a href="data-model.html" class="">Data Model</a><a href="workflows.html" class="">Operator Workflows</a><a href="safety.html" class="">Safety</a><a href="roadmap.html" class="">Roadmap</a><a href="developers.html" class="on">Developers</a></div>
+</header>
+
+<div class="hero" style="padding-bottom:8px">
+  <div class="eyebrow">Developers</div>
+  <h1 style="font-size:2.4rem">Simple to extend.<br>Strict to deploy.</h1>
+</div>
+
+<div class="wrap"><div class="doc">
+
+<section class="blk">
+  <div class="eyebrow">Developers</div>
+  <h2>Repository &amp; deployment</h2>
+  <p>This documentation lives in the <span class="mono">microgrid/</span> directory of
+  the <span class="mono">enxpower/docs-energize-v2</span> repository, which serves
+  <span class="mono">docs.energizeos.com</span> via GitHub Pages. Pages are plain
+  static HTML generated from a single build script — no runtime build pipeline is
+  required.</p>
+  <h3>Structure</h3>
+  <div class="tablewrap"><table>
+    <tr><th>Path</th><th>Content</th></tr>
+    <tr><td class="mono">microgrid/index.html</td><td>Homepage and positioning</td></tr>
+    <tr><td class="mono">microgrid/*.html</td><td>One page per documentation section</td></tr>
+    <tr><td class="mono">microgrid/style.css</td><td>Shared stylesheet (EnergizeOS Slate&amp;Volt design tokens)</td></tr>
+    <tr><td class="mono">microgrid/og-image.png</td><td>1200×630 social preview image</td></tr>
+  </table></div>
+  <h3>Adding documentation</h3>
+  <ol>
+    <li>Add or edit a page following the existing template (header, nav, footer must match).</li>
+    <li>Keep all content, filenames, and code in English.</li>
+    <li>Verify mobile behavior at 900px and 480px breakpoints before committing.</li>
+    <li>Commit with a descriptive message; GitHub Pages deploys automatically on push to <span class="mono">main</span>.</li>
+  </ol>
+  <h3>Future API documentation</h3>
+  <p>API references will be added under <span class="mono">microgrid/api/</span>
+  when the Phase&nbsp;2 Copilot prototype exposes its first read-only endpoints.
+  If documentation volume grows beyond static pages, migration to a generator
+  (e.g., VitePress) will be evaluated in a separate source repository with built
+  output published into this directory.</p>
+</section>
+
+</div></div>
+<footer><div class="fwrap">
+  <div>© 2026 Energize Solutions Inc. · EnergizeOS Microgrid EMS</div>
+  <div><a href="mailto:info@energizeos.com">info@energizeos.com</a> · <a href="https://energizeos.com">energizeos.com</a></div>
+</div></footer>
+<script>
+function tnav(){var m=document.getElementById('mnav');m.classList.toggle('open');}
+</script>
+</body>
+</html>

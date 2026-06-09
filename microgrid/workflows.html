@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Operator Workflows — EnergizeOS Microgrid EMS</title>
+<meta name="description" content="Example operator workflows: underperformance analysis, dispatch planning, alarm triage, grid event reconstruction, reporting.">
+<meta property="og:title" content="Operator Workflows — EnergizeOS Microgrid EMS">
+<meta property="og:description" content="Example operator workflows: underperformance analysis, dispatch planning, alarm triage, grid event reconstruction, reporting.">
+<meta property="og:image" content="https://docs.energizeos.com/microgrid/og-image.png">
+<meta property="og:url" content="https://docs.energizeos.com/microgrid/workflows.html">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="hwrap">
+    <a class="brand" href="index.html" aria-label="EnergizeOS Microgrid EMS">
+      <div class="mark"><i></i><i></i><i></i><i></i></div>
+      <b>EnergizeOS</b><span>Microgrid EMS</span>
+    </a>
+    <nav class="main" aria-label="Primary"><a href="index.html" class="">Overview</a><a href="architecture.html" class="">Architecture</a><a href="use-case.html" class="">C&I Use Case</a><a href="ai-kernel.html" class="">AI Kernel</a><a href="ems-core.html" class="">EMS Core</a><a href="data-model.html" class="">Data Model</a><a href="workflows.html" class="on">Operator Workflows</a><a href="safety.html" class="">Safety</a><a href="roadmap.html" class="">Roadmap</a><a href="developers.html" class="">Developers</a></nav>
+    <button class="burger" onclick="tnav()" aria-label="Toggle navigation"><i></i><i></i><i></i></button>
+  </div>
+  <div class="mnav" id="mnav"><a href="index.html" class="">Overview</a><a href="architecture.html" class="">Architecture</a><a href="use-case.html" class="">C&I Use Case</a><a href="ai-kernel.html" class="">AI Kernel</a><a href="ems-core.html" class="">EMS Core</a><a href="data-model.html" class="">Data Model</a><a href="workflows.html" class="on">Operator Workflows</a><a href="safety.html" class="">Safety</a><a href="roadmap.html" class="">Roadmap</a><a href="developers.html" class="">Developers</a></div>
+</header>
+
+<div class="hero" style="padding-bottom:8px">
+  <div class="eyebrow">Operator Workflows</div>
+  <h1 style="font-size:2.4rem">Built around real<br>operator questions.</h1>
+</div>
+
+<div class="wrap"><div class="doc">
+
+<section class="blk">
+  <div class="eyebrow">Operator Workflows</div>
+  <h2>How operators actually use it</h2>
+  <p>Each workflow follows the same pattern: the LLM layer interprets the question,
+  the Energy Domain AI layer runs the relevant analysis against audited records,
+  and the answer is returned with traceable evidence. Nothing in these flows
+  touches equipment.</p>
+</section>
+<section class="blk">
+  <h3>“Why did the site underperform yesterday?”</h3><p>Site Copilot routes to the Revenue Gap Analyzer, which compares the approved dispatch plan against dispatch results, meter data, and derate records. Answer: ranked causes (e.g., a 2-hour BMS thermal derate during the peak window) with monetary impact and links to the underlying events.</p>
+  <h3>“What should the system do tomorrow?”</h3><p>The Dispatch Recommendation Engine builds a day-ahead plan from tariff, load forecast, weather, and SOC constraints. The plan is presented with all constraint checks; the operator approves it, and the deterministic EMS scheduler executes it through safety gates.</p>
+  <h3>“Is this alarm critical?”</h3><p>The Alarm &amp; Fault Explanation Engine classifies the alarm, explains the cause and the affected functions, and recommends a response — for example, distinguishing an informational comm-retry from a trip-path-relevant relay alarm.</p>
+  <h3>“Can the battery safely discharge during peak window?”</h3><p>The Copilot evaluates SOC envelope, BMS permissives, thermal headroom, power limits, and any active lockouts, then answers with a clear yes/no plus the binding constraint. The actual discharge still executes only through the EMS within those limits.</p>
+  <h3>“What caused the revenue gap?”</h3><p>The Revenue Gap Analyzer attributes the gap across derates, forecast error, missed windows, and availability loss — each line item traceable to logged events.</p>
+  <h3>“What happened during the grid event?”</h3><p>The Copilot reconstructs the timeline from relay signals, breaker feedback, EMS state transitions, and PCS responses — including the trip (relay-led) and the supervised, authorized recovery sequence — into a clear narrative for owner and utility communication.</p>
+  <h3>“Generate a daily customer report.”</h3><p>The Operator Report Generator compiles verified meter data, dispatch results, savings, availability, and notable events into a formatted report. Figures cite audited records; the narrative is reviewed before sending.</p>
+</section>
+
+</div></div>
+<footer><div class="fwrap">
+  <div>© 2026 Energize Solutions Inc. · EnergizeOS Microgrid EMS</div>
+  <div><a href="mailto:info@energizeos.com">info@energizeos.com</a> · <a href="https://energizeos.com">energizeos.com</a></div>
+</div></footer>
+<script>
+function tnav(){var m=document.getElementById('mnav');m.classList.toggle('open');}
+</script>
+</body>
+</html>

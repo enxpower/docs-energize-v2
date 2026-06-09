@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C&I Use Case — EnergizeOS Microgrid EMS</title>
+<meta name="description" content="Reference C&I microgrid deployment in SDG&E territory under CA Rule 21 and IEEE 1547-2018.">
+<meta property="og:title" content="C&I Use Case — EnergizeOS Microgrid EMS">
+<meta property="og:description" content="Reference C&I microgrid deployment in SDG&E territory under CA Rule 21 and IEEE 1547-2018.">
+<meta property="og:image" content="https://docs.energizeos.com/microgrid/og-image.png">
+<meta property="og:url" content="https://docs.energizeos.com/microgrid/use-case.html">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="hwrap">
+    <a class="brand" href="index.html" aria-label="EnergizeOS Microgrid EMS">
+      <div class="mark"><i></i><i></i><i></i><i></i></div>
+      <b>EnergizeOS</b><span>Microgrid EMS</span>
+    </a>
+    <nav class="main" aria-label="Primary"><a href="index.html" class="">Overview</a><a href="architecture.html" class="">Architecture</a><a href="use-case.html" class="on">C&I Use Case</a><a href="ai-kernel.html" class="">AI Kernel</a><a href="ems-core.html" class="">EMS Core</a><a href="data-model.html" class="">Data Model</a><a href="workflows.html" class="">Operator Workflows</a><a href="safety.html" class="">Safety</a><a href="roadmap.html" class="">Roadmap</a><a href="developers.html" class="">Developers</a></nav>
+    <button class="burger" onclick="tnav()" aria-label="Toggle navigation"><i></i><i></i><i></i></button>
+  </div>
+  <div class="mnav" id="mnav"><a href="index.html" class="">Overview</a><a href="architecture.html" class="">Architecture</a><a href="use-case.html" class="on">C&I Use Case</a><a href="ai-kernel.html" class="">AI Kernel</a><a href="ems-core.html" class="">EMS Core</a><a href="data-model.html" class="">Data Model</a><a href="workflows.html" class="">Operator Workflows</a><a href="safety.html" class="">Safety</a><a href="roadmap.html" class="">Roadmap</a><a href="developers.html" class="">Developers</a></div>
+</header>
+
+<div class="hero" style="padding-bottom:8px">
+  <div class="eyebrow">Use Case</div>
+  <h1 style="font-size:2.4rem">C&amp;I microgrid,<br>SDG&amp;E territory.</h1>
+</div>
+
+<div class="wrap"><div class="doc">
+
+<section class="blk">
+  <div class="eyebrow">Reference Deployment</div>
+  <h2>C&amp;I microgrid — Southern California</h2>
+  <p>The first EnergizeOS Microgrid EMS deployment supports a behind-the-meter BESS
+  program at a Fortune&nbsp;500 manufacturing facility in the SDG&amp;E service territory,
+  delivered with an EPC engineering partner and a BESS integrator, under
+  CA Rule&nbsp;21 and IEEE&nbsp;1547-2018 interconnection requirements.</p>
+  <div class="note">This page is the public-facing description. Commercial terms,
+  protection settings, single-line diagrams, and project-specific procedures are
+  maintained in the internal project workspace and are not published here.</div>
+</section>
+
+<section class="blk">
+  <h2>Scope covered by the EMS</h2>
+  <div class="tablewrap"><table>
+    <tr><th>Area</th><th>EMS role</th></tr>
+    <tr><td>BESS integration</td><td>PCS dispatch, BMS status supervision, rack-level health visibility, SOC and power limit enforcement.</td></tr>
+    <tr><td>Site load support</td><td>Peak shaving and demand management against the facility load profile and tariff structure.</td></tr>
+    <tr><td>Utility / grid interaction</td><td>Interconnection-compliant operation under CA Rule&nbsp;21 / IEEE&nbsp;1547-2018; coordinated behavior at the point of common coupling.</td></tr>
+    <tr><td>Export-limited operation</td><td>Zero-export / export-limited control enforced deterministically from revenue-grade meter feedback.</td></tr>
+    <tr><td>Relay &amp; meter integration</td><td>SEL-700G-class protection relay status and permissive interfaces; SEL-735-class revenue metering with CT/PT validation.</td></tr>
+    <tr><td>PCS / BMS / EMS coordination</td><td>Deterministic command path EMS → PCS, with BMS permissives in the interlock chain before any close or dispatch.</td></tr>
+    <tr><td>Remote monitoring</td><td>Secure remote visibility of states, alarms, events, and energy flows for owner, EPC, and integrator.</td></tr>
+    <tr><td>Commissioning support</td><td>FAT/SAT-aligned test procedures, trip-lockout verification, interlock chain validation, witness-test support.</td></tr>
+    <tr><td>Operator reporting</td><td>Daily and monthly performance, savings, and availability reports generated from audited operational data.</td></tr>
+    <tr><td>Alarm explanation</td><td>Plain-language alarm context: what fired, why, criticality, and recommended response.</td></tr>
+    <tr><td>Dispatch planning</td><td>Day-ahead plans built from tariff, load forecast, and SOC constraints — reviewed through safety gates before execution.</td></tr>
+  </table></div>
+</section>
+
+<section class="blk">
+  <h2>What this deployment taught the product</h2>
+  <ul>
+    <li>Interconnection success depends on an auditable <b>evidence chain</b> — every protection setting, test result, and approval must be traceable. The EMS data model treats evidence as a first-class object.</li>
+    <li>Close authority must be singular and interlocked: one permissive chain, one authorized close path, full logging.</li>
+    <li>Multi-party programs (owner, EPC, integrator, utility) need shared, explainable operational truth — which is exactly what the AI layer provides on top of deterministic records.</li>
+  </ul>
+</section>
+
+</div></div>
+<footer><div class="fwrap">
+  <div>© 2026 Energize Solutions Inc. · EnergizeOS Microgrid EMS</div>
+  <div><a href="mailto:info@energizeos.com">info@energizeos.com</a> · <a href="https://energizeos.com">energizeos.com</a></div>
+</div></footer>
+<script>
+function tnav(){var m=document.getElementById('mnav');m.classList.toggle('open');}
+</script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Model — EnergizeOS Microgrid EMS</title>
+<meta name="description" content="Minimum site data model: Site, Asset, PCS, BMS, Meter, Relay, Breaker, Alarm, Event, Dispatch, Tariff, Forecasts, Health.">
+<meta property="og:title" content="Data Model — EnergizeOS Microgrid EMS">
+<meta property="og:description" content="Minimum site data model: Site, Asset, PCS, BMS, Meter, Relay, Breaker, Alarm, Event, Dispatch, Tariff, Forecasts, Health.">
+<meta property="og:image" content="https://docs.energizeos.com/microgrid/og-image.png">
+<meta property="og:url" content="https://docs.energizeos.com/microgrid/data-model.html">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="hwrap">
+    <a class="brand" href="index.html" aria-label="EnergizeOS Microgrid EMS">
+      <div class="mark"><i></i><i></i><i></i><i></i></div>
+      <b>EnergizeOS</b><span>Microgrid EMS</span>
+    </a>
+    <nav class="main" aria-label="Primary"><a href="index.html" class="">Overview</a><a href="architecture.html" class="">Architecture</a><a href="use-case.html" class="">C&I Use Case</a><a href="ai-kernel.html" class="">AI Kernel</a><a href="ems-core.html" class="">EMS Core</a><a href="data-model.html" class="on">Data Model</a><a href="workflows.html" class="">Operator Workflows</a><a href="safety.html" class="">Safety</a><a href="roadmap.html" class="">Roadmap</a><a href="developers.html" class="">Developers</a></nav>
+    <button class="burger" onclick="tnav()" aria-label="Toggle navigation"><i></i><i></i><i></i></button>
+  </div>
+  <div class="mnav" id="mnav"><a href="index.html" class="">Overview</a><a href="architecture.html" class="">Architecture</a><a href="use-case.html" class="">C&I Use Case</a><a href="ai-kernel.html" class="">AI Kernel</a><a href="ems-core.html" class="">EMS Core</a><a href="data-model.html" class="on">Data Model</a><a href="workflows.html" class="">Operator Workflows</a><a href="safety.html" class="">Safety</a><a href="roadmap.html" class="">Roadmap</a><a href="developers.html" class="">Developers</a></div>
+</header>
+
+<div class="hero" style="padding-bottom:8px">
+  <div class="eyebrow">Data Model</div>
+  <h1 style="font-size:2.4rem">One model for control<br>and intelligence.</h1>
+</div>
+
+<div class="wrap"><div class="doc">
+
+<section class="blk">
+  <div class="eyebrow">Data Model</div>
+  <h2>Minimum site data model</h2>
+  <p>Every site is described by a common entity model. This model feeds both the
+  deterministic EMS and the AI Kernel, so explanations always trace back to the
+  same audited records that control relies on.</p>
+  <div class="tablewrap"><table>
+    <tr><th style="width:28%">Entity</th><th>Description</th></tr>
+    <tr><td>Site</td><td>Top-level facility: location, utility territory, interconnection program, tariff association.</td></tr>
+    <tr><td>Asset</td><td>Generic equipment record with type, ratings, vendor, firmware, and lifecycle state.</td></tr>
+    <tr><td>PCS</td><td>Power conversion system: ratings, control map, limit set, command interface.</td></tr>
+    <tr><td>BMS</td><td>Battery management system: permissives, limits, rack inventory, fault codes.</td></tr>
+    <tr><td>Battery Rack</td><td>Rack-level capacity, SOC, temperature, and health attributes.</td></tr>
+    <tr><td>Meter</td><td>Revenue and submeter points: location in SLD, CT/PT configuration, data quality state.</td></tr>
+    <tr><td>Relay</td><td>Protection relay: role, status points, trip/permissive signals, settings reference (settings themselves are engineering-controlled).</td></tr>
+    <tr><td>Breaker</td><td>Switching device with 52a/52b feedback, close authority mapping, and operation history.</td></tr>
+    <tr><td>Alarm</td><td>Classified alarm instance: source, severity, state, acknowledgement trail.</td></tr>
+    <tr><td>Event</td><td>Timestamped operational event: mode changes, commands, trips, grid events, user actions.</td></tr>
+    <tr><td>Dispatch Plan</td><td>Approved plan: intervals, setpoints, constraints checked, approval identity.</td></tr>
+    <tr><td>Dispatch Result</td><td>Realized operation per interval: delivered power, deviations, derates, reasons.</td></tr>
+    <tr><td>Tariff / Price Signal</td><td>Rate structures and market/price signals used for value calculation.</td></tr>
+    <tr><td>Load Forecast</td><td>Site load predictions with horizon, source model, and accuracy tracking.</td></tr>
+    <tr><td>Weather Forecast</td><td>Weather inputs relevant to load, PV (if present), and thermal constraints.</td></tr>
+    <tr><td>Battery Health Snapshot</td><td>Periodic health record: capacity estimate, resistance trends, cycle statistics, anomalies.</td></tr>
+  </table></div>
+</section>
+
+</div></div>
+<footer><div class="fwrap">
+  <div>© 2026 Energize Solutions Inc. · EnergizeOS Microgrid EMS</div>
+  <div><a href="mailto:info@energizeos.com">info@energizeos.com</a> · <a href="https://energizeos.com">energizeos.com</a></div>
+</div></footer>
+<script>
+function tnav(){var m=document.getElementById('mnav');m.classList.toggle('open');}
+</script>
+</body>
+</html>

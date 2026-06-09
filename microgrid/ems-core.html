@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EMS Core — EnergizeOS Microgrid EMS</title>
+<meta name="description" content="Deterministic EMS functions: operating modes, dispatch, interlocks, limits, fault handling, fail-safe behavior.">
+<meta property="og:title" content="EMS Core — EnergizeOS Microgrid EMS">
+<meta property="og:description" content="Deterministic EMS functions: operating modes, dispatch, interlocks, limits, fault handling, fail-safe behavior.">
+<meta property="og:image" content="https://docs.energizeos.com/microgrid/og-image.png">
+<meta property="og:url" content="https://docs.energizeos.com/microgrid/ems-core.html">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="hwrap">
+    <a class="brand" href="index.html" aria-label="EnergizeOS Microgrid EMS">
+      <div class="mark"><i></i><i></i><i></i><i></i></div>
+      <b>EnergizeOS</b><span>Microgrid EMS</span>
+    </a>
+    <nav class="main" aria-label="Primary"><a href="index.html" class="">Overview</a><a href="architecture.html" class="">Architecture</a><a href="use-case.html" class="">C&I Use Case</a><a href="ai-kernel.html" class="">AI Kernel</a><a href="ems-core.html" class="on">EMS Core</a><a href="data-model.html" class="">Data Model</a><a href="workflows.html" class="">Operator Workflows</a><a href="safety.html" class="">Safety</a><a href="roadmap.html" class="">Roadmap</a><a href="developers.html" class="">Developers</a></nav>
+    <button class="burger" onclick="tnav()" aria-label="Toggle navigation"><i></i><i></i><i></i></button>
+  </div>
+  <div class="mnav" id="mnav"><a href="index.html" class="">Overview</a><a href="architecture.html" class="">Architecture</a><a href="use-case.html" class="">C&I Use Case</a><a href="ai-kernel.html" class="">AI Kernel</a><a href="ems-core.html" class="on">EMS Core</a><a href="data-model.html" class="">Data Model</a><a href="workflows.html" class="">Operator Workflows</a><a href="safety.html" class="">Safety</a><a href="roadmap.html" class="">Roadmap</a><a href="developers.html" class="">Developers</a></div>
+</header>
+
+<div class="hero" style="padding-bottom:8px">
+  <div class="eyebrow">EMS Core</div>
+  <h1 style="font-size:2.4rem">The only layer that<br>commands equipment.</h1>
+</div>
+
+<div class="wrap"><div class="doc">
+
+<section class="blk">
+  <div class="eyebrow">EMS Core</div>
+  <h2>Deterministic control functions</h2>
+  <p>The EMS Core is the only layer with command authority over equipment. Its
+  behavior is fully specified, configuration-controlled, and validated through
+  FAT/SAT. No AI component participates in any function on this page.</p>
+</section>
+<section class="blk">
+  <h2>Function reference</h2>
+  <div class="tablewrap"><table>
+    <tr><th style="width:32%">Function</th><th>Behavior</th></tr>
+    <tr><td>Operating modes</td><td>Defined mode set (e.g., standby, peak shave, demand limit, scheduled dispatch, manual, maintenance) with explicit, logged transitions.</td></tr>
+    <tr><td>PCS dispatch</td><td>Deterministic active/reactive power commands within validated limits; single command path from EMS to PCS.</td></tr>
+    <tr><td>BMS status monitoring</td><td>Continuous supervision of SOC, temperatures, voltages, contactor states, and BMS permissives.</td></tr>
+    <tr><td>Meter data</td><td>Revenue-grade meter integration (SEL-735-class) at the point of common coupling; basis for export-limit enforcement.</td></tr>
+    <tr><td>Relay status</td><td>Protection relay (SEL-700G-class) status, trip, and permissive signals integrated as read-and-respect inputs.</td></tr>
+    <tr><td>Breaker status</td><td>52a/52b position feedback supervised; position mismatch raises alarms and blocks dependent actions.</td></tr>
+    <tr><td>Permissives &amp; interlocks</td><td>A hardwired-plus-logic permissive chain (relay healthy, BMS ready, sync conditions, breaker states, authorization) — all conditions must be true before close or dispatch.</td></tr>
+    <tr><td>SOC limits</td><td>Configurable min/max SOC envelopes with hysteresis; enforced ahead of any plan.</td></tr>
+    <tr><td>Power limits</td><td>Site, PCS, and interconnection power limits enforced deterministically, including export limits from meter feedback.</td></tr>
+    <tr><td>Charge/discharge limits</td><td>Rate limits derived from BMS capability and engineering configuration; never relaxed by software at runtime.</td></tr>
+    <tr><td>Fault handling</td><td>On trip: EMS enters trip lockout. Recovery of all permissives does not auto-close; an authorized user must clear lockout, after which the full permissive chain is re-evaluated.</td></tr>
+    <tr><td>Manual override</td><td>Authorized manual control with the same limit and interlock enforcement; all actions logged with user identity.</td></tr>
+    <tr><td>Fallback mode</td><td>On loss of optimization/AI services, EMS continues on a safe baseline schedule or standby — intelligence loss never degrades safety.</td></tr>
+    <tr><td>Communication loss</td><td>Watchdog-supervised links; defined comm-loss behavior per device (hold-safe, ramp-down, or standby) with alarming.</td></tr>
+  </table></div>
+</section>
+
+</div></div>
+<footer><div class="fwrap">
+  <div>© 2026 Energize Solutions Inc. · EnergizeOS Microgrid EMS</div>
+  <div><a href="mailto:info@energizeos.com">info@energizeos.com</a> · <a href="https://energizeos.com">energizeos.com</a></div>
+</div></footer>
+<script>
+function tnav(){var m=document.getElementById('mnav');m.classList.toggle('open');}
+</script>
+</body>
+</html>

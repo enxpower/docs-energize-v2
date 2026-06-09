@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Architecture — EnergizeOS Microgrid EMS</title>
+<meta name="description" content="Layered architecture: LLM orchestration and energy domain AI above mandatory safety gates; deterministic EMS control below.">
+<meta property="og:title" content="Architecture — EnergizeOS Microgrid EMS">
+<meta property="og:description" content="Layered architecture: LLM orchestration and energy domain AI above mandatory safety gates; deterministic EMS control below.">
+<meta property="og:image" content="https://docs.energizeos.com/microgrid/og-image.png">
+<meta property="og:url" content="https://docs.energizeos.com/microgrid/architecture.html">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="hwrap">
+    <a class="brand" href="index.html" aria-label="EnergizeOS Microgrid EMS">
+      <div class="mark"><i></i><i></i><i></i><i></i></div>
+      <b>EnergizeOS</b><span>Microgrid EMS</span>
+    </a>
+    <nav class="main" aria-label="Primary"><a href="index.html" class="">Overview</a><a href="architecture.html" class="on">Architecture</a><a href="use-case.html" class="">C&I Use Case</a><a href="ai-kernel.html" class="">AI Kernel</a><a href="ems-core.html" class="">EMS Core</a><a href="data-model.html" class="">Data Model</a><a href="workflows.html" class="">Operator Workflows</a><a href="safety.html" class="">Safety</a><a href="roadmap.html" class="">Roadmap</a><a href="developers.html" class="">Developers</a></nav>
+    <button class="burger" onclick="tnav()" aria-label="Toggle navigation"><i></i><i></i><i></i></button>
+  </div>
+  <div class="mnav" id="mnav"><a href="index.html" class="">Overview</a><a href="architecture.html" class="on">Architecture</a><a href="use-case.html" class="">C&I Use Case</a><a href="ai-kernel.html" class="">AI Kernel</a><a href="ems-core.html" class="">EMS Core</a><a href="data-model.html" class="">Data Model</a><a href="workflows.html" class="">Operator Workflows</a><a href="safety.html" class="">Safety</a><a href="roadmap.html" class="">Roadmap</a><a href="developers.html" class="">Developers</a></div>
+</header>
+
+<div class="hero" style="padding-bottom:8px">
+  <div class="eyebrow">System Architecture</div>
+  <h1 style="font-size:2.4rem">Intelligence above the gate.<br>Determinism below it.</h1>
+</div>
+
+<div class="wrap"><div class="doc">
+
+<section class="blk">
+  <div class="eyebrow">System Architecture</div>
+  <h2>Layered architecture</h2>
+  <p>EnergizeOS Microgrid EMS is organized as a strict layered system. Intelligence
+  flows downward as recommendations; only the deterministic EMS core issues commands
+  to equipment.</p>
+  
+<div class="stack">
+  <div class="layer ai"><span class="tag">L5</span><div><b>User Interface</b><br><span>Operators, asset owners, engineers — web HMI, reports, chat copilot</span></div></div>
+  <div class="layer ai"><span class="tag">L4</span><div><b>LLM Orchestration Layer</b><br><span>Intent understanding, status explanation, report generation, tool coordination</span></div></div>
+  <div class="layer ai"><span class="tag">L3</span><div><b>Energy Domain AI Layer</b><br><span>Dispatch recommendation, revenue optimization, forecasting, degradation &amp; anomaly analytics</span></div></div>
+  <div class="gate"><i></i><b>Safety Gate · Operator Approval · Audit Log</b><i></i></div>
+  <div class="layer det"><span class="tag">L2</span><div><b>EMS Core — Deterministic Control</b><br><span>Real-time control, PCS commands, interlocks, protection interfaces, fail-safe behavior</span></div></div>
+  <div class="layer det"><span class="tag">L1</span><div><b>Device &amp; Data Integration Layer</b><br><span>Modbus TCP, DNP3, IEC&nbsp;61850 — PCS, BMS, relays, meters, breakers, SCADA</span></div></div>
+  <div class="layer det"><span class="tag">L0</span><div><b>Physical Assets</b><br><span>BESS, PCS, transformers, switchgear, protection relays, site loads</span></div></div>
+</div>
+
+</section>
+
+<section class="blk">
+  <h2>Layer responsibilities</h2>
+  <h3>LLM Orchestration Layer</h3>
+  <p>The LLM layer is responsible for understanding user intent, explaining system
+  status, generating reports, coordinating analytical tools, recommending strategies,
+  and helping operators understand alarms, revenue gaps, dispatch results, and
+  operational risk. It is a reasoning and communication layer — not a control layer.</p>
+  <h3>Energy Domain AI Layer</h3>
+  <p>Domain-specific optimization and analytics: dispatch recommendation, revenue
+  optimization, load and price forecast usage, battery degradation analysis, anomaly
+  detection, fault explanation, operational risk scoring, and microgrid scenario
+  analysis. Outputs are structured recommendations with confidence and constraints —
+  never direct device commands.</p>
+  <h3>EMS Core (Deterministic)</h3>
+  <p>Real-time control, PCS command execution, BMS coordination, relay and meter
+  interfaces, Modbus/SCADA communication, protection logic interfaces, interlock
+  logic, safe operating limits, manual override, emergency stop, and fail-safe
+  behavior. All control paths are deterministic, testable, and auditable.</p>
+  <h3>Device &amp; Data Integration Layer</h3>
+  <p>Protocol adapters (Modbus TCP, DNP3, IEC&nbsp;61850), device register maps,
+  time-series ingestion, and the site data model that feeds both control and
+  analytics.</p>
+</section>
+
+<section class="blk">
+  <h2>Non-negotiable design rules</h2>
+  <ul>
+    <li>The LLM is <b>never</b> in a real-time control loop and never writes Modbus commands to equipment.</li>
+    <li>EMS control remains fully deterministic; AI provides intelligence, recommendation, explanation, and optimization.</li>
+    <li>Safety gates are mandatory before execution. Deterministic interlocks and limits always override AI suggestions.</li>
+    <li>Protection devices (relays) act independently of the EMS: trip paths are relay-led, hardwired, and fast.</li>
+    <li>Every recommendation and every command is written to an audit log.</li>
+  </ul>
+  <div class="note"><b>Trip vs. Close — the asymmetry that defines the system.</b>
+  Trip is relay-led, hardwired, fast, and EMS-independent. Operational close is
+  EMS-led, slow, interlocked, logged, and user-authorized. AI may inform the close
+  decision; it can never bypass the permissive chain.</div>
+</section>
+
+</div></div>
+<footer><div class="fwrap">
+  <div>© 2026 Energize Solutions Inc. · EnergizeOS Microgrid EMS</div>
+  <div><a href="mailto:info@energizeos.com">info@energizeos.com</a> · <a href="https://energizeos.com">energizeos.com</a></div>
+</div></footer>
+<script>
+function tnav(){var m=document.getElementById('mnav');m.classList.toggle('open');}
+</script>
+</body>
+</html>

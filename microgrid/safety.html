@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Safety — EnergizeOS Microgrid EMS</title>
+<meta name="description" content="Safety model: LLM never controls equipment, safety gates, operator approval, independent protection, audit logging.">
+<meta property="og:title" content="Safety — EnergizeOS Microgrid EMS">
+<meta property="og:description" content="Safety model: LLM never controls equipment, safety gates, operator approval, independent protection, audit logging.">
+<meta property="og:image" content="https://docs.energizeos.com/microgrid/og-image.png">
+<meta property="og:url" content="https://docs.energizeos.com/microgrid/safety.html">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="hwrap">
+    <a class="brand" href="index.html" aria-label="EnergizeOS Microgrid EMS">
+      <div class="mark"><i></i><i></i><i></i><i></i></div>
+      <b>EnergizeOS</b><span>Microgrid EMS</span>
+    </a>
+    <nav class="main" aria-label="Primary"><a href="index.html" class="">Overview</a><a href="architecture.html" class="">Architecture</a><a href="use-case.html" class="">C&I Use Case</a><a href="ai-kernel.html" class="">AI Kernel</a><a href="ems-core.html" class="">EMS Core</a><a href="data-model.html" class="">Data Model</a><a href="workflows.html" class="">Operator Workflows</a><a href="safety.html" class="on">Safety</a><a href="roadmap.html" class="">Roadmap</a><a href="developers.html" class="">Developers</a></nav>
+    <button class="burger" onclick="tnav()" aria-label="Toggle navigation"><i></i><i></i><i></i></button>
+  </div>
+  <div class="mnav" id="mnav"><a href="index.html" class="">Overview</a><a href="architecture.html" class="">Architecture</a><a href="use-case.html" class="">C&I Use Case</a><a href="ai-kernel.html" class="">AI Kernel</a><a href="ems-core.html" class="">EMS Core</a><a href="data-model.html" class="">Data Model</a><a href="workflows.html" class="">Operator Workflows</a><a href="safety.html" class="on">Safety</a><a href="roadmap.html" class="">Roadmap</a><a href="developers.html" class="">Developers</a></div>
+</header>
+
+<div class="hero" style="padding-bottom:8px">
+  <div class="eyebrow">Safety</div>
+  <h1 style="font-size:2.4rem">Fail-safe by design.<br>Auditable by default.</h1>
+</div>
+
+<div class="wrap"><div class="doc">
+
+<section class="blk">
+  <div class="eyebrow">Safety Model</div>
+  <h2>Statements of principle</h2>
+  <ul>
+    <li>The LLM does not directly control equipment — under any configuration, in any release.</li>
+    <li>All AI recommendations pass through EMS safety gates before any action.</li>
+    <li>Deterministic controls override AI suggestions, always and automatically.</li>
+    <li>Operator approval may be required for critical actions, enforced by role-based authorization.</li>
+    <li>Protection devices remain independent: relay trip paths are hardwired and function with the EMS offline.</li>
+    <li>Fail-safe behavior is mandatory: loss of intelligence, communication, or power resolves to a safe state.</li>
+    <li>Audit logs are required for every recommendation and every command — who, what, when, on what evidence.</li>
+  </ul>
+</section>
+<section class="blk">
+  <h2>The Trip / Close asymmetry</h2>
+  <div class="note"><b>Trip</b> = relay-led, hardwired, fast, EMS-independent.<br>
+  <b>Operational close</b> = EMS-led, slow, interlocked, logged, user-authorized.</div>
+  <p>After any trip, the EMS enters trip lockout. Even when every permissive in the
+  chain recovers to true, close remains disabled until an authorized user clears the
+  lockout — at which point the EMS re-evaluates the complete permissive chain before
+  enabling close. AI may explain the trip and recommend recovery steps; it cannot
+  clear lockouts or close breakers.</p>
+</section>
+<section class="blk">
+  <h2>Validation</h2>
+  <p>Interlock chains, trip lockout behavior, comm-loss responses, and limit
+  enforcement are validated through structured FAT/SAT procedures with witnessed
+  test evidence — the same evidence chain required for utility interconnection
+  approval.</p>
+</section>
+
+</div></div>
+<footer><div class="fwrap">
+  <div>© 2026 Energize Solutions Inc. · EnergizeOS Microgrid EMS</div>
+  <div><a href="mailto:info@energizeos.com">info@energizeos.com</a> · <a href="https://energizeos.com">energizeos.com</a></div>
+</div></footer>
+<script>
+function tnav(){var m=document.getElementById('mnav');m.classList.toggle('open');}
+</script>
+</body>
+</html>

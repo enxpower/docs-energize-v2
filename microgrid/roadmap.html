@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roadmap — EnergizeOS Microgrid EMS</title>
+<meta name="description" content="Seven-phase roadmap from documentation baseline to customer-facing SaaS portal.">
+<meta property="og:title" content="Roadmap — EnergizeOS Microgrid EMS">
+<meta property="og:description" content="Seven-phase roadmap from documentation baseline to customer-facing SaaS portal.">
+<meta property="og:image" content="https://docs.energizeos.com/microgrid/og-image.png">
+<meta property="og:url" content="https://docs.energizeos.com/microgrid/roadmap.html">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="hwrap">
+    <a class="brand" href="index.html" aria-label="EnergizeOS Microgrid EMS">
+      <div class="mark"><i></i><i></i><i></i><i></i></div>
+      <b>EnergizeOS</b><span>Microgrid EMS</span>
+    </a>
+    <nav class="main" aria-label="Primary"><a href="index.html" class="">Overview</a><a href="architecture.html" class="">Architecture</a><a href="use-case.html" class="">C&I Use Case</a><a href="ai-kernel.html" class="">AI Kernel</a><a href="ems-core.html" class="">EMS Core</a><a href="data-model.html" class="">Data Model</a><a href="workflows.html" class="">Operator Workflows</a><a href="safety.html" class="">Safety</a><a href="roadmap.html" class="on">Roadmap</a><a href="developers.html" class="">Developers</a></nav>
+    <button class="burger" onclick="tnav()" aria-label="Toggle navigation"><i></i><i></i><i></i></button>
+  </div>
+  <div class="mnav" id="mnav"><a href="index.html" class="">Overview</a><a href="architecture.html" class="">Architecture</a><a href="use-case.html" class="">C&I Use Case</a><a href="ai-kernel.html" class="">AI Kernel</a><a href="ems-core.html" class="">EMS Core</a><a href="data-model.html" class="">Data Model</a><a href="workflows.html" class="">Operator Workflows</a><a href="safety.html" class="">Safety</a><a href="roadmap.html" class="on">Roadmap</a><a href="developers.html" class="">Developers</a></div>
+</header>
+
+<div class="hero" style="padding-bottom:8px">
+  <div class="eyebrow">Roadmap</div>
+  <h1 style="font-size:2.4rem">Seven phases.<br>One fixed boundary.</h1>
+</div>
+
+<div class="wrap"><div class="doc">
+
+<section class="blk">
+  <div class="eyebrow">Roadmap</div>
+  <h2>Phased delivery</h2>
+  <div class="tablewrap"><table>
+    <tr><th style="width:18%">Phase</th><th>Scope</th></tr>
+    <tr><td>Phase 1</td><td>Documentation site, architecture baseline, public positioning, internal reference docs. <b>(This release.)</b></td></tr>
+    <tr><td>Phase 2</td><td>Prototype AI Copilot using historical EMS data — read-only, offline records.</td></tr>
+    <tr><td>Phase 3</td><td>Revenue Gap Analyzer and Dispatch Recommendation Engine on historical and day-ahead data.</td></tr>
+    <tr><td>Phase 4</td><td>Battery health analytics and anomaly detection.</td></tr>
+    <tr><td>Phase 5</td><td>Controlled integration with live EMS data — read-only telemetry, no command path.</td></tr>
+    <tr><td>Phase 6</td><td>Operator approval workflow and full audit trail for gated plan execution.</td></tr>
+    <tr><td>Phase 7</td><td>Customer-facing SaaS portal for owners and multi-site programs.</td></tr>
+  </table></div>
+  <p>Each phase ships only when the previous phase's safety and audit requirements
+  are demonstrated. Intelligence expands; the deterministic control boundary does
+  not move.</p>
+</section>
+
+</div></div>
+<footer><div class="fwrap">
+  <div>© 2026 Energize Solutions Inc. · EnergizeOS Microgrid EMS</div>
+  <div><a href="mailto:info@energizeos.com">info@energizeos.com</a> · <a href="https://energizeos.com">energizeos.com</a></div>
+</div></footer>
+<script>
+function tnav(){var m=document.getElementById('mnav');m.classList.toggle('open');}
+</script>
+</body>
+</html>
