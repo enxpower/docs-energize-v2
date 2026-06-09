@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>EnergizeOS MCP — AI 能源管理接口 | Energize Solutions Inc.</title>
+<meta name="description" content="通过 Model Context Protocol，将 EnergizeOS EMS 的现场数据、调度能力和合规报告暴露为 AI 可调用接口。工业级能源系统的 AI 智能层。">
+<meta property="og:title" content="EnergizeOS MCP — AI 能源管理接口">
+<meta property="og:description" content="将您的 BESS / 微电网数据连接到 Claude 和 AI Agent，实现自然语言运维、自动合规报告和智能调度建议。">
+<meta property="og:image" content="https://docs.energizeos.com/mcp/og-mcp.png">
+<meta property="og:url" content="https://docs.energizeos.com/mcp/">
+<meta name="theme-color" content="#FAFAF8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════ TOKENS ═══════════════ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --paper:#FAFAF8;--white:#FFFFFF;--stone:#F3F2EF;
+  --pearl:#EEEDE9;--rule:#E2E0DA;--rule2:#D0CEC7;
+  --ink:#18181A;--ink2:#2C2C30;--body:#4A4A52;
+  --muted:#78787E;--faint:#A8A8B0;
+  --navy:#0A1F44;--navy2:#0D2855;
+  --gold:#C8750A;--gold2:#E08B14;--gold-l:#FDF3E7;
+  --sky:#1A5FAA;--sky2:#2070C0;--sky-l:#EEF4FB;
+  --green:#1A6B45;--green-l:#E8F5EE;
+  --teal:#0D6B6E;--teal-l:#E6F6F6;
+  --red:#B02A20;--red-l:#FDF0EF;
+  --fh:'Playfair Display',Georgia,serif;
+  --fb:'DM Sans',system-ui,sans-serif;
+  --fm:'IBM Plex Mono','Courier New',monospace;
+  --sidebar:260px;
+  --nav-h:60px;
+}
+
+/* ═══════════════ BASE ═══════════════ */
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--fb);font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:rgba(200,117,10,0.12);color:var(--ink)}
+a{color:inherit;text-decoration:none}
+code,kbd{font-family:var(--fm)}
+
+/* ═══════════════ TOP NAV ═══════════════ */
+.topnav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:var(--nav-h);
+  background:rgba(250,250,248,0.95);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--rule);
+  display:flex;align-items:center;
+  padding:0 24px 0 calc(var(--sidebar) + 24px);
+  gap:16px;
+}
+.topnav-brand{display:flex;align-items:center;gap:10px;margin-right:auto}
+.topnav-logo{width:28px;height:28px;flex-shrink:0}
+.topnav-name{font-family:var(--fm);font-size:12px;font-weight:500;color:var(--navy);letter-spacing:0.02em}
+.topnav-sep{width:1px;height:16px;background:var(--rule2)}
+.topnav-page{font-size:13px;color:var(--muted)}
+.topnav-cta{
+  background:var(--navy);color:#fff;
+  font-size:12px;font-weight:500;padding:7px 16px;border-radius:6px;
+  transition:background .15s,transform .15s;white-space:nowrap;
+}
+.topnav-cta:hover{background:var(--navy2);transform:translateY(-1px)}
+.hamburger{display:none;background:none;border:none;cursor:pointer;padding:4px;color:var(--ink)}
+.hamburger svg{display:block}
+
+/* ═══════════════ LAYOUT SHELL ═══════════════ */
+.shell{display:flex;min-height:100vh;padding-top:var(--nav-h)}
+
+/* ═══════════════ SIDEBAR ═══════════════ */
+.sidebar{
+  width:var(--sidebar);flex-shrink:0;
+  position:fixed;top:var(--nav-h);left:0;bottom:0;
+  overflow-y:auto;overflow-x:hidden;
+  border-right:1px solid var(--rule);
+  background:var(--white);
+  padding:28px 0 40px;
+  scrollbar-width:thin;scrollbar-color:var(--rule2) transparent;
+}
+.sidebar::-webkit-scrollbar{width:4px}
+.sidebar::-webkit-scrollbar-track{background:transparent}
+.sidebar::-webkit-scrollbar-thumb{background:var(--rule2);border-radius:4px}
+
+.nav-section{padding:0 20px;margin-bottom:24px}
+.nav-section-label{
+  font-family:var(--fm);font-size:10px;font-weight:500;
+  color:var(--faint);letter-spacing:0.08em;text-transform:uppercase;
+  padding:0 4px;margin-bottom:8px;
+}
+.nav-link{
+  display:block;padding:7px 12px;border-radius:6px;
+  font-size:13px;color:var(--body);
+  transition:background .12s,color .12s;
+  cursor:pointer;border:none;background:none;width:100%;text-align:left;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.nav-link:hover{background:var(--stone);color:var(--ink)}
+.nav-link.active{background:var(--gold-l);color:var(--gold);font-weight:500}
+.nav-link.active::before{content:'';display:inline-block;width:3px;height:3px;border-radius:50%;background:var(--gold);margin-right:8px;vertical-align:middle}
+.nav-divider{height:1px;background:var(--rule);margin:12px 20px}
+.nav-badge{
+  display:inline-block;margin-left:6px;
+  font-family:var(--fm);font-size:9px;font-weight:500;
+  padding:2px 6px;border-radius:3px;vertical-align:middle;
+}
+.badge-new{background:var(--green-l);color:var(--green)}
+.badge-beta{background:var(--sky-l);color:var(--sky)}
+
+/* ═══════════════ MAIN CONTENT ═══════════════ */
+.main{
+  flex:1;min-width:0;
+  margin-left:var(--sidebar);
+  padding:60px 72px 120px;
+  max-width:calc(100% - var(--sidebar));
+}
+.content-max{max-width:860px}
+
+/* ═══════════════ TYPOGRAPHY ═══════════════ */
+.eyebrow{
+  display:flex;align-items:center;gap:10px;
+  font-family:var(--fm);font-size:11px;font-weight:500;
+  color:var(--gold);margin-bottom:16px;letter-spacing:0.04em;
+}
+.eyebrow::before{content:'';width:24px;height:1px;background:var(--gold)}
+
+h1.page-title{
+  font-family:var(--fh);
+  font-size:clamp(32px,3.5vw,48px);
+  font-weight:500;line-height:1.15;
+  letter-spacing:-0.3px;color:var(--ink);
+  margin-bottom:20px;
+}
+h1.page-title em{font-style:italic;color:var(--sky)}
+
+.lead{font-size:18px;font-weight:300;color:var(--body);line-height:1.7;margin-bottom:40px;max-width:680px}
+
+h2.sec-title{
+  font-family:var(--fh);
+  font-size:clamp(22px,2.5vw,30px);
+  font-weight:500;line-height:1.2;color:var(--ink);
+  margin-bottom:16px;margin-top:64px;
+}
+h2.sec-title:first-child{margin-top:0}
+h2.sec-title em{font-style:italic;color:var(--gold)}
+
+h3.sub-title{
+  font-size:17px;font-weight:600;color:var(--ink2);
+  margin-bottom:10px;margin-top:36px;
+}
+
+p.body-text{font-size:15px;color:var(--body);line-height:1.75;margin-bottom:16px}
+p.body-text strong{color:var(--ink);font-weight:500}
+p.body-text a{color:var(--sky);border-bottom:1px solid transparent;transition:border-color .15s}
+p.body-text a:hover{border-color:var(--sky)}
+
+/* ═══════════════ HERO STATUS BAR ═══════════════ */
+.hero-status{
+  display:flex;align-items:center;gap:20px;
+  padding:14px 20px;
+  background:var(--stone);border:1px solid var(--rule);border-radius:10px;
+  margin-bottom:48px;flex-wrap:wrap;
+}
+.status-item{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--body)}
+.status-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.dot-live{background:#16A34A;box-shadow:0 0 0 3px rgba(22,163,74,.15)}
+.dot-build{background:var(--gold);box-shadow:0 0 0 3px rgba(200,117,10,.15)}
+.dot-plan{background:var(--faint)}
+.status-sep{width:1px;height:16px;background:var(--rule2)}
+
+/* ═══════════════ ARCH DIAGRAM ═══════════════ */
+.arch-wrap{
+  border:1px solid var(--rule);border-radius:12px;
+  overflow:hidden;margin:32px 0;background:var(--white);
+}
+.arch-wrap svg{display:block;width:100%;height:auto}
+
+/* ═══════════════ TOOL CARDS ═══════════════ */
+.tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin:24px 0}
+.tool-card{
+  border:1px solid var(--rule);border-radius:10px;
+  background:var(--white);padding:20px 22px;
+  transition:border-color .15s,box-shadow .15s;
+}
+.tool-card:hover{border-color:var(--rule2);box-shadow:0 2px 12px rgba(0,0,0,.05)}
+.tool-card-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
+.tool-name{font-family:var(--fm);font-size:12px;font-weight:500;color:var(--sky);word-break:break-all}
+.tool-type{
+  font-family:var(--fm);font-size:10px;padding:3px 8px;border-radius:4px;white-space:nowrap;
+  flex-shrink:0;margin-left:8px;margin-top:1px;
+}
+.type-read{background:var(--green-l);color:var(--green)}
+.type-write{background:var(--red-l);color:var(--red)}
+.type-report{background:var(--sky-l);color:var(--sky)}
+.type-ai{background:var(--gold-l);color:var(--gold)}
+.tool-desc{font-size:13px;color:var(--body);line-height:1.6;margin-bottom:12px}
+.tool-params{display:flex;flex-wrap:wrap;gap:5px}
+.param-tag{
+  font-family:var(--fm);font-size:10px;
+  padding:2px 7px;border-radius:4px;
+  background:var(--stone);color:var(--muted);
+}
+
+/* ═══════════════ SCENARIO CARDS ═══════════════ */
+.scenario-list{display:flex;flex-direction:column;gap:16px;margin:24px 0}
+.scenario-card{
+  border:1px solid var(--rule);border-radius:10px;
+  background:var(--white);overflow:hidden;
+}
+.scenario-head{
+  display:flex;align-items:center;gap:14px;
+  padding:18px 22px;border-bottom:1px solid var(--rule);
+  background:var(--stone);
+}
+.scenario-num{
+  font-family:var(--fm);font-size:11px;font-weight:500;
+  width:28px;height:28px;border-radius:50%;
+  background:var(--navy);color:#fff;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.scenario-title{font-size:15px;font-weight:500;color:var(--ink)}
+.scenario-body{padding:20px 22px}
+.chat-thread{display:flex;flex-direction:column;gap:10px}
+.chat-msg{padding:11px 15px;border-radius:8px;font-size:13px;line-height:1.6;max-width:92%}
+.chat-user{background:var(--sky-l);color:var(--sky2);border:1px solid rgba(26,95,170,.12);align-self:flex-end}
+.chat-ai{background:var(--stone);color:var(--ink2);border:1px solid var(--rule);align-self:flex-start}
+.chat-ai strong{color:var(--ink);font-weight:500}
+.chat-role{font-family:var(--fm);font-size:10px;color:var(--muted);margin-bottom:4px}
+
+/* ═══════════════ PRICING TABLE ═══════════════ */
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin:24px 0}
+.price-card{
+  border:1px solid var(--rule);border-radius:10px;
+  background:var(--white);padding:24px 22px;
+  position:relative;
+}
+.price-card.featured{border-color:var(--gold);border-width:2px}
+.price-card.featured::before{
+  content:'推荐方案';position:absolute;top:-1px;left:50%;transform:translateX(-50%) translateY(-50%);
+  font-family:var(--fm);font-size:10px;font-weight:500;
+  background:var(--gold);color:#fff;padding:3px 12px;border-radius:20px;white-space:nowrap;
+}
+.price-tier{font-family:var(--fm);font-size:11px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em}
+.price-amount{
+  font-family:var(--fh);font-size:28px;font-weight:500;color:var(--ink);
+  margin-bottom:4px;line-height:1;
+}
+.price-unit{font-size:13px;color:var(--muted);margin-bottom:16px}
+.price-features{list-style:none;display:flex;flex-direction:column;gap:8px}
+.price-features li{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--body)}
+.price-features li::before{content:'✓';color:var(--green);font-weight:600;flex-shrink:0;margin-top:1px}
+
+/* ═══════════════ ROADMAP ═══════════════ */
+.roadmap{display:flex;flex-direction:column;gap:0;margin:24px 0;position:relative}
+.roadmap::before{
+  content:'';position:absolute;left:19px;top:28px;bottom:28px;
+  width:1px;background:var(--rule);
+}
+.rm-item{display:flex;gap:20px;align-items:flex-start;padding:4px 0 24px}
+.rm-dot{
+  width:40px;height:40px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fm);font-size:11px;font-weight:500;
+  position:relative;z-index:1;
+}
+.rm-dot.done{background:var(--green);color:#fff}
+.rm-dot.active{background:var(--gold);color:#fff;box-shadow:0 0 0 4px rgba(200,117,10,.15)}
+.rm-dot.soon{background:var(--white);color:var(--muted);border:1px solid var(--rule2)}
+.rm-dot.later{background:var(--stone);color:var(--faint);border:1px solid var(--rule)}
+.rm-content{flex:1;padding-top:8px}
+.rm-date{font-family:var(--fm);font-size:11px;color:var(--muted);margin-bottom:5px}
+.rm-title{font-size:15px;font-weight:500;color:var(--ink);margin-bottom:5px}
+.rm-desc{font-size:13px;color:var(--body);line-height:1.6}
+
+/* ═══════════════ CODE BLOCK ═══════════════ */
+.code-block{
+  background:var(--navy);border-radius:10px;
+  padding:24px 26px;margin:20px 0;overflow-x:auto;
+  position:relative;
+}
+.code-block pre{font-family:var(--fm);font-size:12.5px;line-height:1.8;color:#CBD5E1;white-space:pre}
+.code-block .c-comment{color:#64748B}
+.code-block .c-key{color:#94A3B8}
+.code-block .c-str{color:#86EFAC}
+.code-block .c-num{color:#FCA5A5}
+.code-block .c-tool{color:#FCD34D}
+.code-label{
+  position:absolute;top:12px;right:14px;
+  font-family:var(--fm);font-size:10px;color:#475569;
+}
+
+/* ═══════════════ CALLOUT ═══════════════ */
+.callout{
+  border-radius:10px;padding:18px 22px;margin:20px 0;
+  display:flex;gap:14px;align-items:flex-start;
+}
+.callout-warn{background:var(--gold-l);border:1px solid rgba(200,117,10,.2)}
+.callout-info{background:var(--sky-l);border:1px solid rgba(26,95,170,.15)}
+.callout-ok{background:var(--green-l);border:1px solid rgba(26,107,69,.15)}
+.callout-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.callout-text{font-size:13px;color:var(--body);line-height:1.65}
+.callout-text strong{color:var(--ink);font-weight:500}
+
+/* ═══════════════ COMPARISON TABLE ═══════════════ */
+.cmp-table{width:100%;border-collapse:collapse;margin:20px 0;font-size:13px}
+.cmp-table th{
+  text-align:left;padding:10px 14px;
+  background:var(--stone);color:var(--ink);font-weight:500;
+  border-bottom:1px solid var(--rule2);font-size:12px;
+}
+.cmp-table th:first-child{border-radius:8px 0 0 0}
+.cmp-table th:last-child{border-radius:0 8px 0 0}
+.cmp-table td{
+  padding:10px 14px;border-bottom:1px solid var(--rule);
+  vertical-align:top;line-height:1.5;color:var(--body);
+}
+.cmp-table tr:last-child td{border-bottom:none}
+.cmp-table tr:hover td{background:var(--stone)}
+.td-highlight{color:var(--ink);font-weight:500}
+.td-muted{color:var(--faint)}
+.check{color:var(--green);font-weight:600}
+.cross{color:var(--faint)}
+
+/* ═══════════════ SECURITY SECTION ═══════════════ */
+.sec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:20px 0}
+.sec-card{
+  border:1px solid var(--rule);border-radius:8px;
+  padding:16px 18px;background:var(--white);
+}
+.sec-card-icon{font-size:20px;margin-bottom:8px}
+.sec-card-title{font-size:13px;font-weight:500;color:var(--ink);margin-bottom:5px}
+.sec-card-desc{font-size:12px;color:var(--muted);line-height:1.55}
+
+/* ═══════════════ SECTION DIVIDER ═══════════════ */
+.divider{height:1px;background:var(--rule);margin:48px 0}
+
+/* ═══════════════ SCROLL SECTIONS ═══════════════ */
+.doc-section{scroll-margin-top:calc(var(--nav-h) + 24px)}
+
+/* ═══════════════ FOOTER ═══════════════ */
+.doc-footer{
+  margin-top:80px;padding-top:32px;
+  border-top:1px solid var(--rule);
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:12px;
+}
+.footer-text{font-size:12px;color:var(--faint)}
+.footer-links{display:flex;gap:16px}
+.footer-links a{font-size:12px;color:var(--muted);transition:color .15s}
+.footer-links a:hover{color:var(--ink)}
+
+/* ═══════════════ MOBILE OVERLAY ═══════════════ */
+.sidebar-overlay{
+  display:none;position:fixed;inset:0;z-index:149;
+  background:rgba(0,0,0,0.4);
+}
+.sidebar-overlay.active{display:block}
+
+/* ═══════════════ RESPONSIVE ═══════════════ */
+@media(max-width:900px){
+  :root{--sidebar:0px;--nav-h:56px}
+  .topnav{padding:0 16px}
+  .hamburger{display:block}
+  .topnav-page{display:none}
+  .topnav-sep{display:none}
+  .sidebar{
+    width:280px;transform:translateX(-100%);
+    transition:transform .25s cubic-bezier(.4,0,.2,1);
+    z-index:150;
+  }
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0;padding:40px 24px 80px;max-width:100%}
+}
+@media(max-width:480px){
+  h1.page-title{font-size:26px}
+  h2.sec-title{font-size:20px;margin-top:44px}
+  .main{padding:32px 16px 60px}
+  .tool-grid{grid-template-columns:1fr}
+  .pricing-grid{grid-template-columns:1fr}
+  .sec-grid{grid-template-columns:1fr}
+  .hero-status{flex-direction:column;align-items:flex-start;gap:10px}
+  .status-sep{display:none}
+  .code-block{padding:16px}
+  .code-block pre{font-size:11px}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ TOP NAV ══════════════ -->
+<nav class="topnav">
+  <button class="hamburger" onclick="toggleSidebar()" aria-label="菜单">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <line x1="3" y1="6" x2="17" y2="6"/><line x1="3" y1="10" x2="17" y2="10"/><line x1="3" y1="14" x2="17" y2="14"/>
+    </svg>
+  </button>
+  <div class="topnav-brand">
+    <svg class="topnav-logo" viewBox="0 0 28 28" fill="none">
+      <rect x="0" y="0" width="13" height="13" rx="2" fill="#0A1F44"/>
+      <rect x="15" y="0" width="13" height="13" rx="2" fill="#1A5FAA"/>
+      <rect x="0" y="15" width="13" height="13" rx="2" fill="#C8750A"/>
+      <rect x="15" y="15" width="13" height="13" rx="2" fill="#0A1F44"/>
+    </svg>
+    <span class="topnav-name">ENERGIZEOS</span>
+  </div>
+  <span class="topnav-sep"></span>
+  <span class="topnav-page">MCP 解决方案</span>
+  <a href="https://docs.energizeos.com/ems/" class="topnav-cta">查看 EMS →</a>
+</nav>
+<div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<!-- ══════════════ LAYOUT ══════════════ -->
+<div class="shell">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="nav-section">
+      <div class="nav-section-label">概览</div>
+      <button class="nav-link active" onclick="scrollTo('intro')">什么是 MCP 接口</button>
+      <button class="nav-link" onclick="scrollTo('why')">为什么 EnergizeOS 需要它</button>
+      <button class="nav-link" onclick="scrollTo('arch')">系统架构</button>
+    </div>
+    <div class="nav-divider"></div>
+    <div class="nav-section">
+      <div class="nav-section-label">技术规格</div>
+      <button class="nav-link" onclick="scrollTo('tools')">工具接口清单</button>
+      <button class="nav-link" onclick="scrollTo('protocols')">协议与数据源</button>
+      <button class="nav-link" onclick="scrollTo('security')">安全控制边界</button>
+    </div>
+    <div class="nav-divider"></div>
+    <div class="nav-section">
+      <div class="nav-section-label">使用场景</div>
+      <button class="nav-link" onclick="scrollTo('scenarios')">真实对话示例</button>
+      <button class="nav-link" onclick="scrollTo('compliance')">合规报告自动化</button>
+    </div>
+    <div class="nav-divider"></div>
+    <div class="nav-section">
+      <div class="nav-section-label">商业化</div>
+      <button class="nav-link" onclick="scrollTo('compare')">与竞品的差距</button>
+      <button class="nav-link" onclick="scrollTo('pricing')">定价与变现模型</button>
+      <button class="nav-link" onclick="scrollTo('roadmap')">开发路线图</button>
+    </div>
+    <div class="nav-divider"></div>
+    <div class="nav-section">
+      <button class="nav-link" onclick="scrollTo('quickstart')">快速接入指南 <span class="nav-badge badge-new">New</span></button>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <main class="main">
+  <div class="content-max">
+
+    <!-- ─ INTRO ─ -->
+    <section id="intro" class="doc-section">
+      <div class="eyebrow">Model Context Protocol</div>
+      <h1 class="page-title">EnergizeOS MCP<br>——<em>工业能源系统的 AI 接口层</em></h1>
+      <p class="lead">通过 MCP，将您部署在现场的 BESS、微电网、保护继电器的实时数据和控制能力，直接暴露给 Claude 或任何 AI Agent，实现自然语言运维、智能调度建议和合规报告自动化。</p>
+
+      <div class="hero-status">
+        <div class="status-item"><div class="status-dot dot-live"></div> EMS Platform 已部署（PepsiCo / SDG&E）</div>
+        <div class="status-sep"></div>
+        <div class="status-item"><div class="status-dot dot-build"></div> MCP 接口层开发中</div>
+        <div class="status-sep"></div>
+        <div class="status-item"><div class="status-dot dot-plan"></div> 第三方 API 开放计划中</div>
+      </div>
+    </section>
+
+    <!-- ─ WHY ─ -->
+    <section id="why" class="doc-section">
+      <h2 class="sec-title">为什么 EnergizeOS <em>需要</em> MCP 接口</h2>
+
+      <p class="body-text">一个 BESS 项目每天产生数百万个数据点——SOC 曲线、功率流向、保护动作日志、电网事件告警。这些数据今天的使用方式是：工程师盯着 HMI 看，事后手动写运维报告，按月生成合规文档。</p>
+
+      <p class="body-text">MCP（Model Context Protocol）是 Anthropic 在 2024 年末发布的开放标准，让 AI 模型能够通过标准化接口调用外部工具和数据。<strong>它不是 ChatGPT 插件，也不是简单的 API wrapper</strong>——它是一套双向、持久化、可审计的 AI-to-System 通信协议。</p>
+
+      <p class="body-text">对 EnergizeOS 而言，MCP 的价值在于：把我们在 EMS 里已经掌握的现场数据、调度逻辑和合规知识，变成 AI Agent 可以直接理解和调用的能力。结果是：</p>
+
+      <div class="tool-grid" style="margin-top:16px">
+        <div class="tool-card">
+          <div class="tool-card-head"><span class="tool-name" style="font-size:13px;color:var(--ink)">运维效率</span></div>
+          <div class="tool-desc">工程师用自然语言问"昨晚 BESS 为什么切换到孤岛模式"，30 秒得到完整根因分析，原来需要 30 分钟人工排查。</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-card-head"><span class="tool-name" style="font-size:13px;color:var(--ink)">合规自动化</span></div>
+          <div class="tool-desc">CA Rule 21 互联合规报告、ITC 税收抵免运行记录，AI 自动从时序数据库提取、计算并生成报告草稿，人工只需审阅。</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-card-head"><span class="tool-name" style="font-size:13px;color:var(--ink)">客户自助服务</span></div>
+          <div class="tool-desc">PepsiCo 设施经理可以直接问"这个月 demand charge 节省了多少"，不需要等 EnergizeOS 工程师出具报告。</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-card-head"><span class="tool-name" style="font-size:13px;color:var(--ink)">第三方开放</span></div>
+          <div class="tool-desc">EPC 商、运维公司、能源交易商可通过 API Key 接入您管理的项目数据，构建自己的 AI 应用，并向 EnergizeOS 付费。</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ─ ARCH ─ -->
+    <section id="arch" class="doc-section">
+      <h2 class="sec-title">系统架构</h2>
+      <p class="body-text">整套方案分四层，每层职责清晰。MCP Server 是第三层，是 EMS 与 AI 世界之间的唯一受控出口。</p>
+
+      <div class="arch-wrap">
+        <svg viewBox="0 0 800 620" xmlns="http://www.w3.org/2000/svg" style="font-family:'DM Sans',system-ui,sans-serif">
+          <!-- bg -->
+          <rect width="800" height="620" fill="#FAFAF8"/>
+
+          <!-- Layer labels -->
+          <text x="28" y="115" font-size="10" fill="#A8A8B0" font-weight="500" transform="rotate(-90,28,115)" text-anchor="middle" font-family="'IBM Plex Mono',monospace">现场层</text>
+          <text x="28" y="290" font-size="10" fill="#A8A8B0" font-weight="500" transform="rotate(-90,28,290)" text-anchor="middle" font-family="'IBM Plex Mono',monospace">EMS 核心</text>
+          <text x="28" y="455" font-size="10" fill="#A8A8B0" font-weight="500" transform="rotate(-90,28,455)" text-anchor="middle" font-family="'IBM Plex Mono',monospace">MCP 接口</text>
+          <text x="28" y="572" font-size="10" fill="#A8A8B0" font-weight="500" transform="rotate(-90,28,572)" text-anchor="middle" font-family="'IBM Plex Mono',monospace">AI 客户端</text>
+
+          <!-- Horizontal dividers -->
+          <line x1="52" y1="195" x2="768" y2="195" stroke="#E2E0DA" stroke-width="0.8" stroke-dasharray="4,3"/>
+          <line x1="52" y1="385" x2="768" y2="385" stroke="#E2E0DA" stroke-width="0.8" stroke-dasharray="4,3"/>
+          <line x1="52" y1="535" x2="768" y2="535" stroke="#E2E0DA" stroke-width="0.8" stroke-dasharray="4,3"/>
+
+          <!-- ── L1 Field Hardware ── -->
+          <!-- BESS -->
+          <rect x="62" y="44" width="142" height="52" rx="7" fill="#F3F2EF" stroke="#D0CEC7" stroke-width="0.8"/>
+          <text x="133" y="67" text-anchor="middle" font-size="12" font-weight="600" fill="#18181A">BESS / PCS</text>
+          <text x="133" y="83" text-anchor="middle" font-size="10" fill="#78787E">CATL · EVE · SMA · Sungrow</text>
+          <!-- Smart Meters -->
+          <rect x="224" y="44" width="142" height="52" rx="7" fill="#F3F2EF" stroke="#D0CEC7" stroke-width="0.8"/>
+          <text x="295" y="67" text-anchor="middle" font-size="12" font-weight="600" fill="#18181A">智能电表</text>
+          <text x="295" y="83" text-anchor="middle" font-size="10" fill="#78787E">Modbus TCP / RTU</text>
+          <!-- Protection Relays -->
+          <rect x="386" y="44" width="142" height="52" rx="7" fill="#F3F2EF" stroke="#D0CEC7" stroke-width="0.8"/>
+          <text x="457" y="67" text-anchor="middle" font-size="12" font-weight="600" fill="#18181A">保护继电器</text>
+          <text x="457" y="83" text-anchor="middle" font-size="10" fill="#78787E">DNP3 · IEC 61850</text>
+          <!-- EV Chargers -->
+          <rect x="548" y="44" width="142" height="52" rx="7" fill="#F3F2EF" stroke="#D0CEC7" stroke-width="0.8"/>
+          <text x="619" y="67" text-anchor="middle" font-size="12" font-weight="600" fill="#18181A">EV 充电桩</text>
+          <text x="619" y="83" text-anchor="middle" font-size="10" fill="#78787E">OCPP · Modbus</text>
+
+          <!-- Protocol bus -->
+          <rect x="62" y="115" width="628" height="28" rx="5" fill="#EEF4FB" stroke="rgba(26,95,170,.2)" stroke-width="0.8"/>
+          <text x="376" y="133" text-anchor="middle" font-size="10" fill="#1A5FAA" font-family="'IBM Plex Mono',monospace">协议适配器 — Modbus · DNP3 · IEC 61850 · OCPP · BACnet</text>
+
+          <!-- arrows L1 down -->
+          <line x1="133" y1="96" x2="133" y2="113" stroke="#D0CEC7" stroke-width="1.2" marker-end="url(#arr)"/>
+          <line x1="295" y1="96" x2="295" y2="113" stroke="#D0CEC7" stroke-width="1.2" marker-end="url(#arr)"/>
+          <line x1="457" y1="96" x2="457" y2="113" stroke="#D0CEC7" stroke-width="1.2" marker-end="url(#arr)"/>
+          <line x1="619" y1="96" x2="619" y2="113" stroke="#D0CEC7" stroke-width="1.2" marker-end="url(#arr)"/>
+
+          <!-- arrow bus to EMS -->
+          <line x1="376" y1="143" x2="376" y2="208" stroke="#D0CEC7" stroke-width="1.5" marker-end="url(#arr)"/>
+
+          <!-- ── L2 EMS Core ── -->
+          <rect x="62" y="210" width="628" height="160" rx="10" fill="#F3F2EF" stroke="#D0CEC7" stroke-width="1"/>
+          <text x="376" y="233" text-anchor="middle" font-size="13" font-weight="600" fill="#0A1F44">EnergizeOS EMS Platform</text>
+
+          <!-- EMS sub-modules -->
+          <rect x="80" y="246" width="138" height="48" rx="6" fill="white" stroke="#E2E0DA" stroke-width="0.8"/>
+          <text x="149" y="266" text-anchor="middle" font-size="11" font-weight="600" fill="#18181A">调度引擎</text>
+          <text x="149" y="281" text-anchor="middle" font-size="9.5" fill="#78787E">15 个策略模块</text>
+
+          <rect x="232" y="246" width="138" height="48" rx="6" fill="white" stroke="#E2E0DA" stroke-width="0.8"/>
+          <text x="301" y="266" text-anchor="middle" font-size="11" font-weight="600" fill="#18181A">C1–C7 联锁链</text>
+          <text x="301" y="281" text-anchor="middle" font-size="9.5" fill="#78787E">硬件安全保障</text>
+
+          <rect x="384" y="246" width="138" height="48" rx="6" fill="white" stroke="#E2E0DA" stroke-width="0.8"/>
+          <text x="453" y="266" text-anchor="middle" font-size="11" font-weight="600" fill="#18181A">电网接口</text>
+          <text x="453" y="281" text-anchor="middle" font-size="9.5" fill="#78787E">CA Rule 21 · SDG&amp;E</text>
+
+          <rect x="536" y="246" width="138" height="48" rx="6" fill="white" stroke="#E2E0DA" stroke-width="0.8"/>
+          <text x="605" y="266" text-anchor="middle" font-size="11" font-weight="600" fill="#18181A">时序数据库</text>
+          <text x="605" y="281" text-anchor="middle" font-size="9.5" fill="#78787E">历史 + 实时</text>
+
+          <!-- API/Protocol row -->
+          <rect x="80" y="308" width="594" height="42" rx="6" fill="white" stroke="#E2E0DA" stroke-width="0.8"/>
+          <text x="377" y="332" text-anchor="middle" font-size="10" fill="#4A4A52" font-family="'IBM Plex Mono',monospace">REST API · WebSocket · MQTT · OpenADR · IEEE 2030.5</text>
+
+          <!-- arrow EMS to MCP -->
+          <line x1="376" y1="370" x2="376" y2="402" stroke="#C8750A" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#arr-gold)"/>
+
+          <!-- ── L3 MCP Server ── -->
+          <rect x="62" y="400" width="628" height="122" rx="10" fill="#FDF3E7" stroke="rgba(200,117,10,.35)" stroke-width="1.2"/>
+          <text x="376" y="423" text-anchor="middle" font-size="13" font-weight="600" fill="#92600A">EnergizeOS MCP Server</text>
+          <text x="376" y="439" text-anchor="middle" font-size="10" fill="#C8750A" font-family="'IBM Plex Mono',monospace">mcp.energizeos.com:443  —  TLS 1.3 · API Key · 审计日志</text>
+
+          <!-- MCP Tools -->
+          <rect x="80" y="450" width="130" height="56" rx="6" fill="white" stroke="rgba(200,117,10,.25)" stroke-width="0.8"/>
+          <text x="145" y="470" text-anchor="middle" font-size="10" font-weight="600" fill="#92600A" font-family="'IBM Plex Mono',monospace">read_site_status</text>
+          <text x="145" y="485" text-anchor="middle" font-size="9" fill="#78787E">SOC · 功率流 · 告警</text>
+          <text x="145" y="497" text-anchor="middle" font-size="8.5" fill="#16A34A">只读</text>
+
+          <rect x="224" y="450" width="130" height="56" rx="6" fill="white" stroke="rgba(200,117,10,.25)" stroke-width="0.8"/>
+          <text x="289" y="470" text-anchor="middle" font-size="10" font-weight="600" fill="#92600A" font-family="'IBM Plex Mono',monospace">query_analytics</text>
+          <text x="289" y="485" text-anchor="middle" font-size="9" fill="#78787E">节省额 · 需求费 · 预测</text>
+          <text x="289" y="497" text-anchor="middle" font-size="8.5" fill="#16A34A">只读</text>
+
+          <rect x="368" y="450" width="130" height="56" rx="6" fill="white" stroke="rgba(200,117,10,.25)" stroke-width="0.8"/>
+          <text x="433" y="470" text-anchor="middle" font-size="10" font-weight="600" fill="#92600A" font-family="'IBM Plex Mono',monospace">generate_report</text>
+          <text x="433" y="485" text-anchor="middle" font-size="9" fill="#78787E">合规 · ITC · SDG&amp;E</text>
+          <text x="433" y="497" text-anchor="middle" font-size="8.5" fill="#1A5FAA">报告生成</text>
+
+          <rect x="512" y="450" width="160" height="56" rx="6" fill="white" stroke="rgba(200,117,10,.25)" stroke-width="0.8"/>
+          <text x="592" y="470" text-anchor="middle" font-size="10" font-weight="600" fill="#B02A20" font-family="'IBM Plex Mono',monospace">dispatch_command ⚠</text>
+          <text x="592" y="485" text-anchor="middle" font-size="9" fill="#78787E">调度指令（人工审批）</text>
+          <text x="592" y="497" text-anchor="middle" font-size="8.5" fill="#B02A20">写操作</text>
+
+          <!-- arrow MCP to AI -->
+          <line x1="376" y1="522" x2="376" y2="548" stroke="#1A5FAA" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+          <!-- ── L4 AI Clients ── -->
+          <rect x="62" y="548" width="628" height="52" rx="8" fill="#EEF4FB" stroke="rgba(26,95,170,.2)" stroke-width="0.8"/>
+          <text x="376" y="566" text-anchor="middle" font-size="11" font-weight="600" fill="#1A5FAA">AI 客户端层</text>
+          <text x="376" y="582" text-anchor="middle" font-size="10" fill="#4A4A52">Claude (claude.ai)  ·  自定义 AI Agent  ·  客户自助门户  ·  第三方开发者</text>
+
+          <!-- defs -->
+          <defs>
+            <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+              <path d="M2 2L8 5L2 8" fill="none" stroke="#D0CEC7" stroke-width="1.5" stroke-linecap="round"/>
+            </marker>
+            <marker id="arr-gold" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+              <path d="M2 2L8 5L2 8" fill="none" stroke="#C8750A" stroke-width="1.5" stroke-linecap="round"/>
+            </marker>
+            <marker id="arr-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+              <path d="M2 2L8 5L2 8" fill="none" stroke="#1A5FAA" stroke-width="1.5" stroke-linecap="round"/>
+            </marker>
+          </defs>
+        </svg>
+      </div>
+
+      <div class="callout callout-info">
+        <div class="callout-icon">💡</div>
+        <div class="callout-text"><strong>关键设计原则：</strong>MCP Server 是 EMS 数据的唯一受控出口。所有 AI 调用必须经过 API Key 认证、权限检查和操作日志记录，AI 永远无法直接接触 Modbus/DNP3 总线或现场设备。</div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ─ TOOLS ─ -->
+    <section id="tools" class="doc-section">
+      <h2 class="sec-title">工具接口清单</h2>
+      <p class="body-text">以下是 MCP Server 向 AI 暴露的工具集。工具设计原则：<strong>读操作无限制，写操作强制人工审批，报告生成异步执行</strong>。</p>
+
+      <div class="tool-grid">
+        <div class="tool-card">
+          <div class="tool-card-head">
+            <code class="tool-name">read_site_status</code>
+            <span class="tool-type type-read">只读</span>
+          </div>
+          <div class="tool-desc">返回指定站点的实时运行状态，包括 SOC、当前充放电功率、电网连接状态、活跃告警列表。</div>
+          <div class="tool-params">
+            <span class="param-tag">site_id</span>
+            <span class="param-tag">time_range</span>
+            <span class="param-tag">include_alarms</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-card-head">
+            <code class="tool-name">get_power_flow</code>
+            <span class="tool-type type-read">只读</span>
+          </div>
+          <div class="tool-desc">获取指定时间段内的功率流向数据，支持 1 秒到 15 分钟多粒度。可用于根因分析和异常检测。</div>
+          <div class="tool-params">
+            <span class="param-tag">site_id</span>
+            <span class="param-tag">start_time</span>
+            <span class="param-tag">end_time</span>
+            <span class="param-tag">resolution</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-card-head">
+            <code class="tool-name">query_savings</code>
+            <span class="tool-type type-read">只读</span>
+          </div>
+          <div class="tool-desc">计算指定周期内的 demand charge 节省额、峰谷套利收益和 demand response 参与收益，返回分项明细。</div>
+          <div class="tool-params">
+            <span class="param-tag">site_id</span>
+            <span class="param-tag">billing_period</span>
+            <span class="param-tag">breakdown</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-card-head">
+            <code class="tool-name">list_events</code>
+            <span class="tool-type type-read">只读</span>
+          </div>
+          <div class="tool-desc">查询运行事件日志，包括保护动作、模式切换、通信中断、电网事件。支持按严重等级和时间范围过滤。</div>
+          <div class="tool-params">
+            <span class="param-tag">site_id</span>
+            <span class="param-tag">severity</span>
+            <span class="param-tag">event_type</span>
+            <span class="param-tag">limit</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-card-head">
+            <code class="tool-name">generate_report</code>
+            <span class="tool-type type-report">报告</span>
+          </div>
+          <div class="tool-desc">异步生成合规报告，支持 CA Rule 21 互联报告、ITC 税收抵免运行记录、SDG&E 月度汇报。返回草稿 PDF 链接。</div>
+          <div class="tool-params">
+            <span class="param-tag">report_type</span>
+            <span class="param-tag">period</span>
+            <span class="param-tag">site_ids</span>
+            <span class="param-tag">format</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-card-head">
+            <code class="tool-name">forecast_load</code>
+            <span class="tool-type type-ai">AI 推理</span>
+          </div>
+          <div class="tool-desc">基于历史负荷模式 + 天气数据，预测未来 24–72 小时负荷曲线，并推荐最优 BESS 调度策略。</div>
+          <div class="tool-params">
+            <span class="param-tag">site_id</span>
+            <span class="param-tag">horizon_hours</span>
+            <span class="param-tag">weather_source</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-card-head">
+            <code class="tool-name">dispatch_command</code>
+            <span class="tool-type type-write">写操作 ⚠</span>
+          </div>
+          <div class="tool-desc">生成调度指令草稿（充电 / 放电 / 模式切换 / setpoint），<strong>不直接执行</strong>，返回待审批工单，需工程师在 HMI 或管理后台确认后方可下发。</div>
+          <div class="tool-params">
+            <span class="param-tag">site_id</span>
+            <span class="param-tag">command_type</span>
+            <span class="param-tag">value</span>
+            <span class="param-tag">require_approval: true</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-card-head">
+            <code class="tool-name">get_interlock_status</code>
+            <span class="tool-type type-read">只读</span>
+          </div>
+          <div class="tool-desc">返回当前 C1–C7 联锁链状态，包括各级联锁条件是否满足、上次触发时间和触发原因，用于安全检查和故障分析。</div>
+          <div class="tool-params">
+            <span class="param-tag">site_id</span>
+            <span class="param-tag">chain_level</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-text"><strong>写操作安全原则：</strong><code>dispatch_command</code> 在第一阶段只生成指令草稿，不连接到任何控制通道。真实下发须通过独立的人工审批流程，与 MCP 接口完全解耦。这是工业系统 AI 接入的基本安全边界。</div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ─ PROTOCOLS ─ -->
+    <section id="protocols" class="doc-section">
+      <h2 class="sec-title">协议与数据源</h2>
+      <p class="body-text">MCP Server 的数据来自 EnergizeOS EMS 的统一数据层，EMS 本身已完成对以下现场协议的标准化适配。</p>
+
+      <table class="cmp-table">
+        <thead>
+          <tr><th>协议 / 数据源</th><th>典型用途</th><th>支持设备</th><th>数据粒度</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-highlight">Modbus TCP / RTU</td>
+            <td>BESS PCS 状态、电表读数、逆变器功率</td>
+            <td>Power Electronics · SMA · Sungrow · 施耐德</td>
+            <td>1 秒</td>
+          </tr>
+          <tr>
+            <td class="td-highlight">DNP3</td>
+            <td>保护继电器、开关状态、变电站遥测</td>
+            <td>SEL · ABB · GE Multilin</td>
+            <td>事件驱动</td>
+          </tr>
+          <tr>
+            <td class="td-highlight">IEC 61850</td>
+            <td>变电站自动化、电网互联保护</td>
+            <td>施耐德 · ABB · Siemens</td>
+            <td>毫秒级</td>
+          </tr>
+          <tr>
+            <td class="td-highlight">OCPP 1.6 / 2.0</td>
+            <td>EV 充电桩状态、充电会话、功率控制</td>
+            <td>Blink · ChargePoint · Eaton</td>
+            <td>15 秒</td>
+          </tr>
+          <tr>
+            <td class="td-highlight">OpenADR 2.0b</td>
+            <td>需求响应事件、电网 DR 信号接收</td>
+            <td>SDG&E · PG&E · SCE DRMS</td>
+            <td>事件驱动</td>
+          </tr>
+          <tr>
+            <td class="td-highlight">REST API / WebSocket</td>
+            <td>云端数据同步、远程监控、第三方集成</td>
+            <td>—</td>
+            <td>可配置</td>
+          </tr>
+          <tr>
+            <td class="td-highlight">MQTT</td>
+            <td>IoT 传感器、边缘计算网关上报</td>
+            <td>—</td>
+            <td>可配置</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ─ SECURITY ─ -->
+    <section id="security" class="doc-section">
+      <h2 class="sec-title">安全控制边界</h2>
+      <p class="body-text">工业控制系统接入 AI 的最大顾虑是安全边界。EnergizeOS MCP 从设计上就是<strong>物理隔离的数据代理层</strong>，AI 永远无法直接触达现场设备。</p>
+
+      <div class="sec-grid">
+        <div class="sec-card">
+          <div class="sec-card-icon">🔐</div>
+          <div class="sec-card-title">API Key 认证</div>
+          <div class="sec-card-desc">每个接入方拥有独立 API Key，支持细粒度权限控制。只读 Key 无法调用任何写操作工具。</div>
+        </div>
+        <div class="sec-card">
+          <div class="sec-card-icon">📋</div>
+          <div class="sec-card-title">完整审计日志</div>
+          <div class="sec-card-desc">所有工具调用记录 timestamp、调用方身份、入参和返回结果，不可篡改，保留 90 天。</div>
+        </div>
+        <div class="sec-card">
+          <div class="sec-card-icon">🚧</div>
+          <div class="sec-card-title">写操作强制审批</div>
+          <div class="sec-card-desc">调度指令只生成草稿，下发须通过独立审批通道，与 MCP 接口完全解耦，无法绕过。</div>
+        </div>
+        <div class="sec-card">
+          <div class="sec-card-icon">🌐</div>
+          <div class="sec-card-title">TLS 1.3 全程加密</div>
+          <div class="sec-card-desc">MCP 通信全程 TLS 1.3 加密，证书锁定，防止中间人攻击。满足 NERC-CIP 框架要求。</div>
+        </div>
+        <div class="sec-card">
+          <div class="sec-card-icon">🏗️</div>
+          <div class="sec-card-title">网络层隔离</div>
+          <div class="sec-card-desc">MCP Server 部署在独立的 DMZ 网段，与 OT 网络之间通过单向数据二极管或受控防火墙隔离。</div>
+        </div>
+        <div class="sec-card">
+          <div class="sec-card-icon">📦</div>
+          <div class="sec-card-title">速率限制</div>
+          <div class="sec-card-desc">每个 API Key 按分钟和小时设置调用上限，防止 AI Agent 误操作导致数据库压力异常。</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ─ SCENARIOS ─ -->
+    <section id="scenarios" class="doc-section">
+      <h2 class="sec-title">真实使用场景</h2>
+      <p class="body-text">以下对话示例展示了接入 MCP 后，工程师和客户如何用自然语言与 BESS 系统交互。</p>
+
+      <div class="scenario-list">
+
+        <div class="scenario-card">
+          <div class="scenario-head">
+            <div class="scenario-num">01</div>
+            <div class="scenario-title">运维工程师：事故根因分析</div>
+          </div>
+          <div class="scenario-body">
+            <div class="chat-thread">
+              <div>
+                <div class="chat-role">工程师</div>
+                <div class="chat-msg chat-user">昨晚 11:37 CA-PEP01 站点切换到孤岛模式，具体是什么触发的？当时 BESS 的 SOC 和功率状态是什么？</div>
+              </div>
+              <div>
+                <div class="chat-role">Claude（调用 list_events + get_power_flow）</div>
+                <div class="chat-msg chat-ai">
+                  <strong>根因分析：CA-PEP01 / 2026-06-09 23:37:14 PST</strong><br><br>
+                  触发原因：SDG&E 主网检测到 0.4Hz 频率偏差，超过 CA Rule 21 联锁阈值 (±0.2Hz)，EMS C3 联锁条件满足，自动切换到孤岛运行模式。<br><br>
+                  切换时刻状态：SOC 72.4%，BESS 以 -340 kW 充电（接收电网电力），切换后立即转为 +280 kW 放电维持厂区负荷。<br><br>
+                  持续时间：23:37 至 00:12（共 35 分钟），00:12:08 电网频率恢复至 59.98Hz，自动并网成功。<br><br>
+                  建议：此次孤岛切换流程正常，无需处理。建议在月度报告中记录此事件用于 SDG&E 互联合规报备。
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="scenario-card">
+          <div class="scenario-head">
+            <div class="scenario-num">02</div>
+            <div class="scenario-title">PepsiCo 设施经理：账单核查</div>
+          </div>
+          <div class="scenario-body">
+            <div class="chat-thread">
+              <div>
+                <div class="chat-role">设施经理</div>
+                <div class="chat-msg chat-user">这个月 BESS 帮我节省了多少 demand charge？跟上个月比怎么样？</div>
+              </div>
+              <div>
+                <div class="chat-role">Claude（调用 query_savings）</div>
+                <div class="chat-msg chat-ai">
+                  <strong>CA-PEP01 / 2026 年 5 月账单节省明细</strong><br><br>
+                  Demand Charge 节省：<strong>$18,420</strong>（峰值削减 214 kW，SDG&E TOU-PA-3 费率）<br>
+                  峰谷套利收益：$4,280<br>
+                  需求响应参与：$1,150（参与 2 次 SDG&E DR 事件）<br>
+                  <strong>合计：$23,850</strong><br><br>
+                  对比上月（4 月）$19,340，本月增长 +23.3%。主要原因：5 月天气升温，用电高峰时段延长，BESS 放电利用率从 68% 提升至 81%。
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="scenario-card">
+          <div class="scenario-head">
+            <div class="scenario-num">03</div>
+            <div class="scenario-title">项目经理：ITC 合规文件准备</div>
+          </div>
+          <div class="scenario-body">
+            <div class="chat-thread">
+              <div>
+                <div class="chat-role">项目经理</div>
+                <div class="chat-msg chat-user">Q1 的 ITC 税收抵免申请需要 BESS 运行记录，帮我生成一份符合 IRS 要求格式的报告。</div>
+              </div>
+              <div>
+                <div class="chat-role">Claude（调用 generate_report）</div>
+                <div class="chat-msg chat-ai">
+                  已提交报告生成任务（异步处理，预计 3 分钟完成）。<br><br>
+                  报告将包含：Q1 累计充放电量（MWh）、月均可用率（99.1%）、充放电循环次数（91 次）、SOC 管理合规记录，格式符合 IRS Form 3468 附件要求。<br><br>
+                  完成后发送至：andy.gong@energizeos.com<br>
+                  PDF 下载链接将在此处更新。<br><br>
+                  <em>注意：此为草稿，请在签署前由税务顾问审阅最终数据。</em>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ─ COMPLIANCE ─ -->
+    <section id="compliance" class="doc-section">
+      <h2 class="sec-title">合规报告<em>自动化</em></h2>
+      <p class="body-text">合规报告是目前最耗费工程师时间的重复性工作，也是客户愿意为之付费的最直接价值。以下是 MCP 接口覆盖的主要合规场景：</p>
+
+      <div class="tool-grid">
+        <div class="tool-card">
+          <div class="tool-card-head"><span class="tool-name" style="color:var(--ink);font-size:13px">CA Rule 21 互联合规</span></div>
+          <div class="tool-desc">自动从 EMS 提取 12 个月互联运行数据，包括频率响应记录、孤岛事件报告、电能质量指标，生成 SDG&E/SCE/PG&E 标准格式提交文件。</div>
+          <div class="tool-params">
+            <span class="param-tag">年报 / 月报</span><span class="param-tag">自动格式化</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-card-head"><span class="tool-name" style="color:var(--ink);font-size:13px">ITC 税收抵免</span></div>
+          <div class="tool-desc">提取 BESS 充放电日志，计算可再生能源充电比例（≥75% 即满足 ITC 要求），生成 IRS 认可的运行记录附件，显著降低税务审计风险。</div>
+          <div class="tool-params">
+            <span class="param-tag">IRS Form 3468</span><span class="param-tag">季度更新</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-card-head"><span class="tool-name" style="color:var(--ink);font-size:13px">ERCOT / CAISO 电力市场</span></div>
+          <div class="tool-desc">生成 Ancillary Services 参与记录（频率调节、备用容量），协助验证 BESS 参与 CAISO PDCI 和 ERCOT ECRS 的合规证明文件。</div>
+          <div class="tool-params">
+            <span class="param-tag">市场结算</span><span class="param-tag">性能验证</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-card-head"><span class="tool-name" style="color:var(--ink);font-size:13px">Fortune 500 内部审计</span></div>
+          <div class="tool-desc">为 PepsiCo、Shell 等企业客户生成 ESG 合规所需的能耗数据报告、碳减排量计算、峰值负荷管理记录，满足内部 EHS 审计要求。</div>
+          <div class="tool-params">
+            <span class="param-tag">ESG</span><span class="param-tag">GHG Protocol</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ─ COMPARE ─ -->
+    <section id="compare" class="doc-section">
+      <h2 class="sec-title">与市场上其他方案的差距</h2>
+      <p class="body-text">市场上大量通用 MCP Server 是把已有 SaaS 包一层协议。EnergizeOS MCP 的护城河完全不同——它建立在实物工程资产上。</p>
+
+      <table class="cmp-table">
+        <thead>
+          <tr><th>能力维度</th><th>通用 MCP（Notion / Slack 等）</th><th>EnergizeOS MCP</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>数据来源</td>
+            <td class="td-muted">第三方 SaaS API（任何人都能接）</td>
+            <td class="td-highlight">自有 EMS 现场数据，独家访问</td>
+          </tr>
+          <tr>
+            <td>行业知识壁垒</td>
+            <td><span class="cross">无</span></td>
+            <td><span class="check">✓</span> CA Rule 21、IEEE 1547、C&I 10 年经验</td>
+          </tr>
+          <tr>
+            <td>监管合规价值</td>
+            <td class="td-muted">不适用</td>
+            <td class="td-highlight">错报罚款，对报告省税，客户直接付费</td>
+          </tr>
+          <tr>
+            <td>竞争门槛</td>
+            <td class="td-muted">低（可被任何开发者复制）</td>
+            <td class="td-highlight">极高（需要已部署项目 + 监管认知）</td>
+          </tr>
+          <tr>
+            <td>定价能力</td>
+            <td class="td-muted">$10–$50/月（商品化）</td>
+            <td class="td-highlight">$15K–$50K/年/站点（解决方案定价）</td>
+          </tr>
+          <tr>
+            <td>现有客户基础</td>
+            <td class="td-muted">从零开始</td>
+            <td class="td-highlight">PepsiCo / SDG&E 已在产项目，直接升级</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ─ PRICING ─ -->
+    <section id="pricing" class="doc-section">
+      <h2 class="sec-title">定价与变现模型</h2>
+      <p class="body-text">三条变现路径并行，从最快落地的现有客户增值开始，逐步拓展到第三方开放平台。</p>
+
+      <div class="pricing-grid">
+        <div class="price-card">
+          <div class="price-tier">路径 A — 存量客户增值</div>
+          <div class="price-amount">$20K<span style="font-size:16px;font-weight:400;color:var(--muted)">/年</span></div>
+          <div class="price-unit">每个站点，附加在现有服务合同上</div>
+          <ul class="price-features">
+            <li>自然语言运维助手（只读）</li>
+            <li>合规报告自动生成</li>
+            <li>月度账单节省报告</li>
+            <li>最快落地，无需新客户</li>
+          </ul>
+        </div>
+        <div class="price-card featured">
+          <div class="price-tier">路径 B — 托管 AI 运维</div>
+          <div class="price-amount">$40K<span style="font-size:16px;font-weight:400;color:var(--muted)">/年</span></div>
+          <div class="price-unit">每个站点，含专属 AI Agent 配置</div>
+          <ul class="price-features">
+            <li>全功能 MCP 工具集</li>
+            <li>定制告警 + 调度建议</li>
+            <li>ITC / CA Rule 21 全套合规</li>
+            <li>季度性能优化报告</li>
+            <li>ESG 碳减排量核算</li>
+          </ul>
+        </div>
+        <div class="price-card">
+          <div class="price-tier">路径 C — 第三方 API 开放</div>
+          <div class="price-amount">$1.5K<span style="font-size:16px;font-weight:400;color:var(--muted)">/月</span></div>
+          <div class="price-unit">per 接入方，按 MW 阶梯定价</div>
+          <ul class="price-features">
+            <li>API Key 独立接入</li>
+            <li>EPC / O&M / 交易商</li>
+            <li>只读工具套件</li>
+            <li>100 MW 以上规模折扣</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout callout-ok">
+        <div class="callout-icon">📊</div>
+        <div class="callout-text"><strong>收入测算：</strong>仅路径 A——将 CA-PEP01 及后续 5 个同类 C&I 项目升级，每年增量收入约 $120K，边际成本接近零（技术已建设完成）。</div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ─ ROADMAP ─ -->
+    <section id="roadmap" class="doc-section">
+      <h2 class="sec-title">开发路线图</h2>
+
+      <div class="roadmap">
+        <div class="rm-item">
+          <div class="rm-dot done">✓</div>
+          <div class="rm-content">
+            <div class="rm-date">已完成 — EMS Platform</div>
+            <div class="rm-title">EnergizeOS EMS 核心部署</div>
+            <div class="rm-desc">CA-PEP01 (PepsiCo/SDG&E) 项目上线，15 个策略模块、C1–C7 联锁链、CA Rule 21 合规，500+ MW 累计部署。</div>
+          </div>
+        </div>
+        <div class="rm-item">
+          <div class="rm-dot active">→</div>
+          <div class="rm-content">
+            <div class="rm-date">进行中 — Q3 2026</div>
+            <div class="rm-title">MCP Server 基础版（只读）</div>
+            <div class="rm-desc">搭建 MCP Server 骨架，实现 read_site_status / get_power_flow / list_events / query_savings 四个只读工具，接入 Claude 进行内部测试。部署至 GCP VM (app) Docker 容器。</div>
+          </div>
+        </div>
+        <div class="rm-item">
+          <div class="rm-dot soon">Q4</div>
+          <div class="rm-content">
+            <div class="rm-date">计划 — Q4 2026</div>
+            <div class="rm-title">合规报告模块 + CA-PEP01 客户 Beta</div>
+            <div class="rm-desc">上线 generate_report 工具，覆盖 CA Rule 21 和 ITC 报告，向 PepsiCo 团队开放 Beta 访问，收集真实使用反馈并验证定价。</div>
+          </div>
+        </div>
+        <div class="rm-item">
+          <div class="rm-dot later">25</div>
+          <div class="rm-content">
+            <div class="rm-date">计划 — Q1 2025</div>
+            <div class="rm-title">写操作工具 + 人工审批流</div>
+            <div class="rm-desc">上线 dispatch_command（草稿模式），配套审批工作流，接入 Notion/邮件通知。同步建立 API Key 管理后台。</div>
+          </div>
+        </div>
+        <div class="rm-item">
+          <div class="rm-dot later">H2</div>
+          <div class="rm-content">
+            <div class="rm-date">计划 — 2025 下半年</div>
+            <div class="rm-title">第三方 API 开放平台</div>
+            <div class="rm-desc">对外正式开放 API，按 MW 阶梯定价，面向 EPC 商、O&M 公司和能源交易商，建立开发者文档和 SDK。</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ─ QUICKSTART ─ -->
+    <section id="quickstart" class="doc-section">
+      <h2 class="sec-title">快速接入指南</h2>
+      <p class="body-text">当 MCP Server 就绪后，接入 Claude 只需两步：配置 MCP 连接，然后开始对话。</p>
+
+      <h3 class="sub-title">Step 1 — 在 Claude 中添加 MCP Server</h3>
+      <p class="body-text">在 Claude Desktop（MacOS / Windows）的 <code>claude_desktop_config.json</code> 中添加以下配置：</p>
+
+      <div class="code-block">
+        <div class="code-label">JSON</div>
+        <pre><span class="c-comment">{</span>
+  <span class="c-key">"mcpServers"</span>: {
+    <span class="c-key">"energizeos"</span>: {
+      <span class="c-key">"type"</span>: <span class="c-str">"http"</span>,
+      <span class="c-key">"url"</span>: <span class="c-str">"https://mcp.energizeos.com/v1"</span>,
+      <span class="c-key">"headers"</span>: {
+        <span class="c-key">"Authorization"</span>: <span class="c-str">"Bearer YOUR_API_KEY"</span>,
+        <span class="c-key">"X-Site-ID"</span>: <span class="c-str">"CA-PEP01"</span>
+      }
+    }
+  }
+<span class="c-comment">}</span></pre>
+      </div>
+
+      <h3 class="sub-title">Step 2 — 开始对话</h3>
+      <p class="body-text">重启 Claude Desktop 后，即可直接用中文或英文与 EMS 数据交互：</p>
+
+      <div class="code-block">
+        <div class="code-label">自然语言示例</div>
+        <pre><span class="c-comment"># 运维查询</span>
+<span class="c-str">"CA-PEP01 现在 SOC 是多少？有没有活跃告警？"</span>
+
+<span class="c-comment"># 财务分析</span>
+<span class="c-str">"上个月 demand charge 节省了多少？帮我生成一张账单摘要。"</span>
+
+<span class="c-comment"># 合规报告</span>
+<span class="c-str">"生成 Q2 的 ITC 运行记录报告，格式符合 IRS Form 3468 要求。"</span>
+
+<span class="c-comment"># 故障分析</span>
+<span class="c-str">"查一下昨天所有 Severity ≥ Warning 的事件，帮我分析根因。"</span></pre>
+      </div>
+
+      <div class="callout callout-info">
+        <div class="callout-icon">📧</div>
+        <div class="callout-text"><strong>申请早期接入：</strong>MCP Server 目前处于内部开发阶段，如果您是 EnergizeOS 现有客户或合作伙伴，欢迎联系我们讨论早期 Beta 接入计划。联系方式：<a href="mailto:info@energizeos.com" style="color:var(--sky)">info@energizeos.com</a></div>
+      </div>
+    </section>
+
+    <!-- ─ FOOTER ─ -->
+    <div class="doc-footer">
+      <span class="footer-text">© 2026 Energize Solutions Inc. · AGI&M Assets Inc.</span>
+      <div class="footer-links">
+        <a href="https://docs.energizeos.com/ems/">EMS 产品</a>
+        <a href="https://docs.energizeos.com/vi/">品牌规范</a>
+        <a href="mailto:info@energizeos.com">联系我们</a>
+      </div>
+    </div>
+
+  </div>
+  </main>
+</div>
+
+<script>
+// Sidebar toggle (mobile)
+function toggleSidebar(){
+  const s=document.getElementById('sidebar');
+  const o=document.getElementById('overlay');
+  s.classList.toggle('open');
+  o.classList.toggle('active');
+}
+
+// Scroll to section
+function scrollTo(id){
+  const el=document.getElementById(id);
+  if(el) el.scrollIntoView({behavior:'smooth'});
+  // close sidebar on mobile
+  if(window.innerWidth<=900){
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('overlay').classList.remove('active');
+  }
+}
+
+// Active nav link on scroll
+const sections=document.querySelectorAll('.doc-section');
+const navLinks=document.querySelectorAll('.nav-link');
+const obs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const id=e.target.id;
+      navLinks.forEach(l=>{
+        l.classList.remove('active');
+        if(l.getAttribute('onclick')&&l.getAttribute('onclick').includes("'"+id+"'")){
+          l.classList.add('active');
+        }
+      });
+    }
+  });
+},{threshold:0.3,rootMargin:'-60px 0px -60% 0px'});
+sections.forEach(s=>obs.observe(s));
+</script>
+</body>
+</html>
