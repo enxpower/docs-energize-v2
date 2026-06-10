@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phase 2 Copilot Hub — EnergizeOS Microgrid EMS Copilot</title>
+<meta name="description" content="AI-powered interactive EMS modules: zero export control, grid-island-grid state machine, interlock diagnostics, TOU optimization.">
+<meta property="og:title" content="Phase 2 Copilot Hub">
+<meta property="og:description" content="AI-powered interactive EMS modules: zero export control, grid-island-grid state machine, interlock diagnostics, TOU optimization.">
+<meta property="og:image" content="https://docs.energizeos.com/microgrid/og-image.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="copilot.css">
+</head>
+<body>
+<header>
+  <div class="hwrap">
+    <a class="brand" href="../index.html">
+      <div class="mark"><i></i><i></i><i></i><i></i></div>
+      <b>EnergizeOS</b><span>Microgrid EMS</span>
+    </a>
+    <nav class="top" aria-label="Primary"><a href="../index.html" class="">Docs Home</a><a href="index.html" class="active">Copilot Hub</a><a href="f1-zero-export.html" class="">Zero Export</a><a href="f2-grid-island.html" class="">Grid↔Island</a><a href="f3-interlock.html" class="">Interlocks</a><a href="f4-tou-optimizer.html" class="">TOU Optimizer</a></nav>
+    <button class="burger" onclick="EnergizeOS.initBurger&&document.getElementById('mnav').classList.toggle('open')" aria-label="Menu">
+      <i></i><i></i><i></i>
+    </button>
+  </div>
+  <div class="mnav" id="mnav"><a href="../index.html" class="">Docs Home</a><a href="index.html" class="active">Copilot Hub</a><a href="f1-zero-export.html" class="">Zero Export</a><a href="f2-grid-island.html" class="">Grid↔Island</a><a href="f3-interlock.html" class="">Interlocks</a><a href="f4-tou-optimizer.html" class="">TOU Optimizer</a></div>
+</header>
+
+<div class="page-wrap">
+  <div class="page-hero">
+    <div class="eyebrow">Phase 2 Copilot</div>
+    <h1>Interactive EMS Modules <span class="ph2-badge">Phase 2</span></h1>
+    <p>Five interconnected modules demonstrating the EnergizeOS AI + deterministic EMS architecture.
+    Each module runs a live simulation seeded with real C&amp;I BESS parameters.
+    The AI Copilot panel reads the EMS state and answers operational questions —
+    it never issues device commands.</p>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:4px;">
+    <a href="f1-zero-export.html" style="text-decoration:none;">
+      <div class="card" style="border-left:4px solid var(--volt);transition:box-shadow .15s;" onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,0.09)'" onmouseout="this.style.boxShadow=''">
+        <div class="eyebrow">F1</div>
+        <h2>Zero Export / Reverse Flow Guard</h2>
+        <p style="color:var(--muted);font-size:.88rem">Interactive simulation of the PCC power flow control loop that prevents net export to the utility under CA Rule 21.
+        Adjust site load and BESS dispatch with live reverse-flow detection, dead-band enforcement, and automatic clamping.</p>
+        <div style="margin-top:14px;"><span class="pill info">Live simulation</span> <span class="pill neutral">SDG&amp;E Rule 21</span></div>
+      </div>
+    </a>
+    <a href="f2-grid-island.html" style="text-decoration:none;">
+      <div class="card" style="border-left:4px solid var(--slate);transition:box-shadow .15s;" onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,0.09)'" onmouseout="this.style.boxShadow=''">
+        <div class="eyebrow">F2</div>
+        <h2>Grid ↔ Island ↔ Grid State Machine</h2>
+        <p style="color:var(--muted);font-size:.88rem">Walk through the complete 7-state grid-island-grid sequence. Trigger grid loss, watch BESS transition to grid-forming mode,
+        simulate grid restoration, and step through the synchronized reclose sequence including trip lockout behavior.</p>
+        <div style="margin-top:14px;"><span class="pill info">State machine</span> <span class="pill neutral">IEEE 1547-2018</span></div>
+      </div>
+    </a>
+    <a href="f3-interlock.html" style="text-decoration:none;">
+      <div class="card" style="border-left:4px solid var(--mid);transition:box-shadow .15s;" onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,0.09)'" onmouseout="this.style.boxShadow=''">
+        <div class="eyebrow">F3</div>
+        <h2>C1–C7 Close Interlock Diagnostics</h2>
+        <p style="color:var(--muted);font-size:.88rem">Real-time C1–C7 permissive chain status with per-condition source, data age, and blocking reason.
+        Inject communication faults, BESS faults, sync failures, and spring-charge failures to see how the EMS responds.</p>
+        <div style="margin-top:14px;"><span class="pill info">Interlock chain</span> <span class="pill neutral">C1–C7 logic</span></div>
+      </div>
+    </a>
+    <a href="f4-tou-optimizer.html" style="text-decoration:none;">
+      <div class="card" style="border-left:4px solid var(--good);transition:box-shadow .15s;" onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,0.09)'" onmouseout="this.style.boxShadow=''">
+        <div class="eyebrow">F4</div>
+        <h2>TOU / Demand Charge Optimizer</h2>
+        <p style="color:var(--muted);font-size:.88rem">Day-ahead BESS dispatch plan optimized for SDG&amp;E TOU-DR-OPT. See 24-hour energy and demand savings breakdown,
+        peak shaving strategy, and how SOC constraints interact with on-peak windows.</p>
+        <div style="margin-top:14px;"><span class="pill info">Optimization</span> <span class="pill neutral">TOU-DR-OPT</span></div>
+      </div>
+    </a>
+  </div>
+
+  <div class="note" style="margin-top:28px;">
+    <strong>Architecture note:</strong> All five modules share a single deterministic EMS engine and site data model.
+    The AI Copilot reads a state snapshot on every query — it never modifies engine state or issues device commands.
+    This mirrors the production architecture described at <a href="../architecture.html">docs.energizeos.com/microgrid/architecture</a>.
+  </div>
+
+  <div style="margin-top:28px;padding:20px;background:#fff;border:1px solid var(--line);border-radius:10px;">
+    <div class="eyebrow">Parameters</div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--slate);margin-bottom:14px;">Simulation Baseline</h2>
+    <div class="tablewrap"><table>
+      <tr><th>Parameter</th><th>Value</th><th>Basis</th></tr>
+      <tr><td>System voltage</td><td>480Y/277V, 3-phase, 4-wire</td><td>Site electrical design</td></tr>
+      <tr><td>Main bus / intertie breaker</td><td>4,000A bus / 1,600A LSIG 52-U</td><td>Switchboard specification</td></tr>
+      <tr><td>BESS rating</td><td>996 kW / 1,992 kWh (2-hour)</td><td>PCS nameplate</td></tr>
+      <tr><td>SOC operating range</td><td>10% – 95%</td><td>EMS configuration baseline</td></tr>
+      <tr><td>Peak site demand</td><td>~1,580 kW</td><td>Historical billing data</td></tr>
+      <tr><td>EV charging load</td><td>57× 16.6 kW L2 + 2× 120 kW DCFC ≈ 1,185 kW</td><td>Charger schedule</td></tr>
+      <tr><td>Zero-export dead band</td><td>±2 kW at PCC</td><td>CA Rule 21 / SDG&amp;E IA</td></tr>
+      <tr><td>Tariff</td><td>SDG&amp;E TOU-DR-OPT</td><td>Utility rate schedule</td></tr>
+      <tr><td>On-peak window (summer)</td><td>4:00 PM – 9:00 PM, Mon–Fri</td><td>TOU-DR-OPT definition</td></tr>
+      <tr><td>On-peak demand rate (summer)</td><td>$22.40/kW</td><td>TOU-DR-OPT rate table</td></tr>
+      <tr><td>On-peak energy rate (summer)</td><td>$0.52/kWh</td><td>TOU-DR-OPT rate table</td></tr>
+    </table></div>
+  </div>
+</div>
+
+
+<footer><div class="fwrap">
+  <div>EnergizeOS Microgrid EMS — Phase 2 Copilot &nbsp;·&nbsp; Advisory simulation only. All control actions require operator authorization through the deterministic EMS.</div>
+  <div><a href="mailto:info@energizeos.com">info@energizeos.com</a> &nbsp;·&nbsp; <a href="https://docs.energizeos.com/microgrid/">Docs</a></div>
+</div></footer>
+
+  <script src="site-model.js"></script>
+  <script src="ems-engine.js"></script>
+  <script src="copilot-core.js"></script>
+  <script src="copilot-shared.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    window.EnergizeOS?.initBurger && window.EnergizeOS.initBurger();
+  });
+</script>
+</body></html>

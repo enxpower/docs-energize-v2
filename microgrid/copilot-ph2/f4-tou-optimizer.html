@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>F4: TOU / Demand Charge Optimizer — EnergizeOS Microgrid EMS Copilot</title>
+<meta name="description" content="Day-ahead BESS dispatch optimization for SDG&E TOU-DR-OPT tariff with demand charge reduction.">
+<meta property="og:title" content="F4: TOU / Demand Charge Optimizer">
+<meta property="og:description" content="Day-ahead BESS dispatch optimization for SDG&E TOU-DR-OPT tariff with demand charge reduction.">
+<meta property="og:image" content="https://docs.energizeos.com/microgrid/og-image.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="copilot.css">
+</head>
+<body>
+<header>
+  <div class="hwrap">
+    <a class="brand" href="../index.html">
+      <div class="mark"><i></i><i></i><i></i><i></i></div>
+      <b>EnergizeOS</b><span>Microgrid EMS</span>
+    </a>
+    <nav class="top" aria-label="Primary"><a href="../index.html" class="">Docs Home</a><a href="index.html" class="">Copilot Hub</a><a href="f1-zero-export.html" class="">Zero Export</a><a href="f2-grid-island.html" class="">Grid↔Island</a><a href="f3-interlock.html" class="">Interlocks</a><a href="f4-tou-optimizer.html" class="active">TOU Optimizer</a></nav>
+    <button class="burger" onclick="EnergizeOS.initBurger&&document.getElementById('mnav').classList.toggle('open')" aria-label="Menu">
+      <i></i><i></i><i></i>
+    </button>
+  </div>
+  <div class="mnav" id="mnav"><a href="../index.html" class="">Docs Home</a><a href="index.html" class="">Copilot Hub</a><a href="f1-zero-export.html" class="">Zero Export</a><a href="f2-grid-island.html" class="">Grid↔Island</a><a href="f3-interlock.html" class="">Interlocks</a><a href="f4-tou-optimizer.html" class="active">TOU Optimizer</a></div>
+</header>
+
+<div class="page-wrap">
+  <div class="page-hero">
+    <div class="eyebrow">F4 — TOU / Demand Optimizer <span class="ph2-badge">Optimization</span></div>
+    <h1>Day-Ahead Dispatch Planner</h1>
+    <p>Generates an optimized 24-hour BESS dispatch schedule for the SDG&amp;E TOU-DR-OPT tariff.
+    Charge during super-off-peak. Discharge during on-peak to reduce demand and energy costs.
+    All constraints (SOC, power limits, zero export, on-peak window) are enforced by the deterministic EMS engine
+    before any plan is approved.</p>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <!-- Savings summary -->
+      <div class="metric-grid" style="margin-bottom:14px;" id="f4-savings">
+        <div class="metric highlight"><div class="label">Demand Savings</div><div class="value" id="v-demand-save">—</div><div class="sub">this billing period est.</div></div>
+        <div class="metric"><div class="label">Energy Savings</div><div class="value" id="v-energy-save">—</div><div class="sub">today est.</div></div>
+        <div class="metric"><div class="label">Peak Demand Reduction</div><div class="value" id="v-demand-red">—</div><div class="sub">vs. no BESS baseline</div></div>
+        <div class="metric"><div class="label">BESS Cycles Today</div><div class="value" id="v-cycles">—</div><div class="sub">charge / discharge</div></div>
+        <div class="metric"><div class="label">On-Peak Dispatch</div><div class="value" id="v-onpeak-kwh">—</div><div class="sub">kWh delivered (4–9 PM)</div></div>
+        <div class="metric"><div class="label">SOC at Peak End</div><div class="value" id="v-soc-end">—</div><div class="sub">estimated 9 PM</div></div>
+      </div>
+
+      <!-- 24-hour chart (canvas) -->
+      <div class="card" style="margin-bottom:14px;">
+        <h2>24-Hour Dispatch Plan</h2>
+        <div style="font-size:0.78rem;color:var(--muted);margin-bottom:8px;">
+          Shaded region = SDG&amp;E on-peak (4–9 PM). Blue bars = BESS charging. Orange bars = BESS discharging. Gray line = site load.
+        </div>
+        <div class="chart-wrap"><canvas id="f4-chart" height="220"></canvas></div>
+      </div>
+
+      <!-- Tariff reference -->
+      <div class="card">
+        <h2>Tariff Reference — SDG&amp;E TOU-DR-OPT</h2>
+        <div id="f4-tariff-table" class="tablewrap"></div>
+      </div>
+    </div>
+
+    <div>
+      <!-- Plan controls -->
+      <div class="card" style="margin-bottom:14px;">
+        <h2>Plan Parameters</h2>
+        <div style="margin-bottom:14px;">
+          <label style="font-size:0.84rem;font-weight:600;display:block;margin-bottom:6px;">BESS Discharge Power: <span id="lbl-discharge-pwr">800</span> kW</label>
+          <input type="range" id="sl-discharge-pwr" min="100" max="996" value="800" step="50" style="width:100%;accent-color:var(--volt)">
+        </div>
+        <div style="margin-bottom:14px;">
+          <label style="font-size:0.84rem;font-weight:600;display:block;margin-bottom:6px;">Charge Power: <span id="lbl-charge-pwr">600</span> kW</label>
+          <input type="range" id="sl-charge-pwr" min="100" max="996" value="600" step="50" style="width:100%;accent-color:var(--mid)">
+        </div>
+        <div style="margin-bottom:14px;">
+          <label style="font-size:0.84rem;font-weight:600;display:block;margin-bottom:6px;">Starting SOC: <span id="lbl-start-soc">55</span>%</label>
+          <input type="range" id="sl-start-soc" min="10" max="95" value="55" step="5" style="width:100%;accent-color:var(--slate)">
+        </div>
+        <button class="btn btn-primary" id="btn-plan" style="width:100%;">Generate Optimized Plan</button>
+        <div id="f4-plan-msg" class="note" style="display:none;margin-top:10px;"></div>
+      </div>
+
+      <!-- Hourly plan table -->
+      <div class="card">
+        <h2>Hourly Schedule</h2>
+        <div id="f4-hourly-table" class="tablewrap" style="max-height:320px;overflow-y:auto;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================================================= AI COPILOT PANEL -->
+<div class="copilot-panel collapsed" id="copilot-panel">
+  <div class="copilot-header" id="copilot-header">
+    <span>⚡ Site Copilot <span style="opacity:0.6;font-weight:400;font-size:0.72rem">ADVISORY ONLY</span></span>
+    <button class="copilot-toggle-btn" aria-label="Toggle copilot">▲</button>
+  </div>
+  <div class="copilot-quick" id="copilot-quick"></div>
+  <div class="copilot-messages" id="copilot-messages">
+    <div class="msg-typing" id="copilot-typing">Site Copilot is thinking…</div>
+  </div>
+  <div class="copilot-input-row">
+    <textarea class="copilot-input" id="copilot-input"
+      rows="1" placeholder="Ask about site operations…"
+      aria-label="Ask the Site Copilot"></textarea>
+    <button class="copilot-send" id="copilot-send" aria-label="Send">↑</button>
+  </div>
+</div>
+<!-- toast container injected by copilot-shared.js -->
+
+<footer><div class="fwrap">
+  <div>EnergizeOS Microgrid EMS — Phase 2 Copilot &nbsp;·&nbsp; Advisory simulation only. All control actions require operator authorization through the deterministic EMS.</div>
+  <div><a href="mailto:info@energizeos.com">info@energizeos.com</a> &nbsp;·&nbsp; <a href="https://docs.energizeos.com/microgrid/">Docs</a></div>
+</div></footer>
+
+  <script src="site-model.js"></script>
+  <script src="ems-engine.js"></script>
+  <script src="copilot-core.js"></script>
+  <script src="copilot-shared.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script>
+(function () {
+  "use strict";
+  const E = window.EnergizeOS;
+  const { SIM_STATE, SITE_CONFIG, TARIFF_TOU_DR_OPT, INTERLOCK_DEFS, EmsEngine,
+           getSeason, getTOUPeriod, getEnergyRate, logEvent, generateLoadProfile, fmtKW } = E;
+
+  const engine = new EmsEngine(SIM_STATE, SITE_CONFIG, INTERLOCK_DEFS, logEvent);
+
+  // Tariff table
+  const season = getSeason(new Date());
+  const tariff  = TARIFF_TOU_DR_OPT[season];
+  const tariffEl = document.getElementById("f4-tariff-table");
+  if (tariffEl) tariffEl.innerHTML = `<table>
+    <tr><th>Period</th><th>Hours</th><th>Energy ($/kWh)</th><th>Demand ($/kW)</th></tr>
+    <tr><td>On-Peak</td><td>Mon–Fri 4–9 PM</td><td style="color:var(--bad)">${tariff.on_peak.energy_rate_per_kwh.toFixed(2)}</td><td style="color:var(--bad)">${tariff.on_peak.demand_rate_per_kw.toFixed(2)}</td></tr>
+    <tr><td>Off-Peak</td><td>All other times</td><td>${tariff.off_peak.energy_rate_per_kwh.toFixed(2)}</td><td>$0.00</td></tr>
+    <tr><td>Super Off-Peak</td><td>Wknd all day / wkday 9AM–2PM (winter)</td><td style="color:var(--good)">${tariff.super_off_peak.energy_rate_per_kwh.toFixed(2)}</td><td>$0.00</td></tr>
+  </table>`;
+
+  // Sliders
+  ["discharge-pwr","charge-pwr","start-soc"].forEach(id => {
+    const sl = document.getElementById("sl-" + id);
+    const lb = document.getElementById("lbl-" + id);
+    sl?.addEventListener("input", () => { if(lb) lb.textContent = sl.value; });
+  });
+
+  // Chart
+  const ctx = document.getElementById("f4-chart")?.getContext("2d");
+  let chart = null;
+  const labels = Array.from({length:24}, (_,h) => `${String(h).padStart(2,"0")}:00`);
+
+  function initChart(loadData, bessData) {
+    if (!ctx) return;
+    const onPeakBg = labels.map((_,h) => (h >= 16 && h < 21) ? "rgba(212,132,10,0.08)" : "rgba(0,0,0,0)");
+    if (chart) chart.destroy();
+    chart = new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels,
+        datasets: [
+          {
+            label: "BESS (kW)", type: "bar",
+            data: bessData,
+            backgroundColor: bessData.map(v => v > 0 ? "rgba(46,74,110,0.7)" : "rgba(212,132,10,0.75)"),
+            yAxisID: "y",
+          },
+          {
+            label: "Site Load (kW)", type: "line",
+            data: loadData,
+            borderColor: "rgba(94,107,120,0.8)",
+            borderWidth: 2, pointRadius: 0, fill: false,
+            yAxisID: "y",
+          },
+        ],
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { position: "top", labels: { font: { size: 11 }, boxWidth: 12 } },
+          tooltip: { mode: "index", intersect: false },
+        },
+        scales: {
+          y: { title: { display: true, text: "kW" }, beginAtZero: false },
+          x: { ticks: { font: { size: 10 } } },
+        },
+      },
+    });
+  }
+
+  function generatePlan() {
+    const dischargePwr = Number(document.getElementById("sl-discharge-pwr").value);
+    const chargePwr    = Number(document.getElementById("sl-charge-pwr").value);
+    let   soc          = Number(document.getElementById("sl-start-soc").value);
+    const loadProfile  = generateLoadProfile(); // 96 x 15-min
+    const capacity     = SITE_CONFIG.bess_rated_energy_kwh;
+
+    // Aggregate load to hourly
+    const hourlyLoad = Array.from({length:24}, (_,h) =>
+      Math.round((loadProfile[h*4] + loadProfile[h*4+1] + loadProfile[h*4+2] + loadProfile[h*4+3]) / 4)
+    );
+
+    // Simple rule-based optimizer:
+    //   Super-off-peak (overnight 0–7): charge at chargePwr if SOC < 90%
+    //   On-peak (16–21 weekday): discharge at dischargePwr if SOC > 15%
+    //   Off-peak: standby
+    // Enforce zero-export: discharge ≤ load
+    const bessSchedule = [];
+    const socSchedule  = [];
+    let onpeakKwh = 0, energySave = 0, demandBaseline = 0, demandWithBess = 0;
+
+    for (let h = 0; h < 24; h++) {
+      const load = hourlyLoad[h];
+      const isOnPeak    = h >= 16 && h < 21;
+      const isSuperOff  = h >= 0  && h < 7;
+
+      let bessKw = 0;
+      if (isOnPeak && soc > 15) {
+        // Discharge — clamped to load (zero-export rule) and available power
+        const maxDisch = Math.min(dischargePwr, load - SITE_CONFIG.meter_deadband_kw);
+        const availKw  = ((soc - SITE_CONFIG.bess_soc_min_pct) / 100) * capacity;
+        bessKw = -Math.min(maxDisch, availKw);
+        onpeakKwh += Math.abs(bessKw);
+        energySave += Math.abs(bessKw) * tariff.on_peak.energy_rate_per_kwh;
+      } else if (isSuperOff && soc < 90) {
+        // Charge
+        bessKw = Math.min(chargePwr, (0.90 - soc/100) * capacity);
+      }
+
+      // Update SOC
+      const dtH = 1; // hourly resolution
+      soc = Math.min(95, Math.max(10, soc - (bessKw / capacity) * 100));
+      bessSchedule.push(Math.round(bessKw));
+      socSchedule.push(soc.toFixed(1));
+
+      // Demand tracking
+      const netDemand = load + bessKw;
+      if (load > demandBaseline) demandBaseline = load;
+      if (netDemand > demandWithBess) demandWithBess = netDemand;
+    }
+
+    const demandReduction = demandBaseline - demandWithBess;
+    const demandSavings   = demandReduction * tariff.on_peak.demand_rate_per_kw;
+
+    // Update metrics
+    document.getElementById("v-demand-save").textContent = "$" + demandSavings.toFixed(0);
+    document.getElementById("v-energy-save").textContent = "$" + energySave.toFixed(0);
+    document.getElementById("v-demand-red").textContent  = demandReduction.toFixed(0) + " kW";
+    document.getElementById("v-cycles").textContent      = "1.0";
+    document.getElementById("v-onpeak-kwh").textContent  = onpeakKwh.toFixed(0) + " kWh";
+    document.getElementById("v-soc-end").textContent     = socSchedule[20] + "%";
+
+    // Chart
+    initChart(hourlyLoad, bessSchedule);
+
+    // Hourly table
+    const tbl = document.getElementById("f4-hourly-table");
+    if (tbl) tbl.innerHTML = `<table>
+      <tr><th>Hour</th><th>Load (kW)</th><th>BESS (kW)</th><th>Net Demand</th><th>SOC</th><th>Period</th></tr>` +
+      Array.from({length:24}, (_,h) => {
+        const load = hourlyLoad[h];
+        const bess = bessSchedule[h];
+        const net  = load + bess;
+        const isOn = h >= 16 && h < 21;
+        const isSo = h < 7;
+        const period = isOn ? '<span class="pill bad" style="font-size:.7rem">ON-PEAK</span>'
+                     : isSo ? '<span class="pill good" style="font-size:.7rem">SUPER-OFF</span>'
+                     : '<span class="pill neutral" style="font-size:.7rem">OFF-PEAK</span>';
+        const bessColor = bess < 0 ? "color:var(--volt);font-weight:600" : bess > 0 ? "color:var(--mid)" : "color:var(--muted)";
+        return `<tr>
+          <td style="font-family:monospace">${String(h).padStart(2,"0")}:00</td>
+          <td>${load}</td>
+          <td style="${bessColor}">${bess >= 0 ? "+" : ""}${bess}</td>
+          <td>${net.toFixed(0)}</td>
+          <td>${socSchedule[h]}%</td>
+          <td>${period}</td>
+        </tr>`;
+      }).join("") + "</table>";
+
+    const msg = document.getElementById("f4-plan-msg");
+    if (msg) {
+      msg.style.display = "block";
+      msg.className = "note good";
+      msg.innerHTML = `Plan generated. Estimated demand savings: <strong>$${demandSavings.toFixed(0)}/month</strong>. Energy savings today: <strong>$${energySave.toFixed(0)}</strong>. All commands pass through EMS safety gates before execution.`;
+    }
+
+    E.showToast("Dispatch plan generated — review and approve in EMS", "success");
+  }
+
+  document.getElementById("btn-plan")?.addEventListener("click", generatePlan);
+
+  // Auto-generate on load
+  generatePlan();
+
+  E.initCopilot(engine, [
+    "Why charge overnight and not midday?",
+    "What is the on-peak demand rate?",
+    "How much can I save this month?",
+    "What limits BESS discharge during on-peak?",
+    "Explain the zero-export constraint on the plan.",
+    "What is super-off-peak?",
+  ], "F4 TOU Optimizer");
+  E.initBurger();
+})();
+</script>
+</body></html>

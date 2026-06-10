@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>F2: Grid-Island-Grid State Machine — EnergizeOS Microgrid EMS Copilot</title>
+<meta name="description" content="Interactive 7-state grid-island-grid state machine with trip lockout, BESS transition, and synchronized reclose.">
+<meta property="og:title" content="F2: Grid-Island-Grid State Machine">
+<meta property="og:description" content="Interactive 7-state grid-island-grid state machine with trip lockout, BESS transition, and synchronized reclose.">
+<meta property="og:image" content="https://docs.energizeos.com/microgrid/og-image.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="copilot.css">
+</head>
+<body>
+<header>
+  <div class="hwrap">
+    <a class="brand" href="../index.html">
+      <div class="mark"><i></i><i></i><i></i><i></i></div>
+      <b>EnergizeOS</b><span>Microgrid EMS</span>
+    </a>
+    <nav class="top" aria-label="Primary"><a href="../index.html" class="">Docs Home</a><a href="index.html" class="">Copilot Hub</a><a href="f1-zero-export.html" class="">Zero Export</a><a href="f2-grid-island.html" class="active">Grid↔Island</a><a href="f3-interlock.html" class="">Interlocks</a><a href="f4-tou-optimizer.html" class="">TOU Optimizer</a></nav>
+    <button class="burger" onclick="EnergizeOS.initBurger&&document.getElementById('mnav').classList.toggle('open')" aria-label="Menu">
+      <i></i><i></i><i></i>
+    </button>
+  </div>
+  <div class="mnav" id="mnav"><a href="../index.html" class="">Docs Home</a><a href="index.html" class="">Copilot Hub</a><a href="f1-zero-export.html" class="">Zero Export</a><a href="f2-grid-island.html" class="active">Grid↔Island</a><a href="f3-interlock.html" class="">Interlocks</a><a href="f4-tou-optimizer.html" class="">TOU Optimizer</a></div>
+</header>
+
+<div class="page-wrap">
+  <div class="page-hero">
+    <div class="eyebrow">F2 — Grid ↔ Island ↔ Grid <span class="ph2-badge">State Machine</span></div>
+    <h1>Grid-Island-Grid Controller</h1>
+    <p>Simulate the complete islanding and reconnection sequence. The EMS follows a strict 7-state machine:
+    trip lockout on grid loss, BESS grid-forming during island, synchronized reclose after grid restoration.
+    The AI Copilot explains each state and what must happen before the next transition.</p>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <!-- State display -->
+      <div class="card" style="margin-bottom:14px;">
+        <h2>Current Grid State</h2>
+        <div id="f2-state-badge" style="margin-bottom:16px;"></div>
+        <div id="f2-state-desc" style="font-size:0.9rem;color:var(--muted);line-height:1.6;"></div>
+      </div>
+
+      <!-- State machine diagram -->
+      <div class="card" style="margin-bottom:14px;">
+        <h2>State Machine</h2>
+        <div id="f2-sm-diagram" style="font-family:'IBM Plex Mono',monospace;font-size:0.78rem;line-height:2;"></div>
+      </div>
+
+      <!-- Controls -->
+      <div class="card">
+        <h2>Controls</h2>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+          <button class="btn btn-danger" id="btn-grid-loss">Inject Grid Loss</button>
+          <button class="btn btn-good"   id="btn-grid-restore" disabled>Restore Grid</button>
+          <button class="btn btn-warn"   id="btn-auth-close"   disabled>Authorize Close (Admin)</button>
+          <button class="btn btn-ghost"  id="btn-clear-lockout" disabled>Clear Trip Lockout</button>
+          <button class="btn btn-ghost btn-sm" id="btn-reset">Reset Simulation</button>
+        </div>
+        <div id="f2-control-msg" class="note" style="display:none;"></div>
+      </div>
+    </div>
+
+    <div>
+      <!-- Interlock chain -->
+      <div class="card" style="margin-bottom:14px;">
+        <h2>C1–C7 Interlock Chain</h2>
+        <div id="f2-interlocks" class="interlock-grid"></div>
+        <div style="margin-top:12px;padding:10px;background:var(--paper);border-radius:6px;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;">
+          Close permitted: <span id="f2-close-ok" style="font-weight:700;">—</span>
+        </div>
+      </div>
+      <!-- Key metrics -->
+      <div class="metric-grid" style="margin-bottom:14px;">
+        <div class="metric"><div class="label">BESS Mode</div><div class="value" style="font-size:1rem;" id="v-f2-bess-mode">—</div></div>
+        <div class="metric"><div class="label">BESS SOC</div><div class="value" style="font-size:1rem;" id="v-f2-soc">—</div></div>
+        <div class="metric"><div class="label">Breaker</div><div class="value" style="font-size:1rem;" id="v-f2-breaker">—</div></div>
+      </div>
+      <!-- Event log -->
+      <div class="card">
+        <h2>Event Log</h2>
+        <div class="event-log" id="f2-events"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================================================= AI COPILOT PANEL -->
+<div class="copilot-panel collapsed" id="copilot-panel">
+  <div class="copilot-header" id="copilot-header">
+    <span>⚡ Site Copilot <span style="opacity:0.6;font-weight:400;font-size:0.72rem">ADVISORY ONLY</span></span>
+    <button class="copilot-toggle-btn" aria-label="Toggle copilot">▲</button>
+  </div>
+  <div class="copilot-quick" id="copilot-quick"></div>
+  <div class="copilot-messages" id="copilot-messages">
+    <div class="msg-typing" id="copilot-typing">Site Copilot is thinking…</div>
+  </div>
+  <div class="copilot-input-row">
+    <textarea class="copilot-input" id="copilot-input"
+      rows="1" placeholder="Ask about site operations…"
+      aria-label="Ask the Site Copilot"></textarea>
+    <button class="copilot-send" id="copilot-send" aria-label="Send">↑</button>
+  </div>
+</div>
+<!-- toast container injected by copilot-shared.js -->
+
+<footer><div class="fwrap">
+  <div>EnergizeOS Microgrid EMS — Phase 2 Copilot &nbsp;·&nbsp; Advisory simulation only. All control actions require operator authorization through the deterministic EMS.</div>
+  <div><a href="mailto:info@energizeos.com">info@energizeos.com</a> &nbsp;·&nbsp; <a href="https://docs.energizeos.com/microgrid/">Docs</a></div>
+</div></footer>
+
+  <script src="site-model.js"></script>
+  <script src="ems-engine.js"></script>
+  <script src="copilot-core.js"></script>
+  <script src="copilot-shared.js"></script>
+<script>
+(function () {
+  "use strict";
+  const E = window.EnergizeOS;
+  const { SIM_STATE, SITE_CONFIG, INTERLOCK_DEFS, EmsEngine, GRID_STATES, logEvent, fmtPct } = E;
+
+  const engine = new EmsEngine(SIM_STATE, SITE_CONFIG, INTERLOCK_DEFS, logEvent);
+
+  const STATE_LABELS = {
+    GRID_CONNECTED:        { label: "GRID CONNECTED",        cls: "",        dot: true  },
+    GRID_LOSS_DETECTED:    { label: "GRID LOSS DETECTED",    cls: "lockout", dot: true  },
+    ISLANDING:             { label: "ISLANDING",             cls: "island",  dot: true  },
+    GRID_RESTORE_DETECTED: { label: "GRID RESTORE DETECTED", cls: "sync",    dot: true  },
+    SYNC_CHECKING:         { label: "SYNC CHECKING",         cls: "sync",    dot: true  },
+    RECLOSE_AUTHORIZED:    { label: "RECLOSE AUTHORIZED",    cls: "reclose", dot: true  },
+    TRIP_LOCKOUT:          { label: "TRIP LOCKOUT",          cls: "lockout", dot: true  },
+  };
+
+  const STATE_DESCS = {
+    GRID_CONNECTED:        "Site is operating normally on the utility grid. BESS is in grid-following mode (charge, discharge, or standby). The SEL-700G protection relay and 52-U intertie breaker are closed.",
+    GRID_LOSS_DETECTED:    "Utility voltage or frequency out of range. EMS has confirmed grid loss. 52-U will open (trip) and BESS will begin transitioning to grid-forming mode to energize the island bus.",
+    ISLANDING:             "52-U is open. BESS is operating in grid-forming mode, maintaining voltage and frequency on the island bus for critical loads. The EMS monitors for grid restoration.",
+    GRID_RESTORE_DETECTED: "Utility grid has been detected as stable for the required duration. BESS is stopping grid-forming and settling. C3 (BESS standby) will evaluate once settle time completes.",
+    SYNC_CHECKING:         "BESS has settled. EMS is evaluating all C1–C7 conditions. Close is possible only when all seven conditions are simultaneously true and an operator has provided authorization.",
+    RECLOSE_AUTHORIZED:    "All C1–C7 satisfied. Operator authorization confirmed. EMS is issuing a DO2 pulse (timed, never latched) to close 52-U. Awaiting 52a confirmation.",
+    TRIP_LOCKOUT:          "A protection trip has been detected. Close is BLOCKED until an admin reviews root cause and explicitly clears the lockout. All C1–C7 will be re-evaluated after clearing.",
+  };
+
+  const SM_STATES = ["GRID_CONNECTED","GRID_LOSS_DETECTED","ISLANDING",
+    "GRID_RESTORE_DETECTED","SYNC_CHECKING","RECLOSE_AUTHORIZED"];
+
+  function renderSMDiagram(current) {
+    const lines = SM_STATES.map((s, i) => {
+      const active = s === current;
+      const lockout = current === "TRIP_LOCKOUT";
+      const color = active ? "var(--volt)" : "var(--muted)";
+      const prefix = active ? "▶ " : "  ";
+      const connector = i < SM_STATES.length - 1 ? "  ↓" : "";
+      const parts = [`<span style="color:${color};font-weight:${active?700:400}">${prefix}${s}</span>`];
+      if (connector) parts.push(`<span style="color:var(--line)">${connector}</span>`);
+      return parts.join("\n");
+    });
+    if (current === "TRIP_LOCKOUT") {
+      lines.push(`<span style="color:var(--bad);font-weight:700">▶ TRIP_LOCKOUT (blocks all close)</span>`);
+    }
+    return lines.join("\n");
+  }
+
+  // Buttons
+  const btnLoss    = document.getElementById("btn-grid-loss");
+  const btnRestore = document.getElementById("btn-grid-restore");
+  const btnAuth    = document.getElementById("btn-auth-close");
+  const btnLockout = document.getElementById("btn-clear-lockout");
+  const btnReset   = document.getElementById("btn-reset");
+  const ctrlMsg    = document.getElementById("f2-control-msg");
+
+  function showMsg(text, type="") {
+    ctrlMsg.style.display = "block";
+    ctrlMsg.className = "note" + (type ? " " + type : "");
+    ctrlMsg.textContent = text;
+  }
+
+  btnLoss?.addEventListener("click", () => {
+    engine.setFault("grid_loss", true);
+    btnLoss.disabled = true;
+    btnRestore.disabled = false;
+    showMsg("Grid loss injected. Watch BESS transition to GRID_FORMING mode.", "alert");
+    E.showToast("Grid loss injected — 52-U will open", "error");
+  });
+
+  btnRestore?.addEventListener("click", () => {
+    engine.setFault("grid_loss", false);
+    btnRestore.disabled = true;
+    showMsg("Grid restored. Waiting for BESS settle time before SYNC_CHECKING begins.");
+    E.showToast("Grid restored — awaiting BESS settle", "warn");
+  });
+
+  btnAuth?.addEventListener("click", () => {
+    const r = engine.requestCloseAuthorization("admin-demo", "admin");
+    showMsg(r.reason, r.success ? "good" : "alert");
+    if (r.success) E.showToast("Close authorization granted — 5-minute window", "success");
+  });
+
+  btnLockout?.addEventListener("click", () => {
+    const r = engine.clearTripLockout("admin-demo");
+    showMsg(r.reason, r.success ? "" : "alert");
+    if (r.success) E.showToast("Trip lockout cleared — entering SYNC_CHECKING", "warn");
+  });
+
+  btnReset?.addEventListener("click", () => {
+    Object.assign(SIM_STATE.bess, { mode:"STANDBY", grid_forming_active:false, transition_complete:true, fault_active:false });
+    SIM_STATE.breaker = { position:"CLOSED", cb_52a:true, cb_52b:false, spring_charged:true, data_age_ms:0, quality:"GOOD" };
+    SIM_STATE.ems.grid_state = "GRID_CONNECTED";
+    SIM_STATE.ems.trip_lockout = false;
+    SIM_STATE.ems.close_authorized = false;
+    SIM_STATE.event_log = [];
+    engine.setFault("grid_loss", false);
+    btnLoss.disabled = false; btnRestore.disabled = true;
+    btnAuth.disabled = true; btnLockout.disabled = true;
+    showMsg("Simulation reset to GRID_CONNECTED state.");
+    E.showToast("Simulation reset", "info");
+  });
+
+  function update() {
+    engine.tick(60); // 60x speed so transitions happen quickly in demo
+    const s = SIM_STATE;
+    const gs = s.ems.grid_state;
+    const info = STATE_LABELS[gs] || STATE_LABELS.GRID_CONNECTED;
+
+    // State badge
+    const badge = document.getElementById("f2-state-badge");
+    if (badge) badge.innerHTML =
+      `<div class="state-badge ${info.cls}">${info.dot ? '<div class="state-dot"></div>' : ''}${info.label}</div>`;
+
+    // State desc
+    const desc = document.getElementById("f2-state-desc");
+    if (desc) desc.textContent = STATE_DESCS[gs] || "";
+
+    // SM diagram
+    const diag = document.getElementById("f2-sm-diagram");
+    if (diag) diag.innerHTML = renderSMDiagram(gs);
+
+    // Button states
+    if (btnAuth)    btnAuth.disabled    = gs !== "SYNC_CHECKING";
+    if (btnLockout) btnLockout.disabled = !s.ems.trip_lockout;
+
+    // Close permitted
+    const cpEl = document.getElementById("f2-close-ok");
+    if (cpEl) {
+      cpEl.textContent = s.close_permitted ? "YES — all C1–C7 met" : "NO";
+      cpEl.style.color = s.close_permitted ? "var(--good)" : "var(--bad)";
+    }
+
+    // Key metrics
+    const bmEl = document.getElementById("v-f2-bess-mode");
+    if (bmEl) { bmEl.textContent = s.bess.mode + (s.bess.grid_forming_active ? " (GF)" : ""); }
+    const socEl = document.getElementById("v-f2-soc");
+    if (socEl) socEl.textContent = fmtPct(s.bess.soc_pct);
+    const brEl = document.getElementById("v-f2-breaker");
+    if (brEl) { brEl.textContent = s.breaker.position; brEl.style.color = s.breaker.position === "CLOSED" ? "var(--good)" : "var(--warn)"; }
+
+    // Interlocks
+    E.renderInterlocks("f2-interlocks", s.interlocks, INTERLOCK_DEFS);
+
+    // Event log
+    E.renderEventLog("f2-events", SIM_STATE.event_log, 15);
+  }
+
+  setInterval(update, 600);
+  update();
+
+  E.initCopilot(engine, [
+    "Why can't I close the breaker yet?",
+    "What is C3 waiting for?",
+    "Explain the trip lockout.",
+    "What is grid-forming mode?",
+    "Walk me through the reclose sequence.",
+    "What happens if the grid comes back while islanding?",
+  ], "F2 Grid-Island-Grid State Machine");
+  E.initBurger();
+})();
+</script>
+</body></html>

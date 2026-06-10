@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>F3: C1–C7 Interlock Diagnostics — EnergizeOS Microgrid EMS Copilot</title>
+<meta name="description" content="Real-time C1–C7 EMS close permissive chain with fault injection and AI diagnostic copilot.">
+<meta property="og:title" content="F3: C1–C7 Interlock Diagnostics">
+<meta property="og:description" content="Real-time C1–C7 EMS close permissive chain with fault injection and AI diagnostic copilot.">
+<meta property="og:image" content="https://docs.energizeos.com/microgrid/og-image.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="copilot.css">
+</head>
+<body>
+<header>
+  <div class="hwrap">
+    <a class="brand" href="../index.html">
+      <div class="mark"><i></i><i></i><i></i><i></i></div>
+      <b>EnergizeOS</b><span>Microgrid EMS</span>
+    </a>
+    <nav class="top" aria-label="Primary"><a href="../index.html" class="">Docs Home</a><a href="index.html" class="">Copilot Hub</a><a href="f1-zero-export.html" class="">Zero Export</a><a href="f2-grid-island.html" class="">Grid↔Island</a><a href="f3-interlock.html" class="active">Interlocks</a><a href="f4-tou-optimizer.html" class="">TOU Optimizer</a></nav>
+    <button class="burger" onclick="EnergizeOS.initBurger&&document.getElementById('mnav').classList.toggle('open')" aria-label="Menu">
+      <i></i><i></i><i></i>
+    </button>
+  </div>
+  <div class="mnav" id="mnav"><a href="../index.html" class="">Docs Home</a><a href="index.html" class="">Copilot Hub</a><a href="f1-zero-export.html" class="">Zero Export</a><a href="f2-grid-island.html" class="">Grid↔Island</a><a href="f3-interlock.html" class="active">Interlocks</a><a href="f4-tou-optimizer.html" class="">TOU Optimizer</a></div>
+</header>
+
+<div class="page-wrap">
+  <div class="page-hero">
+    <div class="eyebrow">F3 — Close Interlock Chain <span class="ph2-badge">Diagnostic</span></div>
+    <h1>C1–C7 Permissive Diagnostics</h1>
+    <p>The EMS close command requires all seven permissive conditions to be simultaneously true.
+    Each condition has a specific source, data quality requirement, and blocking reason.
+    Inject faults below to see how the interlock chain responds — and ask the Copilot for a diagnosis.</p>
+  </div>
+
+  <div class="two-col wide-right">
+    <div>
+      <!-- Full interlock chain -->
+      <div class="card" style="margin-bottom:14px;">
+        <h2>C1–C7 Chain</h2>
+        <div id="f3-interlocks" class="interlock-grid"></div>
+        <div style="margin-top:14px;padding:12px;background:var(--paper);border-radius:7px;display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:0.82rem;font-weight:600;">Close Permitted:</span>
+          <span id="f3-close-pill" class="pill bad">NO</span>
+        </div>
+      </div>
+
+      <!-- Interlock definitions reference -->
+      <div class="card">
+        <h2>Condition Reference</h2>
+        <div id="f3-defs" class="tablewrap"></div>
+      </div>
+    </div>
+
+    <div>
+      <!-- Fault injection -->
+      <div class="card" style="margin-bottom:14px;">
+        <h2>Fault Injection Panel</h2>
+        <p style="font-size:0.82rem;color:var(--muted);margin-bottom:14px;">Toggle faults to observe interlock chain response. Each fault reflects a real failure mode identified in the EMS engineering review.</p>
+        <div class="fault-panel" id="f3-faults"></div>
+
+        <div style="margin-top:14px;">
+          <button class="btn btn-warn btn-sm" id="f3-auth-btn">Grant Close Authorization (C4+C7)</button>
+          <div id="f3-auth-msg" style="margin-top:8px;font-size:0.8rem;color:var(--muted);"></div>
+        </div>
+      </div>
+
+      <!-- Live metrics -->
+      <div class="card" style="margin-bottom:14px;">
+        <h2>Live Readings</h2>
+        <div class="metric-grid">
+          <div class="metric"><div class="label">PCC Voltage</div><div class="value" style="font-size:1.1rem;" id="v-f3-v">—</div></div>
+          <div class="metric"><div class="label">Frequency</div><div class="value" style="font-size:1.1rem;" id="v-f3-f">—</div></div>
+          <div class="metric"><div class="label">PCC Flow</div><div class="value" style="font-size:1.1rem;" id="v-f3-flow">—</div></div>
+        </div>
+      </div>
+
+      <!-- Event log -->
+      <div class="card">
+        <h2>Interlock Event Log</h2>
+        <div class="event-log" id="f3-events"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================================================= AI COPILOT PANEL -->
+<div class="copilot-panel collapsed" id="copilot-panel">
+  <div class="copilot-header" id="copilot-header">
+    <span>⚡ Site Copilot <span style="opacity:0.6;font-weight:400;font-size:0.72rem">ADVISORY ONLY</span></span>
+    <button class="copilot-toggle-btn" aria-label="Toggle copilot">▲</button>
+  </div>
+  <div class="copilot-quick" id="copilot-quick"></div>
+  <div class="copilot-messages" id="copilot-messages">
+    <div class="msg-typing" id="copilot-typing">Site Copilot is thinking…</div>
+  </div>
+  <div class="copilot-input-row">
+    <textarea class="copilot-input" id="copilot-input"
+      rows="1" placeholder="Ask about site operations…"
+      aria-label="Ask the Site Copilot"></textarea>
+    <button class="copilot-send" id="copilot-send" aria-label="Send">↑</button>
+  </div>
+</div>
+<!-- toast container injected by copilot-shared.js -->
+
+<footer><div class="fwrap">
+  <div>EnergizeOS Microgrid EMS — Phase 2 Copilot &nbsp;·&nbsp; Advisory simulation only. All control actions require operator authorization through the deterministic EMS.</div>
+  <div><a href="mailto:info@energizeos.com">info@energizeos.com</a> &nbsp;·&nbsp; <a href="https://docs.energizeos.com/microgrid/">Docs</a></div>
+</div></footer>
+
+  <script src="site-model.js"></script>
+  <script src="ems-engine.js"></script>
+  <script src="copilot-core.js"></script>
+  <script src="copilot-shared.js"></script>
+<script>
+(function () {
+  "use strict";
+  const E = window.EnergizeOS;
+  const { SIM_STATE, SITE_CONFIG, INTERLOCK_DEFS, EmsEngine, logEvent, fmtPct } = E;
+
+  // Start in SYNC_CHECKING so all C conditions are actively evaluated
+  SIM_STATE.breaker.position = "OPEN";
+  SIM_STATE.breaker.cb_52a = false;
+  SIM_STATE.breaker.cb_52b = true;
+  SIM_STATE.ems.grid_state = "SYNC_CHECKING";
+  SIM_STATE.ems.trip_lockout = false;
+
+  const engine = new EmsEngine(SIM_STATE, SITE_CONFIG, INTERLOCK_DEFS, logEvent);
+
+  // Build fault toggles
+  const FAULTS = [
+    { key:"grid_loss",         label:"Grid Loss (C1 → undervoltage/frequency)",     desc:"Simulates utility voltage collapse" },
+    { key:"bess_fault",        label:"BESS Fault Active (C3 → fault blocking)",     desc:"BESS reports fault — C3 goes FALSE" },
+    { key:"comm_loss_bess",    label:"BESS Comm Loss (C3 → STALE data)",            desc:"Modbus TCP to BESS PLC times out" },
+    { key:"comm_loss_relay",   label:"Relay Comm Loss (C1 → quality STALE)",        desc:"SEL-735/700G communication failure" },
+    { key:"sync_angle_fail",   label:"Sync Angle Out of Range (C5 → FALSE)",        desc:"Phase angle delta exceeds 10° limit" },
+    { key:"spring_charge_fail",label:"Spring Charge Not Ready (C6 → FALSE)",        desc:"Breaker mechanical energy not available" },
+  ];
+
+  const faultPanel = document.getElementById("f3-faults");
+  if (faultPanel) {
+    faultPanel.innerHTML = FAULTS.map(f => `
+      <div class="fault-row">
+        <div>
+          <div style="font-weight:600;font-size:0.84rem;">${f.label}</div>
+          <div style="font-size:0.74rem;color:var(--muted);">${f.desc}</div>
+        </div>
+        <div class="toggle-wrap">
+          <label class="toggle"><input type="checkbox" data-fault="${f.key}"><span class="toggle-slider"></span></label>
+          <span class="pill neutral" id="fpill-${f.key}">OFF</span>
+        </div>
+      </div>`).join("");
+
+    faultPanel.addEventListener("change", e => {
+      const cb = e.target;
+      if (!cb.dataset.fault) return;
+      engine.setFault(cb.dataset.fault, cb.checked);
+      const pill = document.getElementById(`fpill-${cb.dataset.fault}`);
+      if (pill) {
+        pill.textContent = cb.checked ? "ON" : "OFF";
+        pill.className = "pill " + (cb.checked ? "bad" : "neutral");
+      }
+      if (cb.checked) E.showToast("Fault injected: " + cb.dataset.fault, "warn");
+    });
+  }
+
+  // Auth button
+  document.getElementById("f3-auth-btn")?.addEventListener("click", () => {
+    const r = engine.requestCloseAuthorization("operator-demo", "operator");
+    const msg = document.getElementById("f3-auth-msg");
+    if (msg) msg.textContent = r.reason;
+    if (r.success) E.showToast("Close authorization active — 5 min window", "success");
+  });
+
+  // Interlock defs table
+  const defsEl = document.getElementById("f3-defs");
+  if (defsEl) {
+    defsEl.innerHTML = `<table><tr><th>ID</th><th>Label</th><th>Source</th></tr>` +
+      Object.entries(INTERLOCK_DEFS).map(([id, d]) =>
+        `<tr><td style="font-family:monospace;font-weight:700">${id}</td><td style="font-size:0.82rem">${d.label}</td><td style="font-size:0.78rem;color:var(--muted)">${d.source}</td></tr>`
+      ).join("") + "</table>";
+  }
+
+  function update() {
+    engine.tick(1);
+    const s = SIM_STATE;
+
+    E.renderInterlocks("f3-interlocks", s.interlocks, INTERLOCK_DEFS);
+
+    const pill = document.getElementById("f3-close-pill");
+    if (pill) {
+      pill.textContent = s.close_permitted ? "YES" : "NO";
+      pill.className = "pill " + (s.close_permitted ? "good" : "bad");
+    }
+
+    const vEl = document.getElementById("v-f3-v");
+    if (vEl) vEl.textContent = (s.pcc.voltage_pu * 480).toFixed(0) + " V";
+    const fEl = document.getElementById("v-f3-f");
+    if (fEl) fEl.textContent = s.pcc.frequency_hz.toFixed(2) + " Hz";
+    const flowEl = document.getElementById("v-f3-flow");
+    if (flowEl) flowEl.textContent = (s.pcc.active_power_kw >= 0 ? "+" : "") + s.pcc.active_power_kw.toFixed(1) + " kW";
+
+    E.renderEventLog("f3-events", SIM_STATE.event_log.filter(e => e.category === "INTERLOCK"), 15);
+  }
+
+  setInterval(update, 700);
+  update();
+
+  E.initCopilot(engine, [
+    "Why is C3 false?",
+    "What does BESS comm loss do to the interlock chain?",
+    "Explain C5 sync check requirements.",
+    "Why is C6 false when breaker is closed?",
+    "What clears a trip lockout?",
+    "Are any conditions currently blocking close?",
+  ], "F3 Interlock Diagnostics");
+  E.initBurger();
+})();
+</script>
+</body></html>

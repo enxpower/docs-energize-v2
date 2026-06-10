@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>F1: Zero Export / Reverse Flow Guard — EnergizeOS Microgrid EMS Copilot</title>
+<meta name="description" content="Live simulation of PCC power flow control preventing net export to utility under CA Rule 21.">
+<meta property="og:title" content="F1: Zero Export / Reverse Flow Guard">
+<meta property="og:description" content="Live simulation of PCC power flow control preventing net export to utility under CA Rule 21.">
+<meta property="og:image" content="https://docs.energizeos.com/microgrid/og-image.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="copilot.css">
+</head>
+<body>
+<header>
+  <div class="hwrap">
+    <a class="brand" href="../index.html">
+      <div class="mark"><i></i><i></i><i></i><i></i></div>
+      <b>EnergizeOS</b><span>Microgrid EMS</span>
+    </a>
+    <nav class="top" aria-label="Primary"><a href="../index.html" class="">Docs Home</a><a href="index.html" class="">Copilot Hub</a><a href="f1-zero-export.html" class="active">Zero Export</a><a href="f2-grid-island.html" class="">Grid↔Island</a><a href="f3-interlock.html" class="">Interlocks</a><a href="f4-tou-optimizer.html" class="">TOU Optimizer</a></nav>
+    <button class="burger" onclick="EnergizeOS.initBurger&&document.getElementById('mnav').classList.toggle('open')" aria-label="Menu">
+      <i></i><i></i><i></i>
+    </button>
+  </div>
+  <div class="mnav" id="mnav"><a href="../index.html" class="">Docs Home</a><a href="index.html" class="">Copilot Hub</a><a href="f1-zero-export.html" class="active">Zero Export</a><a href="f2-grid-island.html" class="">Grid↔Island</a><a href="f3-interlock.html" class="">Interlocks</a><a href="f4-tou-optimizer.html" class="">TOU Optimizer</a></div>
+</header>
+
+<div class="page-wrap">
+  <div class="page-hero">
+    <div class="eyebrow">F1 — Zero Export Guard <span class="ph2-badge">Live Sim</span></div>
+    <h1>Reverse Flow Prevention</h1>
+    <p>SDG&amp;E interconnection requires zero net export at the PCC. This module simulates the EMS
+    enforcement loop: real-time meter feedback → zero-export check → automatic BESS discharge clamp.
+    Drag the sliders to explore what happens when load drops or BESS output rises.</p>
+  </div>
+
+  <div class="two-col wide-right">
+    <!-- LEFT: controls + flow display -->
+    <div>
+      <!-- Metrics row -->
+      <div class="metric-grid" id="f1-metrics">
+        <div class="metric highlight" id="m-pcc-flow">
+          <div class="label">PCC Net Flow</div>
+          <div class="value" id="v-pcc-flow">—</div>
+          <div class="sub" id="s-pcc-flow">—</div>
+        </div>
+        <div class="metric" id="m-bess-kw">
+          <div class="label">BESS Output</div>
+          <div class="value" id="v-bess-kw">—</div>
+          <div class="sub" id="s-bess-mode">—</div>
+        </div>
+        <div class="metric" id="m-site-load">
+          <div class="label">Site Load</div>
+          <div class="value" id="v-site-load">—</div>
+          <div class="sub">kW total</div>
+        </div>
+        <div class="metric" id="m-soc">
+          <div class="label">BESS SOC</div>
+          <div class="value" id="v-soc">—</div>
+          <div class="sub" id="s-soc">—</div>
+        </div>
+        <div class="metric" id="m-c2">
+          <div class="label">C2 Status</div>
+          <div class="value" id="v-c2-status">—</div>
+          <div class="sub">Zero export check</div>
+        </div>
+        <div class="metric" id="m-clamp">
+          <div class="label">Clamp Events</div>
+          <div class="value" id="v-clamp">0</div>
+          <div class="sub">This session</div>
+        </div>
+      </div>
+
+      <!-- Power flow bar -->
+      <div class="card" style="margin-bottom:14px;">
+        <h2>Live PCC Power Flow</h2>
+        <div style="font-size:0.82rem;color:var(--muted);margin-bottom:10px;">
+          Positive = site importing from utility (normal).
+          Negative = site exporting to utility (Rule 21 violation).
+        </div>
+        <div class="flow-bar-wrap">
+          <div class="flow-bar-label">
+            <span>Export ←</span>
+            <span>0 kW (PCC)</span>
+            <span>→ Import</span>
+          </div>
+          <div class="flow-bar" id="f1-flowbar" style="height:20px;">
+            <div class="flow-bar-fill" id="f1-flowfill" style="width:50%;background:var(--good)"></div>
+          </div>
+          <div style="font-size:0.76rem;color:var(--muted);margin-top:4px;" id="f1-flowlabel">—</div>
+        </div>
+        <div class="note" id="f1-alert" style="display:none;margin-top:10px;"></div>
+      </div>
+
+      <!-- Manual dispatch controls -->
+      <div class="card">
+        <h2>Simulation Controls</h2>
+        <div style="margin-bottom:18px;">
+          <label style="font-size:0.84rem;font-weight:600;display:block;margin-bottom:6px;">
+            BESS Dispatch Target: <span id="lbl-bess-dispatch">0</span> kW
+            <span style="font-size:0.72rem;color:var(--muted);font-weight:400">&nbsp;(negative = discharge)</span>
+          </label>
+          <input type="range" id="sl-bess-dispatch" min="-996" max="996" value="0" step="10"
+            style="width:100%;accent-color:var(--volt)">
+          <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted)">
+            <span>−996 kW discharge</span><span>0</span><span>+996 kW charge</span>
+          </div>
+        </div>
+        <div style="margin-bottom:18px;">
+          <label style="font-size:0.84rem;font-weight:600;display:block;margin-bottom:6px;">
+            Site Load: <span id="lbl-load">620</span> kW
+          </label>
+          <input type="range" id="sl-load" min="100" max="1580" value="620" step="20"
+            style="width:100%;accent-color:var(--slate)">
+          <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted)">
+            <span>100 kW (low)</span><span>1,580 kW (peak)</span>
+          </div>
+        </div>
+        <div id="f1-dispatch-result" class="note" style="display:none;"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: interlock C2 detail + event log -->
+    <div>
+      <div class="card" style="margin-bottom:14px;">
+        <h2>C2 — Zero Export Interlock</h2>
+        <div id="f1-c2-detail" class="interlock-grid"></div>
+        <div style="margin-top:14px;font-size:0.82rem;color:var(--muted);">
+          <strong>Rule 21 requirement:</strong> Site must not inject power to the utility grid.
+          The EMS monitors the SEL-735 revenue meter at the PCC every 1 second.
+          If net flow goes below −2 kW (dead band), BESS discharge is clamped within the same poll cycle.
+        </div>
+      </div>
+      <div class="card">
+        <h2>Event Log</h2>
+        <div class="event-log" id="f1-events"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================================================= AI COPILOT PANEL -->
+<div class="copilot-panel collapsed" id="copilot-panel">
+  <div class="copilot-header" id="copilot-header">
+    <span>⚡ Site Copilot <span style="opacity:0.6;font-weight:400;font-size:0.72rem">ADVISORY ONLY</span></span>
+    <button class="copilot-toggle-btn" aria-label="Toggle copilot">▲</button>
+  </div>
+  <div class="copilot-quick" id="copilot-quick"></div>
+  <div class="copilot-messages" id="copilot-messages">
+    <div class="msg-typing" id="copilot-typing">Site Copilot is thinking…</div>
+  </div>
+  <div class="copilot-input-row">
+    <textarea class="copilot-input" id="copilot-input"
+      rows="1" placeholder="Ask about site operations…"
+      aria-label="Ask the Site Copilot"></textarea>
+    <button class="copilot-send" id="copilot-send" aria-label="Send">↑</button>
+  </div>
+</div>
+<!-- toast container injected by copilot-shared.js -->
+
+<footer><div class="fwrap">
+  <div>EnergizeOS Microgrid EMS — Phase 2 Copilot &nbsp;·&nbsp; Advisory simulation only. All control actions require operator authorization through the deterministic EMS.</div>
+  <div><a href="mailto:info@energizeos.com">info@energizeos.com</a> &nbsp;·&nbsp; <a href="https://docs.energizeos.com/microgrid/">Docs</a></div>
+</div></footer>
+
+  <script src="site-model.js"></script>
+  <script src="ems-engine.js"></script>
+  <script src="copilot-core.js"></script>
+  <script src="copilot-shared.js"></script>
+<script>
+(function () {
+  "use strict";
+  const E = window.EnergizeOS;
+  const { SIM_STATE, SITE_CONFIG, INTERLOCK_DEFS, EmsEngine, logEvent, fmtKW, fmtPct } = E;
+
+  // Reset breaker to CLOSED for this module (normal grid-connected state)
+  SIM_STATE.breaker.position = "CLOSED";
+  SIM_STATE.breaker.cb_52a = true;
+  SIM_STATE.breaker.cb_52b = false;
+  SIM_STATE.ems.grid_state = "GRID_CONNECTED";
+
+  const engine = new EmsEngine(SIM_STATE, SITE_CONFIG, INTERLOCK_DEFS, logEvent);
+  let clampCount = 0;
+
+  // Sliders
+  const slDispatch = document.getElementById("sl-bess-dispatch");
+  const slLoad     = document.getElementById("sl-load");
+  const lblDispatch = document.getElementById("lbl-bess-dispatch");
+  const lblLoad    = document.getElementById("lbl-load");
+  const dispResult = document.getElementById("f1-dispatch-result");
+
+  slDispatch.addEventListener("input", () => {
+    lblDispatch.textContent = slDispatch.value;
+    const r = engine.setBessDispatch(Number(slDispatch.value));
+    dispResult.style.display = "block";
+    dispResult.className = "note" + (r.success ? "" : " alert");
+    dispResult.textContent = r.reason;
+    if (r.applied_kw !== Number(slDispatch.value)) {
+      clampCount++;
+      E.showToast("Zero-export clamp applied — BESS output reduced to prevent reverse flow.", "warn");
+    }
+  });
+
+  slLoad.addEventListener("input", () => {
+    lblLoad.textContent = slLoad.value;
+    SIM_STATE.load.total_kw = Number(slLoad.value);
+  });
+
+  // UI update loop
+  function update() {
+    engine.tick(1);
+    const s = SIM_STATE;
+    const flow = s.pcc.active_power_kw;
+    const exporting = flow < -SITE_CONFIG.meter_deadband_kw;
+
+    // Metrics
+    const pccEl = document.getElementById("v-pcc-flow");
+    if (pccEl) pccEl.textContent = (flow >= 0 ? "+" : "") + flow.toFixed(1) + " kW";
+    const pccSub = document.getElementById("s-pcc-flow");
+    if (pccSub) pccSub.textContent = flow >= 0 ? "Importing (normal)" : "⚠ EXPORTING — violation risk";
+    const mPcc = document.getElementById("m-pcc-flow");
+    if (mPcc) mPcc.className = "metric highlight" + (exporting ? " alert-bad" : " alert-good");
+
+    const bessKw = document.getElementById("v-bess-kw");
+    if (bessKw) bessKw.textContent = (s.bess.active_power_kw >= 0 ? "+" : "") + s.bess.active_power_kw.toFixed(0) + " kW";
+    const bessMode = document.getElementById("s-bess-mode");
+    if (bessMode) bessMode.textContent = s.bess.mode.toLowerCase();
+
+    const loadEl = document.getElementById("v-site-load");
+    if (loadEl) loadEl.textContent = s.load.total_kw.toFixed(0) + " kW";
+
+    const socEl = document.getElementById("v-soc");
+    if (socEl) socEl.textContent = fmtPct(s.bess.soc_pct);
+    const socSub = document.getElementById("s-soc");
+    if (socSub) socSub.textContent = s.bess.available_discharge_kw.toFixed(0) + " kW avail. discharge";
+
+    const c2val = s.interlocks.C2.value;
+    const c2El = document.getElementById("v-c2-status");
+    if (c2El) { c2El.textContent = c2val ? "PASS" : "FAIL"; c2El.style.color = c2val ? "var(--good)" : "var(--bad)"; }
+
+    const clampEl = document.getElementById("v-clamp");
+    if (clampEl) clampEl.textContent = clampCount;
+
+    // Flow bar: centre = 0, right = max import, left = max export
+    const maxKw = 1600;
+    const pct = ((flow + maxKw) / (maxKw * 2)) * 100;
+    const fill = document.getElementById("f1-flowfill");
+    if (fill) {
+      fill.style.width = Math.min(100, Math.max(0, pct)) + "%";
+      fill.style.background = exporting ? "var(--bad)" : (flow < 50 ? "var(--warn)" : "var(--good)");
+    }
+    const flowLbl = document.getElementById("f1-flowlabel");
+    if (flowLbl) flowLbl.textContent = `Load: ${s.load.total_kw} kW  |  BESS: ${s.bess.active_power_kw.toFixed(0)} kW  |  PCC: ${flow.toFixed(1)} kW`;
+
+    // C2 alert
+    const alert = document.getElementById("f1-alert");
+    if (alert) {
+      if (exporting) {
+        alert.style.display = "block";
+        alert.className = "note alert";
+        alert.innerHTML = "<strong>⚠ Reverse flow detected.</strong> Net export = " + Math.abs(flow).toFixed(1) + " kW. EMS will clamp BESS discharge on next tick.";
+      } else {
+        alert.style.display = "none";
+      }
+    }
+
+    // Interlock C2 detail
+    E.renderInterlocks("f1-c2-detail",
+      { C2: s.interlocks.C2 },
+      { C2: INTERLOCK_DEFS.C2 }
+    );
+
+    // Event log
+    E.renderEventLog("f1-events", SIM_STATE.event_log, 12);
+  }
+
+  setInterval(update, 800);
+  update();
+
+  // Init copilot
+  E.initCopilot(engine, [
+    "Why did the BESS clamp?",
+    "What is the Rule 21 export limit?",
+    "How does the zero-export control work?",
+    "Can I discharge 800 kW right now?",
+    "What happens if load drops to 200 kW?",
+  ], "F1 Zero Export Guard");
+  E.initBurger();
+})();
+</script>
+</body></html>
