@@ -207,36 +207,68 @@
       Math.round((loadProfile[h*4] + loadProfile[h*4+1] + loadProfile[h*4+2] + loadProfile[h*4+3]) / 4)
     );
 
-    // Simple rule-based optimizer:
-    //   Super-off-peak (overnight 0–7): charge at chargePwr if SOC < 90%
-    //   On-peak (16–21 weekday): discharge at dischargePwr if SOC > 15%
-    //   Off-peak: standby
-    // Enforce zero-export: discharge ≤ load
+    // Demand-limit optimizer (peak shave to a computed target):
+    //   1. Overnight super-off-peak (0-7): charge toward SOC max.
+    //   2. Compute usable BESS energy available at start of on-peak window.
+    //   3. Binary-search the lowest demand target T such that the energy
+    //      required to clip all on-peak load above T fits within usable
+    //      energy and the PCS power limit.
+    //   4. During on-peak, discharge only max(0, load - T) — this holds
+    //      net demand at T through the actual 19:00 load peak instead of
+    //      depleting the battery at 16:00.
+    //   Zero-export rule: discharge never exceeds load - deadband.
+    const SOC_MAX = SITE_CONFIG.bess_soc_max_pct;        // 95
+    const SOC_RESERVE = 15;                              // keep 15% floor for the plan
+    const ON_PEAK_HOURS = [16, 17, 18, 19, 20];
+
+    // --- Step 1: simulate overnight charging to find SOC at 16:00 ---
+    let socAtPeak = soc;
+    for (let h = 0; h < 16; h++) {
+      if (h < 7 && socAtPeak < SOC_MAX) {
+        const headroomKwh = ((SOC_MAX - socAtPeak) / 100) * capacity;
+        const chg = Math.min(chargePwr, headroomKwh);
+        socAtPeak = Math.min(SOC_MAX, socAtPeak + (chg / capacity) * 100);
+      }
+    }
+    const usableKwh = Math.max(0, ((socAtPeak - SOC_RESERVE) / 100) * capacity);
+
+    // --- Step 2: binary search the demand target T ---
+    const peakLoads = ON_PEAK_HOURS.map(h => hourlyLoad[h]);
+    const energyToShaveTo = (T) => peakLoads.reduce(
+      (sum, load) => sum + Math.min(dischargePwr, Math.max(0, load - T)), 0);
+    let lo = 0, hi = Math.max(...peakLoads);
+    for (let i = 0; i < 40; i++) {
+      const mid = (lo + hi) / 2;
+      if (energyToShaveTo(mid) > usableKwh) lo = mid; else hi = mid;
+    }
+    const demandTarget = Math.ceil(hi);
+
+    // --- Step 3: build the full 24h schedule against the target ---
     const bessSchedule = [];
     const socSchedule  = [];
     let onpeakKwh = 0, energySave = 0, demandBaseline = 0, demandWithBess = 0;
 
     for (let h = 0; h < 24; h++) {
       const load = hourlyLoad[h];
-      const isOnPeak    = h >= 16 && h < 21;
-      const isSuperOff  = h >= 0  && h < 7;
+      const isOnPeak    = ON_PEAK_HOURS.includes(h);
+      const isSuperOff  = h >= 0 && h < 7;
 
       let bessKw = 0;
-      if (isOnPeak && soc > 15) {
-        // Discharge — clamped to load (zero-export rule) and available power
-        const maxDisch = Math.min(dischargePwr, load - SITE_CONFIG.meter_deadband_kw);
-        const availKw  = ((soc - SITE_CONFIG.bess_soc_min_pct) / 100) * capacity;
-        bessKw = -Math.min(maxDisch, availKw);
+      if (isOnPeak && soc > SOC_RESERVE) {
+        // Discharge only what is needed to hold net demand at the target.
+        const needed   = Math.max(0, load - demandTarget);
+        const zeroExp  = load - SITE_CONFIG.meter_deadband_kw;  // zero-export cap
+        const availKwh = ((soc - SITE_CONFIG.bess_soc_min_pct) / 100) * capacity;
+        bessKw = -Math.min(needed, dischargePwr, zeroExp, availKwh);
         onpeakKwh += Math.abs(bessKw);
         energySave += Math.abs(bessKw) * tariff.on_peak.energy_rate_per_kwh;
-      } else if (isSuperOff && soc < 90) {
-        // Charge
-        bessKw = Math.min(chargePwr, (0.90 - soc/100) * capacity);
+      } else if (isSuperOff && soc < SOC_MAX) {
+        const headroomKwh = ((SOC_MAX - soc) / 100) * capacity;
+        bessKw = Math.min(chargePwr, headroomKwh);
       }
 
-      // Update SOC
-      const dtH = 1; // hourly resolution
-      soc = Math.min(95, Math.max(10, soc - (bessKw / capacity) * 100));
+      // SOC update: bessKw > 0 = charging (SOC rises), bessKw < 0 = discharging (SOC falls)
+      soc = Math.min(SOC_MAX, Math.max(SITE_CONFIG.bess_soc_min_pct, soc + (bessKw / capacity) * 100));
       bessSchedule.push(Math.round(bessKw));
       socSchedule.push(soc.toFixed(1));
 

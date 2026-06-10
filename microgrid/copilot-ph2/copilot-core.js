@@ -50,35 +50,56 @@ class CopilotCore {
   // -------------------------------------------------------------------------
 
   /**
+   * API key handling (BYOK — bring your own key).
+   * Stored ONLY in this browser's localStorage, shared with the
+   * Commissioning Copilot (/commissioning) under the same key name.
+   * Sent only to api.anthropic.com over HTTPS using Anthropic's official
+   * CORS browser-access support. Never embedded in source.
+   */
+  get apiKey()  { return localStorage.getItem("cx-anthropic-key") || ""; }
+  set apiKey(k) {
+    if (k) localStorage.setItem("cx-anthropic-key", k.trim());
+    else   localStorage.removeItem("cx-anthropic-key");
+  }
+  get isLive() { return !!this.apiKey; }
+
+  /**
    * Send a user message to the AI Copilot.
    * Injects current EMS state as system context on every call.
+   * Without an API key, falls back to a deterministic local responder
+   * that answers state questions directly from the EMS snapshot.
    * @param {string} userMessage
-   * @param {function} onChunk   - called with each streamed text chunk (optional)
    * @returns {Promise<string>}  - full response text
    */
-  async ask(userMessage, onChunk = null) {
-    // Build system prompt with live EMS context
+  async ask(userMessage) {
+    this.log("AI", "INFO", `Copilot query: "${userMessage.slice(0, 80)}${userMessage.length > 80 ? "…" : ""}"`, {});
+
+    // ---- Offline mode: deterministic local answer from live snapshot ----
+    if (!this.isLive) {
+      const text = this._offlineAnswer(userMessage);
+      this.log("AI", "INFO", "Copilot offline-mode response (no API key)", {});
+      return text;
+    }
+
+    // ---- Live mode: Anthropic API ----
     const systemPrompt = this._buildSystemPrompt();
-
-    // Append user message to history
     this.history.push({ role: "user", content: userMessage });
-
-    // Trim history to budget
     if (this.history.length > this.MAX_HISTORY_TURNS * 2) {
       this.history = this.history.slice(-this.MAX_HISTORY_TURNS * 2);
     }
 
-    // Log the query
-    this.log("AI", "INFO", `Copilot query: "${userMessage.slice(0, 80)}${userMessage.length > 80 ? "…" : ""}"`, {});
-
     let responseText = "";
-
     try {
       const response = await fetch("https://api.anthropic.com/v1/messages", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": this.apiKey,
+          "anthropic-version": "2023-06-01",
+          "anthropic-dangerous-direct-browser-access": "true",
+        },
         body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
+          model: localStorage.getItem("cx-model") || "claude-sonnet-4-20250514",
           max_tokens: 1000,
           system: systemPrompt,
           messages: this.history,
@@ -91,25 +112,55 @@ class CopilotCore {
       }
 
       const data = await response.json();
-
-      // Extract text from content blocks
       responseText = data.content
         .filter(b => b.type === "text")
         .map(b => b.text)
         .join("\n");
 
-      // Append assistant response to history
       this.history.push({ role: "assistant", content: responseText });
-
-      // Log the response summary
       this.log("AI", "INFO", `Copilot response (${responseText.length} chars)`, {});
 
     } catch (err) {
-      responseText = `**Copilot unavailable:** ${err.message}\n\nThe EMS deterministic engine continues to operate normally. Check your network connection or API configuration.`;
+      this.history.pop(); // drop failed turn so retry is clean
+      responseText = `**Copilot request failed:** ${err.message}\n\nThe EMS deterministic engine continues to operate normally. Verify your API key (key icon in the panel header) or clear it to use offline mode.`;
       this.log("AI", "WARNING", `Copilot API error: ${err.message}`, {});
     }
-
     return responseText;
+  }
+
+  /**
+   * Offline deterministic responder — no AI, no network.
+   * Answers state questions directly from the live EMS snapshot so the
+   * demo remains genuinely useful without a key. Clearly labelled.
+   */
+  _offlineAnswer(userMessage) {
+    const snap = this.getSnapshot();
+    const q = userMessage.toLowerCase();
+    const blocking = Object.entries(snap.interlocks)
+      .filter(([, c]) => !c.value)
+      .map(([id, c]) => `- **${id}** (${this.defs[id].label}): ${c.blocking_reason || "false"}`);
+
+    let focus = "";
+    if (/close|breaker|reclose/.test(q)) {
+      focus = snap.close_permitted
+        ? "**Close is currently permitted** — all C1–C7 conditions are true."
+        : `**Close is blocked.** Conditions currently FALSE:\n${blocking.join("\n") || "(none — check grid state)"}\n\nGrid state: ${snap.grid_state}${snap.trip_lockout ? " · **TRIP LOCKOUT ACTIVE** (admin must clear)" : ""}`;
+    } else if (/soc|battery|bess|discharge|charge/.test(q)) {
+      focus = `**BESS status:** mode ${snap.bess.mode}${snap.bess.grid_forming_active ? " (grid-forming)" : ""}, SOC ${snap.bess.soc_pct.toFixed(1)}%, output ${snap.bess.active_power_kw.toFixed(0)} kW, available discharge ${snap.bess.available_discharge_kw.toFixed(0)} kW, available charge ${snap.bess.available_charge_kw.toFixed(0)} kW.`;
+    } else if (/export|reverse|flow|pcc|rule 21/.test(q)) {
+      const f = snap.pcc.active_power_kw;
+      focus = `**PCC flow:** ${f >= 0 ? "+" : ""}${f.toFixed(1)} kW (${f >= 0 ? "importing — normal" : "EXPORTING — violation risk; EMS clamps BESS discharge automatically"}). Zero-export dead band: 2 kW per CA Rule 21.`;
+    } else {
+      focus = `**Current state summary:**
+- Grid state: ${snap.grid_state}${snap.trip_lockout ? " · TRIP LOCKOUT" : ""}
+- Close permitted: ${snap.close_permitted ? "YES" : "NO"}
+- PCC flow: ${snap.pcc.active_power_kw.toFixed(1)} kW · V ${(snap.pcc.voltage_pu * 480).toFixed(0)}V · F ${snap.pcc.frequency_hz.toFixed(2)}Hz
+- BESS: ${snap.bess.mode}, SOC ${snap.bess.soc_pct.toFixed(1)}%
+- Breaker 52-U: ${snap.breaker.position}
+${blocking.length ? "- Blocking interlocks:\n" + blocking.join("\n") : "- All interlocks TRUE"}`;
+    }
+
+    return `**[Offline mode — live state, no AI]**\n\n${focus}\n\n_For full AI analysis and natural-language reasoning, click the 🔑 icon in this panel header and add your Anthropic API key (stored in this browser only)._`;
   }
 
   /**

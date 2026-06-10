@@ -115,6 +115,35 @@ function initCopilot(engine, quickPrompts = [], pageContext = "") {
     panel.classList.toggle("collapsed");
   });
 
+  // API key button (🔑) — injected into the panel header.
+  // Key is stored only in this browser's localStorage and shared with
+  // the Commissioning Copilot. Clicking with a key set offers removal.
+  if (header) {
+    const keyBtn = document.createElement("button");
+    keyBtn.className = "copilot-toggle-btn";
+    keyBtn.setAttribute("aria-label", "Configure API key");
+    keyBtn.title = "Configure Anthropic API key (stored in this browser only)";
+    keyBtn.textContent = "\u{1F511}"; // key emoji
+    keyBtn.style.marginRight = "6px";
+    keyBtn.addEventListener("click", (e) => {
+      e.stopPropagation(); // don't toggle the panel
+      if (copilot.isLive) {
+        if (confirm("An API key is configured (live AI mode). Remove it and switch to offline mode?")) {
+          copilot.apiKey = "";
+          appendMessage("assistant", "**API key removed.** Copilot is now in offline mode — state questions are answered directly from the live EMS snapshot.");
+        }
+      } else {
+        const k = prompt("Enter your Anthropic API key.\n\nStored only in this browser (localStorage), sent only to api.anthropic.com over HTTPS. Leave empty to cancel.");
+        if (k && k.trim()) {
+          copilot.apiKey = k.trim();
+          appendMessage("assistant", "**API key saved — live AI mode enabled.** Ask me anything about site operations.");
+        }
+      }
+    });
+    const toggleBtn = header.querySelector(".copilot-toggle-btn");
+    header.insertBefore(keyBtn, toggleBtn);
+  }
+
   // Render quick-action chips
   if (quickWrap && quickPrompts.length) {
     quickWrap.innerHTML = quickPrompts
@@ -172,9 +201,13 @@ function initCopilot(engine, quickPrompts = [], pageContext = "") {
     panel?.classList.remove("collapsed");
   }
 
-  // Greeting on first open
+  // Greeting on first open — reflects live vs offline mode
   appendMessage("assistant",
-    `**Site Copilot ready** — ${pageContext} module loaded.\n\nI have live access to the EMS state, interlock chain, tariff data, and event log. Ask me anything about site operations, or use the quick prompts above.\n\n_Advisory only — I do not control equipment._`
+    `**Site Copilot ready** — ${pageContext} module loaded.\n\n` +
+    (copilot.isLive
+      ? "AI mode: **LIVE**. I have live access to the EMS state, interlock chain, tariff data, and event log. Ask me anything about site operations, or use the quick prompts above."
+      : "AI mode: **OFFLINE** — I answer state questions directly from the live EMS snapshot (interlocks, SOC, PCC flow, grid state). For full AI reasoning, click the \u{1F511} icon above and add your Anthropic API key (stored in this browser only).") +
+    "\n\n_Advisory only — I do not control equipment._"
   );
 
   return copilot;
