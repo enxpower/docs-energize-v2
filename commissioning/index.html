@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Commissioning Copilot — EnergizeOS</title>
+<meta name="description" content="AI commissioning assistant for BESS, EMS, PCS, BMS, SEL relays, and microgrid field commissioning. Upload documents, ask questions, generate reports.">
+<meta property="og:title" content="EnergizeOS Commissioning Copilot">
+<meta property="og:description" content="AI commissioning intelligence for BESS, EMS, and microgrid projects. Document analysis, troubleshooting, and report generation for field engineers.">
+<meta property="og:image" content="https://docs.energizeos.com/commissioning/og-image.png">
+<meta property="og:url" content="https://docs.energizeos.com/commissioning/">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header>
+  <div class="hwrap">
+    <a class="brand" href="https://docs.energizeos.com/">
+      <div class="mark"><i></i><i></i><i></i><i></i></div>
+      <b>EnergizeOS</b><span>Commissioning Copilot</span>
+    </a>
+    <div class="header-actions">
+      <span id="ai-mode-badge"></span>
+      <a href="https://docs.energizeos.com/microgrid/" class="hide-mobile">Microgrid EMS Docs</a>
+      <button class="btn btn-ghost btn-sm" id="settings-btn">Settings</button>
+      <button class="burger" onclick="document.getElementById('mnav').classList.toggle('open')" aria-label="Menu"><i></i><i></i><i></i></button>
+    </div>
+  </div>
+  <div class="mnav" id="mnav">
+    <a href="https://docs.energizeos.com/microgrid/">Microgrid EMS Docs</a>
+    <a href="https://docs.energizeos.com/">EnergizeOS Docs Home</a>
+  </div>
+</header>
+
+<div class="safety-banner">
+  ⚠ AI output is engineering assistance, not stamped engineering approval. Switching, energization, and relay changes require qualified personnel following site safety procedures.
+</div>
+
+<div class="workspace">
+
+  <!-- ============================== LEFT COLUMN: project + upload -->
+  <div class="col">
+    <div class="card">
+      <div class="eyebrow">Project</div>
+      <h2>Workspace</h2>
+      <div class="field">
+        <label for="project-name">Project Name</label>
+        <input type="text" id="project-name" placeholder="e.g. SD-Mega-BESS-Phase2" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="site-type">Site Type</label>
+        <select id="site-type">
+          <option value="bess">BESS</option>
+          <option value="ems-cabinet">EMS Cabinet</option>
+          <option value="microgrid">Microgrid</option>
+          <option value="solar-storage">Solar + Storage</option>
+          <option value="ev-storage">EV Charging + Storage</option>
+          <option value="gen-storage">Generator + Storage</option>
+        </select>
+      </div>
+      <div id="project-status"></div>
+    </div>
+
+    <div class="card">
+      <div class="eyebrow">Documents</div>
+      <h2>Upload <span id="doc-count"></span></h2>
+      <div class="field">
+        <label for="upload-category">Category for next upload</label>
+        <select id="upload-category"></select>
+      </div>
+      <div class="dropzone" id="dropzone">
+        <strong>Drop files here</strong> or click to browse
+        <div class="formats">PDF · DOCX · XLSX · CSV · TXT · MD · JSON · images</div>
+      </div>
+      <input type="file" id="file-input" multiple hidden
+        accept=".pdf,.docx,.xlsx,.xls,.csv,.txt,.md,.json,.log,.png,.jpg,.jpeg">
+      <div class="file-list" id="file-list" style="margin-top:12px;"></div>
+    </div>
+
+    <div class="card">
+      <div class="eyebrow">Reference</div>
+      <h2>Templates</h2>
+      <div class="template-list" id="template-list"></div>
+      <div class="template-view" id="template-view"></div>
+    </div>
+  </div>
+
+  <!-- ============================== CENTER COLUMN: chat -->
+  <div class="col">
+    <div class="card chat-card">
+      <div class="eyebrow">Assistant</div>
+      <h2>Commissioning Chat</h2>
+      <div class="chat-messages" id="chat-messages"></div>
+      <div class="msg-typing" id="chat-typing">Analyzing documents…</div>
+      <div class="quick-questions" id="quick-questions"></div>
+      <div class="chat-input-row">
+        <textarea class="chat-input" id="chat-input" rows="2"
+          placeholder="Ask a commissioning question — answers cite your uploaded documents…"
+          aria-label="Commissioning question"></textarea>
+        <button class="chat-send" id="chat-send" aria-label="Send">↑</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================== RIGHT COLUMN: reports -->
+  <div class="col">
+    <div class="card">
+      <div class="eyebrow">Output</div>
+      <h2>Generate Report</h2>
+      <div class="report-buttons" id="report-buttons"></div>
+      <div class="report-preview" id="report-preview">
+        <div class="empty-state">Select a report type above.<br>Reports use your uploaded documents and chat findings.</div>
+      </div>
+      <div class="report-actions" id="report-actions">
+        <button class="btn btn-primary btn-sm" id="report-copy">Copy Markdown</button>
+        <button class="btn btn-ghost btn-sm" id="report-download">Download .md</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="eyebrow">How It Works</div>
+      <h2>V1 Pipeline</h2>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:.74rem;line-height:2;color:var(--muted);">
+        Upload files<br>
+        &nbsp;&nbsp;↓ parse + extract text<br>
+        &nbsp;&nbsp;↓ chunk + tag metadata<br>
+        &nbsp;&nbsp;↓ index (persistent, this browser)<br>
+        Ask question<br>
+        &nbsp;&nbsp;↓ retrieve relevant excerpts<br>
+        &nbsp;&nbsp;↓ AI analysis with citations<br>
+        Generate report<br>
+        &nbsp;&nbsp;↓ markdown / copy / download
+      </div>
+      <div style="font-size:.76rem;color:var(--muted);margin-top:10px;">
+        Documents are processed and stored locally in this browser (IndexedDB).
+        Nothing is uploaded to any server. With an API key configured, document
+        excerpts are sent directly to the Anthropic API for analysis.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== SETTINGS MODAL -->
+<div class="modal" id="settings-modal">
+  <div class="modal-box">
+    <h2>Settings</h2>
+    <div class="note">
+      Your API key is stored only in this browser (localStorage) and sent only to
+      api.anthropic.com over HTTPS. It is never embedded in this site's code or
+      sent to any other server. Without a key, the app runs in Mock mode —
+      parsing, indexing, retrieval, and templates remain fully functional.
+    </div>
+    <div class="field">
+      <label for="api-key-input">Anthropic API Key</label>
+      <input type="password" id="api-key-input" placeholder="sk-ant-…" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="model-input">Model</label>
+      <input type="text" id="model-input" placeholder="claude-sonnet-4-20250514" autocomplete="off">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="settings-close">Cancel</button>
+      <button class="btn btn-primary" id="settings-save">Save</button>
+    </div>
+  </div>
+</div>
+
+<footer><div class="fwrap">
+  <div>EnergizeOS Commissioning Copilot V1 — engineering assistance, not stamped engineering approval.</div>
+  <div><a href="mailto:info@energizeos.com">info@energizeos.com</a> · <a href="https://energizeos.com">energizeos.com</a></div>
+</div></footer>
+
+<!-- Module load order matters: domain → parsers → store → templates → ai → reports → app -->
+<script src="js/domain.js"></script>
+<script src="js/parsers.js"></script>
+<script src="js/store.js"></script>
+<script src="js/templates.js"></script>
+<script src="js/ai-service.js"></script>
+<script src="js/reports.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
