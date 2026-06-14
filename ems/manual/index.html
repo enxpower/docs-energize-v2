@@ -15,6 +15,9 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
   --paper:  #FAFBFC;
+  --slate:  #1A2B3C;
+  --volt:   #D4840A;
+  --tint:   #FDF6ED;
   --white:  #FFFFFF;
   --stone:  #F0F4F8;
   --pearl:  #E8EEF4;
@@ -78,7 +81,7 @@ body{
 }
 .sb-back{
   display:inline-flex;align-items:center;gap:5px;
-  font-family:var(--fm);font-size:11px;color:var(--sky);
+  font-family:var(--fm);font-size:11px;color:var(--volt);
   text-decoration:none;margin-top:10px;transition:color .15s;
 }
 .sb-back:hover{color:var(--navy)}
@@ -107,7 +110,7 @@ body{
   padding:16px 22px;border-top:1px solid var(--rule);
   font-family:var(--fm);font-size:10px;color:var(--faint);line-height:1.65;
 }
-.sb-foot a{color:var(--sky);text-decoration:none}
+.sb-foot a{color:var(--volt);text-decoration:none}
 
 /* Main */
 .main{margin-left:268px;flex:1;}
@@ -122,16 +125,16 @@ body{
   border-bottom:1px solid var(--rule);
 }
 .tb-crumb{font-family:var(--fm);font-size:11px;color:var(--faint)}
-.tb-crumb a{color:var(--sky);text-decoration:none}
+.tb-crumb a{color:var(--volt);text-decoration:none}
 .tb-crumb a:hover{text-decoration:underline}
 .tb-crumb strong{color:var(--muted)}
 .tb-acts{display:flex;gap:8px}
 .tb-btn{
-  padding:7px 16px;border-radius:6px;font-size:12px;font-weight:500;
+  padding:7px 16px;font-size:12px;font-weight:500;
   text-decoration:none;border:none;cursor:pointer;transition:all .12s;
 }
 .tb-out{background:transparent;border:1px solid var(--rule2);color:var(--muted)}
-.tb-out:hover{border-color:var(--sky);color:var(--sky)}
+.tb-out:hover{border-color:var(--volt);color:var(--sky)}
 .tb-navy{background:var(--navy);color:#fff;font-weight:500}
 .tb-navy:hover{background:var(--navy2)}
 
@@ -148,11 +151,11 @@ body{
 }
 .sec-eye::before{content:'';width:20px;height:1px;background:var(--gold)}
 .sec-h1{
-  font-family:var(--fh);font-size:clamp(28px,3vw,40px);
+  font-size:clamp(28px,3vw,40px);
   font-weight:500;line-height:1.12;letter-spacing:-0.3px;
   color:var(--ink);margin-bottom:12px;
 }
-.sec-h1 em{font-style:italic;color:var(--sky)}
+.sec-h1 em{font-weight:700;color:var(--slate)}
 .sec-sub{font-size:14px;font-weight:300;color:var(--body);max-width:640px;margin-bottom:24px;line-height:1.72}
 h3{
   font-family:var(--fb);font-size:14px;font-weight:600;
@@ -168,8 +171,8 @@ ul li{font-size:13px;font-weight:300;color:var(--body);line-height:1.8}
 /* Tables */
 .tbl-wrap{
   overflow-x:auto;margin:14px 0 26px;
-  border-radius:10px;border:1px solid var(--rule);
-  box-shadow:0 1px 4px rgba(10,31,68,0.04);
+  border:1px solid var(--rule);
+  
 }
 table{width:100%;border-collapse:collapse;font-size:12px}
 thead tr{background:var(--navy)}
@@ -187,21 +190,21 @@ td{padding:11px 14px;vertical-align:top;font-size:12px;font-weight:300;color:var
 td:first-child{font-weight:500;color:var(--ink);white-space:nowrap}
 .mono{font-family:var(--fm);font-size:11px;color:var(--sky)}
 .tag{
-  display:inline-block;padding:2px 7px;border-radius:3px;
+  display:inline-block;padding:2px 7px;
   font-family:var(--fm);font-size:9px;font-weight:500;
   letter-spacing:0.06em;text-transform:uppercase;
 }
 .t-g{background:var(--green-l);color:var(--green);border:1px solid rgba(26,107,69,0.15)}
-.t-b{background:var(--sky-l);color:var(--sky);border:1px solid rgba(26,95,170,0.15)}
+.t-b{background:var(--sky-l);color:var(--volt);border:1px solid rgba(26,95,170,0.15)}
 .t-a{background:var(--amber-l);color:var(--amber);border:1px solid rgba(146,96,10,0.2)}
 .t-r{background:var(--red-l);color:var(--red);border:1px solid rgba(176,42,32,0.15)}
 
 /* Code */
 .code{
-  background:var(--navy);border-radius:10px;
+  background:var(--navy);
   padding:22px 26px;margin:14px 0 22px;
   font-family:var(--fm);font-size:12px;line-height:2;
-  overflow-x:auto;box-shadow:0 2px 16px rgba(10,31,68,0.12);
+  overflow-x:auto;
 }
 .ck{color:#7EC8E3}
 .cv{color:#9EE09E}
@@ -209,7 +212,7 @@ td:first-child{font-weight:500;color:var(--ink);white-space:nowrap}
 
 /* Notes */
 .note{
-  display:flex;gap:12px;padding:14px 18px;border-radius:9px;
+  display:flex;gap:12px;padding:14px 18px;
   margin:14px 0;font-size:13px;line-height:1.65;
 }
 .n-gold{background:var(--gold-l);border:1px solid rgba(200,117,10,0.2)}
@@ -224,7 +227,7 @@ td:first-child{font-weight:500;color:var(--ink);white-space:nowrap}
 .spec-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:14px 0 22px}
 .spec-row{
   display:flex;justify-content:space-between;align-items:center;
-  padding:9px 14px;background:var(--white);border-radius:7px;
+  padding:9px 14px;background:var(--white);
   border:1px solid var(--rule);font-size:12px;
 }
 .spec-k{color:var(--muted);font-weight:300}
@@ -234,10 +237,10 @@ td:first-child{font-weight:500;color:var(--ink);white-space:nowrap}
 .metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0 22px}
 .metric-card{
   background:var(--white);border:1px solid var(--rule);
-  border-radius:10px;padding:18px;border-top:2px solid var(--gold);
+  padding:18px;border-top:2px solid var(--gold);
 }
 .metric-val{
-  font-family:var(--fh);font-size:32px;font-weight:500;font-style:italic;
+  font-size:32px;font-weight:500;
   color:var(--ink);line-height:1;margin-bottom:4px;
 }
 .metric-val.green{color:var(--green)}
@@ -250,7 +253,7 @@ td:first-child{font-weight:500;color:var(--ink);white-space:nowrap}
 .sbadge{
   display:flex;align-items:center;gap:8px;
   padding:9px 14px;border:1px solid var(--rule);
-  border-radius:8px;background:var(--white);font-size:12px;
+  background:var(--white);font-size:12px;
   transition:all .15s;
 }
 .sbadge:hover{border-color:var(--gold);background:var(--gold-l)}
@@ -259,13 +262,13 @@ td:first-child{font-weight:500;color:var(--ink);white-space:nowrap}
 .sbadge-sub{font-size:10px;color:var(--faint);display:block;font-weight:300}
 
 /* Roadmap */
-.roadmap{margin:14px 0;border:1px solid var(--rule);border-radius:10px;overflow:hidden}
+.roadmap{margin:14px 0;border:1px solid var(--rule);overflow:hidden}
 .rm-row{display:flex;border-bottom:1px solid var(--rule);transition:background .1s}
 .rm-row:last-child{border:none}
 .rm-row:hover{background:var(--stone)}
 .rm-date{
   width:106px;flex-shrink:0;padding:13px 16px;
-  font-family:var(--fm);font-size:11px;color:var(--sky);
+  font-family:var(--fm);font-size:11px;color:var(--volt);
   background:var(--stone);border-right:1px solid var(--rule);
   display:flex;align-items:center;
 }
@@ -278,7 +281,7 @@ td:first-child{font-weight:500;color:var(--ink);white-space:nowrap}
 }
 
 /* Deliver */
-.deliver{margin:14px 0;border:1px solid var(--rule);border-radius:10px;overflow:hidden}
+.deliver{margin:14px 0;border:1px solid var(--rule);overflow:hidden}
 .dl-head{display:grid;grid-template-columns:58px 196px 1fr 86px;background:var(--navy)}
 .dl-head>div{padding:9px 14px;font-family:var(--fm);font-size:9px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.4)}
 .dl-row{display:grid;grid-template-columns:58px 196px 1fr 86px;border-bottom:1px solid var(--rule);transition:background .1s}
@@ -291,17 +294,17 @@ td:first-child{font-weight:500;color:var(--ink);white-space:nowrap}
 .dl-fmt{font-family:var(--fm);font-size:10px;color:var(--faint)}
 
 /* Interlock */
-.ilock-tbl{margin:14px 0;border:1px solid var(--rule);border-radius:10px;overflow:hidden}
+.ilock-tbl{margin:14px 0;border:1px solid var(--rule);overflow:hidden}
 .ilock-head{display:grid;grid-template-columns:54px 174px 1fr 152px;background:var(--navy)}
 .ilock-head>div{padding:9px 14px;font-family:var(--fm);font-size:9px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.4)}
 .ilock-row{display:grid;grid-template-columns:54px 174px 1fr 152px;border-bottom:1px solid var(--rule);transition:background .1s}
 .ilock-row:last-child{border:none}
 .ilock-row:hover{background:var(--gold-l)}
 .ilock-row>div{padding:12px 14px;font-size:12px}
-.il-code{font-family:var(--fm);font-size:14px;font-weight:500;color:var(--gold);display:flex;align-items:center}
+.il-code{font-family:var(--fm);font-size:14px;font-weight:600;color:var(--volt);display:flex;align-items:center}
 .il-title{font-weight:500;color:var(--ink)}
 .il-desc{color:var(--body);font-weight:300}
-.il-src{font-family:var(--fm);font-size:10px;color:var(--sky);display:flex;align-items:center}
+.il-src{font-family:var(--fm);font-size:10px;color:var(--volt);display:flex;align-items:center}
 
 /* Mobile sidebar */
 .mob-bar{
@@ -311,7 +314,7 @@ td:first-child{font-weight:500;color:var(--ink);white-space:nowrap}
 }
 .mob-logo img{height:28px;display:block}
 .mob-btn{
-  width:36px;height:36px;border-radius:7px;background:var(--stone);
+  width:36px;height:36px;background:var(--stone);
   border:1px solid var(--rule);cursor:pointer;
   display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;
 }
@@ -319,7 +322,7 @@ td:first-child{font-weight:500;color:var(--ink);white-space:nowrap}
 .mob-cta{
   font-family:var(--fm);font-size:11px;color:var(--gold);
   text-decoration:none;background:var(--gold-l);
-  padding:6px 12px;border-radius:5px;border:1px solid rgba(200,117,10,0.25);
+  padding:6px 12px;border:1px solid rgba(200,117,10,0.25);
 }
 .mob-backdrop{
   display:none;position:fixed;inset:0;z-index:90;
@@ -409,7 +412,7 @@ td:first-child{font-weight:500;color:var(--ink);white-space:nowrap}
     </div>
     <div class="tb-acts">
       <a class="tb-btn tb-out" href="../">← Overview</a>
-      <a class="tb-btn tb-navy" href="mailto:info@energizeos.com">Request Quote</a>
+      <a class="tb-btn tb-navy" href="mailto:info@energizeos.com" style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;">Talk to an Engineer</a>
     </div>
   </div>
 
@@ -595,7 +598,7 @@ td:first-child{font-weight:500;color:var(--ink);white-space:nowrap}
   <div class="tbl-wrap"><table>
     <thead><tr><th>Path</th><th>Hardware</th><th>Detection</th><th>Trip Execution</th></tr></thead>
     <tbody>
-      <tr><td style="color:var(--sky);font-weight:500">Path A (Primary)</td><td>Dedicated relay (ABB CM-UFD, SEL-700G)</td><td>V deviation; f out-of-range; ROCOF; anti-islanding algorithm</td><td>Direct hardwired to breaker trip coil — no EMS software in trip path</td></tr>
+      <tr><td style="color:var(--volt);font-weight:500">Path A (Primary)</td><td>Dedicated relay (ABB CM-UFD, SEL-700G)</td><td>V deviation; f out-of-range; ROCOF; anti-islanding algorithm</td><td>Direct hardwired to breaker trip coil — no EMS software in trip path</td></tr>
       <tr><td style="color:var(--muted);font-weight:500">Path B (Secondary)</td><td>Revenue-grade meter (Modbus TCP)</td><td>Voltage presence; current direction; active power direction</td><td>EMS operational trip via DO — software path, secondary to relay</td></tr>
     </tbody>
   </table></div>
@@ -862,10 +865,7 @@ td:first-child{font-weight:500;color:var(--ink);white-space:nowrap}
       <a href="mailto:info@energizeos.com" style="color:var(--gold);font-weight:600;font-size:15px">sales@energizeos.com →</a>
     </div>
   </div>
-  <div style="margin-top:44px;padding-top:22px;border-top:1px solid var(--rule);font-family:var(--fm);font-size:10px;color:var(--faint);line-height:1.8">
-    © 2026 Energize Solutions Inc. All rights reserved. EnergizeOS™ is a trademark of Energize Solutions Inc.<br>
-    This document is provided to authorized recipients only. Specifications subject to change.
-  </div>
+
 </section>
 
   </div>
@@ -892,8 +892,8 @@ bd.addEventListener('click',c);
 document.querySelectorAll('.sb-link').forEach(l=>l.addEventListener('click',()=>{if(window.innerWidth<=900)c();}) );
 </script>
 
-<footer style="background:#1A2B3C;position:relative;margin-top:0;">
-  <div style="position:absolute;top:0;left:0;right:0;height:3px;background:#D4840A;"></div>
+<footer style="background:var(--slate,#1A2B3C);position:relative;margin-top:0;">
+  <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--volt,#D4840A);"></div>
   <div style="max-width:1200px;margin:0 auto;padding:32px 48px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
     <div style="display:flex;align-items:center;gap:11px;">
       <svg width="20" height="20" viewBox="0 0 48 48" fill="none" aria-hidden="true"><rect x="0" y="0" width="21" height="21" fill="#fff"/><rect x="27" y="0" width="21" height="21" fill="rgba(255,255,255,.42)"/><rect x="0" y="27" width="21" height="21" fill="rgba(255,255,255,.42)"/><rect x="27" y="27" width="21" height="21" fill="#fff"/></svg>
