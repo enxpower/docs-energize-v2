@@ -503,6 +503,38 @@ td:first-child{font-weight:500;color:var(--ink)}
     padding:24px 16px !important;
   }
 }
+
+/* ── SITE FOOTER (accounts for sidebar offset) ── */
+.site-foot{
+  background:#1A2B3C;
+  margin-left:268px;   /* matches --sb-w */
+  position:relative;
+}
+.foot-inner-manual{
+  padding:32px 48px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:16px;
+}
+.foot-brand-manual{display:flex;align-items:center;gap:11px;flex-shrink:0}
+.foot-label-manual{font-size:12px;font-weight:700;letter-spacing:.02em;color:#fff}
+.foot-copy-manual{font-size:11px;color:rgba(255,255,255,.32);letter-spacing:.04em}
+.foot-links-manual{display:flex;gap:24px}
+.foot-links-manual a{
+  font-size:11px;letter-spacing:.07em;text-transform:uppercase;
+  color:rgba(255,255,255,.38);text-decoration:none;transition:color .15s;
+}
+.foot-links-manual a:hover{color:#fff}
+@media(max-width:900px){
+  .site-foot{margin-left:0}
+  .foot-inner-manual{padding:24px 20px;flex-direction:column;align-items:flex-start;gap:12px}
+  .foot-links-manual{gap:16px;flex-wrap:wrap}
+}
+@media(max-width:480px){
+  .foot-inner-manual{padding:20px 16px}
+  .foot-label-manual{font-size:11px}
+  .foot-links-manual{gap:12px}
+  .foot-links-manual a{font-size:10px}
+}
 </style>
 </head>
 <body>
@@ -1044,20 +1076,20 @@ bd.addEventListener('click',c);
 document.querySelectorAll('.sb-link').forEach(l=>l.addEventListener('click',()=>{if(window.innerWidth<=900)c();}) );
 </script>
 
-<footer style="background:var(--slate,#1A2B3C);position:relative;margin-top:0;">
-  <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--volt,#D4840A);"></div>
-  <div style="max-width:1200px;margin:0 auto;padding:32px 48px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
-    <div style="display:flex;align-items:center;gap:11px;">
+<footer class="site-foot">
+  <div class="foot-inner-manual">
+    <div class="foot-brand-manual">
       <svg width="20" height="20" viewBox="0 0 48 48" fill="none" aria-hidden="true"><rect x="0" y="0" width="21" height="21" fill="#fff"/><rect x="27" y="0" width="21" height="21" fill="rgba(255,255,255,.42)"/><rect x="0" y="27" width="21" height="21" fill="rgba(255,255,255,.42)"/><rect x="27" y="27" width="21" height="21" fill="#fff"/></svg>
-      <span style="font-size:12px;font-weight:700;letter-spacing:.02em;color:#fff;">EnergizeOS — Full Technical Specification</span>
+      <span class="foot-label-manual">EnergizeOS</span>
     </div>
-    <span style="font-size:11px;color:rgba(255,255,255,.32);letter-spacing:.04em;">© 2019–2026 Energize Solutions Inc.</span>
-    <div style="display:flex;gap:24px;">
-      <a href="../" style="font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.38);" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.38)'">EMS Overview</a>
-      <a href="https://energizeos.com" style="font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.38);" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.38)'">energizeos.com</a>
-      <a href="mailto:info@energizeos.com" style="font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.38);" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.38)'">Contact</a>
+    <span class="foot-copy-manual">© 2019–2026 Energize Solutions Inc.</span>
+    <div class="foot-links-manual">
+      <a href="../">EMS Overview</a>
+      <a href="https://energizeos.com">energizeos.com</a>
+      <a href="mailto:info@energizeos.com">Contact</a>
     </div>
   </div>
 </footer>
+
 </body>
 </html>
