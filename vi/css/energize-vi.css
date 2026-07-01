@@ -1,6 +1,6 @@
 *{box-sizing:border-box;margin:0;padding:0}
-html{font-size:16px;-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
-body{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;background:#fff;color:#1A2B3C;line-height:1.6}
+html{font-size:16px;-webkit-font-smoothing:antialiased;scroll-behavior:smooth;overflow-x:hidden;max-width:100%}
+body{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;background:#fff;color:#1A2B3C;line-height:1.6;overflow-x:hidden;max-width:100%;position:relative}
 a{color:inherit;text-decoration:none}
 svg{display:block}
 :root{
