@@ -100,7 +100,14 @@ section{padding:82px 0;position:relative}
 .pain-num{font-family:var(--fm);font-size:12px;color:var(--gold);letter-spacing:.1em;margin-bottom:18px}
 .pain-t{font-size:19px;font-weight:700;color:var(--ink);margin-bottom:12px;line-height:1.4}
 .pain-d{font-size:14px;color:var(--body);line-height:1.75}
-.pain-q{margin-top:56px;padding:40px 44px;background:var(--slate);color:#fff;position:relative;overflow:hidden}
+.pain-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);margin-bottom:14px}
+.pain-stat{background:var(--white);padding:30px 32px}
+.pain-stat-v{font-size:clamp(26px,3vw,34px);font-weight:700;color:var(--ink);letter-spacing:-.02em;line-height:1.05;margin-bottom:10px;font-family:var(--fh)}
+.pain-stat-v em{font-style:normal;color:var(--gold)}
+.pain-stat-d{font-size:13.5px;color:var(--body);line-height:1.65}
+.pain-stat-src{margin-top:10px;font-family:var(--fm);font-size:10.5px;letter-spacing:.04em;color:var(--faint)}
+.pain-stats-note{font-size:11.5px;color:var(--faint);line-height:1.7;margin-bottom:56px}
+.pain-q{margin-top:0;padding:40px 44px;background:var(--slate);color:#fff;position:relative;overflow:hidden}
 .pain-q::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold)}
 .pain-q-lab{font-family:var(--fm);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
 .pain-q-t{font-size:clamp(20px,2.6vw,27px);font-weight:600;line-height:1.5;letter-spacing:-.01em}
@@ -412,6 +419,24 @@ footer{background:#131F2B;border-top:1px solid rgba(255,255,255,.06)}
       <h2 class="sec-h2">矿山客户真正采购的，<em>从来不是一台车</em></h2>
       <p class="sec-sub">全球电动矿卡已经跨过概念验证：地下矿电动化已商业化，中国宽体电动矿卡已规模化，220–290 吨级刚性矿卡正处于首批验证窗口。但真正卡住规模化的，不是车辆本身，而是车辆背后那套没有被系统性解决的"电"。</p>
     </div>
+    <div class="pain-stats reveal">
+      <div class="pain-stat">
+        <div class="pain-stat-v"><em>250</em> 亿升</div>
+        <div class="pain-stat-d">全球约 28,000 台大型矿用运输卡车每年合计消耗的柴油量，对应排放超 6,900 万吨 CO₂。</div>
+        <div class="pain-stat-src">来源：ICMM</div>
+      </div>
+      <div class="pain-stat">
+        <div class="pain-stat-v"><em>30–50</em>%</div>
+        <div class="pain-stat-d">露天矿运输卡车（haul truck）可占矿山总能耗的比例——运输环节是能耗与减排的最大单项抓手。</div>
+        <div class="pain-stat-src">来源：RMI</div>
+      </div>
+      <div class="pain-stat">
+        <div class="pain-stat-v"><em>30–50</em>%</div>
+        <div class="pain-stat-d">地下矿通风可占地下矿总能耗成本的比例——这使地下电动化的经济性显著优于地表场景。</div>
+        <div class="pain-stat-src">来源：ABB</div>
+      </div>
+    </div>
+    <p class="pain-stats-note">上述数据引自 ICMM、RMI、ABB 等第三方机构公开研究，用于说明矿山运输与能源的规模量级；具体到单一矿区的数值须以现场实测为准。</p>
     <div class="pain-grid">
       <div class="pain-card reveal">
         <div class="pain-num">CHALLENGE 01</div>
@@ -442,7 +467,7 @@ footer{background:#131F2B;border-top:1px solid rgba(255,255,255,.06)}
     <div class="sec-head reveal">
       <div class="eyebrow">Our Position</div>
       <h2 class="sec-h2">我们把行业重新定义为<em>矿山电气化</em></h2>
-      <p class="sec-sub">Mine Electrification。电动矿卡只是入口，不是全部。矿山电气化领域并非没有强玩家——ABB、Schneider、Hitachi Energy、Siemens 都在其中。真正的空白，在三个交叉点上：矿山专用、多 OEM 中立、软件定义且可快速复制。</p>
+      <p class="sec-sub">Mine Electrification。电动矿卡只是入口，不是全部。矿山电气化领域并非没有强玩家——ABB、Schneider、Hitachi Energy、Siemens 都在其中。但设备巨头的方案往往自然导向自家 PCS、开关柜与平台，交付偏重、软件复用慢。真正的空白，在三个交叉点上：矿山专用、多 OEM 中立、软件定义且可快速复制——这正是我们选择站位的地方。</p>
     </div>
     <div class="pos-wrap">
       <div class="pos-col dont reveal">
@@ -655,7 +680,7 @@ footer{background:#131F2B;border-top:1px solid rgba(255,255,255,.06)}
         <div class="stage-n">STAGE 02</div>
         <div class="stage-t">工程设计</div>
         <div class="stage-en">Electrical & Energy Design</div>
-        <div class="stage-d">单线图、潮流与短路计算、保护philosophy、BESS / PCS 设计、补能电气设计、Trolley 接口、控制架构、通讯图、FAT/SAT 计划。</div>
+        <div class="stage-d">单线图、潮流与短路计算、保护配置原则、BESS / PCS 设计、补能电气设计、Trolley 接口、控制架构、通讯图、FAT/SAT 计划。</div>
         <div class="stage-price"><span class="cur">按矿山规模</span> 报价</div>
       </div>
       <div class="stage-card reveal">
@@ -711,8 +736,8 @@ footer{background:#131F2B;border-top:1px solid rgba(255,255,255,.06)}
   <div class="container">
     <div class="sec-head reveal">
       <div class="eyebrow">Verified Capability</div>
-      <h2 class="sec-h2">矿山能源集成层的能力，<em>已经过实战验证</em></h2>
-      <p class="sec-sub">我们的护城河不是一段代码或一个漂亮的 EMS 页面，而是一组难以快速复制的工程能力组合。这些能力自 2019 年起，已在 500+ MW 储能与能源系统项目中反复交付。矿卡厂懂车，PCS 厂懂设备，而把电力系统真正做成、调通、管住的，是另一种能力。</p>
+      <h2 class="sec-h2">支撑矿山电气化的能力，<em>已在能源基础设施领域实战验证</em></h2>
+      <p class="sec-sub">我们的护城河不是一段代码或一个漂亮的 EMS 页面，而是一组难以快速复制的工程能力组合。这些能力自 2019 年起，已在北美电网侧与工商业侧累计 500+ MW 的储能与能源系统项目中反复交付，并可直接迁移至矿山电气化场景。矿卡厂懂车，PCS 厂懂设备，而把电力系统真正做成、调通、管住，是另一种能力。</p>
     </div>
     <div class="moat-grid">
       <div class="moat-cell reveal"><div class="mt">并网互连</div><div class="md">Utility Interconnection 全流程</div></div>
@@ -860,7 +885,7 @@ footer{background:#131F2B;border-top:1px solid rgba(255,255,255,.06)}
       </div>
       <div class="road-item reveal">
         <div class="road-time">第 3–6 阶段<span class="ph">Engineering</span></div>
-        <div class="road-body"><h4>工程设计与合规路径确认</h4><p>单线图、潮流 / 短路计算、保护philosophy、BESS / PCS 设计、补能电气设计、控制架构与通讯图；同步完成目标国家电气合规路径尽调。</p></div>
+        <div class="road-body"><h4>工程设计与合规路径确认</h4><p>单线图、潮流 / 短路计算、保护配置原则、BESS / PCS 设计、补能电气设计、控制架构与通讯图；同步完成目标国家电气合规路径尽调。</p></div>
       </div>
       <div class="road-item reveal">
         <div class="road-time">第 6–9 阶段<span class="ph">Integration & EMS</span></div>
