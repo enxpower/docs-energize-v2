@@ -1,0 +1,967 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>矿山电气化能源整体解决方案 — EnergizeOS | Energize Solutions Inc.</title>
+<meta name="description" content="EnergizeOS 面向矿山电气化的中立电气与能源基础设施集成方案：微电网、储能 BESS、快充/换电/Trolley 补能、EMS 智能调度与矿卡移动负荷管理一体化交付。先用能源数字孪生算清电气化经济性，再用矿山 EMS 管住电、储、补能与车队负荷，让电动矿卡真正实现可复制、可规模化。">
+<link rel="canonical" href="https://docs.energizeos.com/mine-electrification/">
+<link rel="icon" type="image/svg+xml" href="/vi/assets/favicon.svg">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="EnergizeOS">
+<meta property="og:title" content="矿山电气化能源整体解决方案 — EnergizeOS">
+<meta property="og:description" content="中立 · 多 OEM · 软件定义。把电网、微电网、储能、补能系统与电动矿卡移动负荷统一建模、控制、调度与优化。先算清账，再管住电。">
+<meta property="og:image" content="https://docs.energizeos.com/mine-electrification/assets/og-image.png">
+<meta property="og:url" content="https://docs.energizeos.com/mine-electrification/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://docs.energizeos.com/mine-electrification/assets/og-image.png">
+<meta name="theme-color" content="#FAFBFC">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --paper:#FAFBFC; --white:#FFFFFF; --stone:#F0F4F8; --pearl:#E8EEF4;
+  --rule:rgba(26,43,60,.09); --rule2:rgba(26,43,60,.16); --tint:#FDF6ED;
+  --ink:#1A2B3C; --ink2:#2E4A6E; --body:#3A4A5C; --muted:#64788D; --faint:#8FA3B8;
+  --slate:#1A2B3C; --mid:#2E4A6E; --volt:#D4840A;
+  --navy:#1A2B3C; --navy2:#2E4A6E; --gold:#D4840A; --gold-l:#FDF6ED;
+  --sky:#1B4F8A; --sky-l:#F0F4F8;
+  --green:#1A6B45; --green-l:#E8F5EE; --red:#B02A20; --red-l:#FDF0EF; --amber:#B36A08; --amber-l:#FDF6ED;
+  --fh:"Helvetica Neue",Helvetica,Arial,sans-serif; --fb:"PingFang SC","Microsoft YaHei","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --fm:"SF Mono","Courier New",Courier,monospace;
+  --max:1200px; --gutter:48px;
+}
+html{scroll-behavior:smooth;overflow-x:hidden;max-width:100vw;-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--fb);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden;width:100%;max-width:100vw}
+a{color:inherit;text-decoration:none}
+::selection{background:rgba(212,132,10,.14);color:var(--ink)}
+.container{max-width:var(--max);margin:0 auto;padding:0 var(--gutter)}
+@media(max-width:900px){:root{--gutter:24px}}
+@media(max-width:480px){:root{--gutter:20px}}
+
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:var(--fm);font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.eyebrow::before{content:'';width:24px;height:1px;background:var(--gold)}
+.sec-h2{font-size:clamp(27px,3.9vw,42px);font-weight:700;line-height:1.24;letter-spacing:-.02em;color:var(--ink);margin-bottom:14px}
+.sec-h2 em{font-style:normal;color:var(--gold)}
+.sec-sub{font-size:16px;font-weight:400;color:var(--body);line-height:1.8;max-width:640px}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:300;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 var(--gutter);background:rgba(250,251,252,.97);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule)}
+.nav-brand{display:flex;align-items:center;gap:10px}
+.nav-brand-name{font-size:13px;font-weight:700;letter-spacing:.02em;color:var(--ink)}
+.nav-brand-tag{font-family:var(--fm);font-size:9px;letter-spacing:.06em;color:var(--faint);display:block;margin-top:1px}
+.nav-links{display:flex;gap:26px;align-items:center}
+.nav-links a{font-size:12px;color:var(--muted);transition:color .15s;white-space:nowrap}
+.nav-links a:hover{color:var(--ink)}
+.nav-cta{background:var(--navy);color:#fff!important;padding:9px 20px;font-size:12px;font-weight:500;letter-spacing:.02em;transition:background .15s}
+.nav-cta:hover{background:var(--navy2)}
+.nav-burger{display:none;flex-direction:column;gap:4px;background:none;border:none;cursor:pointer;padding:8px;z-index:301}
+.nav-burger span{display:block;width:20px;height:2px;background:var(--ink);transition:all .2s}
+.nav-burger.open span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.nav-burger.open span:nth-child(2){opacity:0}
+.nav-burger.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+.mnav{position:fixed;inset:64px 0 0 0;background:var(--white);z-index:250;display:flex;flex-direction:column;padding:8px var(--gutter) 32px;overflow-y:auto;transform:translateY(-8px);opacity:0;pointer-events:none;transition:all .2s}
+.mnav.open{opacity:1;pointer-events:auto;transform:translateY(0)}
+.mnav a{display:block;padding:16px 4px;font-size:16px;color:var(--ink);border-bottom:1px solid var(--rule);font-weight:500}
+.mnav .nav-cta{margin-top:20px;text-align:center;padding:14px}
+
+/* HERO */
+.hero{padding:126px var(--gutter) 76px;max-width:var(--max);margin:0 auto}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--gold-l);border:1px solid rgba(200,117,10,.25);padding:5px 14px;font-family:var(--fm);font-size:11px;color:var(--gold);letter-spacing:.05em;margin-bottom:26px}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:blink 2.2s ease-in-out infinite;flex-shrink:0}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.hero-h1{font-size:clamp(32px,4.7vw,56px);font-weight:700;line-height:1.2;letter-spacing:-.025em;color:var(--ink);margin-bottom:24px;max-width:900px}
+.hero-h1 .accent{color:var(--gold)}
+.hero-h1 .light{display:block;font-weight:400;font-size:.4em;color:var(--muted);letter-spacing:.03em;margin-bottom:14px;line-height:1.5}
+.hero-body{font-size:17px;font-weight:400;color:var(--body);line-height:1.85;max-width:660px;margin-bottom:34px}
+.hero-body strong{color:var(--ink);font-weight:600}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:52px}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:#fff;padding:14px 28px;font-size:14px;font-weight:500;border:none;cursor:pointer;transition:opacity .15s}
+.btn-primary:hover{opacity:.9}
+.btn-outline{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--ink);padding:14px 26px;font-size:14px;font-weight:500;border:1px solid var(--rule2);transition:all .15s}
+.btn-outline:hover{border-color:var(--ink);background:var(--white)}
+.hero-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.hs-cell{background:var(--white);padding:22px 24px}
+.hs-val{font-size:26px;font-weight:700;color:var(--ink);letter-spacing:-.02em;line-height:1;margin-bottom:8px;font-family:var(--fh)}
+.hs-val em{font-style:normal;color:var(--gold)}
+.hs-lab{font-size:12px;color:var(--muted);line-height:1.5}
+
+/* SECTION SHELL */
+section{padding:82px 0;position:relative}
+.sec-head{margin-bottom:52px;max-width:720px}
+.band{background:var(--white);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.band-stone{background:var(--stone)}
+.band-slate{background:var(--slate)}
+
+/* PAIN */
+.pain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.pain-card{background:var(--white);padding:38px 34px}
+.pain-num{font-family:var(--fm);font-size:12px;color:var(--gold);letter-spacing:.1em;margin-bottom:18px}
+.pain-t{font-size:19px;font-weight:700;color:var(--ink);margin-bottom:12px;line-height:1.4}
+.pain-d{font-size:14px;color:var(--body);line-height:1.75}
+.pain-q{margin-top:56px;padding:40px 44px;background:var(--slate);color:#fff;position:relative;overflow:hidden}
+.pain-q::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold)}
+.pain-q-lab{font-family:var(--fm);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.pain-q-t{font-size:clamp(20px,2.6vw,27px);font-weight:600;line-height:1.5;letter-spacing:-.01em}
+.pain-q-t em{font-style:normal;color:var(--gold)}
+
+/* POSITION */
+.pos-wrap{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.pos-col{background:var(--white);padding:40px 38px}
+.pos-col.dont{background:var(--red-l)}
+.pos-col.do{background:var(--green-l)}
+.pos-lab{font-family:var(--fm);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:22px;display:flex;align-items:center;gap:8px}
+.pos-col.dont .pos-lab{color:var(--red)}
+.pos-col.do .pos-lab{color:var(--green)}
+.pos-item{font-size:14.5px;color:var(--ink);padding:11px 0;border-bottom:1px solid rgba(26,43,60,.07);display:flex;gap:11px;align-items:flex-start;line-height:1.6}
+.pos-item:last-child{border-bottom:none}
+.pos-item .ic{flex-shrink:0;font-size:13px;margin-top:2px;font-weight:700}
+.pos-col.dont .ic{color:var(--red)}
+.pos-col.do .ic{color:var(--green)}
+.pos-statement{margin-top:44px;padding:44px 48px;background:var(--white);border:1px solid var(--rule2);text-align:center}
+.pos-statement-lab{font-family:var(--fm);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
+.pos-statement-zh{font-size:clamp(19px,2.6vw,26px);font-weight:700;color:var(--ink);line-height:1.55;letter-spacing:-.01em;max-width:820px;margin:0 auto 18px}
+.pos-statement-zh em{font-style:normal;color:var(--gold)}
+.pos-statement-en{font-size:14px;color:var(--muted);line-height:1.7;max-width:720px;margin:0 auto;font-family:var(--fh);font-style:italic}
+
+/* LAYERS */
+.layer-stack{display:flex;flex-direction:column;gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.layer-row{background:var(--white);display:grid;grid-template-columns:120px 1fr;gap:0;transition:background .15s}
+.layer-row:hover{background:var(--stone)}
+.layer-badge{padding:28px 24px;display:flex;flex-direction:column;justify-content:center;gap:6px;border-right:1px solid var(--rule);background:var(--slate)}
+.layer-n{font-family:var(--fm);font-size:11px;color:var(--gold);letter-spacing:.08em}
+.layer-en{font-size:13px;font-weight:700;color:#fff;line-height:1.3}
+.layer-main{padding:26px 32px}
+.layer-t{font-size:17px;font-weight:700;color:var(--ink);margin-bottom:8px}
+.layer-t .own{display:inline-block;margin-left:10px;font-family:var(--fm);font-size:10px;letter-spacing:.06em;padding:2px 9px;background:var(--gold-l);color:var(--gold);vertical-align:middle;font-weight:500}
+.layer-t .own.ext{background:var(--sky-l);color:var(--sky)}
+.layer-d{font-size:14px;color:var(--body);line-height:1.7}
+.layer-tags{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px}
+.layer-tag{font-family:var(--fm);font-size:11px;color:var(--muted);background:var(--stone);padding:3px 10px;border:1px solid var(--rule)}
+.layer-note{margin-top:34px;padding:26px 32px;background:var(--tint);border:1px solid rgba(200,117,10,.2);font-size:14.5px;color:var(--ink);line-height:1.75}
+.layer-note strong{color:var(--gold)}
+
+/* MOBILE LOAD FEATURE */
+.ml-wrap{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.ml-visual{background:var(--slate);border:1px solid var(--rule);padding:40px;position:relative;overflow:hidden}
+.ml-visual::after{content:'';position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--gold)}
+.truck-obj{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);padding:18px 20px;margin-bottom:12px;display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center}
+.truck-obj:last-child{margin-bottom:0}
+.truck-icon{width:34px;height:34px;background:var(--gold);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.truck-icon svg{width:20px;height:20px}
+.truck-meta{min-width:0}
+.truck-id{font-family:var(--fm);font-size:12px;color:#fff;font-weight:600;margin-bottom:3px}
+.truck-attr{font-size:11px;color:rgba(255,255,255,.5);line-height:1.4}
+.truck-soc{text-align:right;flex-shrink:0}
+.soc-val{font-family:var(--fm);font-size:17px;font-weight:700;line-height:1}
+.soc-lab{font-size:9px;color:rgba(255,255,255,.35);letter-spacing:.08em;margin-top:3px}
+.soc-hi{color:#5CCB8E}.soc-md{color:var(--gold)}.soc-lo{color:#E86B5A}
+.ml-txt .eyebrow{margin-bottom:16px}
+.ml-txt h3{font-size:clamp(22px,3vw,30px);font-weight:700;color:var(--ink);line-height:1.3;letter-spacing:-.02em;margin-bottom:18px}
+.ml-txt p{font-size:15px;color:var(--body);line-height:1.85;margin-bottom:18px}
+.ml-txt p strong{color:var(--ink);font-weight:600}
+.ml-list{list-style:none;margin-top:8px}
+.ml-list li{font-size:14px;color:var(--ink);padding:9px 0 9px 26px;position:relative;line-height:1.6;border-bottom:1px solid var(--rule)}
+.ml-list li:last-child{border-bottom:none}
+.ml-list li::before{content:'';position:absolute;left:2px;top:14px;width:7px;height:7px;background:var(--gold);transform:rotate(45deg)}
+
+/* JOURNEY / STAGES */
+.stage-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.stage-card{background:var(--white);padding:30px 24px;display:flex;flex-direction:column}
+.stage-n{font-family:var(--fm);font-size:11px;color:var(--gold);letter-spacing:.1em;margin-bottom:14px}
+.stage-t{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:6px;line-height:1.3}
+.stage-en{font-family:var(--fm);font-size:10px;color:var(--faint);letter-spacing:.03em;margin-bottom:16px;line-height:1.4}
+.stage-d{font-size:13px;color:var(--body);line-height:1.7;flex:1}
+.stage-price{margin-top:16px;padding-top:14px;border-top:1px solid var(--rule);font-family:var(--fm);font-size:13px;font-weight:600;color:var(--ink)}
+.stage-price .cur{color:var(--gold)}
+.stage-arrow{display:flex;align-items:center;justify-content:center;color:var(--faint);font-size:20px}
+
+/* TWIN / PRODUCT */
+.prod-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.prod-card{background:var(--white);border:1px solid var(--rule2);padding:0;overflow:hidden;display:flex;flex-direction:column}
+.prod-head{padding:32px 34px;border-bottom:1px solid var(--rule);background:var(--slate);position:relative}
+.prod-head::after{content:'';position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--gold)}
+.prod-mvp{font-family:var(--fm);font-size:11px;letter-spacing:.1em;color:var(--gold);margin-bottom:12px}
+.prod-name{font-size:22px;font-weight:700;color:#fff;line-height:1.3;margin-bottom:8px}
+.prod-en{font-family:var(--fm);font-size:11px;color:rgba(255,255,255,.5);letter-spacing:.04em}
+.prod-body{padding:32px 34px;flex:1;display:flex;flex-direction:column}
+.prod-role{font-size:15px;color:var(--ink);font-weight:600;margin-bottom:16px;line-height:1.6}
+.prod-p{font-size:14px;color:var(--body);line-height:1.8;margin-bottom:20px}
+.prod-qs{list-style:none;margin-bottom:8px}
+.prod-qs li{font-size:13.5px;color:var(--body);padding:8px 0 8px 22px;position:relative;line-height:1.55;border-bottom:1px solid var(--rule)}
+.prod-qs li:last-child{border-bottom:none}
+.prod-qs li::before{content:'?';position:absolute;left:0;top:8px;font-family:var(--fm);font-size:13px;font-weight:700;color:var(--gold)}
+.prod-out{margin-top:auto;padding-top:20px}
+.prod-out-lab{font-family:var(--fm);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.prod-out-tags{display:flex;flex-wrap:wrap;gap:6px}
+.prod-tag{font-size:12px;color:var(--ink);background:var(--gold-l);border:1px solid rgba(200,117,10,.2);padding:4px 11px}
+
+/* SAFETY / MOAT */
+.safety-band{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.safety-txt h3{font-size:clamp(22px,3vw,30px);font-weight:700;color:#fff;line-height:1.3;letter-spacing:-.02em;margin-bottom:18px}
+.safety-txt .eyebrow{color:var(--gold)}
+.safety-txt p{font-size:15px;color:rgba(255,255,255,.62);line-height:1.85;margin-bottom:18px}
+.safety-txt p strong{color:#fff}
+.chain{display:flex;flex-direction:column;gap:8px}
+.chain-node{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);padding:15px 20px;display:grid;grid-template-columns:52px 1fr;gap:16px;align-items:center;transition:all .3s}
+.chain-node.hot{background:rgba(212,132,10,.12);border-color:rgba(212,132,10,.4)}
+.chain-c{font-family:var(--fm);font-size:15px;font-weight:700;color:var(--gold);text-align:center}
+.chain-t{font-size:13.5px;color:rgba(255,255,255,.85);line-height:1.4}
+.chain-t b{color:#fff;font-weight:600;display:block;font-size:14px;margin-bottom:2px}
+
+/* CAPABILITY / MOAT grid */
+.moat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.moat-cell{background:var(--white);padding:24px 22px}
+.moat-cell .mt{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:6px;line-height:1.35}
+.moat-cell .md{font-size:12.5px;color:var(--muted);line-height:1.6}
+
+/* CASES */
+.case-note{margin-bottom:34px;padding:18px 24px;background:var(--sky-l);border:1px solid rgba(27,79,138,.18);font-size:13.5px;color:var(--ink2);line-height:1.7}
+.case-note strong{color:var(--sky)}
+.case-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.case-card{background:var(--white);padding:30px 32px;position:relative}
+.case-tag{font-family:var(--fm);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;display:inline-block}
+.case-t{font-size:17px;font-weight:700;color:var(--ink);margin-bottom:6px;line-height:1.35}
+.case-loc{font-size:12px;color:var(--faint);font-family:var(--fm);margin-bottom:14px}
+.case-d{font-size:13.5px;color:var(--body);line-height:1.75}
+.case-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);margin-top:24px}
+.cm-cell{background:var(--slate);padding:24px 20px;text-align:center}
+.cm-val{font-size:26px;font-weight:700;color:#fff;letter-spacing:-.02em;line-height:1;margin-bottom:8px;font-family:var(--fh)}
+.cm-val em{font-style:normal;color:var(--gold)}
+.cm-lab{font-size:11px;color:rgba(255,255,255,.5);line-height:1.5}
+.cm-note{margin-top:14px;font-size:11.5px;color:var(--faint);text-align:center;line-height:1.6}
+
+/* TCO */
+.tco-wrap{overflow-x:auto;border:1px solid var(--rule);background:var(--white)}
+.tco-table{width:100%;border-collapse:collapse;min-width:640px}
+.tco-table th{font-family:var(--fm);font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:16px 18px;text-align:left;background:var(--stone);border-bottom:1px solid var(--rule2);white-space:nowrap}
+.tco-table td{font-size:14px;color:var(--ink);padding:16px 18px;border-bottom:1px solid var(--rule);vertical-align:middle}
+.tco-table tr:last-child td{border-bottom:none}
+.tco-table td:first-child{font-weight:600}
+.tco-idx{display:inline-block;font-family:var(--fm);font-weight:700;padding:3px 10px;font-size:13px}
+.tco-idx.base{background:var(--stone);color:var(--muted)}
+.tco-idx.win{background:var(--green-l);color:var(--green)}
+.tco-payback{font-family:var(--fm);font-weight:600;color:var(--gold)}
+.tco-foot{margin-top:16px;font-size:12px;color:var(--faint);line-height:1.7}
+
+/* REGION */
+.region-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.region-card{background:var(--white);padding:32px 34px;position:relative}
+.region-rank{position:absolute;top:28px;right:32px;font-family:var(--fh);font-size:40px;font-weight:700;color:var(--pearl);line-height:1}
+.region-pri{font-family:var(--fm);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.region-t{font-size:20px;font-weight:700;color:var(--ink);margin-bottom:14px}
+.region-t .flag{font-size:13px;color:var(--muted);font-weight:400;margin-left:8px}
+.region-d{font-size:14px;color:var(--body);line-height:1.75;margin-bottom:16px;max-width:88%}
+.region-mins{display:flex;flex-wrap:wrap;gap:6px}
+.region-min{font-family:var(--fm);font-size:11px;color:var(--muted);background:var(--stone);padding:4px 11px;border:1px solid var(--rule)}
+.region-hold{margin-top:34px;padding:24px 30px;background:var(--stone);border:1px solid var(--rule);font-size:14px;color:var(--body);line-height:1.75}
+.region-hold strong{color:var(--ink)}
+
+/* ROADMAP */
+.road-track{position:relative;padding-left:0}
+.road-item{display:grid;grid-template-columns:150px 1fr;gap:32px;padding:28px 0;border-bottom:1px solid var(--rule);align-items:start}
+.road-item:last-child{border-bottom:none}
+.road-time{font-family:var(--fm);font-size:13px;font-weight:600;color:var(--gold);letter-spacing:.02em;padding-top:2px}
+.road-time .ph{display:block;font-size:11px;color:var(--faint);font-weight:400;margin-top:5px;letter-spacing:.04em}
+.road-body h4{font-size:17px;font-weight:700;color:var(--ink);margin-bottom:10px;line-height:1.4}
+.road-body p{font-size:14px;color:var(--body);line-height:1.75}
+
+/* AUDIENCE */
+.aud-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.aud-card{background:var(--white);padding:30px 26px}
+.aud-ic{width:40px;height:40px;background:var(--slate);display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+.aud-ic svg{width:22px;height:22px}
+.aud-t{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:10px;line-height:1.35}
+.aud-d{font-size:13px;color:var(--body);line-height:1.7}
+
+/* CTA */
+.cta-section{background:var(--slate);padding:88px var(--gutter);text-align:center;border-top:1px solid rgba(255,255,255,.06)}
+.cta-inner{max-width:760px;margin:0 auto}
+.cta-eyebrow{font-family:var(--fm);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
+.cta-h2{font-size:clamp(28px,4.4vw,44px);font-weight:700;color:#fff;line-height:1.24;letter-spacing:-.02em;margin-bottom:18px}
+.cta-h2 em{font-style:normal;color:var(--gold)}
+.cta-sub{font-size:16px;font-weight:400;color:rgba(255,255,255,.55);max-width:520px;margin:0 auto 40px;line-height:1.75}
+.cta-steps{display:flex;border:1px solid rgba(255,255,255,.1);overflow:hidden;margin-bottom:40px}
+.cta-step{flex:1;padding:20px 22px;border-right:1px solid rgba(255,255,255,.1);text-align:left}
+.cta-step:last-child{border:none}
+.step-n{font-family:var(--fm);font-size:10px;letter-spacing:.1em;color:var(--gold);margin-bottom:8px}
+.step-t{font-size:14px;font-weight:600;color:#fff;margin-bottom:5px}
+.step-s{font-size:12px;color:rgba(255,255,255,.45);line-height:1.5}
+.cta-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-white{display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:#1A2B3C;padding:15px 32px;font-size:14px;font-weight:600;border:none;cursor:pointer;transition:opacity .15s}
+.btn-white:hover{opacity:.9}
+.btn-ghost{display:inline-flex;align-items:center;gap:8px;background:transparent;color:#fff;padding:15px 30px;font-size:14px;font-weight:500;border:1px solid rgba(255,255,255,.25);transition:all .15s}
+.btn-ghost:hover{border-color:#fff}
+.cta-note{font-size:11.5px;color:rgba(255,255,255,.24);margin-top:20px;line-height:1.7}
+
+/* FOOTER */
+footer{background:#131F2B;border-top:1px solid rgba(255,255,255,.06)}
+.foot-inner{max-width:1200px;margin:0 auto;padding:38px var(--gutter);display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:24px}
+.foot-brand{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.foot-brand-name{font-size:14px;font-weight:700;color:#fff}
+.foot-legal{font-size:12px;color:rgba(255,255,255,.4);line-height:1.8;max-width:440px}
+.foot-legal a{color:var(--gold)}
+.foot-meta{font-size:11px;color:rgba(255,255,255,.25);line-height:1.9;text-align:right}
+.disclaimer{max-width:1200px;margin:0 auto;padding:0 var(--gutter) 34px}
+.disclaimer-box{border-top:1px solid rgba(255,255,255,.06);padding-top:22px;font-size:11px;color:rgba(255,255,255,.3);line-height:1.8}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .55s ease,transform .55s ease}
+.reveal.on{opacity:1;transform:none}
+
+/* RESPONSIVE */
+@media(max-width:980px){
+  .nav-links{display:none}
+  .nav-burger{display:flex}
+  .ml-wrap,.safety-band{grid-template-columns:1fr;gap:36px}
+  .prod-grid{grid-template-columns:1fr}
+  .moat-grid,.aud-grid{grid-template-columns:1fr 1fr}
+  .stage-grid{grid-template-columns:1fr 1fr}
+  .stage-arrow{display:none}
+}
+@media(max-width:760px){
+  .pain-grid{grid-template-columns:1fr}
+  .pos-wrap{grid-template-columns:1fr}
+  .layer-row{grid-template-columns:96px 1fr}
+  .region-grid,.case-grid{grid-template-columns:1fr}
+  .hero-strip{grid-template-columns:1fr 1fr}
+  .case-metrics{grid-template-columns:1fr 1fr}
+  .cta-steps{flex-direction:column}
+  .cta-step{border-right:none;border-bottom:1px solid rgba(255,255,255,.1)}
+  .cta-step:last-child{border:none}
+  .road-item{grid-template-columns:1fr;gap:12px}
+  .foot-inner{flex-direction:column;align-items:flex-start}
+  .foot-meta{text-align:left}
+}
+@media(max-width:480px){
+  .hero-actions{flex-direction:column}
+  .btn-primary,.btn-outline{width:100%;justify-content:center}
+  .moat-grid,.aud-grid,.stage-grid{grid-template-columns:1fr}
+  .hero-strip,.case-metrics{grid-template-columns:1fr}
+  .cta-actions{flex-direction:column;align-items:stretch}
+  .btn-white,.btn-ghost{justify-content:center}
+  .layer-row{grid-template-columns:1fr}
+  .layer-badge{flex-direction:row;gap:12px;padding:16px 20px;align-items:center}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-brand" href="https://docs.energizeos.com" aria-label="EnergizeOS">
+    <svg width="24" height="24" viewBox="0 0 48 48" fill="none" aria-hidden="true"><rect x="0" y="0" width="21" height="21" fill="#1A2B3C"/><rect x="27" y="0" width="21" height="21" fill="#D4840A"/><rect x="0" y="27" width="21" height="21" fill="#D4840A"/><rect x="27" y="27" width="21" height="21" fill="#1A2B3C"/></svg>
+    <span><span class="nav-brand-name">EnergizeOS</span><span class="nav-brand-tag">MINE ELECTRIFICATION</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="#challenge">行业挑战</a>
+    <a href="#position">我们的定位</a>
+    <a href="#architecture">七层架构</a>
+    <a href="#products">核心产品</a>
+    <a href="#journey">交付路径</a>
+    <a href="#capability">已验证能力</a>
+    <a href="#regions">区域策略</a>
+    <a class="nav-cta" href="mailto:info@energizeos.com?subject=矿山电气化能源方案咨询">预约技术研讨</a>
+  </div>
+  <button class="nav-burger" id="burger" aria-label="菜单"><span></span><span></span><span></span></button>
+</nav>
+<div class="mnav" id="mnav">
+  <a href="#challenge">行业挑战</a>
+  <a href="#position">我们的定位</a>
+  <a href="#architecture">七层能源架构</a>
+  <a href="#mobile">移动负荷层</a>
+  <a href="#products">核心产品</a>
+  <a href="#journey">五阶段交付路径</a>
+  <a href="#safety">安全控制边界</a>
+  <a href="#capability">已验证能力</a>
+  <a href="#benchmark">行业标杆参考</a>
+  <a href="#regions">区域进入策略</a>
+  <a href="#roadmap">交付路线图</a>
+  <a class="nav-cta" href="mailto:info@energizeos.com?subject=矿山电气化能源方案咨询">预约技术研讨</a>
+</div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-badge"><span class="badge-dot"></span>矿山电气化能源整体解决方案 · 面向矿业公司、矿卡 OEM、EPC 与矿山承包商开放合作</div>
+  <h1 class="hero-h1">
+    <span class="light">电动矿卡能不能规模化，从来不取决于车。</span>
+    先把<span class="accent">电</span>的问题算清楚、管起来，矿山电气化才能真正落地、可复制、可扩张。
+  </h1>
+  <p class="hero-body">
+    <strong>EnergizeOS™</strong> 不造矿卡，也不做"全矿山平台"。我们是<strong>中立、矿山专用、软件定义的电气与能源基础设施集成商</strong>——把电网、微电网、储能 BESS、快充 / 换电 / Trolley 补能系统，以及电动矿卡这一全新的"移动负荷"，统一建模、控制、调度和优化。让您在投资之前先算清账，在运营之中真正管住电。
+  </p>
+  <div class="hero-actions">
+    <a class="btn-primary" href="#products">查看核心产品与交付路径
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" stroke-width="1.5"/></svg></a>
+    <a class="btn-outline" href="#challenge">先了解行业挑战</a>
+  </div>
+  <div class="hero-strip">
+    <div class="hs-cell"><div class="hs-val"><em>500</em>+ MW</div><div class="hs-lab">自 2019 年起累计部署的储能与能源系统容量</div></div>
+    <div class="hs-cell"><div class="hs-val">15 个</div><div class="hs-lab">已验证的 EMS 调度策略模块</div></div>
+    <div class="hs-cell"><div class="hs-val">C1–C7</div><div class="hs-lab">硬件级安全闭锁与保护控制链</div></div>
+    <div class="hs-cell"><div class="hs-val">多 OEM</div><div class="hs-lab">中立集成，不绑定任何单一设备厂商</div></div>
+  </div>
+</header>
+
+<!-- CHALLENGE -->
+<section id="challenge" class="band">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="eyebrow">The Real Challenge</div>
+      <h2 class="sec-h2">矿山客户真正采购的，<em>从来不是一台车</em></h2>
+      <p class="sec-sub">全球电动矿卡已经跨过概念验证：地下矿电动化已商业化，中国宽体电动矿卡已规模化，220–290 吨级刚性矿卡正处于首批验证窗口。但真正卡住规模化的，不是车辆本身，而是车辆背后那套没有被系统性解决的"电"。</p>
+    </div>
+    <div class="pain-grid">
+      <div class="pain-card reveal">
+        <div class="pain-num">CHALLENGE 01</div>
+        <div class="pain-t">补能系统缺失，车队跑不满</div>
+        <div class="pain-d">上 50 台、100 台电动矿卡，峰值负荷是多少？需要多大 PCS、多少 MWh 储能、几个换电站或快充点？快充会不会冲击主生产负荷？换电排队会不会拖垮运输产能？这些问题不解决，矿卡只能"能跑一台"，无法批量复制。</div>
+      </div>
+      <div class="pain-card reveal">
+        <div class="pain-num">CHALLENGE 02</div>
+        <div class="pain-t">电网薄弱，很多矿区不是没需求，是没电</div>
+        <div class="pain-d">高海拔铜矿、偏远铜钴带、弱电网矿区——需求很强，但电力供给脆弱。柴发、光伏、风电、储能、电网如何混合运行？柴油机保留多少？绿电能覆盖多少负荷？没有能源系统规划，电动化就是空谈。</div>
+      </div>
+      <div class="pain-card reveal">
+        <div class="pain-num">CHALLENGE 03</div>
+        <div class="pain-t">项目无法复制，每次都从零开始</div>
+        <div class="pain-d">多家矿卡 OEM、多家 PCS、多家电池——数据接口不通，系统各自为政。传统工程方每个项目重新设计，交付重、复用低。董事会、财务、运营与 ESG 团队无法共同接受一个可解释的资本决策。</div>
+      </div>
+    </div>
+    <div class="pain-q reveal">
+      <div class="pain-q-lab">What mine owners actually buy</div>
+      <div class="pain-q-t">矿山客户真正采购的，是<em>吨公里成本下降、柴油消耗下降、碳排放下降、运输可用率不下降、投资回收期可解释、多厂家系统可稳定运行</em>——这些问题，矿卡 OEM 单独回答不了，PCS 厂单独也回答不了。它需要电气、能源、控制、运维、TCO、调度与合规一起建模。</div>
+    </div>
+  </div>
+</section>
+
+<!-- POSITION -->
+<section id="position">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Our Position</div>
+      <h2 class="sec-h2">我们把行业重新定义为<em>矿山电气化</em></h2>
+      <p class="sec-sub">Mine Electrification。电动矿卡只是入口，不是全部。矿山电气化领域并非没有强玩家——ABB、Schneider、Hitachi Energy、Siemens 都在其中。真正的空白，在三个交叉点上：矿山专用、多 OEM 中立、软件定义且可快速复制。</p>
+    </div>
+    <div class="pos-wrap">
+      <div class="pos-col dont reveal">
+        <div class="pos-lab">✕ 我们不做</div>
+        <div class="pos-item"><span class="ic">✕</span>不造矿卡，不与矿卡 OEM 争车辆生意</div>
+        <div class="pos-item"><span class="ic">✕</span>不做全矿山生产调度平台</div>
+        <div class="pos-item"><span class="ic">✕</span>不承诺覆盖破碎、磨矿、浮选、输送带等生产系统</div>
+        <div class="pos-item"><span class="ic">✕</span>不把 TCO / ROI 包装成收益承诺</div>
+        <div class="pos-item"><span class="ic">✕</span>不绑定任何单一 PCS、电池、充电桩或换电站</div>
+      </div>
+      <div class="pos-col do reveal">
+        <div class="pos-lab">✓ 我们专注做</div>
+        <div class="pos-item"><span class="ic">✓</span>矿山电气化前期测算与微电网 / 能源系统规划</div>
+        <div class="pos-item"><span class="ic">✓</span>BESS 与 PCS 容量设计、补能电气接入与调度逻辑</div>
+        <div class="pos-item"><span class="ic">✓</span>矿卡作为"移动负荷"的能源建模与管理</div>
+        <div class="pos-item"><span class="ic">✓</span>多厂家 PCS / BESS / 充电站 / 矿卡接口集成</div>
+        <div class="pos-item"><span class="ic">✓</span>继电保护、互锁、EMS 控制策略、FAT/SAT 与远程能源运维</div>
+      </div>
+    </div>
+    <div class="pos-statement reveal">
+      <div class="pos-statement-lab">One-line Positioning</div>
+      <div class="pos-statement-zh">EnergizeOS 是面向矿山电气化的<em>中立电气与能源基础设施集成商</em>，帮助矿业客户把电网、微电网、储能、补能系统和电动矿卡移动负荷，统一建模、控制、调度和优化。</div>
+      <div class="pos-statement-en">A neutral electrical and energy infrastructure integrator for mine electrification — connecting grid, microgrid, storage, charging, swapping, trolley power and mobile mining fleets into one controllable and optimizable energy system.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ARCHITECTURE -->
+<section id="architecture" class="band-stone" style="border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="eyebrow">System Architecture</div>
+      <h2 class="sec-h2">矿山能源系统的<em>七个业务层</em></h2>
+      <p class="sec-sub">不要按"软件模块"理解，而要按矿山业务层理解。矿卡会换品牌，但电气基础设施通常存在 10–20 年。我们的能力覆盖从能源来源到管理层看板的完整链条——生产调度归生产系统，能源调度归 EnergizeOS。</p>
+    </div>
+    <div class="layer-stack">
+      <div class="layer-row reveal">
+        <div class="layer-badge"><span class="layer-n">LAYER 1</span><span class="layer-en">Primary Energy</span></div>
+        <div class="layer-main">
+          <div class="layer-t">能源来源层<span class="own ext">外部资源</span></div>
+          <div class="layer-d">解决"电从哪里来"。电网、光伏、风电、柴油发电、燃气发电、氢能与储能的混合供给。</div>
+          <div class="layer-tags"><span class="layer-tag">Grid</span><span class="layer-tag">PV</span><span class="layer-tag">Wind</span><span class="layer-tag">Diesel</span><span class="layer-tag">BESS</span><span class="layer-tag">H₂</span></div>
+        </div>
+      </div>
+      <div class="layer-row reveal">
+        <div class="layer-badge"><span class="layer-n">LAYER 2</span><span class="layer-en">Electrical Infra.</span></div>
+        <div class="layer-main">
+          <div class="layer-t">电气基础设施层<span class="own">核心能力</span></div>
+          <div class="layer-d">变电、变压、开关柜、继电保护与配合、电缆、PCS、充电、换电、Trolley 供电、电能质量、接地与控制电源。这是我们最深的能力之一。</div>
+          <div class="layer-tags"><span class="layer-tag">Substation</span><span class="layer-tag">Switchgear</span><span class="layer-tag">Protection</span><span class="layer-tag">PCS</span><span class="layer-tag">Charger / Swap / Trolley</span></div>
+        </div>
+      </div>
+      <div class="layer-row reveal">
+        <div class="layer-badge"><span class="layer-n">LAYER 3</span><span class="layer-en">Energy Control</span></div>
+        <div class="layer-main">
+          <div class="layer-t">能源分配与控制层<span class="own">核心能力</span></div>
+          <div class="layer-d">EMS、微电网控制、BESS SOC 管理、柴发优化、削峰、零逆流、需量管理、并网 / 孤岛切换、安全闭锁与保护跳合闸逻辑。EnergizeOS 现有能力可自然延伸的层。</div>
+          <div class="layer-tags"><span class="layer-tag">EMS</span><span class="layer-tag">Microgrid Control</span><span class="layer-tag">Peak Shaving</span><span class="layer-tag">Grid-Tie / Island</span><span class="layer-tag">Safety Interlock</span></div>
+        </div>
+      </div>
+      <div class="layer-row reveal">
+        <div class="layer-badge"><span class="layer-n">LAYER 4</span><span class="layer-en">Mobile Energy</span></div>
+        <div class="layer-main">
+          <div class="layer-t">移动能源 / 移动负荷层<span class="own">关键差异</span></div>
+          <div class="layer-d">矿山场景最重要的新变化。传统 EMS 管的是固定负荷，电动矿卡首次带来大量"会移动、有 SOC、有任务、有路线、有补能需求"的动态负荷——这正是矿山 EMS 与普通工商业 EMS 的本质区别。</div>
+          <div class="layer-tags"><span class="layer-tag">Fleet SOC / SOH</span><span class="layer-tag">Position</span><span class="layer-tag">Charging Need</span><span class="layer-tag">Swap Need</span><span class="layer-tag">Load Forecast</span></div>
+        </div>
+      </div>
+      <div class="layer-row reveal">
+        <div class="layer-badge"><span class="layer-n">LAYER 5</span><span class="layer-en">Operation IF</span></div>
+        <div class="layer-main">
+          <div class="layer-t">生产运营接口层<span class="own ext">仅做接口</span></div>
+          <div class="layer-d">车队管理、自动驾驶 AHS、调度系统、破碎、输送、通风、选厂。当前阶段我们不做这一层，只做能源接口与数据交换——不抢矿山生产系统的位置，只让能源系统更聪明。</div>
+          <div class="layer-tags"><span class="layer-tag">Fleet Mgmt</span><span class="layer-tag">AHS Interface</span><span class="layer-tag">Dispatch API</span></div>
+        </div>
+      </div>
+      <div class="layer-row reveal">
+        <div class="layer-badge"><span class="layer-n">LAYER 6</span><span class="layer-en">Optimization</span></div>
+        <div class="layer-main">
+          <div class="layer-t">优化层<span class="own">高价值软件</span></div>
+          <div class="layer-d">充电优化、换电优化、Trolley 供电优化、电池健康优化、柴油节省、绿电利用、碳优化、能源成本与峰值需量控制。这是未来高毛利软件收入的核心。</div>
+          <div class="layer-tags"><span class="layer-tag">Charging Opt.</span><span class="layer-tag">Diesel Saving</span><span class="layer-tag">Battery Health</span><span class="layer-tag">Carbon-aware</span></div>
+        </div>
+      </div>
+      <div class="layer-row reveal">
+        <div class="layer-badge"><span class="layer-n">LAYER 7</span><span class="layer-en">Business Intel.</span></div>
+        <div class="layer-main">
+          <div class="layer-t">管理层看板层<span class="own">决策输出</span></div>
+          <div class="layer-d">老板不关心每一个 SOC 点位，只关心：今天生产是否受影响、柴油少用多少、电费多少、碳排多少、BESS 是否健康、车队是否按计划、可用率是否达标、ROI 是否符合计划。最终输出是 Executive Dashboard。</div>
+          <div class="layer-tags"><span class="layer-tag">TCO</span><span class="layer-tag">Diesel Saving</span><span class="layer-tag">CO₂</span><span class="layer-tag">Availability</span><span class="layer-tag">ROI</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="layer-note reveal"><strong>控制哲学 ·</strong> 生产调度归生产系统，能源调度归 EnergizeOS。保护跳闸优先级永远高于 EMS，安全闭环留给 PLC / 继电器 / 本地控制器；EMS 可以优化和授权，但绝不绕过保护。这与我们现有的 ECP / AIPP / C1–C7 控制哲学完全一致。</div>
+  </div>
+</section>
+
+<!-- MOBILE LOAD FEATURE -->
+<section id="mobile" class="band-slate" style="padding-top:82px;padding-bottom:82px">
+  <div class="container">
+    <div class="ml-wrap">
+      <div class="ml-txt reveal">
+        <div class="eyebrow" style="color:var(--gold)">Layer 4 · The Game Changer</div>
+        <h3 style="color:#fff">每一台电动矿卡，都是一个<span style="color:var(--gold)">动态能源对象</span></h3>
+        <p style="color:rgba(255,255,255,.65)">电动矿卡出现后，矿山第一次拥有了大量会移动的负荷。每台车都携带 <strong style="color:#fff">SOC、SOH、位置、路线、坡度、载重、任务状态、预计回站时间、预计能耗、是否需要充电 / 换电、是否进入 Trolley 区段</strong>——这是普通工商业 EMS 从未处理过的负荷类型。</p>
+        <p style="color:rgba(255,255,255,.65)">谁能把这些移动负荷与储能、柴发、绿电、补能站联动调度起来，谁才能让矿卡车队真正跑满、跑稳、跑得经济。这正是 <strong style="color:#fff">Mine EMS for Mobile Load</strong> 要解决的核心问题。</p>
+        <ul class="ml-list">
+          <li>车队 SOC 实时监测与补能需求预测</li>
+          <li>充电 / 换电排队优化，避免拥堵与产能损失</li>
+          <li>BESS 与充电负荷联动、柴发最小运行策略</li>
+          <li>光伏 / 风电优先分配、生产负荷优先级控制</li>
+          <li>低 SOC 风险预警与充电站容量瓶颈识别</li>
+        </ul>
+      </div>
+      <div class="ml-visual reveal">
+        <div class="truck-obj">
+          <div class="truck-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M2 8h11v8H2zM13 11h5l3 3v2h-8z" stroke="#1A2B3C" stroke-width="1.5"/><circle cx="6" cy="18" r="2" fill="#1A2B3C"/><circle cx="17" cy="18" r="2" fill="#1A2B3C"/></svg></div>
+          <div class="truck-meta"><div class="truck-id">TRUCK-014 · 100t 宽体</div><div class="truck-attr">上坡段 · 满载 · 循环剩余 12min · 预计回站需补能</div></div>
+          <div class="truck-soc"><div class="soc-val soc-hi">82%</div><div class="soc-lab">SOC</div></div>
+        </div>
+        <div class="truck-obj">
+          <div class="truck-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M2 8h11v8H2zM13 11h5l3 3v2h-8z" stroke="#1A2B3C" stroke-width="1.5"/><circle cx="6" cy="18" r="2" fill="#1A2B3C"/><circle cx="17" cy="18" r="2" fill="#1A2B3C"/></svg></div>
+          <div class="truck-meta"><div class="truck-id">TRUCK-027 · 100t 宽体</div><div class="truck-attr">返程空载 · 建议进入 3 号换电站 · 队列位 2</div></div>
+          <div class="truck-soc"><div class="soc-val soc-md">41%</div><div class="soc-lab">SOC</div></div>
+        </div>
+        <div class="truck-obj">
+          <div class="truck-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M2 8h11v8H2zM13 11h5l3 3v2h-8z" stroke="#1A2B3C" stroke-width="1.5"/><circle cx="6" cy="18" r="2" fill="#1A2B3C"/><circle cx="17" cy="18" r="2" fill="#1A2B3C"/></svg></div>
+          <div class="truck-meta"><div class="truck-id">TRUCK-009 · 91t 换电</div><div class="truck-attr">低 SOC 预警 · 优先补能 · BESS 联动削峰中</div></div>
+          <div class="truck-soc"><div class="soc-val soc-lo">18%</div><div class="soc-lab">SOC</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section id="products">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Core Products</div>
+      <h2 class="sec-h2">两个即刻可交付的<em>核心产品</em></h2>
+      <p class="sec-sub">产品主线是 Mine Electrification Suite，但这是一条路线图，不是一次性铺开的九条产品线。当前阶段我们只聚焦两个可交付的核心产品——先帮您把电气化算清楚，再帮您把它管起来。</p>
+    </div>
+    <div class="prod-grid">
+      <div class="prod-card reveal">
+        <div class="prod-head">
+          <div class="prod-mvp">CORE PRODUCT 01</div>
+          <div class="prod-name">矿山能源数字孪生</div>
+          <div class="prod-en">Mine Digital Energy Twin</div>
+        </div>
+        <div class="prod-body">
+          <div class="prod-role">定位：矿山能源仿真与 TCO 决策工具——在您投资之前，先把电气化算清楚。</div>
+          <div class="prod-p">它只仿真能源系统，不仿真采矿流程、矿石品位或浮选效率。见客户时不是只讲 PPT，而是现场算账。</div>
+          <div class="prod-out-lab">回答这些关键问题</div>
+          <ul class="prod-qs">
+            <li>上多少台电动矿卡？用快充、换电还是 Trolley？</li>
+            <li>需要多大电网容量、多少 MWh 储能、多少 MW PCS？</li>
+            <li>需要几个换电站、几个快充点？柴油机保留多少？</li>
+            <li>光伏、风电能覆盖多少负荷？每年节省多少柴油、减排多少 CO₂？几年回本？</li>
+          </ul>
+          <div class="prod-out">
+            <div class="prod-out-lab">输出结果</div>
+            <div class="prod-out-tags"><span class="prod-tag">推荐技术路线</span><span class="prod-tag">TCO 对比</span><span class="prod-tag">回收期</span><span class="prod-tag">基础设施规模</span><span class="prod-tag">减排量</span><span class="prod-tag">敏感性分析</span><span class="prod-tag">分阶段路线图</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="prod-card reveal">
+        <div class="prod-head">
+          <div class="prod-mvp">CORE PRODUCT 02</div>
+          <div class="prod-name">矿山移动负荷 EMS</div>
+          <div class="prod-en">Mine EMS for Mobile Load</div>
+        </div>
+        <div class="prod-body">
+          <div class="prod-role">定位：EnergizeOS 的矿山升级版——把电、储、补能与矿卡移动负荷真正管起来。</div>
+          <div class="prod-p">传统 EMS 管电网、光伏、储能、柴发与固定负荷；矿山 EMS 还要管电动矿卡、SOC、充电与换电排队、Trolley 负荷和移动负荷预测。</div>
+          <div class="prod-out-lab">核心功能</div>
+          <ul class="prod-qs" style="list-style:none">
+            <li style="padding-left:22px">车队 SOC 监测与补能需求预测</li>
+            <li style="padding-left:22px">充电 / 换电排队优化、BESS 与充电负荷联动</li>
+            <li style="padding-left:22px">柴发启停建议、绿电优先分配、峰值负荷限制</li>
+            <li style="padding-left:22px">充电失败报警、电池健康趋势、能源日 / 周 / 月报</li>
+          </ul>
+          <div class="prod-out">
+            <div class="prod-out-lab">交付形态</div>
+            <div class="prod-out-tags"><span class="prod-tag">车队能源看板</span><span class="prod-tag">补能调度</span><span class="prod-tag">BESS 联动</span><span class="prod-tag">柴油优化</span><span class="prod-tag">碳报告</span><span class="prod-tag">远程运营</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- JOURNEY / 5 STAGES -->
+<section id="journey" class="band">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Delivery Journey</div>
+      <h2 class="sec-h2">按您的成熟阶段，<em>分五步交付</em></h2>
+      <p class="sec-sub">我们不按"卖硬件 / 卖软件"划分，而按客户成熟阶段销售：先用可行性研究帮您算清楚是否值得做，再逐步走向工程、集成、软件与长期运营。每一步都可独立成交，也可串联成完整交付。</p>
+    </div>
+    <div class="stage-grid">
+      <div class="stage-card reveal">
+        <div class="stage-n">STAGE 01</div>
+        <div class="stage-t">可行性研究</div>
+        <div class="stage-en">Electrification Feasibility Study</div>
+        <div class="stage-d">能源基线、柴油分析、快充 / 换电 / Trolley 路线比较、BESS / PCS / 电网 sizing、TCO、ROI、分阶段路线图。</div>
+        <div class="stage-price"><span class="cur">三档可选</span> · 免费初筛 / 低价诊断 / 正式报告</div>
+      </div>
+      <div class="stage-card reveal">
+        <div class="stage-n">STAGE 02</div>
+        <div class="stage-t">工程设计</div>
+        <div class="stage-en">Electrical & Energy Design</div>
+        <div class="stage-d">单线图、潮流与短路计算、保护philosophy、BESS / PCS 设计、补能电气设计、Trolley 接口、控制架构、通讯图、FAT/SAT 计划。</div>
+        <div class="stage-price"><span class="cur">按矿山规模</span> 报价</div>
+      </div>
+      <div class="stage-card reveal">
+        <div class="stage-n">STAGE 03</div>
+        <div class="stage-t">系统集成</div>
+        <div class="stage-en">ECP / EMS / SCADA / Commissioning</div>
+        <div class="stage-d">电气控制柜、EMS 部署、SCADA 集成、继电保护集成、PCS / 充电集成、现场调试与培训。出厂预配置，远程调试标配。</div>
+        <div class="stage-price"><span class="cur">按项目</span> 交付</div>
+      </div>
+      <div class="stage-card reveal">
+        <div class="stage-n">STAGE 04</div>
+        <div class="stage-t">软件授权</div>
+        <div class="stage-en">Mine EMS License</div>
+        <div class="stage-d">按站点、矿卡数量、补能站数量、BESS 容量或策略模块授权。基础 EMS、移动负荷模块、充电 / 换电优化、柴油优化、碳报告、电池健康分析。</div>
+        <div class="stage-price"><span class="cur">订阅 / 模块</span> 计费</div>
+      </div>
+      <div class="stage-card reveal">
+        <div class="stage-n">STAGE 05</div>
+        <div class="stage-t">远程运营</div>
+        <div class="stage-en">Remote Energy Operation</div>
+        <div class="stage-d">月度能源优化报告、柴油节省报告、碳减排报告、电池健康报告、运行异常分析、SLA 可用率报告与远程支持。长期高价值服务。</div>
+        <div class="stage-price"><span class="cur">年度</span> 服务合同</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SAFETY -->
+<section id="safety" class="band-slate">
+  <div class="container">
+    <div class="safety-band">
+      <div class="safety-txt reveal">
+        <div class="eyebrow">Safety Control Boundary</div>
+        <h3>能源系统可以更聪明，<br>但<span style="color:var(--gold)">安全永远不可被绕过</span></h3>
+        <p>矿山环境复杂——高温、低温、高海拔、粉尘、震动、弱电网，系统可靠性要求极高。我们把安全边界写死在架构里：<strong>保护跳闸优先级高于 EMS</strong>，安全闭环留给硬件级控制器，EMS 只做优化和授权。</p>
+        <p>远程操作必须有权限、审计与互锁；合闸 / 跳闸逻辑必须硬件级可验证；FAT/SAT 必须覆盖通讯中断、UPS 掉电、误合闸防护与孤岛切换。这套 C1–C7 硬件闭锁控制链，已在我们交付的储能与微电网项目中验证。</p>
+      </div>
+      <div class="chain reveal">
+        <div class="chain-node"><div class="chain-c">C1</div><div class="chain-t"><b>就地保护与跳闸</b>继电保护独立于 EMS，优先级最高</div></div>
+        <div class="chain-node"><div class="chain-c">C2</div><div class="chain-t"><b>硬件互锁</b>合闸 / 跳闸逻辑硬件级可验证</div></div>
+        <div class="chain-node"><div class="chain-c">C3</div><div class="chain-t"><b>孤岛与并网切换</b>Grid-Tie / Island Transition 安全序列</div></div>
+        <div class="chain-node hot"><div class="chain-c">C4</div><div class="chain-t"><b>EMS 优化与授权</b>可调度、可优化，但不绕过保护</div></div>
+        <div class="chain-node"><div class="chain-c">C5</div><div class="chain-t"><b>远程操作权限与审计</b>权限分级 · 全程留痕</div></div>
+        <div class="chain-node"><div class="chain-c">C6</div><div class="chain-t"><b>掉电与通讯中断保护</b>UPS 掉电 / 通讯丢失下的安全态</div></div>
+        <div class="chain-node"><div class="chain-c">C7</div><div class="chain-t"><b>FAT / SAT 全覆盖验证</b>出厂与现场双重验收</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CAPABILITY -->
+<section id="capability">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Verified Capability</div>
+      <h2 class="sec-h2">矿山能源集成层的能力，<em>已经过实战验证</em></h2>
+      <p class="sec-sub">我们的护城河不是一段代码或一个漂亮的 EMS 页面，而是一组难以快速复制的工程能力组合。这些能力自 2019 年起，已在 500+ MW 储能与能源系统项目中反复交付。矿卡厂懂车，PCS 厂懂设备，而把电力系统真正做成、调通、管住的，是另一种能力。</p>
+    </div>
+    <div class="moat-grid">
+      <div class="moat-cell reveal"><div class="mt">并网互连</div><div class="md">Utility Interconnection 全流程</div></div>
+      <div class="moat-cell reveal"><div class="mt">保护与配合</div><div class="md">继电保护逻辑与整定协调</div></div>
+      <div class="moat-cell reveal"><div class="mt">微电网设计</div><div class="md">多源混合微电网架构</div></div>
+      <div class="moat-cell reveal"><div class="mt">BESS 集成</div><div class="md">储能系统集成与 SOC 管理</div></div>
+      <div class="moat-cell reveal"><div class="mt">多厂家 PCS 兼容</div><div class="md">不绑定单一 PCS 品牌</div></div>
+      <div class="moat-cell reveal"><div class="mt">EMS 策略引擎</div><div class="md">15 个已验证调度策略模块</div></div>
+      <div class="moat-cell reveal"><div class="mt">协议集成</div><div class="md">SCADA / Modbus / MQTT / OPC UA / API</div></div>
+      <div class="moat-cell reveal"><div class="mt">ECP 控制柜</div><div class="md">电气控制柜设计与制造</div></div>
+      <div class="moat-cell reveal"><div class="mt">FAT / SAT</div><div class="md">出厂与现场验收测试</div></div>
+      <div class="moat-cell reveal"><div class="mt">现场调试</div><div class="md">Field Commissioning 交付经验</div></div>
+      <div class="moat-cell reveal"><div class="mt">能源优化</div><div class="md">削峰 / 柴油节省 / 碳优化</div></div>
+      <div class="moat-cell reveal"><div class="mt">TCO 建模</div><div class="md">工程级经济性决策支持</div></div>
+    </div>
+    <div class="case-metrics reveal" style="margin-top:32px">
+      <div class="cm-cell"><div class="cm-val"><em>500</em>+</div><div class="cm-lab">MW 累计部署容量（自 2019）</div></div>
+      <div class="cm-cell"><div class="cm-val">15</div><div class="cm-lab">已验证 EMS 策略模块</div></div>
+      <div class="cm-cell"><div class="cm-val">C1–C7</div><div class="cm-lab">硬件安全闭锁链</div></div>
+      <div class="cm-cell"><div class="cm-val">多协议</div><div class="cm-lab">Modbus / DNP3 / IEC 61850</div></div>
+    </div>
+    <div class="cm-note reveal">部署与容量数据来自 EnergizeOS / Energize Solutions Inc. 自 2019 年以来在北美电网侧与工商业侧储能及能源系统的实际交付业绩，客户涵盖公用事业与大型工商业用户。上述能力可直接迁移至矿山电气化场景。</div>
+  </div>
+</section>
+
+<!-- BENCHMARK -->
+<section id="benchmark" class="band">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Industry Benchmark</div>
+      <h2 class="sec-h2">这些公开标杆，验证了<em>路线的商业潜力</em></h2>
+      <p class="sec-sub">以下为行业公开项目，用于说明矿山电气化各条技术路线已具备真实商业落地价值，并非 EnergizeOS 自身案例。它们共同印证了一个判断：矿山电气化的机会真实存在，且正在从试点走向规模化。</p>
+    </div>
+    <div class="case-note reveal"><strong>说明 ·</strong> 本节所列项目为公开市场信息，用于行业趋势佐证；EnergizeOS 的自有验证能力见上一节。我们严格区分"行业标杆参考"与"自身交付业绩"，不虚构任何案例。</div>
+    <div class="case-grid">
+      <div class="case-card reveal">
+        <span class="case-tag">换电宽体 · 铜金矿</span>
+        <div class="case-t">秘鲁 La Arena</div>
+        <div class="case-loc">Peru · 50 台 91 吨级换电宽体矿卡</div>
+        <div class="case-d">中国电动宽体矿卡出海最具指标性的商业案例之一。在中国资本主导、工况固定、可集中部署换电站的前提下，宽体纯电 + 换电已从概念走向可复制的商业模式。</div>
+      </div>
+      <div class="case-card reveal">
+        <span class="case-tag">换电试验 · 铜矿</span>
+        <div class="case-t">蒙古 Oyu Tolgoi</div>
+        <div class="case-loc">Mongolia · 8 台 91 吨级 + 13 组电池 + 机器人换电站</div>
+        <div class="case-d">国际顶级矿业集团开始认真测试换电矿卡方案。重要意义不在规模，而在于换电正从区域模式，走向全球铜矿短倒场景的可选路线。</div>
+      </div>
+      <div class="case-card reveal">
+        <span class="case-tag">全电无人 · 露天煤矿</span>
+        <div class="case-t">华能伊敏</div>
+        <div class="case-loc">China · 100 台全电无人矿卡</div>
+        <div class="case-d">目前最具代表性的"电动化 + 无人化 + 智慧补能 + 绿电"一体化露天矿示范，证明在真实场景下，电动矿卡是系统创新，而非单车创新。</div>
+      </div>
+      <div class="case-card reveal">
+        <span class="case-tag">全电刚性 · 铜矿</span>
+        <div class="case-t">赞比亚 Kansanshi</div>
+        <div class="case-loc">Zambia · 全电刚性矿卡 + 架线供电示范</div>
+        <div class="case-d">220 吨以上超大吨位电动矿卡，正从"只有方案"进入"客户现场看车"阶段——前提是必须与架线、充电、电力系统一起设计。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TCO -->
+<section id="tco">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Economics · TCO Reference</div>
+      <h2 class="sec-h2">以柴油车 = 100 为基准的<em>场景化 TCO 参考</em></h2>
+      <p class="sec-sub">全球不同矿山的 TCO 差异极大，不能用一张静态表替代所有项目。下表为工作情景指数化对比，用于说明经济性量级，不构成对任何具体项目的收益承诺。真实测算须以 Energy Twin 结合您的现场参数完成。</p>
+    </div>
+    <div class="tco-wrap reveal">
+      <table class="tco-table">
+        <thead><tr><th>典型场景</th><th>柴油 TCO</th><th>电动 TCO 指数</th><th>回收期</th><th>关键前提</th></tr></thead>
+        <tbody>
+          <tr><td>70 吨宽体矿卡</td><td><span class="tco-idx base">100</span></td><td><span class="tco-idx win">75–85</span></td><td><span class="tco-payback">2–4 年</span></td><td>固定短倒 · 换电或集中快充 · 再生制动明显 · 高班次</td></tr>
+          <tr><td>100 吨级露天矿卡</td><td><span class="tco-idx base">100</span></td><td><span class="tco-idx win">80–92</span></td><td><span class="tco-payback">3–5 年</span></td><td>电价低于柴油替代成本 · 路线固定 · 基础设施可摊薄</td></tr>
+          <tr><td>220 吨刚性矿卡</td><td><span class="tco-idx base">100</span></td><td><span class="tco-idx win">80–95</span></td><td><span class="tco-payback">4–7 年</span></td><td>高利用率 + Trolley + 电池，优于单车大电池硬扛</td></tr>
+          <tr><td>地下矿用车</td><td><span class="tco-idx base">100</span></td><td><span class="tco-idx win">70–85</span></td><td><span class="tco-payback">2–4 年</span></td><td>通风、冷却与作业环境收益可兑现 · 补能组织顺畅</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tco-foot reveal">注：以上为工作情景，非任何客户投标价。地下矿是电动化经济性最好的场景之一；220 吨级刚性矿卡的主流经济逻辑更偏 Trolley + 电池。TCO 与 ROI 是基于输入假设的工程决策支持，不是对客户收益、节油量、回本期或设备寿命的保证。</div>
+  </div>
+</section>
+
+<!-- REGIONS -->
+<section id="regions" class="band-stone" style="border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Regional Strategy</div>
+      <h2 class="sec-h2">不同区域，<em>不同打法</em></h2>
+      <p class="sec-sub">我们不会用一套方案打全球，而是按矿种结构、供电条件、政策与进入难度分层进入。BD 阶段就同步做当地电气合规路径尽调——不等到工程阶段才查规范、审批与认证。</p>
+    </div>
+    <div class="region-grid">
+      <div class="region-card reveal">
+        <div class="region-rank">01</div>
+        <div class="region-pri">第一优先</div>
+        <div class="region-t">印度尼西亚<span class="flag">镍矿 · 煤矿</span></div>
+        <div class="region-d">镍矿与电池产业链需求强，宽体电动矿卡更易落地。推荐先做 Energy Twin，再上小规模换电 / 快充 + BESS；不追求零碳，先追求少柴油、少停机、少峰值冲击。</div>
+        <div class="region-mins"><span class="region-min">快充 / 换电</span><span class="region-min">BESS</span><span class="region-min">柴发优化</span></div>
+      </div>
+      <div class="region-card reveal">
+        <div class="region-rank">02</div>
+        <div class="region-pri">第二优先</div>
+        <div class="region-t">秘鲁 / 智利<span class="flag">铜矿</span></div>
+        <div class="region-d">铜矿电气化逻辑强，高海拔、长坡道、柴油成本高、ESG 压力大。以 TCO Study 进入，重点证明高海拔、长坡道、再生制动与 BESS 的经济性。</div>
+        <div class="region-mins"><span class="region-min">Trolley + BESS</span><span class="region-min">高海拔降额</span><span class="region-min">TCO Study</span></div>
+      </div>
+      <div class="region-card reveal">
+        <div class="region-rank">03</div>
+        <div class="region-pri">第三优先</div>
+        <div class="region-t">赞比亚 / 刚果（金）<span class="flag">铜钴带</span></div>
+        <div class="region-d">铜钴资源集中，电网弱，偏远矿区微电网价值高。先做 PV + BESS + 柴油优化，把"电不够"的问题先解决，不急着推完整电动矿卡。</div>
+        <div class="region-mins"><span class="region-min">PV + BESS</span><span class="region-min">微电网</span><span class="region-min">柴油优化</span></div>
+      </div>
+      <div class="region-card reveal">
+        <div class="region-rank">04</div>
+        <div class="region-pri">灯塔验证</div>
+        <div class="region-t">澳大利亚 / 北美<span class="flag">铁矿 · 铜 · 关键矿物</span></div>
+        <div class="region-d">认证周期长、服务要求高、既有 OEM 关系强。适合作为未来灯塔验证项目，需先备齐安全标准、工程签章、保险与本地服务伙伴，不作第一现金流市场。</div>
+        <div class="region-mins"><span class="region-min">灯塔项目</span><span class="region-min">品牌验证</span><span class="region-min">合规前置</span></div>
+      </div>
+    </div>
+    <div class="region-hold reveal"><strong>合规前置原则 ·</strong> 进入每一个目标区域，我们都在 BD 阶段同步确认：矿区自备电与供电许可、微电网 / 并网接入要求、高压配电设计审批、高海拔设备降额、矿山安全监管、设备进口与认证，以及是否需要本地持证工程师或合作设计院。合规不是工程阶段的意外，而是商务阶段的前提。</div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section id="roadmap">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Engagement Roadmap</div>
+      <h2 class="sec-h2">与您合作的<em>典型推进节奏</em></h2>
+      <p class="sec-sub">从战略收敛到形成可复用的锚点案例，我们把交付拆成清晰、可验证的阶段。每一步都设有明确门槛与交付物，让资本决策可被董事会、财务、运营与 ESG 团队共同接受。</p>
+    </div>
+    <div class="road-track">
+      <div class="road-item reveal">
+        <div class="road-time">第 0–1 阶段<span class="ph">Strategy & Scoping</span></div>
+        <div class="road-body"><h4>战略收敛与初步测算</h4><p>明确电气化目标与边界，完成初步场景判断与技术路线建议，输出数据清单。可先以免费初筛 Quick Assessment 快速判断电气化机会等级。</p></div>
+      </div>
+      <div class="road-item reveal">
+        <div class="road-time">第 1–3 阶段<span class="ph">Energy Twin Study</span></div>
+        <div class="road-body"><h4>能源数字孪生可行性研究</h4><p>输入车辆、路线、电价、柴油价、电网容量参数，对比柴油 / 快充 / 换电 / Trolley+BESS，输出 TCO、回本期、BESS / PCS / 充电站 sizing 与减排结果，附完整假设登记与敏感性分析。</p></div>
+      </div>
+      <div class="road-item reveal">
+        <div class="road-time">第 3–6 阶段<span class="ph">Engineering</span></div>
+        <div class="road-body"><h4>工程设计与合规路径确认</h4><p>单线图、潮流 / 短路计算、保护philosophy、BESS / PCS 设计、补能电气设计、控制架构与通讯图；同步完成目标国家电气合规路径尽调。</p></div>
+      </div>
+      <div class="road-item reveal">
+        <div class="road-time">第 6–9 阶段<span class="ph">Integration & EMS</span></div>
+        <div class="road-body"><h4>系统集成与移动负荷 EMS 部署</h4><p>ECP 控制柜、EMS 部署、SCADA / 继电保护 / PCS / 充电集成、现场调试与培训；接入首个 OEM 矿卡数据，实现 SOC / 位置 / 状态采集与补能队列调度。</p></div>
+      </div>
+      <div class="road-item reveal">
+        <div class="road-time">第 9–12 阶段<span class="ph">Anchor Case</span></div>
+        <div class="road-body"><h4>形成可复用锚点案例</h4><p>沉淀真实矿山参数、真实 TCO 模型、真实 OEM 接口经验、真实合规路径与可复用报告模板，进入软件授权与远程能源运营的长期合作。</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AUDIENCE -->
+<section id="audience" class="band">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Who This Is For</div>
+      <h2 class="sec-h2">这份方案<em>为谁而作</em></h2>
+      <p class="sec-sub">矿山电气化不是任何一方能独立完成的工程。我们站在矿业客户与 EPC 的角度，做中立的系统集成与运行优化，让各方在同一套能源系统上高效协作。</p>
+    </div>
+    <div class="aud-grid">
+      <div class="aud-card reveal">
+        <div class="aud-ic"><svg viewBox="0 0 24 24" fill="none"><path d="M3 20h18M5 20V9l7-5 7 5v11M9 20v-6h6v6" stroke="#fff" stroke-width="1.5"/></svg></div>
+        <div class="aud-t">矿业公司 / 矿山业主</div>
+        <div class="aud-d">在投入 50 台、100 台电动矿卡前，先算清电网容量、储能规模、补能路线与投资回收期，让董事会、财务、运营与 ESG 共同接受一个可解释的资本决策。</div>
+      </div>
+      <div class="aud-card reveal">
+        <div class="aud-ic"><svg viewBox="0 0 24 24" fill="none"><path d="M2 8h11v8H2zM13 11h5l3 3v2h-8z" stroke="#fff" stroke-width="1.5"/><circle cx="6" cy="18" r="1.8" fill="#fff"/><circle cx="17" cy="18" r="1.8" fill="#fff"/></svg></div>
+        <div class="aud-t">矿卡 OEM</div>
+        <div class="aud-d">您造好车，我们把车背后的电、储、补能与调度做成。中立的能源系统集成，让您的矿卡在客户现场真正跑满、跑稳，从"能跑一台"走向批量复制。</div>
+      </div>
+      <div class="aud-card reveal">
+        <div class="aud-ic"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2l9 5v10l-9 5-9-5V7z" stroke="#fff" stroke-width="1.5"/><path d="M12 7v10M7 9.5v5M17 9.5v5" stroke="#fff" stroke-width="1.5"/></svg></div>
+        <div class="aud-t">EPC / 矿山承包商</div>
+        <div class="aud-d">您需要系统方案与可控 TCO，但不一定有强 EMS / 微电网能力。我们作为能源系统分包与技术顾问，补齐电气化最关键、最难的那一层。</div>
+      </div>
+      <div class="aud-card reveal">
+        <div class="aud-ic"><svg viewBox="0 0 24 24" fill="none"><path d="M4 13a8 8 0 0116 0M12 5v-.5M5 20h14M8 20l1-4M16 20l-1-4" stroke="#fff" stroke-width="1.5"/><circle cx="12" cy="13" r="2.5" stroke="#fff" stroke-width="1.5"/></svg></div>
+        <div class="aud-t">电池 / 补能与设备伙伴</div>
+        <div class="aud-d">电池、PCS、充电桩、换电站厂商——我们以中立立场做多厂家接口集成与协同优化，让您的设备在矿山复杂工况下发挥最大价值，共同做大电气化蛋糕。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="cta-inner">
+    <div class="cta-eyebrow reveal">Let's Start With The Numbers</div>
+    <h2 class="cta-h2 reveal">先把电气化<em>算清楚</em>，<br>再谈规模化。</h2>
+    <p class="cta-sub reveal">一次免费技术研讨，一份基于您现场参数的初步能源与 TCO 评估。无需任何前置承诺——让我们先帮您把账算明白。</p>
+    <div class="cta-steps reveal">
+      <div class="cta-step"><div class="step-n">STEP 01</div><div class="step-t">预约技术研讨</div><div class="step-s">免费咨询，了解矿区现状与电气化目标</div></div>
+      <div class="cta-step"><div class="step-n">STEP 02</div><div class="step-t">能源 Twin 初评</div><div class="step-s">基于现场参数输出初步 TCO 与路线建议</div></div>
+      <div class="cta-step"><div class="step-n">STEP 03</div><div class="step-t">正式方案与报价</div><div class="step-s">按场景匹配设计、集成、软件与运营</div></div>
+    </div>
+    <div class="cta-actions reveal">
+      <a class="btn-white" href="mailto:info@energizeos.com?subject=矿山电气化能源方案咨询&body=矿区名称：%0D%0A国家/地区：%0D%0A矿种：%0D%0A当前矿卡数量与吨位：%0D%0A当前电力结构（电网/柴发/光伏）：%0D%0A希望了解的路线（快充/换电/Trolley）：%0D%0A">
+        预约免费技术研讨
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" stroke-width="1.6"/></svg></a>
+      <a class="btn-ghost" href="https://docs.energizeos.com/ems/">了解 EnergizeOS EMS 平台</a>
+    </div>
+    <p class="cta-note reveal">邮件：info@energizeos.com · 我们将在一个工作日内由工程师回复，回复方式为邮件或双方约定的会议渠道。</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-inner">
+    <div>
+      <div class="foot-brand">
+        <svg width="22" height="22" viewBox="0 0 48 48" fill="none"><rect x="0" y="0" width="21" height="21" fill="#fff"/><rect x="27" y="0" width="21" height="21" fill="#D4840A"/><rect x="0" y="27" width="21" height="21" fill="#D4840A"/><rect x="27" y="27" width="21" height="21" fill="#fff"/></svg>
+        <span class="foot-brand-name">EnergizeOS</span>
+      </div>
+      <div class="foot-legal">面向矿山电气化的中立电气与能源基础设施集成商。由 <strong style="color:rgba(255,255,255,.6)">Energize Solutions Inc.</strong> 提供。联系：<a href="mailto:info@energizeos.com">info@energizeos.com</a></div>
+    </div>
+    <div class="foot-meta">
+      Mine Electrification Energy Solution<br>
+      微电网 · 储能 · 补能集成 · EMS 智能调度<br>
+      docs.energizeos.com/mine-electrification
+    </div>
+  </div>
+  <div class="disclaimer">
+    <div class="disclaimer-box">
+      免责声明：本文件所载技术路线、TCO 指数、回收期与经济性数据均为基于典型工况的工程情景估算，用于说明方案量级与决策方法，不构成对任何具体项目在收益、节油量、回本期或设备寿命方面的保证。正式可行性研究须以客户现场实际参数为准，并附假设登记（Assumptions Register）、数据来源、敏感性分析、排除项与责任边界。文中所引行业标杆项目（La Arena、Oyu Tolgoi、伊敏、Kansanshi 等）为公开市场信息，用于行业趋势佐证，非 Energize Solutions Inc. 自有交付案例；EnergizeOS 自有能力与部署业绩已单独标注。<br>© 2026 Energize Solutions Inc. 版权所有。
+    </div>
+  </div>
+</footer>
+
+<script>
+// mobile nav
+const burger=document.getElementById('burger'),mnav=document.getElementById('mnav');
+burger.addEventListener('click',()=>{burger.classList.toggle('open');mnav.classList.toggle('open');document.body.style.overflow=mnav.classList.contains('open')?'hidden':''});
+mnav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{burger.classList.remove('open');mnav.classList.remove('open');document.body.style.overflow=''}));
+// reveal on scroll
+const obs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('on');obs.unobserve(x.target)}}),{threshold:0.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+// C-chain rolling highlight
+const nodes=document.querySelectorAll('.chain-node');let ci=3;
+if(nodes.length){setInterval(()=>{nodes.forEach(n=>n.classList.remove('hot'));ci=(ci+1)%nodes.length;nodes[ci].classList.add('hot')},1800);}
+</script>
+</body>
+</html>
