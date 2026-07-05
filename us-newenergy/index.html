@@ -1,0 +1,948 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>美国公用事业级新能源与储能 · 投资与落地执行方案 — EnergizeOS | Energize Solutions Inc.</title>
+<meta name="description" content="面向中国背景资本的美国公用事业级光伏、储能与混合项目投资与落地执行方案。基于 EIA、LBNL、FERC、IRS 权威数据，讲清 OBBBA 新政后的市场窗口、税务与 FEOC 合规红线，以及以美国本地控制平台切入的最优路径。缺的不是项目概念，缺的是可并网、可融资、可执行、可合规的项目供给——以及能把它做成的执行团队。">
+<link rel="canonical" href="https://docs.energizeos.com/us-newenergy/">
+<link rel="icon" type="image/svg+xml" href="/vi/assets/favicon.svg">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="EnergizeOS">
+<meta property="og:title" content="美国公用事业级新能源与储能 · 投资与落地执行方案">
+<meta property="og:description" content="缺的不是项目概念，缺的是可并网、可融资、可执行、可合规的项目供给。基于 EIA/LBNL/FERC/IRS 权威数据，讲清美国打法、新政窗口与中国背景资本的最优进入路径。">
+<meta property="og:image" content="https://docs.energizeos.com/us-newenergy/assets/og-image.png">
+<meta property="og:url" content="https://docs.energizeos.com/us-newenergy/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://docs.energizeos.com/us-newenergy/assets/og-image.png">
+<meta name="theme-color" content="#FAFBFC">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --paper:#FAFBFC; --white:#FFFFFF; --stone:#F0F4F8; --pearl:#E8EEF4;
+  --rule:rgba(26,43,60,.09); --rule2:rgba(26,43,60,.16); --tint:#FDF6ED;
+  --ink:#1A2B3C; --ink2:#2E4A6E; --body:#3A4A5C; --muted:#64788D; --faint:#8FA3B8;
+  --slate:#1A2B3C; --mid:#2E4A6E; --volt:#D4840A;
+  --navy:#1A2B3C; --navy2:#2E4A6E; --gold:#D4840A; --gold-l:#FDF6ED;
+  --sky:#1B4F8A; --sky-l:#F0F4F8;
+  --green:#1A6B45; --green-l:#E8F5EE; --red:#B02A20; --red-l:#FDF0EF; --amber:#B36A08; --amber-l:#FDF6ED;
+  --fh:"Helvetica Neue",Helvetica,Arial,sans-serif; --fb:"PingFang SC","Microsoft YaHei","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --fm:"SF Mono","Courier New",Courier,monospace;
+  --max:1200px; --gutter:48px;
+}
+html{scroll-behavior:smooth;overflow-x:hidden;max-width:100vw;-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--fb);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden;width:100%;max-width:100vw}
+a{color:inherit;text-decoration:none}
+::selection{background:rgba(212,132,10,.14);color:var(--ink)}
+.container{max-width:var(--max);margin:0 auto;padding:0 var(--gutter)}
+@media(max-width:900px){:root{--gutter:24px}}
+@media(max-width:480px){:root{--gutter:20px}}
+
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:var(--fm);font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.eyebrow::before{content:'';width:24px;height:1px;background:var(--gold)}
+.sec-h2{font-size:clamp(27px,3.9vw,42px);font-weight:700;line-height:1.24;letter-spacing:-.02em;color:var(--ink);margin-bottom:14px}
+.sec-h2 em{font-style:normal;color:var(--gold)}
+.sec-sub{font-size:16px;font-weight:400;color:var(--body);line-height:1.8;max-width:680px}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:300;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 var(--gutter);background:rgba(250,251,252,.97);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule)}
+.nav-brand{display:flex;align-items:center;gap:10px}
+.nav-brand-name{font-size:13px;font-weight:700;letter-spacing:.02em;color:var(--ink)}
+.nav-brand-tag{font-family:var(--fm);font-size:9px;letter-spacing:.06em;color:var(--faint);display:block;margin-top:1px}
+.nav-links{display:flex;gap:26px;align-items:center}
+.nav-links a{font-size:12px;color:var(--muted);transition:color .15s;white-space:nowrap}
+.nav-links a:hover{color:var(--ink)}
+.nav-cta{background:var(--navy);color:#fff!important;padding:9px 20px;font-size:12px;font-weight:500;letter-spacing:.02em;transition:background .15s}
+.nav-cta:hover{background:var(--navy2)}
+.nav-burger{display:none;flex-direction:column;gap:4px;background:none;border:none;cursor:pointer;padding:8px;z-index:301}
+.nav-burger span{display:block;width:20px;height:2px;background:var(--ink);transition:all .2s}
+.nav-burger.open span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.nav-burger.open span:nth-child(2){opacity:0}
+.nav-burger.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+.mnav{position:fixed;inset:64px 0 0 0;background:var(--white);z-index:250;display:flex;flex-direction:column;padding:8px var(--gutter) 32px;overflow-y:auto;transform:translateY(-8px);opacity:0;pointer-events:none;transition:all .2s}
+.mnav.open{opacity:1;pointer-events:auto;transform:translateY(0)}
+.mnav a{display:block;padding:16px 4px;font-size:16px;color:var(--ink);border-bottom:1px solid var(--rule);font-weight:500}
+.mnav .nav-cta{margin-top:20px;text-align:center;padding:14px}
+
+/* HERO */
+.hero{padding:120px var(--gutter) 68px;max-width:var(--max);margin:0 auto}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--gold-l);border:1px solid rgba(200,117,10,.25);padding:5px 14px;font-family:var(--fm);font-size:11px;color:var(--gold);letter-spacing:.05em;margin-bottom:26px}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:blink 2.2s ease-in-out infinite;flex-shrink:0}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.hero-h1{font-size:clamp(31px,4.6vw,55px);font-weight:700;line-height:1.2;letter-spacing:-.025em;color:var(--ink);margin-bottom:24px;max-width:920px}
+.hero-h1 .accent{color:var(--gold)}
+.hero-h1 .light{display:block;font-weight:400;font-size:.38em;color:var(--muted);letter-spacing:.02em;margin-bottom:16px;line-height:1.5}
+.hero-body{font-size:17px;font-weight:400;color:var(--body);line-height:1.85;max-width:680px;margin-bottom:34px}
+.hero-body strong{color:var(--ink);font-weight:600}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:52px}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:#fff;padding:14px 28px;font-size:14px;font-weight:500;border:none;cursor:pointer;transition:opacity .15s}
+.btn-primary:hover{opacity:.9}
+.btn-outline{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--ink);padding:14px 26px;font-size:14px;font-weight:500;border:1px solid var(--rule2);transition:all .15s}
+.btn-outline:hover{border-color:var(--ink);background:var(--white)}
+.hero-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.hs-cell{background:var(--white);padding:22px 24px}
+.hs-val{font-size:26px;font-weight:700;color:var(--ink);letter-spacing:-.02em;line-height:1;margin-bottom:8px;font-family:var(--fh)}
+.hs-val em{font-style:normal;color:var(--gold)}
+.hs-lab{font-size:12px;color:var(--muted);line-height:1.5}
+.hs-src{font-family:var(--fm);font-size:9.5px;color:var(--faint);letter-spacing:.03em;margin-top:6px}
+
+/* SECTION SHELL */
+section{padding:80px 0;position:relative}
+.sec-head{margin-bottom:50px;max-width:760px}
+.band{background:var(--white);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.band-stone{background:var(--stone)}
+.band-slate{background:var(--slate)}
+
+/* THESIS (pain) */
+.thesis-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);margin-bottom:14px}
+.thesis-stat{background:var(--white);padding:32px 32px}
+.thesis-stat-v{font-size:clamp(28px,3.2vw,38px);font-weight:700;color:var(--ink);letter-spacing:-.02em;line-height:1.05;margin-bottom:10px;font-family:var(--fh)}
+.thesis-stat-v em{font-style:normal;color:var(--gold)}
+.thesis-stat-d{font-size:13.5px;color:var(--body);line-height:1.65}
+.thesis-stat-src{margin-top:12px;font-family:var(--fm);font-size:10px;letter-spacing:.03em;color:var(--faint)}
+.thesis-note{font-size:11.5px;color:var(--faint);line-height:1.7;margin-bottom:52px}
+.thesis-q{padding:44px 48px;background:var(--slate);color:#fff;position:relative;overflow:hidden}
+.thesis-q::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold)}
+.thesis-q-lab{font-family:var(--fm);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+.thesis-q-t{font-size:clamp(21px,2.7vw,29px);font-weight:600;line-height:1.5;letter-spacing:-.01em}
+.thesis-q-t em{font-style:normal;color:var(--gold)}
+.thesis-q-en{margin-top:20px;font-family:var(--fh);font-style:italic;font-size:15px;color:rgba(255,255,255,.5);line-height:1.7}
+
+/* WINDOW / driver rows */
+.driver-stack{display:flex;flex-direction:column;gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.driver-row{background:var(--white);display:grid;grid-template-columns:56px 1fr;gap:0;transition:background .15s}
+.driver-row:hover{background:var(--stone)}
+.driver-n{padding:28px 0;display:flex;align-items:flex-start;justify-content:center;border-right:1px solid var(--rule);font-family:var(--fm);font-size:13px;font-weight:700;color:var(--gold);padding-top:32px}
+.driver-main{padding:26px 34px}
+.driver-t{font-size:17px;font-weight:700;color:var(--ink);margin-bottom:9px;line-height:1.4}
+.driver-d{font-size:14px;color:var(--body);line-height:1.75}
+.driver-d strong{color:var(--ink);font-weight:600}
+.driver-src{margin-top:12px;font-family:var(--fm);font-size:10px;letter-spacing:.03em;color:var(--faint)}
+
+/* POLICY / new-rules — the pivot */
+.policy-band{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
+.policy-txt .eyebrow{color:var(--gold)}
+.policy-txt h3{font-size:clamp(22px,3vw,31px);font-weight:700;color:#fff;line-height:1.3;letter-spacing:-.02em;margin-bottom:20px}
+.policy-txt p{font-size:15px;color:rgba(255,255,255,.66);line-height:1.85;margin-bottom:18px}
+.policy-txt p strong{color:#fff;font-weight:600}
+.policy-txt p .hl{color:var(--gold);font-weight:600}
+.rule-list{display:flex;flex-direction:column;gap:10px}
+.rule-node{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);padding:18px 22px;transition:all .3s}
+.rule-node.hot{background:rgba(212,132,10,.1);border-color:rgba(212,132,10,.34)}
+.rule-node.good{background:rgba(26,107,69,.14);border-color:rgba(60,190,130,.3)}
+.rule-tag{font-family:var(--fm);font-size:10px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:9px;display:block}
+.rule-node.hot .rule-tag{color:#E8A25A}
+.rule-node.good .rule-tag{color:#5CCB8E}
+.rule-node .rule-tag{color:rgba(255,255,255,.4)}
+.rule-t{font-size:14.5px;color:#fff;font-weight:600;line-height:1.45;margin-bottom:6px}
+.rule-d{font-size:13px;color:rgba(255,255,255,.62);line-height:1.65}
+.rule-d b{color:#fff;font-weight:600}
+
+/* ASSET selection — do/dont as invest/avoid */
+.pos-wrap{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.pos-col{background:var(--white);padding:40px 38px}
+.pos-col.dont{background:var(--red-l)}
+.pos-col.do{background:var(--green-l)}
+.pos-lab{font-family:var(--fm);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:22px;display:flex;align-items:center;gap:8px}
+.pos-col.dont .pos-lab{color:var(--red)}
+.pos-col.do .pos-lab{color:var(--green)}
+.pos-item{font-size:14.5px;color:var(--ink);padding:13px 0;border-bottom:1px solid rgba(26,43,60,.07);display:flex;gap:11px;align-items:flex-start;line-height:1.6}
+.pos-item:last-child{border-bottom:none}
+.pos-item .ic{flex-shrink:0;font-size:13px;margin-top:3px;font-weight:700}
+.pos-col.dont .ic{color:var(--red)}
+.pos-col.do .ic{color:var(--green)}
+.pos-item b{font-weight:600}
+.pos-item .sub{display:block;font-size:12.5px;color:var(--muted);margin-top:3px;line-height:1.55}
+
+/* MARKETS */
+.mkt-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.mkt-card{background:var(--white);padding:32px 34px}
+.mkt-code{font-family:var(--fm);font-size:12px;font-weight:700;color:var(--gold);letter-spacing:.06em;margin-bottom:4px}
+.mkt-name{font-size:13px;color:var(--muted);margin-bottom:18px}
+.mkt-logic{font-size:14.5px;color:var(--ink);font-weight:600;line-height:1.55;margin-bottom:14px}
+.mkt-d{font-size:13.5px;color:var(--body);line-height:1.75;margin-bottom:16px}
+.mkt-tags{display:flex;flex-wrap:wrap;gap:6px}
+.mkt-tag{font-family:var(--fm);font-size:11px;color:var(--muted);background:var(--stone);padding:3px 10px;border:1px solid var(--rule)}
+.mkt-tag.hot{background:var(--gold-l);color:var(--gold);border-color:rgba(200,117,10,.2)}
+
+/* VALUE STAGE — where money is made */
+.stage-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.stage-card{background:var(--white);padding:30px 26px;display:flex;flex-direction:column}
+.stage-n{font-family:var(--fm);font-size:11px;color:var(--gold);letter-spacing:.1em;margin-bottom:14px}
+.stage-t{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:6px;line-height:1.3}
+.stage-en{font-family:var(--fm);font-size:10px;color:var(--faint);letter-spacing:.03em;margin-bottom:16px;line-height:1.4}
+.stage-d{font-size:13px;color:var(--body);line-height:1.7;flex:1}
+.stage-earn{margin-top:16px;padding-top:14px;border-top:1px solid var(--rule);font-size:12.5px;font-weight:600;color:var(--ink);line-height:1.5}
+.stage-earn .cur{color:var(--gold)}
+.stage-note{margin-top:34px;padding:26px 32px;background:var(--tint);border:1px solid rgba(200,117,10,.2);font-size:14.5px;color:var(--ink);line-height:1.75}
+.stage-note strong{color:var(--gold)}
+
+/* PATH — entry structures */
+.path-wrap{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.path-card{background:var(--white);border:1px solid var(--rule2);padding:0;overflow:hidden;display:flex;flex-direction:column}
+.path-card.bad{border-color:rgba(176,42,32,.28)}
+.path-card.good{border-color:rgba(26,107,69,.3)}
+.path-head{padding:28px 32px;border-bottom:1px solid var(--rule);position:relative}
+.path-card.bad .path-head{background:var(--red-l)}
+.path-card.good .path-head{background:var(--green-l)}
+.path-head::after{content:'';position:absolute;left:0;right:0;bottom:0;height:2px}
+.path-card.bad .path-head::after{background:var(--red)}
+.path-card.good .path-head::after{background:var(--green)}
+.path-tag{font-family:var(--fm);font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px}
+.path-card.bad .path-tag{color:var(--red)}
+.path-card.good .path-tag{color:var(--green)}
+.path-name{font-size:19px;font-weight:700;color:var(--ink);line-height:1.35}
+.path-body{padding:28px 32px;flex:1;display:flex;flex-direction:column}
+.path-p{font-size:14px;color:var(--body);line-height:1.8;margin-bottom:18px}
+.path-p strong{color:var(--ink);font-weight:600}
+.path-list{list-style:none;margin-top:auto}
+.path-list li{font-size:13.5px;color:var(--body);padding:9px 0 9px 24px;position:relative;line-height:1.55;border-bottom:1px solid var(--rule)}
+.path-list li:last-child{border-bottom:none}
+.path-card.bad .path-list li::before{content:'×';position:absolute;left:2px;top:9px;font-weight:700;color:var(--red)}
+.path-card.good .path-list li::before{content:'✓';position:absolute;left:2px;top:9px;font-weight:700;color:var(--green)}
+
+/* PARTNER (why us) */
+.partner-band{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.partner-txt .eyebrow{color:var(--gold)}
+.partner-txt h3{font-size:clamp(22px,3vw,31px);font-weight:700;color:#fff;line-height:1.3;letter-spacing:-.02em;margin-bottom:20px}
+.partner-txt p{font-size:15px;color:rgba(255,255,255,.66);line-height:1.85;margin-bottom:18px}
+.partner-txt p strong{color:#fff;font-weight:600}
+.partner-txt p .hl{color:var(--gold);font-weight:600}
+.proof-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.1)}
+.proof-cell{background:#1E3145;padding:26px 26px}
+.proof-v{font-size:30px;font-weight:700;color:#fff;letter-spacing:-.02em;line-height:1;margin-bottom:10px;font-family:var(--fh)}
+.proof-v em{font-style:normal;color:var(--gold)}
+.proof-l{font-size:12.5px;color:rgba(255,255,255,.6);line-height:1.55}
+
+/* CAPABILITY modules */
+.cap-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.cap-cell{background:var(--white);padding:26px 24px}
+.cap-ic{width:36px;height:36px;background:var(--slate);display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.cap-ic svg{width:20px;height:20px}
+.cap-t{font-size:14.5px;font-weight:700;color:var(--ink);margin-bottom:8px;line-height:1.35}
+.cap-d{font-size:12.5px;color:var(--muted);line-height:1.65}
+
+/* PORTFOLIO allocation */
+.alloc-wrap{display:grid;grid-template-columns:1.1fr 1fr;gap:48px;align-items:center}
+.alloc-bars{display:flex;flex-direction:column;gap:16px}
+.alloc-row{display:flex;flex-direction:column;gap:8px}
+.alloc-head{display:flex;justify-content:space-between;align-items:baseline}
+.alloc-name{font-size:14px;font-weight:600;color:var(--ink)}
+.alloc-pct{font-family:var(--fm);font-size:15px;font-weight:700;color:var(--gold)}
+.alloc-track{height:10px;background:var(--stone);border:1px solid var(--rule);overflow:hidden}
+.alloc-fill{height:100%;background:var(--slate);position:relative}
+.alloc-fill.g{background:var(--gold)}
+.alloc-desc{font-size:12px;color:var(--muted);line-height:1.55;margin-top:2px}
+.alloc-side h3{font-size:20px;font-weight:700;color:var(--ink);line-height:1.4;margin-bottom:16px}
+.alloc-side p{font-size:14.5px;color:var(--body);line-height:1.85;margin-bottom:14px}
+.alloc-side p strong{color:var(--ink);font-weight:600}
+.alloc-logic{margin-top:20px;padding:22px 26px;background:var(--tint);border:1px solid rgba(200,117,10,.2);font-size:13.5px;color:var(--ink);line-height:1.75}
+
+/* ROADMAP */
+.road-stack{display:flex;flex-direction:column;gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.road-item{background:var(--white);display:grid;grid-template-columns:150px 1fr;gap:0}
+.road-phase{padding:28px 28px;border-right:1px solid var(--rule);background:var(--slate)}
+.road-day{font-family:var(--fm);font-size:11px;color:var(--gold);letter-spacing:.06em;margin-bottom:8px}
+.road-goal{font-size:15px;font-weight:700;color:#fff;line-height:1.4}
+.road-main{padding:26px 32px}
+.road-acts{list-style:none}
+.road-acts li{font-size:13.5px;color:var(--body);padding:7px 0 7px 22px;position:relative;line-height:1.6}
+.road-acts li::before{content:'';position:absolute;left:2px;top:14px;width:6px;height:6px;background:var(--gold);transform:rotate(45deg)}
+
+/* DILIGENCE / discipline */
+.dd-note{margin-bottom:34px;padding:18px 24px;background:var(--sky-l);border:1px solid rgba(27,79,138,.18);font-size:13.5px;color:var(--ink2);line-height:1.7}
+.dd-note strong{color:var(--sky)}
+.dd-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.dd-cell{background:var(--white);padding:22px 26px;display:grid;grid-template-columns:1fr;gap:0}
+.dd-mod{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.dd-q{font-size:12.5px;color:var(--body);line-height:1.6;margin-bottom:10px}
+.dd-flag{font-family:var(--fm);font-size:11px;color:var(--red);line-height:1.5;display:flex;gap:7px;align-items:flex-start}
+.dd-flag::before{content:'▲';font-size:9px;margin-top:2px;flex-shrink:0}
+
+/* CTA */
+.cta-sec{background:var(--slate);position:relative;overflow:hidden}
+.cta-inner{position:relative;z-index:2}
+.cta-eyebrow{color:var(--gold)}
+.cta-h2{font-size:clamp(28px,4vw,46px);font-weight:700;color:#fff;line-height:1.2;letter-spacing:-.02em;margin-bottom:20px;max-width:820px}
+.cta-h2 em{font-style:normal;color:var(--gold)}
+.cta-sub{font-size:16px;color:rgba(255,255,255,.66);line-height:1.85;max-width:660px;margin-bottom:44px}
+.cta-steps{display:flex;gap:0;border:1px solid rgba(255,255,255,.12);margin-bottom:44px}
+.cta-step{flex:1;padding:30px 30px;border-right:1px solid rgba(255,255,255,.12)}
+.cta-step:last-child{border-right:none}
+.cta-step-n{font-family:var(--fm);font-size:12px;color:var(--gold);letter-spacing:.08em;margin-bottom:14px}
+.cta-step-t{font-size:16px;font-weight:700;color:#fff;margin-bottom:8px;line-height:1.4}
+.cta-step-d{font-size:13px;color:rgba(255,255,255,.6);line-height:1.7}
+.cta-actions{display:flex;gap:12px;flex-wrap:wrap}
+.btn-white{display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:#fff;padding:15px 30px;font-size:14px;font-weight:600;border:none;transition:opacity .15s}
+.btn-white:hover{opacity:.9}
+.btn-ghost{display:inline-flex;align-items:center;gap:8px;background:transparent;color:#fff;padding:15px 28px;font-size:14px;font-weight:500;border:1px solid rgba(255,255,255,.24);transition:all .15s}
+.btn-ghost:hover{border-color:#fff;background:rgba(255,255,255,.05)}
+
+/* FOOTER */
+footer{background:#131F2B;border-top:1px solid rgba(255,255,255,.06)}
+.foot-inner{max-width:1200px;margin:0 auto;padding:38px var(--gutter);display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:24px}
+.foot-brand{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.foot-brand-name{font-size:14px;font-weight:700;color:#fff}
+.foot-legal{font-size:12px;color:rgba(255,255,255,.4);line-height:1.8;max-width:460px}
+.foot-legal a{color:var(--gold)}
+.foot-meta{font-size:11px;color:rgba(255,255,255,.25);line-height:1.9;text-align:right}
+.disclaimer{max-width:1200px;margin:0 auto;padding:0 var(--gutter) 34px}
+.disclaimer-box{border-top:1px solid rgba(255,255,255,.06);padding-top:22px;font-size:11px;color:rgba(255,255,255,.3);line-height:1.8}
+.disclaimer-box a{color:rgba(212,132,10,.7)}
+
+/* SOURCES */
+.src-sec{background:var(--stone)}
+.src-list{columns:2;column-gap:48px;font-family:var(--fm);font-size:11.5px;color:var(--muted);line-height:1.9}
+.src-list div{break-inside:avoid;margin-bottom:6px}
+.src-list b{color:var(--ink);font-weight:600}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .55s ease,transform .55s ease}
+.reveal.on{opacity:1;transform:none}
+
+/* RESPONSIVE */
+@media(max-width:980px){
+  .nav-links{display:none}
+  .nav-burger{display:flex}
+  .policy-band,.partner-band,.alloc-wrap{grid-template-columns:1fr;gap:36px}
+  .path-wrap{grid-template-columns:1fr}
+  .cap-grid{grid-template-columns:1fr 1fr}
+  .stage-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:760px){
+  .thesis-stats{grid-template-columns:1fr}
+  .thesis-stat{padding:26px 28px}
+  .pos-wrap{grid-template-columns:1fr}
+  .mkt-grid{grid-template-columns:1fr}
+  .hero-strip{grid-template-columns:1fr 1fr}
+  .proof-grid{grid-template-columns:1fr 1fr}
+  .dd-grid{grid-template-columns:1fr}
+  .cta-steps{flex-direction:column}
+  .cta-step{border-right:none;border-bottom:1px solid rgba(255,255,255,.12)}
+  .cta-step:last-child{border:none}
+  .road-item{grid-template-columns:1fr}
+  .road-phase{border-right:none;border-bottom:1px solid var(--rule)}
+  .src-list{columns:1}
+  .foot-inner{flex-direction:column;align-items:flex-start}
+  .foot-meta{text-align:left}
+}
+@media(max-width:480px){
+  .hero-actions{flex-direction:column}
+  .btn-primary,.btn-outline{width:100%;justify-content:center}
+  .cap-grid,.stage-grid{grid-template-columns:1fr}
+  .hero-strip,.proof-grid{grid-template-columns:1fr}
+  .cta-actions{flex-direction:column;align-items:stretch}
+  .btn-white,.btn-ghost{justify-content:center}
+  .driver-row{grid-template-columns:1fr}
+  .driver-n{border-right:none;border-bottom:1px solid var(--rule);padding:16px 0;justify-content:flex-start;padding-left:34px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-brand" href="https://docs.energizeos.com" aria-label="EnergizeOS">
+    <svg width="26" height="26" viewBox="0 0 48 48" fill="none"><rect x="0" y="0" width="21" height="21" fill="#1A2B3C"/><rect x="27" y="0" width="21" height="21" fill="#D4840A"/><rect x="0" y="27" width="21" height="21" fill="#D4840A"/><rect x="27" y="27" width="21" height="21" fill="#1A2B3C"/></svg>
+    <span><span class="nav-brand-name">EnergizeOS</span><span class="nav-brand-tag">US UTILITY-SCALE STRATEGY</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="#thesis">核心判断</a>
+    <a href="#window">市场窗口</a>
+    <a href="#policy">新政与合规</a>
+    <a href="#path">进入路径</a>
+    <a href="#partner">执行合伙人</a>
+    <a href="#deploy">部署方案</a>
+    <a class="nav-cta" href="#cta">共同发起</a>
+  </div>
+  <button class="nav-burger" id="burger" aria-label="菜单"><span></span><span></span><span></span></button>
+</nav>
+<div class="mnav" id="mnav">
+  <a href="#thesis">核心判断</a>
+  <a href="#window">市场窗口</a>
+  <a href="#policy">新政与合规</a>
+  <a href="#assets">资产选择</a>
+  <a href="#path">进入路径</a>
+  <a href="#partner">执行合伙人</a>
+  <a href="#deploy">部署方案</a>
+  <a href="#roadmap">90 天路线图</a>
+  <a class="nav-cta" href="#cta">共同发起</a>
+</div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-badge reveal"><span class="badge-dot"></span>INVESTMENT & EXECUTION PROPOSAL · 2026</div>
+  <h1 class="hero-h1 reveal">
+    <span class="light">美国公用事业级新能源与储能 · 投资与落地执行方案</span>
+    美国缺的不是新能源项目概念，<br>缺的是<span class="accent">可并网、可融资、可执行、可合规</span>的项目供给——以及能把它做成的团队。
+  </h1>
+  <p class="hero-body reveal">
+    未来十年，美国电力需求重新进入结构性增长通道，数据中心与制造业负荷把电网推向紧张。但真正的瓶颈不在装机意愿，而在穿透率：<strong>并网排队中位时长已超过 5 年，2000–2020 年提交的并网容量最终仅 13% 建成投运。</strong>与此同时，2025 年 7 月的税法新政（OBBBA）重划了游戏规则——光伏、风电的税收抵免加速退坡，而<strong>储能保留了到 2034 年的完整通道</strong>；针对中国的 FEOC 合规红线，则让"如何进入"比"是否进入"更加决定成败。这份方案讲清美国打法，并给出中国背景资本唯一稳健的切入结构。
+  </p>
+  <div class="hero-actions reveal">
+    <a class="btn-primary" href="#cta">查看合作发起路径 <span>→</span></a>
+    <a class="btn-outline" href="#policy">先看新政与合规红线</a>
+  </div>
+  <div class="hero-strip reveal">
+    <div class="hs-cell"><div class="hs-val"><em>86</em> GW</div><div class="hs-lab">2026 年美国计划新增公用事业级装机（创纪录）</div><div class="hs-src">EIA, 2025-12</div></div>
+    <div class="hs-cell"><div class="hs-val"><em>28</em>%</div><div class="hs-lab">其中储能占比，仅次于光伏（51%）</div><div class="hs-src">EIA, 2025-12</div></div>
+    <div class="hs-cell"><div class="hs-val">5<em>+</em> 年</div><div class="hs-lab">并网中位排队时长，且仍在拉长</div><div class="hs-src">LBNL Queued Up 2026</div></div>
+    <div class="hs-cell"><div class="hs-val"><em>13</em>%</div><div class="hs-lab">历史并网申请最终建成率</div><div class="hs-src">LBNL, 2000–2020</div></div>
+  </div>
+</header>
+
+<!-- THESIS -->
+<section id="thesis" class="band">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="eyebrow">核心判断 · THE THESIS</div>
+      <h2 class="sec-h2">未来十年最值得配置的，不是"泛新能源"，<br>而是<em>能穿过四道门</em>的项目。</h2>
+      <p class="sec-sub">并网、税务、供应链合规、现金流验证——这四道门决定了一个项目是真资产还是纸面故事。市场从"投机性冲量"进入"可执行性"的新阶段。这对有真实交付能力的进入者，是最好的时点。</p>
+    </div>
+    <div class="thesis-stats reveal">
+      <div class="thesis-stat">
+        <div class="thesis-stat-v"><em>4,490</em> 亿 kWh</div>
+        <div class="thesis-stat-d">美国年发电量将从 2023 年 4,180 亿千瓦时升至 2026 年——数据中心服务器用电是主要驱动之一。电力需求重回增长通道。</div>
+        <div class="thesis-stat-src">EIA Short-Term Energy Outlook</div>
+      </div>
+      <div class="thesis-stat">
+        <div class="thesis-stat-v">6.7–<em>12</em>%</div>
+        <div class="thesis-stat-d">数据中心用电占全国电力消费比重，预计从 2023 年 4.4% 升至 2028 年该区间，集中压在德州、北弗吉尼亚、亚利桑那等地。</div>
+        <div class="thesis-stat-src">LBNL Data Center Energy Report 2024</div>
+      </div>
+      <div class="thesis-stat">
+        <div class="thesis-stat-v"><em>749</em> GW</div>
+        <div class="thesis-stat-d">截至 2025 年底仍在并网排队的储能容量（另有 1,312GW 发电）。队列是"未来供给愿望池"，不是"装机确定清单"。</div>
+        <div class="thesis-stat-src">LBNL Queued Up 2026 Edition</div>
+      </div>
+    </div>
+    <div class="thesis-note reveal">数据来源：美国能源信息署（EIA）、劳伦斯伯克利国家实验室（LBNL）。上述为公开权威统计，用于说明市场量级与结构，非对任何具体项目回报的预测。</div>
+    <div class="thesis-q reveal">
+      <div class="thesis-q-lab">投资纪律 · THE DISCIPLINE</div>
+      <div class="thesis-q-t">不要把"新能源增长"误读为"任何新能源项目都值得投"。这个市场真正的价值，<em>不在 MW 数量，而在项目已穿越了多少风险节点。</em></div>
+      <div class="thesis-q-en">In the U.S., projects aren't valued by megawatts — they're valued by how many risk gates they've already cleared.</div>
+    </div>
+  </div>
+</section>
+
+<!-- WINDOW -->
+<section id="window">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="eyebrow">市场窗口 · WHY NOW</div>
+      <h2 class="sec-h2">四个叠加因素，把这个窗口<em>推到现在</em>。</h2>
+      <p class="sec-sub">推动市场的最强变量不是单一技术，而是需求、负荷、供给瓶颈与政策门槛四者同时收紧——恰恰是这种收紧，把"有执行能力"变成了稀缺资产。</p>
+    </div>
+    <div class="driver-stack reveal">
+      <div class="driver-row">
+        <div class="driver-n">01</div>
+        <div class="driver-main">
+          <div class="driver-t">电力需求重回增长通道</div>
+          <div class="driver-d">经历十余年"平电量时代"后，美国用电量在 2025、2026 年连续刷新历史纪录；EIA 判断至 2050 年电力消费仍将以每年约 <strong>0.9%–1.6%</strong> 增长，数据中心是主要驱动。需求侧确定性上升。</div>
+          <div class="driver-src">EIA AEO 2026 / Today in Energy</div>
+        </div>
+      </div>
+      <div class="driver-row">
+        <div class="driver-n">02</div>
+        <div class="driver-main">
+          <div class="driver-t">供给被并网与输电死死卡住</div>
+          <div class="driver-d">截至 2025 年底约 <strong>8,200 个项目</strong>在排队（1,312GW 发电 + 749GW 储能）；建成项目中位排队已超 <strong>5 年</strong>；2000–2020 年提交的容量最终仅 13% 投运、75% 退出。缺的从来不是概念，是能真正并网的项目。</div>
+          <div class="driver-src">LBNL Queued Up 2026 Edition</div>
+        </div>
+      </div>
+      <div class="driver-row">
+        <div class="driver-n">03</div>
+        <div class="driver-main">
+          <div class="driver-t">储能从"配套"进化为"独立资产类别"</div>
+          <div class="driver-d">2024 年底美国公用事业级储能累计装机已超 <strong>26GW</strong>（当年新增约 10.4GW，同比 +66%）；EIA 预计 2026 年底将接近 <strong>65GW</strong>。2024 年 66% 的储能容量把电价套利列为用途之一。储能已是"电力时移 + 容量充足 + 风险对冲"的资产类别。</div>
+          <div class="driver-src">EIA STEO / Utility Dive</div>
+        </div>
+      </div>
+      <div class="driver-row">
+        <div class="driver-n">04</div>
+        <div class="driver-main">
+          <div class="driver-t">政策门槛同步强化——把游戏规则重划了</div>
+          <div class="driver-d">2025 年 7 月 OBBBA 与配套行政令、IRS 指引，一方面加速光伏/风电税收抵免退坡，另一方面强化针对中国的 FEOC 合规门槛。<strong>门槛越高，"能合规穿过门槛"的执行能力就越值钱。</strong>详见下一节。</div>
+          <div class="driver-src">Public Law 119-21 (OBBBA) / IRS</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- POLICY (the pivot — dark band) -->
+<section id="policy" class="band-slate">
+  <div class="container">
+    <div class="policy-band">
+      <div class="policy-txt reveal">
+        <div class="eyebrow">新政与合规 · THE 2025 RESET</div>
+        <h3>2025 年 7 月，规则被重划。<br>这不是退出的理由，是"正确进入"的理由。</h3>
+        <p>2025 年 7 月 4 日签署的《One Big Beautiful Bill Act》（OBBBA）是过去十年美国新能源最重大的政策转折。它没有废除税收抵免的技术中性框架，但<strong>重划了谁能拿、拿多久、以及谁被排除</strong>。</p>
+        <p>对中国背景资本，两条结论是决定性的：<span class="hl">第一，赛道要选对——储能保留长通道，光伏/风电在收紧；第二，结构要搭对——中国"控制权"会直接威胁项目的税收资格。</span></p>
+        <p>正因如此，一个"美国本地控制 + 中国资本与执行嵌入"的平台，不是次优选择，而是<strong>唯一能同时拿到市场机会与税收资格的路径。</strong></p>
+      </div>
+      <div class="rule-list reveal">
+        <div class="rule-node good">
+          <span class="rule-tag">◆ 机会窗口 · 储能</span>
+          <div class="rule-t">储能保留到 2034 年的完整税收抵免通道</div>
+          <div class="rule-d">45Y/48E 对储能等非风光技术的退坡自 <b>2034 年</b>才开始（2034 年 75%、2035 年 50%、2036 年归零）。储能是当前赛道里政策确定性最高、且正快速增长的资产。</div>
+        </div>
+        <div class="rule-node hot">
+          <span class="rule-tag">▲ 收紧 · 光伏 / 风电</span>
+          <div class="rule-t">光伏、风电抵免加速退坡</div>
+          <div class="rule-d">除非在 <b>2026 年 7 月 4 日</b>前开工（或满足实物工作/5% 安全港），风光项目须在 <b>2027 年底前投运</b>方可享抵免。晚期已开工项目仍有价值，纯早期绿地风光风险显著上升。</div>
+        </div>
+        <div class="rule-node hot">
+          <span class="rule-tag">▲ 红线 · FEOC / 中国</span>
+          <div class="rule-t">"受限外国实体"重大协助规则，直接作用于税收资格</div>
+          <div class="rule-d">若项目从 FEOC（明确含中国）获得"重大协助"，可能丧失 45Y/48E/45X 资格；且<b>禁止向"特定外国实体"转让</b>税收抵免。这不是抽象政治风险，而是直接作用于现金流模型的资格风险。</div>
+        </div>
+        <div class="rule-node">
+          <span class="rule-tag">◇ 工具 · 税收货币化</span>
+          <div class="rule-d" style="color:rgba(255,255,255,.7)">Section 6418 <b style="color:#fff">税收抵免可转让</b>被保留全周期——把税权融资从封闭的 tax-equity 市场，推向"tax equity + 转让买方 + 债务"并存的更宽市场，降低了外来现金股权参与的门槛（但转让仍受 FEOC 限制约束）。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ASSET SELECTION -->
+<section id="assets" class="band-stone">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="eyebrow">资产选择 · WHAT TO BUY</div>
+      <h2 class="sec-h2">买<em>确定性</em>，不买故事。</h2>
+      <p class="sec-sub">在新政与并网双重不确定性下，"晚一期项目"与"早两年项目"的风险收益比已被严重拉开。资本应集中在已穿越关键风险节点、且政策通道稳定的资产上。</p>
+    </div>
+    <div class="pos-wrap reveal">
+      <div class="pos-col do">
+        <div class="pos-lab">✓ 优先配置 · PRIORITIZE</div>
+        <div class="pos-item"><span class="ic">✓</span><div><b>独立储能 与 光储混合（BESS / PV+BESS）</b><span class="sub">政策通道到 2034，市场增长最快，收益结构从辅助服务转向能量套利 + 容量充足 + 多产品叠加。</span></div></div>
+        <div class="pos-item"><span class="ic">✓</span><div><b>运营资产 与 晚期开发（已拿 IA/PPA）</b><span class="sub">现金流可验证、可融资，是 2026 年后美国市场的组合锚与主要 alpha 来源。</span></div></div>
+        <div class="pos-item"><span class="ic">✓</span><div><b>负荷背书的 C&I / 微网解决方案</b><span class="sub">数据中心、矿山、工业负荷方愿为确定性买单——最适合"执行型合伙人"切入。</span></div></div>
+        <div class="pos-item"><span class="ic">✓</span><div><b>平台 / JV / 执行能力嵌入</b><span class="sub">买"团队 + pipeline + 执行平台"，而非孤立项目——这正是 2025 年市场买方偏好的方向。</span></div></div>
+      </div>
+      <div class="pos-col dont">
+        <div class="pos-lab">× 谨慎或回避 · AVOID</div>
+        <div class="pos-item"><span class="ic">×</span><div><b>纯早期绿地风光项目</b><span class="sub">在新政加速退坡下，早期风光的税收资格与投运时点风险显著上升。</span></div></div>
+        <div class="pos-item"><span class="ic">×</span><div><b>过度依赖单一 merchant 假设的储能</b><span class="sub">尤其在 ERCOT/PJM，高杠杆 + 乐观电价假设是典型陷阱，须用保守情景与更严杠杆。</span></div></div>
+        <div class="pos-item"><span class="ic">×</span><div><b>触碰中国供应链 / 控制权、未做 FEOC 映射的项目</b><span class="sub">问题不是"成本高一点"，而是"税收资格可能直接没有"。</span></div></div>
+        <div class="pos-item"><span class="ic">×</span><div><b>只有排队编号、无研究结果与里程碑的项目</b><span class="sub">queue 位置 ≠ COD 概率，没有里程碑就不值钱。</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARKETS -->
+<section id="markets">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="eyebrow">目标市场 · FOUR MARKETS</div>
+      <h2 class="sec-h2">把战场先缩到<em>四个市场</em>。</h2>
+      <p class="sec-sub">这四个市场已足够大、也足够分化，足以支撑一个数亿美元级别的部署策略。美国是分区电力市场，没有全国统一玩法——市场设计不同，打法就完全不同。</p>
+    </div>
+    <div class="mkt-grid reveal">
+      <div class="mkt-card">
+        <div class="mkt-code">ERCOT · 德州</div>
+        <div class="mkt-name">Energy-only market · 无前向容量市场</div>
+        <div class="mkt-logic">负荷高增长、储能套利成熟、市场深度足、并网相对快。</div>
+        <div class="mkt-d">2026 年计划新增光伏中约 40% 落在德州。适合能接受 merchant 暴露的基金与平台，储能机会最活跃——但电价波动剧烈，须用保守杠杆。</div>
+        <div class="mkt-tags"><span class="mkt-tag hot">独立储能</span><span class="mkt-tag hot">光储混合</span><span class="mkt-tag">C&I 方案</span></div>
+      </div>
+      <div class="mkt-card">
+        <div class="mkt-code">CAISO · 加州</div>
+        <div class="mkt-name">RA 与系统调度成熟 · 可融资性强</div>
+        <div class="mkt-logic">资源充足性与系统调峰需求强，更适合 tolling 与准基础设施资产。</div>
+        <div class="mkt-d">EnergizeOS 自有运营经验所在地（SDG&E 侧项目）。4 小时储能 RA 价值明确，可做 tolling；但许可、安全、竞争密度较高。</div>
+        <div class="mkt-tags"><span class="mkt-tag hot">4h 储能</span><span class="mkt-tag hot">RA / Tolling</span><span class="mkt-tag">高质量混合</span></div>
+      </div>
+      <div class="mkt-card">
+        <div class="mkt-code">MISO · 中西部</div>
+        <div class="mkt-name">工业负荷 + 制造业回流支撑</div>
+        <div class="mkt-logic">中西部资源好、州际负荷与工业链回流支撑，光伏成长性强。</div>
+        <div class="mkt-d">适合 utility solar、光储与晚期开发组合。alpha 来自并网位置、queue 成色、州内许可与 offtake 质量，而非单纯 MW 规模。</div>
+        <div class="mkt-tags"><span class="mkt-tag">Utility Solar</span><span class="mkt-tag">晚期开发组合</span></div>
+      </div>
+      <div class="mkt-card">
+        <div class="mkt-code">PJM · 中大西洋</div>
+        <div class="mkt-name">最大容量市场 · 数据中心负荷激增</div>
+        <div class="mkt-logic">负荷压力大、数据中心需求强、受限区可靠性价值上升。</div>
+        <div class="mkt-d">容量与本地可靠性价值上升带来储能机会；须严格做收入折现，并关注容量市场规则变化的敏感性。</div>
+        <div class="mkt-tags"><span class="mkt-tag hot">受限区储能</span><span class="mkt-tag">负荷背书方案</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUE STAGES -->
+<section id="value" class="band">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="eyebrow">价值分配 · WHERE VALUE IS MADE</div>
+      <h2 class="sec-h2">同样 100MW 项目，绿地、晚期、在建、已运营，<em>估值逻辑完全不同</em>。</h2>
+      <p class="sec-sub">美国新能源项目不按 MW 估值，而按"已穿越多少风险节点"估值。理解每个阶段"谁赚钱、谁承担风险"，是设计进入结构的前提。</p>
+    </div>
+    <div class="stage-grid reveal">
+      <div class="stage-card">
+        <div class="stage-n">01</div>
+        <div class="stage-t">早期开发</div>
+        <div class="stage-en">GREENFIELD</div>
+        <div class="stage-d">选址、拿地、并网申请、许可。价值创造最集中也最难，大量项目死在并网排队或许可环节。</div>
+        <div class="stage-earn">赚 <span class="cur">去风险价差</span><br>但风险也最高</div>
+      </div>
+      <div class="stage-card">
+        <div class="stage-n">02</div>
+        <div class="stage-t">晚期开发</div>
+        <div class="stage-en">LATE-STAGE / RTB</div>
+        <div class="stage-d">已拿 IA / PPA、site control 闭环，达到 ready-to-build。风险收益比最优，最关键的 alpha 来源。</div>
+        <div class="stage-earn">赚 <span class="cur">开发溢价</span><br>+ 可复制 pipeline</div>
+      </div>
+      <div class="stage-card">
+        <div class="stage-n">03</div>
+        <div class="stage-t">建设期</div>
+        <div class="stage-en">CONSTRUCTION</div>
+        <div class="stage-d">EPC 建设、设备采购、调试并网。风险最终多回到赞助人，重点看 LD、wrap、acceptance。</div>
+        <div class="stage-earn">赚 <span class="cur">交付能力</span><br>+ 成本管理</div>
+      </div>
+      <div class="stage-card">
+        <div class="stage-n">04</div>
+        <div class="stage-t">运营期</div>
+        <div class="stage-en">OPERATION</div>
+        <div class="stage-d">COD 后靠 PPA 或市场电价产生现金流。可出售给长期持有者（基础设施基金、保险资金）。</div>
+        <div class="stage-earn">赚 <span class="cur">现金流稳定</span><br>+ 再融资能力</div>
+      </div>
+    </div>
+    <div class="stage-note reveal">
+      <strong>2025 年市场信号：</strong>据 Deloitte，2025 年前九个月美国可再生能源交易额同比下降 41%，但<strong>平台型并购金额反而激增 4.6 倍</strong>——买方更愿意买"团队 + pipeline + 执行平台"，而不是孤立项目。这正是"执行合伙人 + 资本"组合的市场机会所在。
+    </div>
+  </div>
+</section>
+
+<!-- ENTRY PATH -->
+<section id="path">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="eyebrow">进入路径 · HOW TO ENTER</div>
+      <h2 class="sec-h2">中国背景资本进入美国，<em>姿势决定成败</em>。</h2>
+      <p class="sec-sub">最差的方式，是以中国控制主体直接高调控制美国关键电力资产；最好的方式，是通过美国本地控制平台，把资本与执行能力嵌入。原因来自三层：投资审查（CFIUS）、贸易与税务合规（Section 301 / FEOC）、以及买方与出借方的市场偏好。</p>
+    </div>
+    <div class="path-wrap reveal">
+      <div class="path-card bad">
+        <div class="path-head">
+          <div class="path-tag">× 高风险姿势</div>
+          <div class="path-name">中国主体直接控制美国关键电力资产</div>
+        </div>
+        <div class="path-body">
+          <p class="path-p">看似"拥有资产最直接"，实则同时触发三重摩擦，把交易对手范围、税收资格与审批确定性同时压缩。</p>
+          <ul class="path-list">
+            <li>CFIUS 关键基础设施审查风险显著上升</li>
+            <li>触碰 FEOC 控制权 / 重大协助，威胁税收资格</li>
+            <li>Section 301 关税叠加（非电动车锂电池 2026 年升至 25%）</li>
+            <li>lender、tax investor、公用事业方对"谁控制、谁供软件"高度敏感</li>
+          </ul>
+        </div>
+      </div>
+      <div class="path-card good">
+        <div class="path-head">
+          <div class="path-tag">✓ 稳健姿势 · 推荐</div>
+          <div class="path-name">美国本地控制平台 + 资本与执行嵌入</div>
+        </div>
+        <div class="path-body">
+          <p class="path-p">以美国本地 sponsor / 平台为前台，中国资本以<strong>少数股权 / 现金股权</strong>参与，执行能力以模块化方式嵌入——把风险留在平台层，把机会留在资本层。</p>
+          <ul class="path-list">
+            <li>少数 JV 结构降低 CFIUS 与政治阻力</li>
+            <li>美国控制平台 + 执行模块，规避 FEOC 控制权穿透</li>
+            <li>EPC / PMC / Owner's Engineer 切入：先卖能力，不先碰控制权</li>
+            <li>EMS / 微网 / 工业负荷侧解决方案，贴近客户价值</li>
+            <li>minority capital + services 混合模式，回报与风险分层</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PARTNER (why us — dark) -->
+<section id="partner" class="band-slate">
+  <div class="container">
+    <div class="partner-band">
+      <div class="partner-txt reveal">
+        <div class="eyebrow">执行合伙人 · THE MISSING PIECE</div>
+        <h3>基金最缺的不是钱，<br>是一个能在当地把项目管住的执行平台。</h3>
+        <p>上一节的"美国本地控制平台"不是一个抽象结构——它需要一个真实存在、有实绩、有本地实体的团队来承载。<span class="hl">Energize Solutions Inc. 正是这样一个已就位的载体。</span></p>
+        <p>一家在美国注册运营的能源基础设施公司，自 2019 年以来在能源基础设施（EMS / BESS / 微电网）领域<strong>已部署超过 500MW</strong>，服务客户包括 PepsiCo、SDG&E（加州公用事业）。CAISO 侧真实运营经验，正是本方案四个目标市场之一。</p>
+        <p>换言之：<span class="hl">基金带来资本与项目来源（Deal Origination），Energize 带来可过投委、可融资、可交付的执行平台（Project Delivery）。</span>这是真正能长期做成的国际项目搭档结构。</p>
+      </div>
+      <div class="proof-grid reveal">
+        <div class="proof-cell"><div class="proof-v"><em>500</em>+ MW</div><div class="proof-l">自 2019 年以来累计部署的能源基础设施容量</div></div>
+        <div class="proof-cell"><div class="proof-v">2019</div><div class="proof-l">美国实体持续运营起始年——不是壳，是有交付记录的平台</div></div>
+        <div class="proof-cell"><div class="proof-v">CAISO</div><div class="proof-l">加州侧（SDG&E）真实运营经验，本方案四大目标市场之一</div></div>
+        <div class="proof-cell"><div class="proof-v">EMS+BESS</div><div class="proof-l">自有 EMS 平台 + 储能系统集成能力，覆盖并网、调试、调度全链</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CAPABILITY MODULES -->
+<section id="capability">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="eyebrow">可卖能力模块 · SERVICE MODULES</div>
+      <h2 class="sec-h2">把中国相关能力，缩到<em>三个可卖模块</em>。</h2>
+      <p class="sec-sub">对"执行合伙人"定位而言，最适合切入的不是"我来买美国电站"，而是把项目做成、把供应链做合规、把复杂交易做成能过投委的材料。以下能力可独立计价，也可组合嵌入平台。</p>
+    </div>
+    <div class="cap-grid reveal">
+      <div class="cap-cell">
+        <div class="cap-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#D4840A" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+        <div class="cap-t">项目筛选与技术尽调</div>
+        <div class="cap-d">判断 RTB 项目的技术真伪与质量：并网条件、设备选型、EPC 质量、储能责任链是否 bankable。</div>
+      </div>
+      <div class="cap-cell">
+        <div class="cap-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#D4840A" stroke-width="1.6"><path d="M12 2l9 4.9V17L12 22 3 17V6.9L12 2z"/><path d="M12 22V12M3 6.9L12 12l9-5.1"/></svg></div>
+        <div class="cap-t">落地执行管理</div>
+        <div class="cap-d">从投资 / 收购后到 COD 的全流程：EPC 协调、并网、调试、EMS 集成、投运、资产管理。</div>
+      </div>
+      <div class="cap-cell">
+        <div class="cap-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#D4840A" stroke-width="1.6"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <div class="cap-t">结构与合规导航</div>
+        <div class="cap-d">设计既规避 CFIUS / FEOC 风险、又能拿到合理回报的持股结构；供应链本地化与 PFE 成本比率映射。</div>
+      </div>
+      <div class="cap-cell">
+        <div class="cap-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#D4840A" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 9h18M9 21V9"/></svg></div>
+        <div class="cap-t">投委材料与去风险</div>
+        <div class="cap-d">把 queue、site control、offtake、税务思路整理成可过 IC 的材料——告诉基金哪里是真问题，哪里只是谈判问题。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEPLOYMENT -->
+<section id="deploy" class="band-stone">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="eyebrow">部署方案 · CAPITAL DEPLOYMENT</div>
+      <h2 class="sec-h2">一个数亿美元级部署，<em>按确定性分层配置</em>。</h2>
+      <p class="sec-sub">最合理的配置不是 all-in 某一赛道，而是按阶段与确定性分层——运营资产给融资信用，晚期开发给收益率，平台/JV 给未来管道，绿地只保留择优期权。以下为示意性配置框架。</p>
+    </div>
+    <div class="alloc-wrap reveal">
+      <div class="alloc-bars">
+        <div class="alloc-row">
+          <div class="alloc-head"><span class="alloc-name">晚期开发资产（已拿 IA/PPA）</span><span class="alloc-pct">40%</span></div>
+          <div class="alloc-track"><div class="alloc-fill g" style="width:100%"></div></div>
+          <div class="alloc-desc">拿开发溢价与可复制 pipeline——最关键的 alpha 来源。</div>
+        </div>
+        <div class="alloc-row">
+          <div class="alloc-head"><span class="alloc-name">运营资产</span><span class="alloc-pct">30%</span></div>
+          <div class="alloc-track"><div class="alloc-fill" style="width:75%"></div></div>
+          <div class="alloc-desc">稳定现金流，建立本地 lender 与 tax buyer 关系——组合锚。</div>
+        </div>
+        <div class="alloc-row">
+          <div class="alloc-head"><span class="alloc-name">平台 / JV / 解决方案</span><span class="alloc-pct">20%</span></div>
+          <div class="alloc-track"><div class="alloc-fill" style="width:50%"></div></div>
+          <div class="alloc-desc">获得 pipeline 与执行能力，为后续滚动部署服务。</div>
+        </div>
+        <div class="alloc-row">
+          <div class="alloc-head"><span class="alloc-name">早期 / 绿地</span><span class="alloc-pct">10%</span></div>
+          <div class="alloc-track"><div class="alloc-fill" style="width:25%"></div></div>
+          <div class="alloc-desc">低成本锁定未来项目，严格控制比例。</div>
+        </div>
+      </div>
+      <div class="alloc-side reveal">
+        <h3>为什么是这个顺序？</h3>
+        <p><strong>运营资产给你融资信用，晚期开发给你收益率，平台/JV 给你未来管道，绿地只保留择优期权。</strong></p>
+        <p>如果反过来——先重仓早期、再等将来融资窗口——会被并网、政策与资本成本三重波动同时打到。分层配置的本质，是让确定性最高的资产先建立本地信用与关系网，再用它撬动更高收益的晚期资产。</p>
+        <div class="alloc-logic">回报框架（示意）：运营 / 长期合约资产偏低双位数、以 DCF 为主；晚期开发偏低到中双位数、DCF + milestone 估值；早期绿地中双位数以上、须风险调整并严格设置 contingent payment。正式 IC 应以银行报价、税务报价、债务 term sheet 与同类交易验证为准。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section id="roadmap">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="eyebrow">90 天路线图 · FROM 0 TO PIPELINE</div>
+      <h2 class="sec-h2">从 0 到 1，<em>90 天建起北美平台雏形</em>。</h2>
+      <p class="sec-sub">资本到位后，执行不是从"找项目"开始，而是从建市场地图、建筛选系统、建首批可过 IC 的 pipeline 开始。以下为可交付的推进节奏。</p>
+    </div>
+    <div class="road-stack reveal">
+      <div class="road-item">
+        <div class="road-phase">
+          <div class="road-day">DAY 1–30</div>
+          <div class="road-goal">建市场与外部网络</div>
+        </div>
+        <div class="road-main">
+          <ul class="road-acts">
+            <li>设美国平台 deal lead，锁定 4 个目标市场（ERCOT、CAISO、MISO、PJM）</li>
+            <li>固定外部律师、税务顾问、技术顾问、保险经纪、市场顾问</li>
+            <li>建立 20 个交易对手 + 10 个本地顾问的联系人库</li>
+          </ul>
+        </div>
+      </div>
+      <div class="road-item">
+        <div class="road-phase">
+          <div class="road-day">DAY 31–60</div>
+          <div class="road-goal">建筛选与合规系统</div>
+        </div>
+        <div class="road-main">
+          <ul class="road-acts">
+            <li>搭项目初筛表、IC 备忘录模板</li>
+            <li>建 interconnection / permit / offtake / tax / FEOC 五张检查表</li>
+            <li>建储能 merchant / tolling 双模型，与 PV+BESS 混合 IC 模板</li>
+          </ul>
+        </div>
+      </div>
+      <div class="road-item">
+        <div class="road-phase">
+          <div class="road-day">DAY 61–90</div>
+          <div class="road-goal">建首批真实 pipeline</div>
+        </div>
+        <div class="road-main">
+          <ul class="road-acts">
+            <li>拿到 5–8 个具体项目数据包（含 queue、site control、offtake、税务思路）</li>
+            <li>优先深度审两个晚期项目 + 一个运营 / 再融资项目</li>
+            <li>只做有数据的项目，不做无数据的"概念合作"</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DILIGENCE -->
+<section id="diligence" class="band">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="eyebrow">尽调纪律 · DILIGENCE DISCIPLINE</div>
+      <h2 class="sec-h2">任何项目进 IC 前，先做<em>八项硬验证</em>。</h2>
+    </div>
+    <div class="dd-note reveal"><strong>纪律：</strong>不替别人承担未经定价的风险。这份清单直接放进 IC 材料使用——每一项都对应一个可能让项目归零的红旗。这也是"执行合伙人"最能创造价值的地方：在钱进去之前，把真问题和谈判问题分开。</div>
+    <div class="dd-grid reveal">
+      <div class="dd-cell">
+        <div class="dd-mod">1 · Interconnection 并网</div>
+        <div class="dd-q">queue ID、cluster、SIS/FS 完成状态、upgrade cost</div>
+        <div class="dd-flag">只有排队编号，没有研究结果</div>
+      </div>
+      <div class="dd-cell">
+        <div class="dd-mod">2 · Site Control 土地</div>
+        <div class="dd-q">site control、title、easement、集电/送出路径</div>
+        <div class="dd-flag">土地期限覆盖不了融资期</div>
+      </div>
+      <div class="dd-cell">
+        <div class="dd-mod">3 · Permit 许可</div>
+        <div class="dd-q">县 / 州 / 联邦哪些批文已拿到</div>
+        <div class="dd-flag">依赖未启动的重大许可</div>
+      </div>
+      <div class="dd-cell">
+        <div class="dd-mod">4 · Offtake 购电</div>
+        <div class="dd-q">PPA / tolling / hedge 条款、credit support</div>
+        <div class="dd-flag">off-taker 信用差或合同期过短</div>
+      </div>
+      <div class="dd-cell">
+        <div class="dd-mod">5 · Tax 税务</div>
+        <div class="dd-q">45Y / 48E 选择、bonus、transfer 方案</div>
+        <div class="dd-flag">domestic content / FEOC 无法证实</div>
+      </div>
+      <div class="dd-cell">
+        <div class="dd-mod">6 · Supply Chain 供应链</div>
+        <div class="dd-q">模块 / 逆变器 / PCS / 电池来源</div>
+        <div class="dd-flag">中国暴露未做成本比率映射</div>
+      </div>
+      <div class="dd-cell">
+        <div class="dd-mod">7 · EPC / O&M 交付</div>
+        <div class="dd-q">LD、acceptance、performance 责任划分</div>
+        <div class="dd-flag">EPC 但责任无人兜底</div>
+      </div>
+      <div class="dd-cell">
+        <div class="dd-mod">8 · 安全 / 合规</div>
+        <div class="dd-q">NFPA / UL / 州消防 / AHJ、CFIUS、制裁、出口管制</div>
+        <div class="dd-flag">保险异常，或股权结构与控制权不清晰</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta" class="cta-sec">
+  <div class="container cta-inner">
+    <div class="eyebrow cta-eyebrow reveal">共同发起 · THE PROPOSAL</div>
+    <h2 class="cta-h2 reveal">窗口在<em>现在</em>。<br>下一步不是再讨论市场，而是共同发起一个美国实体，开干。</h2>
+    <p class="cta-sub reveal">建议以注资成立新美国实体、或注资现有 Energize Solutions Inc. 平台的方式，共同发起一个聚焦储能与晚期开发的美国部署平台：基金负责资本与项目来源，Energize 负责落地执行与合规交付。以下是从此刻到首批 IC 的推进方式。</p>
+    <div class="cta-steps reveal">
+      <div class="cta-step">
+        <div class="cta-step-n">STEP 01</div>
+        <div class="cta-step-t">确认结构与角色</div>
+        <div class="cta-step-d">明确投资形态（少数股权 / 现金股权 / 平台 JV）、目标市场与资产类别、以及双方在平台中的角色与治理。</div>
+      </div>
+      <div class="cta-step">
+        <div class="cta-step-n">STEP 02</div>
+        <div class="cta-step-t">试跑一个具体项目</div>
+        <div class="cta-step-d">由基金或 Energize 拿出一个真实标的，做 Project Screening + 一页技术路径 + 90 天执行路线图，验证双方配合。</div>
+      </div>
+      <div class="cta-step">
+        <div class="cta-step-n">STEP 03</div>
+        <div class="cta-step-t">注资 · 建平台 · 开干</div>
+        <div class="cta-step-d">注资成立 / 注资现有美国实体，启动 90 天路线图，建起首批可过 IC 的储能与晚期开发 pipeline。</div>
+      </div>
+    </div>
+    <div class="cta-actions reveal">
+      <a class="btn-white" href="mailto:info@energizeos.com?subject=US%20Utility-Scale%20New%20Energy%20%E2%80%94%20Investment%20%26%20Execution%20Discussion">发起合作讨论 <span>→</span></a>
+      <a class="btn-ghost" href="#thesis">回到核心判断</a>
+    </div>
+  </div>
+</section>
+
+<!-- SOURCES -->
+<section class="src-sec">
+  <div class="container">
+    <div class="sec-head reveal" style="margin-bottom:32px">
+      <div class="eyebrow">数据来源 · SOURCES</div>
+      <h2 class="sec-h2" style="font-size:clamp(22px,2.8vw,30px)">全部关键数据引自权威一手来源。</h2>
+    </div>
+    <div class="src-list reveal">
+      <div><b>EIA</b> — Electric Power Monthly；Today in Energy（储能 66% 增长、2026 新增装机预估）；Short-Term Energy Outlook</div>
+      <div><b>LBNL</b> — Queued Up: 2026 Edition（截至 2025 年底并网队列）；Utility-Scale Solar；2024 Data Center Energy Usage Report</div>
+      <div><b>FERC</b> — Order 2023（first-ready, first-served 集群并网）；Order 1920（20 年区域输电规划）</div>
+      <div><b>IRS / Treasury</b> — Public Law 119-21（OBBBA）；Notice 2025-42（45Y/48E 开工认定）；45Y / 48E / 45X 与 FEOC material assistance 指引；Section 6418 transferability</div>
+      <div><b>USTR</b> — Section 301 关税修订（非电动车锂电池 2026 年升至 25%）</div>
+      <div><b>行业与交易</b> — SEIA / Wood Mackenzie；ACP；Deloitte（2025 可再生能源 M&A 回顾）；Utility Dive</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-inner">
+    <div>
+      <div class="foot-brand">
+        <svg width="22" height="22" viewBox="0 0 48 48" fill="none"><rect x="0" y="0" width="21" height="21" fill="#fff"/><rect x="27" y="0" width="21" height="21" fill="#D4840A"/><rect x="0" y="27" width="21" height="21" fill="#D4840A"/><rect x="27" y="27" width="21" height="21" fill="#fff"/></svg>
+        <span class="foot-brand-name">EnergizeOS</span>
+      </div>
+      <div class="foot-legal">美国公用事业级新能源与储能 · 投资与落地执行方案。由 <strong style="color:rgba(255,255,255,.6)">Energize Solutions Inc.</strong> 提供。合作与对接：<a href="mailto:info@energizeos.com">info@energizeos.com</a></div>
+    </div>
+    <div class="foot-meta">
+      US Utility-Scale New Energy &amp; Storage<br>
+      投资判断 · 新政合规 · 落地执行<br>
+      docs.energizeos.com/us-newenergy
+    </div>
+  </div>
+  <div class="disclaimer">
+    <div class="disclaimer-box">
+      免责声明：本文件为战略与商业讨论材料，非投资要约、非投资建议、亦非任何证券之要约或招揽。文中市场数据均引自 EIA、LBNL、FERC、IRS、USTR 等公开权威来源，截至编制日为准，可能随后续政策与市场变化而更新；税务与合规相关内容（含 OBBBA、45Y/48E、FEOC、CFIUS、Section 301）为一般性说明，不构成法律、税务或财务意见，任何具体交易须由合格的美国法律、税务与财务顾问基于实际事实独立审阅。文中所引平台与交易案例为公开市场信息，用于行业趋势佐证；EnergizeOS / Energize Solutions Inc. 自有能力与部署业绩已单独标注。回报区间为市场实践假设框架，非对任何具体项目收益的预测或保证，正式 IC 应以银行报价、税务报价、债务 term sheet 与同类交易验证为准。<br>© 2026 Energize Solutions Inc. 版权所有。
+    </div>
+  </div>
+</footer>
+
+<script>
+// mobile nav
+const burger=document.getElementById('burger'),mnav=document.getElementById('mnav');
+burger.addEventListener('click',()=>{burger.classList.toggle('open');mnav.classList.toggle('open');document.body.style.overflow=mnav.classList.contains('open')?'hidden':''});
+mnav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{burger.classList.remove('open');mnav.classList.remove('open');document.body.style.overflow=''}));
+// reveal on scroll
+const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
