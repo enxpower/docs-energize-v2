@@ -7,655 +7,215 @@
 <meta name="description" content="Private appointment desk for Andy Gong. Request a calendar window consolidated across AGI&amp;M, EnergizeOS, and ARCBOS operating calendars.">
 <meta name="robots" content="noindex, follow">
 <link rel="icon" type="image/svg+xml" href="../vi/assets/favicon.svg">
-<link rel="icon" type="image/png" sizes="32x32" href="../vi/assets/favicon-32.png">
 <link rel="canonical" href="https://docs.energizeos.com/appointment-desk/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://docs.energizeos.com/appointment-desk/">
 <meta property="og:title" content="Andy Gong — Appointment Desk — EnergizeOS">
 <meta property="og:description" content="Private appointment desk for Andy Gong. Request a calendar window consolidated across active operating calendars.">
 <meta property="og:image" content="https://docs.energizeos.com/vi/assets/og-1200x630.png">
-<meta property="og:type" content="website">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <style>
   /* =========================================================
-     ENERGIZEOS VISUAL IDENTITY — TOKENS
-     Slate & Volt palette, per docs.energizeos.com/vi/
+     TOKENS — copied verbatim from docs.energizeos.com/index.html
+     so this page matches the rest of the site exactly, rather
+     than inventing its own palette.
   ========================================================= */
-  :root {
-    --slate: #1A2B3C;
-    --deep-ocean: #2E4A6E;
-    --volt: #D4840A;
-    --tint: #FDF4E7;
-    --white: #FFFFFF;
-    --body-text: #334455;
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+    color:#1A2B3C;background:#FAFBFC;min-height:100vh;
+    -webkit-font-smoothing:antialiased;line-height:1.6;font-size:15px;
+  }
+  a{color:inherit;text-decoration:none}
+  :focus-visible{outline:2px solid #D4840A;outline-offset:2px}
 
-    /* Structural borders derived from Slate at low opacity —
-       used instead of drop shadows, per brand usage rules. */
-    --border-soft: rgba(26, 43, 60, 0.14);
-    --border-firm: rgba(26, 43, 60, 0.28);
-
-    /* Spacing scale, per VI grid system */
-    --sp-xs: 4px;
-    --sp-s: 8px;
-    --sp-m: 16px;
-    --sp-l: 24px;
-    --sp-xl: 48px;
-    --sp-2xl: 72px;
-    --sp-3xl: 120px;
-
-    /* Outer margins by breakpoint */
-    --outer-margin: 16px;
-
-    --font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    --motion-fast: 150ms ease-out;
-    --motion-medium: 200ms ease-out;
+  :root{
+    --slate:#1A2B3C;--mid:#2E4A6E;--volt:#D4840A;--muted:#64788D;
+    --tint:#FDF6ED;--rule:rgba(26,43,60,.09);--rule-firm:rgba(26,43,60,.16);
+    --gutter:48px;
+    --sp-xs:4px;--sp-s:8px;--sp-m:16px;--sp-l:24px;--sp-xl:48px;--sp-2xl:72px;
+    --motion-fast:150ms ease-out;
+  }
+  @media (max-width:900px){:root{--gutter:24px}}
+  @media (max-width:480px){:root{--gutter:20px}}
+  @media (prefers-reduced-motion: reduce){
+    *{transition-duration:0.001ms !important;animation-duration:0.001ms !important}
   }
 
-  @media (min-width: 768px) {
-    :root { --outer-margin: 24px; }
-  }
-
-  @media (min-width: 1024px) {
-    :root { --outer-margin: 48px; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    * { transition-duration: 0.001ms !important; animation-duration: 0.001ms !important; }
-  }
-
-  * { box-sizing: border-box; }
-
-  html { -webkit-text-size-adjust: 100%; }
-
-  body {
-    margin: 0;
-    font-family: var(--font-family);
-    color: var(--body-text);
-    background: var(--white);
-    line-height: 1.6;
-    font-size: 15px;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding-left: var(--outer-margin);
-    padding-right: var(--outer-margin);
-  }
-
-  h1, h2, h3 { color: var(--slate); margin: 0; }
-
-  a { color: var(--deep-ocean); }
+  .wrap{width:100%;max-width:1160px;margin-inline:auto;padding-inline:var(--gutter)}
+  h1,h2{color:var(--slate);margin:0}
 
   /* ---------------------------------------------------------
-     HEADER
+     NAV — identical structure/markup to the site homepage.
   --------------------------------------------------------- */
-  .site-header {
-    border-bottom: 1px solid var(--border-soft);
-  }
-
-  .header-inner {
-    display: flex;
-    flex-direction: column;
-    gap: var(--sp-m);
-    padding-top: var(--sp-l);
-    padding-bottom: var(--sp-l);
-  }
-
-  @media (min-width: 768px) {
-    .header-inner {
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-    }
-  }
-
-  .brand-logo {
-    height: 34px;
-    width: auto;
-    display: block;
-  }
-
-  .desk-label {
-    display: flex;
-    flex-direction: column;
-    gap: var(--sp-xs);
-  }
-
-  @media (min-width: 768px) {
-    .desk-label { text-align: right; align-items: flex-end; }
-  }
-
-  .label-tag {
-    font-size: 11px;
-    font-weight: 400;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--volt);
-  }
-
-  .status-line {
-    font-size: 12px;
-    color: var(--body-text);
-    opacity: 0.75;
-  }
-
-  .volt-bar {
-    height: 3px;
-    background: var(--volt);
-    width: 100%;
-  }
+  .nav{background:rgba(250,251,252,.97);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);position:sticky;top:0;z-index:200}
+  .nav .wrap{height:66px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+  .brand{display:flex;align-items:center;gap:11px}
+  .brand-name{font-size:13px;font-weight:700;letter-spacing:.02em;color:var(--slate)}
+  .nav-back{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:7px;transition:color var(--motion-fast)}
+  .nav-back:hover{color:var(--slate)}
+  @media (max-width:600px){.nav-back span{display:none}}
 
   /* ---------------------------------------------------------
      HERO
   --------------------------------------------------------- */
-  .hero {
-    padding-top: var(--sp-xl);
-    padding-bottom: var(--sp-xl);
-    max-width: 760px;
-  }
-
-  .eyebrow {
-    font-size: 11px;
-    font-weight: 400;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--volt);
-    margin: 0 0 var(--sp-m) 0;
-  }
-
-  .hero h1 {
-    font-size: 32px;
-    font-weight: 300;
-    letter-spacing: -0.02em;
-    line-height: 1.2;
-    margin-bottom: var(--sp-l);
-  }
-
-  @media (min-width: 768px) {
-    .hero h1 { font-size: 42px; }
-  }
-
-  @media (min-width: 1024px) {
-    .hero h1 { font-size: 52px; letter-spacing: -0.025em; }
-  }
-
-  .subhead {
-    font-size: 16px;
-    color: var(--body-text);
-    margin: 0 0 var(--sp-l) 0;
-    max-width: 620px;
-  }
-
-  .status-copy {
-    font-size: 13px;
-    color: var(--slate);
-    font-weight: 500;
-    margin: 0 0 var(--sp-l) 0;
-  }
-
-  .chip-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--sp-s);
-  }
-
-  .chip {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--sp-xs);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    color: var(--slate);
-    background: var(--tint);
-    border: 1px solid var(--border-soft);
-    padding: var(--sp-xs) var(--sp-m);
-    border-radius: 2px;
-  }
-
-  .chip::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    background: var(--volt);
-    display: inline-block;
-  }
+  .hero{background:#fff;border-bottom:1px solid var(--rule);padding-block:60px 48px}
+  .kicker{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--volt);margin-bottom:18px;display:flex;align-items:center;gap:13px}
+  .kicker::before{content:"";display:inline-block;width:26px;height:1px;background:var(--volt);flex-shrink:0}
+  .hero h1{font-size:clamp(26px,4.4vw,44px);font-weight:300;letter-spacing:-.025em;line-height:1.15;margin-bottom:14px}
+  .hero-sub{font-size:14px;color:var(--muted);max-width:600px;line-height:1.78;margin-bottom:24px}
+  .chip-row{display:flex;flex-wrap:wrap;gap:var(--sp-s)}
+  .chip{display:inline-flex;align-items:center;gap:var(--sp-xs);font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--slate);background:var(--tint);border:1px solid var(--rule);padding:7px 14px}
+  .chip::before{content:'';width:6px;height:6px;background:var(--volt);display:inline-block;flex-shrink:0}
+  @media (max-width:480px){.hero{padding-block:40px 32px}}
 
   /* ---------------------------------------------------------
      SCHEDULER LAYOUT
   --------------------------------------------------------- */
-  .scheduler {
-    padding-bottom: var(--sp-2xl);
+  .scheduler{padding-block:var(--sp-2xl)}
+  .scheduler-grid{display:grid;grid-template-columns:1fr;gap:var(--sp-xl);align-items:start}
+  @media (min-width:1024px){.scheduler-grid{grid-template-columns:1.25fr 1fr;gap:var(--sp-2xl)}}
+
+  .panel{border:1px solid var(--rule);padding:var(--sp-l);background:#fff}
+  @media (min-width:768px){.panel{padding:var(--sp-xl)}}
+
+  .panel-title{font-size:18px;font-weight:500;letter-spacing:-.01em;margin-bottom:var(--sp-s)}
+  .panel-subtitle{font-size:13px;color:var(--muted);margin:0 0 var(--sp-l) 0}
+
+  .control-group{margin-bottom:var(--sp-xl)}
+  .control-group:last-of-type{margin-bottom:var(--sp-m)}
+  .control-label{display:block;font-size:10px;font-weight:400;letter-spacing:.16em;text-transform:uppercase;color:var(--volt);margin-bottom:var(--sp-m)}
+
+  .duration-selector,.day-selector{display:flex;flex-wrap:wrap;gap:var(--sp-s)}
+  .duration-btn,.day-btn{
+    min-height:44px;padding:var(--sp-s) var(--sp-l);font-family:inherit;font-size:14px;font-weight:500;
+    color:var(--slate);background:#fff;border:1px solid var(--rule-firm);cursor:pointer;
+    transition:background var(--motion-fast),color var(--motion-fast),border-color var(--motion-fast);
+  }
+  .duration-btn:hover,.day-btn:hover{border-color:var(--slate)}
+  .duration-btn.is-selected,.day-btn.is-selected{
+    background:var(--slate);color:#fff;border-color:var(--slate);box-shadow:inset 0 -3px 0 var(--volt);
   }
 
-  .scheduler-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--sp-xl);
-    align-items: start;
-  }
+  .slot-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--sp-s)}
+  @media (min-width:480px){.slot-grid{grid-template-columns:repeat(3,1fr)}}
+  @media (min-width:1024px){.slot-grid{grid-template-columns:repeat(2,1fr)}}
+  @media (min-width:1280px){.slot-grid{grid-template-columns:repeat(3,1fr)}}
 
-  @media (min-width: 1024px) {
-    .scheduler-grid {
-      grid-template-columns: 1.25fr 1fr;
-      gap: var(--sp-2xl);
-    }
+  .slot-btn{
+    min-height:48px;font-family:inherit;font-size:14px;font-weight:500;color:var(--slate);
+    background:#fff;border:1px solid var(--rule-firm);cursor:pointer;
+    transition:background var(--motion-fast),color var(--motion-fast),border-color var(--motion-fast);
   }
+  .slot-btn:hover{border-color:var(--slate);background:var(--tint)}
+  .slot-btn.is-selected{background:var(--slate);color:#fff;border-color:var(--slate);box-shadow:inset 0 -3px 0 var(--volt)}
 
-  .panel {
-    border: 1px solid var(--border-soft);
-    padding: var(--sp-l);
-    background: var(--white);
-  }
-
-  @media (min-width: 768px) {
-    .panel { padding: var(--sp-xl); }
-  }
-
-  .panel-title {
-    font-size: 18px;
-    font-weight: 500;
-    letter-spacing: -0.01em;
-    margin-bottom: var(--sp-s);
-  }
-
-  .panel-subtitle {
-    font-size: 13px;
-    color: var(--body-text);
-    opacity: 0.8;
-    margin: 0 0 var(--sp-l) 0;
-  }
-
-  .control-group {
-    margin-bottom: var(--sp-xl);
-  }
-
-  .control-group:last-of-type {
-    margin-bottom: var(--sp-m);
-  }
-
-  .control-label {
-    display: block;
-    font-size: 11px;
-    font-weight: 400;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--volt);
-    margin-bottom: var(--sp-m);
-  }
-
-  /* Duration + day selector buttons */
-  .duration-selector,
-  .day-selector {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--sp-s);
-  }
-
-  .duration-btn,
-  .day-btn {
-    min-height: 44px;
-    padding: var(--sp-s) var(--sp-l);
-    font-family: var(--font-family);
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--slate);
-    background: var(--white);
-    border: 1px solid var(--border-firm);
-    cursor: pointer;
-    transition: background var(--motion-fast), color var(--motion-fast), border-color var(--motion-fast);
-  }
-
-  .duration-btn:hover,
-  .day-btn:hover {
-    border-color: var(--slate);
-  }
-
-  .duration-btn.is-selected,
-  .day-btn.is-selected {
-    background: var(--slate);
-    color: var(--white);
-    border-color: var(--slate);
-    box-shadow: inset 0 -3px 0 var(--volt);
-  }
-
-  /* ---------------------------------------------------------
-     CALENDAR LOAD TIMELINE
-     A read-only, chronological view of the selected day —
-     reserved blocks (grey, tagged by source calendar) and open
-     windows (Volt) — so the visitor can see how the day is
-     actually structured, not just a bare list of open times.
-  --------------------------------------------------------- */
-  .day-timeline {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .timeline-row {
-    display: flex;
-    align-items: stretch;
-    gap: var(--sp-m);
-    min-height: 40px;
-  }
-
-  .timeline-bar {
-    flex: 0 0 4px;
-    border-radius: 1px;
-  }
-
-  .timeline-row.is-reserved .timeline-bar {
-    background: var(--border-firm);
-  }
-
-  .timeline-row.is-open .timeline-bar {
-    background: var(--volt);
-  }
-
-  .timeline-body {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: var(--sp-s);
-    flex: 1;
-    padding: var(--sp-s) 0;
-  }
-
-  .timeline-time {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--slate);
-  }
-
-  .timeline-row.is-reserved .timeline-time {
-    color: var(--body-text);
-    opacity: 0.65;
-  }
-
-  .timeline-tag {
-    font-size: 11px;
-    font-weight: 400;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--body-text);
-    opacity: 0.6;
-  }
-
-  .timeline-row.is-open .timeline-tag {
-    color: var(--volt);
-    opacity: 1;
-    font-weight: 700;
-  }
-
-  .timeline-note {
-    font-size: 12px;
-    color: var(--body-text);
-    opacity: 0.75;
-    margin-top: var(--sp-m);
-  }
-
-  /* Time slot grid */
-  .slot-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--sp-s);
-  }
-
-  @media (min-width: 480px) {
-    .slot-grid { grid-template-columns: repeat(3, 1fr); }
-  }
-
-  @media (min-width: 1024px) {
-    .slot-grid { grid-template-columns: repeat(2, 1fr); }
-  }
-
-  @media (min-width: 1280px) {
-    .slot-grid { grid-template-columns: repeat(3, 1fr); }
-  }
-
-  .slot-btn {
-    min-height: 48px;
-    font-family: var(--font-family);
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--slate);
-    background: var(--white);
-    border: 1px solid var(--border-firm);
-    cursor: pointer;
-    transition: background var(--motion-fast), color var(--motion-fast), border-color var(--motion-fast);
-  }
-
-  .slot-btn:hover {
-    border-color: var(--slate);
-    background: var(--tint);
-  }
-
-  .slot-btn.is-selected {
-    background: var(--slate);
-    color: var(--white);
-    border-color: var(--slate);
-    box-shadow: inset 0 -3px 0 var(--volt);
-  }
-
-  .no-slots {
-    grid-column: 1 / -1;
-    font-size: 14px;
-    color: var(--body-text);
-    padding: var(--sp-m);
-    background: var(--tint);
-    border: 1px solid var(--border-soft);
-  }
-
-  .api-status {
-    font-size: 12px;
-    color: var(--body-text);
-    opacity: 0.8;
-    margin-top: var(--sp-l);
-    min-height: 16px;
-  }
+  .no-slots{grid-column:1/-1;font-size:14px;color:var(--muted);padding:var(--sp-m);background:var(--tint);border:1px solid var(--rule)}
+  .api-status{font-size:12px;color:var(--muted);margin-top:var(--sp-l);min-height:16px}
 
   /* ---------------------------------------------------------
      REQUEST PANEL
   --------------------------------------------------------- */
-  .summary-box {
-    background: var(--tint);
-    border: 1px solid var(--border-soft);
-    padding: var(--sp-l);
-    margin-bottom: var(--sp-xl);
+  .summary-box{background:var(--tint);border:1px solid var(--rule);padding:var(--sp-l);margin-bottom:var(--sp-xl)}
+  @media (min-width:1024px){.summary-box{position:sticky;top:calc(66px + var(--sp-l))}}
+
+  .summary-list{margin:0}
+  .summary-row{display:flex;justify-content:space-between;gap:var(--sp-m);padding:var(--sp-s) 0;border-bottom:1px solid var(--rule)}
+  .summary-row:last-child{border-bottom:none}
+  .summary-row dt{font-size:10px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .summary-row dd{margin:0;font-size:14px;font-weight:500;color:var(--slate);text-align:right}
+
+  .field{margin-bottom:var(--sp-l)}
+  .field label{display:block;font-size:12px;font-weight:500;color:var(--slate);margin-bottom:var(--sp-xs)}
+  .field .optional-tag{font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0}
+  .field input,.field select,.field textarea{
+    width:100%;min-height:44px;padding:var(--sp-s) var(--sp-m);font-family:inherit;font-size:15px;
+    color:var(--slate);background:#fff;border:1px solid var(--rule-firm);border-radius:0;
+    transition:border-color var(--motion-fast),box-shadow var(--motion-fast);
+  }
+  .field textarea{min-height:96px;resize:vertical}
+  .field input:focus,.field select:focus,.field textarea:focus{
+    outline:none;border-color:var(--slate);box-shadow:0 0 0 3px rgba(26,43,60,.07);
   }
 
-  @media (min-width: 1024px) {
-    .summary-box {
-      position: sticky;
-      top: var(--sp-l);
-    }
+  .form-error{font-size:13px;color:#B3401A;min-height:18px;margin:0 0 var(--sp-m) 0}
+
+  .submit-btn{
+    width:100%;min-height:48px;padding:var(--sp-m) var(--sp-l);font-family:inherit;font-size:14px;
+    font-weight:700;letter-spacing:.04em;color:#fff;background:var(--slate);border:none;cursor:pointer;
+    box-shadow:inset 0 -3px 0 var(--volt);transition:opacity var(--motion-fast);
   }
+  .submit-btn:hover{opacity:.85}
+  .submit-btn:disabled{opacity:.5;cursor:not-allowed}
 
-  .summary-list {
-    margin: 0;
-  }
-
-  .summary-row {
-    display: flex;
-    justify-content: space-between;
-    gap: var(--sp-m);
-    padding: var(--sp-s) 0;
-    border-bottom: 1px solid var(--border-soft);
-  }
-
-  .summary-row:last-child { border-bottom: none; }
-
-  .summary-row dt {
-    font-size: 11px;
-    font-weight: 400;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--body-text);
-    opacity: 0.75;
-  }
-
-  .summary-row dd {
-    margin: 0;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--slate);
-    text-align: right;
-  }
-
-  .field {
-    margin-bottom: var(--sp-l);
-  }
-
-  .field label {
-    display: block;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--slate);
-    margin-bottom: var(--sp-xs);
-  }
-
-  .field .optional-tag {
-    font-weight: 400;
-    color: var(--body-text);
-    opacity: 0.6;
-    text-transform: none;
-    letter-spacing: 0;
-  }
-
-  .field input,
-  .field select,
-  .field textarea {
-    width: 100%;
-    min-height: 44px;
-    padding: var(--sp-s) var(--sp-m);
-    font-family: var(--font-family);
-    font-size: 15px;
-    color: var(--slate);
-    background: var(--white);
-    border: 1px solid var(--border-firm);
-    border-radius: 0;
-    transition: border-color var(--motion-fast);
-  }
-
-  .field textarea {
-    min-height: 96px;
-    resize: vertical;
-  }
-
-  .field input:focus,
-  .field select:focus,
-  .field textarea:focus {
-    outline: none;
-    border-color: var(--deep-ocean);
-    box-shadow: 0 0 0 1px var(--deep-ocean);
-  }
-
-  .form-error {
-    font-size: 13px;
-    color: #B3401A;
-    min-height: 18px;
-    margin: 0 0 var(--sp-m) 0;
-  }
-
-  .submit-btn {
-    width: 100%;
-    min-height: 48px;
-    padding: var(--sp-m) var(--sp-l);
-    font-family: var(--font-family);
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    color: var(--white);
-    background: var(--slate);
-    border: none;
-    cursor: pointer;
-    box-shadow: inset 0 -3px 0 var(--volt);
-    transition: background var(--motion-fast);
-  }
-
-  .submit-btn:hover { background: var(--deep-ocean); }
-  .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-
-  .confirmation-message {
-    font-size: 14px;
-    color: var(--slate);
-    background: var(--tint);
-    border: 1px solid var(--border-soft);
-    padding: var(--sp-m);
-    margin-top: var(--sp-l);
-    display: block;
-  }
-
-  .confirmation-message:empty { display: none; }
-
-  .confirmation-ref {
-    display: block;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--volt);
-    margin-bottom: var(--sp-xs);
-  }
-
-  .noscript-notice {
-    font-size: 13px;
-    color: var(--body-text);
-    background: var(--tint);
-    border: 1px solid var(--border-soft);
-    padding: var(--sp-m);
-  }
+  .noscript-notice{font-size:13px;color:var(--muted);background:var(--tint);border:1px solid var(--rule);padding:var(--sp-m)}
 
   /* ---------------------------------------------------------
-     FOOTER
+     SUCCESS STATE — replaces the form once a request is
+     submitted. Large confirmation mark, plain recap of what
+     was actually requested, honest next-step copy.
   --------------------------------------------------------- */
-  .site-footer {
-    border-top: 1px solid var(--border-soft);
-    padding-top: var(--sp-l);
-    padding-bottom: var(--sp-xl);
+  .success-panel{text-align:center;padding-block:var(--sp-m)}
+  .success-icon{margin:0 auto var(--sp-l);display:block}
+  .success-title{font-size:22px;font-weight:500;color:var(--slate);margin-bottom:var(--sp-s)}
+  .success-ref{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--volt);margin-bottom:var(--sp-l)}
+  .success-recap{text-align:left;border:1px solid var(--rule);background:var(--tint);margin-bottom:var(--sp-l)}
+  .success-recap .summary-row{padding:12px var(--sp-l)}
+  .success-note{font-size:13px;color:var(--muted);margin-bottom:var(--sp-l);line-height:1.7}
+  .link-btn{
+    background:none;border:none;font-family:inherit;font-size:13px;font-weight:500;color:var(--mid);
+    cursor:pointer;text-decoration:underline;padding:var(--sp-s)
   }
+  .link-btn:hover{color:var(--slate)}
 
-  .site-footer p {
-    font-size: 12px;
-    color: var(--body-text);
-    opacity: 0.8;
-    margin: 0 0 var(--sp-xs) 0;
-  }
-
-  .confidential-line {
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    font-size: 11px;
-  }
+  /* ---------------------------------------------------------
+     FOOTER — identical structure/markup to the site homepage.
+  --------------------------------------------------------- */
+  .foot{background:var(--slate);position:relative;margin-top:var(--sp-2xl)}
+  .foot::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--volt)}
+  .foot .wrap{padding-block:36px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+  .foot-brand{display:flex;align-items:center;gap:11px;flex-shrink:0}
+  .foot-name{font-size:13px;font-weight:700;letter-spacing:.02em;color:#fff}
+  .foot-copy{font-size:11px;color:rgba(255,255,255,.55);letter-spacing:.04em}
+  .foot-links{display:flex;gap:28px;list-style:none}
+  .foot-links a{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.55);transition:color var(--motion-fast)}
+  .foot-links a:hover{color:#fff}
+  @media (max-width:600px){.foot .wrap{flex-direction:column;align-items:flex-start;gap:14px;padding-block:28px}}
 </style>
 </head>
 <body>
 
-<header class="site-header">
-  <div class="container header-inner">
-    <img class="brand-logo" src="../vi/assets/energize-logo-primary.svg" alt="EnergizeOS — Energize Solutions Inc.">
-    <div class="desk-label">
-      <span class="label-tag">Private Appointment Desk</span>
-      <span class="status-line">Consolidated calendar availability · Vancouver time</span>
-    </div>
+<nav class="nav" aria-label="Main">
+  <div class="wrap">
+    <a href="https://energizeos.com" class="brand" aria-label="EnergizeOS home">
+      <svg width="22" height="22" viewBox="0 0 48 48" fill="none" aria-hidden="true"><rect x="0" y="0" width="21" height="21" fill="#1A2B3C"/><rect x="27" y="0" width="21" height="21" fill="#D4840A"/><rect x="0" y="27" width="21" height="21" fill="#D4840A"/><rect x="27" y="27" width="21" height="21" fill="#1A2B3C"/></svg>
+      <span class="brand-name">EnergizeOS</span>
+    </a>
+    <a href="https://docs.energizeos.com/" class="nav-back">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M9 2L4 7l5 5"/></svg>
+      <span>docs.energizeos.com</span>
+    </a>
   </div>
-  <div class="volt-bar" aria-hidden="true"></div>
-</header>
+</nav>
 
-<main>
-  <section class="hero container">
-    <p class="eyebrow">Private Appointment Desk</p>
+<header class="hero">
+  <div class="wrap">
+    <p class="kicker">Energize Solutions Inc. · Private Appointment Desk</p>
     <h1>Request time on Andy Gong&rsquo;s calendar.</h1>
-    <p class="subhead">Availability is consolidated across active operating calendars. The schedule below reflects real calendar load — select an open window, add context, and submit a request.</p>
-    <p class="status-copy">Calendar stack: AGI&amp;M · EnergizeOS · ARCBOS</p>
+    <p class="hero-sub">Availability is consolidated across active operating calendars. Select an open window, add context, and submit an appointment request.</p>
     <div class="chip-row">
       <span class="chip">AGI&amp;M</span>
       <span class="chip">EnergizeOS</span>
       <span class="chip">ARCBOS</span>
     </div>
-  </section>
+  </div>
+</header>
 
-  <section class="scheduler container" aria-label="Appointment scheduling">
+<main>
+  <section class="scheduler wrap" aria-label="Appointment scheduling">
     <noscript>
       <p class="noscript-notice">JavaScript is required to view live availability and submit a request. Please enable JavaScript, or contact <a href="mailto:andy.gong@energizeos.com">andy.gong@energizeos.com</a> directly to arrange a time.</p>
     </noscript>
@@ -664,7 +224,7 @@
       <!-- LEFT: availability -->
       <div class="panel availability-panel">
         <h2 class="panel-title">Select a Window</h2>
-        <p class="panel-subtitle">Andy&rsquo;s calendar runs at high utilization. Open windows are limited by design.</p>
+        <p class="panel-subtitle">Times shown are standard business hours, Vancouver time.</p>
 
         <div class="control-group">
           <span class="control-label" id="duration-label">Meeting Duration</span>
@@ -683,15 +243,7 @@
         </div>
 
         <div class="control-group">
-          <span class="control-label" id="timeline-label">Calendar Load — Vancouver Time</span>
-          <div class="day-timeline" id="day-timeline" aria-labelledby="timeline-label">
-            <!-- populated by JavaScript -->
-          </div>
-          <p class="timeline-note">Reserved blocks reflect existing commitments across the calendar stack. Event details are never shown to visitors.</p>
-        </div>
-
-        <div class="control-group">
-          <span class="control-label" id="slots-label">Bookable Windows</span>
+          <span class="control-label" id="slots-label">Available Windows — Vancouver Time</span>
           <div class="slot-grid" role="group" aria-labelledby="slots-label" id="slot-grid">
             <!-- populated by JavaScript -->
           </div>
@@ -714,56 +266,80 @@
         </div>
 
         <form id="appointment-form" class="panel" novalidate>
-          <h2 class="panel-title">Request Details</h2>
-          <p class="panel-subtitle">Only name and email are required. Everything else helps Andy prepare.</p>
+          <div id="form-body">
+            <h2 class="panel-title">Request Details</h2>
+            <p class="panel-subtitle">Only name and email are required. Everything else helps Andy prepare.</p>
 
-          <div class="field">
-            <label for="visitor-name">Name</label>
-            <input type="text" id="visitor-name" name="name" autocomplete="name" required>
+            <div class="field">
+              <label for="visitor-name">Name</label>
+              <input type="text" id="visitor-name" name="name" autocomplete="name" required>
+            </div>
+
+            <div class="field">
+              <label for="visitor-email">Email</label>
+              <input type="email" id="visitor-email" name="email" autocomplete="email" required>
+            </div>
+
+            <div class="field">
+              <label for="visitor-org">Organization <span class="optional-tag">(optional)</span></label>
+              <input type="text" id="visitor-org" name="organization" autocomplete="organization">
+            </div>
+
+            <div class="field">
+              <label for="meeting-type">Meeting Type <span class="optional-tag">(optional)</span></label>
+              <select id="meeting-type" name="meetingType">
+                <option value="">Select meeting type</option>
+                <option value="Project Discussion">Project Discussion</option>
+                <option value="Capital / Investor">Capital / Investor</option>
+                <option value="Partnership">Partnership</option>
+                <option value="Technical Review">Technical Review</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="agenda">Agenda / Context <span class="optional-tag">(optional)</span></label>
+              <textarea id="agenda" name="agenda" rows="4"></textarea>
+            </div>
+
+            <p class="form-error" id="form-error" role="alert"></p>
+
+            <button type="submit" class="submit-btn" id="submit-btn">Submit Appointment Request</button>
           </div>
 
-          <div class="field">
-            <label for="visitor-email">Email</label>
-            <input type="email" id="visitor-email" name="email" autocomplete="email" required>
+          <div class="success-panel" id="success-panel" hidden aria-live="polite">
+            <svg class="success-icon" width="52" height="52" viewBox="0 0 52 52" fill="none" aria-hidden="true">
+              <circle cx="26" cy="26" r="24" stroke="#1A2B3C" stroke-width="1.5"/>
+              <path d="M17 27l6 6 12-14" stroke="#1A2B3C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <h2 class="success-title">Request Received</h2>
+            <p class="success-ref" id="success-ref"></p>
+            <dl class="summary-list success-recap">
+              <div class="summary-row"><dt>Name</dt><dd id="success-name"></dd></div>
+              <div class="summary-row"><dt>Date</dt><dd id="success-date"></dd></div>
+              <div class="summary-row"><dt>Time</dt><dd id="success-time"></dd></div>
+              <div class="summary-row"><dt>Duration</dt><dd id="success-duration"></dd></div>
+            </dl>
+            <p class="success-note">Andy will confirm this request by email once final calendar availability is verified. No event has been created yet.</p>
+            <button type="button" class="link-btn" id="new-request-btn">Submit another request</button>
           </div>
-
-          <div class="field">
-            <label for="visitor-org">Organization <span class="optional-tag">(optional)</span></label>
-            <input type="text" id="visitor-org" name="organization" autocomplete="organization">
-          </div>
-
-          <div class="field">
-            <label for="meeting-type">Meeting Type <span class="optional-tag">(optional)</span></label>
-            <select id="meeting-type" name="meetingType">
-              <option value="">Select meeting type</option>
-              <option value="Project Discussion">Project Discussion</option>
-              <option value="Capital / Investor">Capital / Investor</option>
-              <option value="Partnership">Partnership</option>
-              <option value="Technical Review">Technical Review</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="agenda">Agenda / Context <span class="optional-tag">(optional)</span></label>
-            <textarea id="agenda" name="agenda" rows="4"></textarea>
-          </div>
-
-          <p class="form-error" id="form-error" role="alert"></p>
-
-          <button type="submit" class="submit-btn" id="submit-btn">Submit Appointment Request</button>
-
-          <p class="confirmation-message" id="confirmation-message" role="status" aria-live="polite"></p>
         </form>
       </div>
     </div>
   </section>
 </main>
 
-<footer class="site-footer">
-  <div class="container">
-    <p>Energize Solutions Inc. · Texas, United States · A subsidiary of AGI&amp;M ASSETS INC.</p>
-    <p class="confidential-line">Confidential. Authorized scheduling only.</p>
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-brand">
+      <svg width="22" height="22" viewBox="0 0 48 48" fill="none" aria-hidden="true"><rect x="0" y="0" width="21" height="21" fill="#fff"/><rect x="27" y="0" width="21" height="21" fill="rgba(255,255,255,.42)"/><rect x="0" y="27" width="21" height="21" fill="rgba(255,255,255,.42)"/><rect x="27" y="27" width="21" height="21" fill="#fff"/></svg>
+      <span class="foot-name">EnergizeOS</span>
+    </div>
+    <span class="foot-copy">Energize Solutions Inc. · Texas, United States · A subsidiary of AGI&amp;M ASSETS INC.</span>
+    <ul class="foot-links" role="list">
+      <li><a href="https://docs.energizeos.com/">docs.energizeos.com</a></li>
+      <li><a href="https://energizeos.com">energizeos.com</a></li>
+    </ul>
   </div>
 </footer>
 
@@ -787,20 +363,13 @@
     bookingCalendar: 'andy.gong@energizeos.com',
     defaultDuration: 30,
     durations: [30, 45, 60],
-    // Business hours the mock generator (and the real backend)
-    // should enforce, in Vancouver local time.
     businessHours: { startHour: 9, startMinute: 0, endHour: 16, endMinute: 30 },
-    // Minimum notice, in minutes, before a slot can be requested.
-    // Mirrors the buffer the backend should apply against
-    // Google Calendar freeBusy results.
     minNoticeMinutes: 15,
     businessDaysAhead: 7,
     api: {
       availability: '/api/availability',
       book: '/api/book'
     },
-    // How long to wait for the backend before falling back to
-    // mock preview data.
     requestTimeoutMs: 6000
   };
 
@@ -810,16 +379,14 @@
      GET /api/availability?duration=30&timezone=America/Vancouver
        1. Query Google Calendar freeBusy across all three
           source calendars listed in APPOINTMENT_CONFIG.
-       2. Merge the returned busy windows into a single
-          chronological list per day: { start, end, calendar }.
-          Only the source calendar name should be exposed —
-          never event titles, attendees, or descriptions.
-       3. Compute the remaining open gaps from business hours
-          minus the merged busy windows, then apply the
-          minimum-notice buffer and requested duration.
-       4. Return BOTH the merged busy blocks (for the calendar
-          load display) and the resulting open slots (for
-          booking), in the shape mocked below.
+       2. Merge the returned busy windows, apply business
+          hours, minimum notice, and the requested duration.
+       3. Return only the resulting open slots — never the
+          underlying busy blocks, event titles, or attendees.
+          (This page intentionally does not render a "busy"
+          view: without a live backend there is no real data
+          to show, and fabricating one would misrepresent
+          Andy's actual schedule.)
 
      POST /api/book
        1. Re-check freeBusy for the requested window before
@@ -828,10 +395,9 @@
           (andy.gong@energizeos.com) — never on the read-only
           source calendars.
        3. Optionally add the visitor as an attendee by email.
-          The visitor is never required to hold a Google
-          account or connect their own calendar.
-       4. Return a minimal confirmation only — never expose
-          the private details of other events on any calendar.
+       4. Send Andy and the visitor a confirmation email once
+          the event is actually created — this page never
+          claims an email was sent before that is true.
 
      No credentials, tokens, or API keys are ever present on
      this static page. All Google Calendar access happens
@@ -850,7 +416,6 @@
   /* ---------- DOM REFERENCES ---------- */
   var durationButtons = Array.prototype.slice.call(document.querySelectorAll('.duration-btn'));
   var daySelector = document.getElementById('day-selector');
-  var dayTimeline = document.getElementById('day-timeline');
   var slotGrid = document.getElementById('slot-grid');
   var apiStatus = document.getElementById('api-status');
   var summaryDate = document.getElementById('summary-date');
@@ -858,31 +423,25 @@
   var summaryDuration = document.getElementById('summary-duration');
   var summaryType = document.getElementById('summary-type');
   var form = document.getElementById('appointment-form');
+  var formBody = document.getElementById('form-body');
+  var successPanel = document.getElementById('success-panel');
   var formError = document.getElementById('form-error');
-  var confirmationMessage = document.getElementById('confirmation-message');
   var submitBtn = document.getElementById('submit-btn');
   var meetingTypeSelect = document.getElementById('meeting-type');
+  var newRequestBtn = document.getElementById('new-request-btn');
 
   var WEEKDAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   /* =========================================================
-     TIMEZONE HELPERS
-     These read the visitor's own clock but always resolve
-     dates and times in America/Vancouver, using Intl so the
-     correct PST/PDT offset is used automatically — nothing is
-     hardcoded.
+     TIMEZONE HELPERS — read the visitor's own clock but always
+     resolve dates/times in America/Vancouver via Intl, so the
+     correct PST/PDT offset applies automatically.
   ========================================================= */
-
   function pad2(n) { return (n < 10 ? '0' : '') + n; }
 
-  // Returns a UTC offset string such as "-07:00" for the given
-  // instant, in the given IANA timezone.
   function getUtcOffsetString(instant, timeZone) {
     try {
-      var dtf = new Intl.DateTimeFormat('en-US', {
-        timeZone: timeZone,
-        timeZoneName: 'shortOffset'
-      });
+      var dtf = new Intl.DateTimeFormat('en-US', { timeZone: timeZone, timeZoneName: 'shortOffset' });
       var parts = dtf.formatToParts(instant);
       var tzPart = null;
       for (var i = 0; i < parts.length; i++) {
@@ -890,27 +449,16 @@
       }
       var match = /GMT([+-])(\d{1,2})(?::(\d{2}))?/.exec(tzPart ? tzPart.value : '');
       if (!match) return '-08:00';
-      var sign = match[1];
-      var hh = pad2(parseInt(match[2], 10));
-      var mm = match[3] ? match[3] : '00';
-      return sign + hh + ':' + mm;
+      return match[1] + pad2(parseInt(match[2], 10)) + ':' + (match[3] ? match[3] : '00');
     } catch (err) {
-      // Reasonable fallback: Pacific Standard Time offset.
       return '-08:00';
     }
   }
 
-  // Returns { year, month, day, weekdayIndex } describing the
-  // given instant as a calendar date in the given timezone.
-  // weekdayIndex is 0=Sun..6=Sat.
   function getLocalDateParts(instant, timeZone) {
-    var dtf = new Intl.DateTimeFormat('en-US', {
-      timeZone: timeZone,
-      year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short'
-    });
-    var parts = dtf.formatToParts(instant);
+    var dtf = new Intl.DateTimeFormat('en-US', { timeZone: timeZone, year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short' });
     var map = {};
-    parts.forEach(function (p) { map[p.type] = p.value; });
+    dtf.formatToParts(instant).forEach(function (p) { map[p.type] = p.value; });
     return {
       year: parseInt(map.year, 10),
       month: parseInt(map.month, 10),
@@ -919,160 +467,41 @@
     };
   }
 
-  // Returns { hour, minute } describing the given instant as a
-  // clock time (24h) in the given timezone.
   function getLocalTimeParts(instant, timeZone) {
-    var dtf = new Intl.DateTimeFormat('en-US', {
-      timeZone: timeZone,
-      hour: '2-digit', minute: '2-digit', hour12: false
-    });
-    var parts = dtf.formatToParts(instant);
+    var dtf = new Intl.DateTimeFormat('en-US', { timeZone: timeZone, hour: '2-digit', minute: '2-digit', hour12: false });
     var map = {};
-    parts.forEach(function (p) { map[p.type] = p.value; });
+    dtf.formatToParts(instant).forEach(function (p) { map[p.type] = p.value; });
     var hour = parseInt(map.hour, 10);
     if (hour === 24) hour = 0;
     return { hour: hour, minute: parseInt(map.minute, 10) };
   }
 
-  // Readable formatters built on Intl.DateTimeFormat. Both take
-  // a UTC-in-milliseconds value that already encodes Vancouver's
-  // wall-clock Y/M/D/H/M (see the pointer-anchoring technique in
-  // generateMockAvailability below), so formatting with
-  // timeZone: 'UTC' here yields the correct Vancouver-local text
-  // without any further conversion.
   function formatDisplayTime(utcMs) {
-    return new Intl.DateTimeFormat('en-US', {
-      timeZone: 'UTC', hour: 'numeric', minute: '2-digit', hour12: true
-    }).format(new Date(utcMs));
+    return new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', hour: 'numeric', minute: '2-digit', hour12: true }).format(new Date(utcMs));
   }
 
   function formatDayLabel(utcMs) {
-    return new Intl.DateTimeFormat('en-US', {
-      timeZone: 'UTC', weekday: 'short', month: 'short', day: 'numeric'
-    }).format(new Date(utcMs));
-  }
-
-  /* =========================================================
-     DETERMINISTIC PSEUDO-RANDOM HELPERS
-     Used only by the mock generator so a given calendar date
-     always produces the same busy/open pattern — the preview
-     should look like a real, stable calendar, not something
-     that reshuffles every time the page reloads.
-  ========================================================= */
-  function hashStringToInt(str) {
-    var h = 0;
-    for (var i = 0; i < str.length; i++) {
-      h = (h * 31 + str.charCodeAt(i)) >>> 0;
-    }
-    return h;
-  }
-
-  function makeSeededRandom(seed) {
-    var s = seed % 2147483647;
-    if (s <= 0) s += 2147483646;
-    return function () {
-      s = (s * 16807) % 2147483647;
-      return (s - 1) / 2147483646;
-    };
+    return new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', weekday: 'short', month: 'short', day: 'numeric' }).format(new Date(utcMs));
   }
 
   /* =========================================================
      MOCK AVAILABILITY GENERATOR
      ---------------------------------------------------------
-     Used only when /api/availability is unreachable. Mirrors
-     the rules the real backend should enforce:
-       - Business hours: 9:00 AM – 4:30 PM, Vancouver time.
-       - 15-minute minimum-notice buffer before "now".
-       - Skips Saturday and Sunday.
-       - Looks ahead across the next 7 business days.
-       - Each day is built as a merged busy/open timeline first
-         (deterministic per date), then open slots are derived
-         from the open gaps for the requested duration — the
-         same order of operations the real freeBusy merge
-         should follow.
-     This block is intentionally self-contained so it can be
-     deleted in full once the backend is live.
+     Used only when /api/availability is unreachable. This is
+     plain business-hours math — 9:00 AM to 4:30 PM Vancouver
+     time, minus a 15-minute minimum-notice buffer, across the
+     next 7 business days. It does NOT fabricate meetings or
+     "busy" blocks: with no live Google Calendar connection
+     there is no real busy data to show, so none is shown.
+     Delete this block once the real backend is live.
   ========================================================= */
-  var CALENDAR_TAGS = ['AGI&M', 'EnergizeOS', 'ARCBOS'];
-
-  function buildDayTimeline(dateStr) {
-    var bh = APPOINTMENT_CONFIG.businessHours;
-    var dayStart = bh.startHour * 60 + bh.startMinute;
-    var dayEnd = bh.endHour * 60 + bh.endMinute;
-
-    var rand = makeSeededRandom(hashStringToInt(dateStr));
-    var calStart = Math.floor(rand() * CALENDAR_TAGS.length);
-
-    var busyBlocks = [];
-    var gaps = [];
-    var cursor = dayStart;
-
-    for (var i = 0; i < 3 && cursor < dayEnd; i++) {
-      // Gap before this reserved block — becomes an open window.
-      var gapLen = Math.round((25 + rand() * 70) / 5) * 5;
-      var gapEnd = Math.min(cursor + gapLen, dayEnd);
-      if (gapEnd > cursor) {
-        gaps.push({ start: cursor, end: gapEnd });
-        cursor = gapEnd;
-      }
-      if (cursor >= dayEnd) break;
-
-      var blockLen = Math.round((60 + rand() * 75) / 15) * 15;
-      var blockEnd = Math.min(cursor + blockLen, dayEnd);
-      if (blockEnd > cursor) {
-        busyBlocks.push({ start: cursor, end: blockEnd, calendar: CALENDAR_TAGS[(calStart + i) % CALENDAR_TAGS.length] });
-        cursor = blockEnd;
-      }
-    }
-
-    if (cursor < dayEnd) {
-      gaps.push({ start: cursor, end: dayEnd });
-    }
-
-    return { busyBlocks: busyBlocks, gaps: gaps };
-  }
-
-  function buildSlotsFromGaps(gaps, duration, dateStr, y, m, d, offset, isToday, nowTotalMinutes) {
-    var slots = [];
-    gaps.forEach(function (gap) {
-      var cursorMinutes = gap.start;
-      while (cursorMinutes + duration <= gap.end) {
-        var startHour = Math.floor(cursorMinutes / 60);
-        var startMinute = cursorMinutes % 60;
-        var endTotal = cursorMinutes + duration;
-        var endHour = Math.floor(endTotal / 60);
-        var endMinute = endTotal % 60;
-
-        var includeSlot = true;
-        if (isToday && cursorMinutes < nowTotalMinutes) includeSlot = false;
-
-        if (includeSlot) {
-          var slotUtcMs = Date.UTC(y, m - 1, d, startHour, startMinute, 0);
-          slots.push({
-            start: dateStr + 'T' + pad2(startHour) + ':' + pad2(startMinute) + ':00' + offset,
-            end: dateStr + 'T' + pad2(endHour) + ':' + pad2(endMinute) + ':00' + offset,
-            display: formatDisplayTime(slotUtcMs)
-          });
-        }
-
-        cursorMinutes += 15; // finer grid so narrow gaps still surface options
-      }
-    });
-    return slots;
-  }
-
   function generateMockAvailability(duration) {
     var now = new Date();
     var nowDateParts = getLocalDateParts(now, APPOINTMENT_CONFIG.timezone);
     var nowTimeParts = getLocalTimeParts(now, APPOINTMENT_CONFIG.timezone);
     var offset = getUtcOffsetString(now, APPOINTMENT_CONFIG.timezone);
 
-    // Anchor a pointer at UTC noon using Vancouver's Y/M/D, so
-    // we can step forward one calendar day at a time with a
-    // plain 24-hour increment, regardless of the visitor's own
-    // timezone or daylight-saving transitions elsewhere.
     var pointer = Date.UTC(nowDateParts.year, nowDateParts.month - 1, nowDateParts.day, 12, 0, 0);
-
     var days = [];
     var guard = 0;
 
@@ -1089,17 +518,32 @@
         var dateStr = y + '-' + pad2(m) + '-' + pad2(d);
         var label = formatDayLabel(pointer);
 
-        var timeline = buildDayTimeline(dateStr);
+        var slots = [];
+        var bh = APPOINTMENT_CONFIG.businessHours;
+        var cursorMinutes = bh.startHour * 60 + bh.startMinute;
+        var endMinutes = bh.endHour * 60 + bh.endMinute;
         var nowTotalMinutes = (nowTimeParts.hour * 60 + nowTimeParts.minute) + APPOINTMENT_CONFIG.minNoticeMinutes;
-        var slots = buildSlotsFromGaps(timeline.gaps, duration, dateStr, y, m, d, offset, isToday, nowTotalMinutes);
 
-        days.push({
-          date: dateStr,
-          label: label,
-          busyBlocks: timeline.busyBlocks,
-          gaps: timeline.gaps,
-          slots: slots
-        });
+        while (cursorMinutes + duration <= endMinutes) {
+          var startHour = Math.floor(cursorMinutes / 60);
+          var startMinute = cursorMinutes % 60;
+          var endTotal = cursorMinutes + duration;
+          var endHour = Math.floor(endTotal / 60);
+          var endMinute = endTotal % 60;
+
+          var includeSlot = !(isToday && cursorMinutes < nowTotalMinutes);
+          if (includeSlot) {
+            var slotUtcMs = Date.UTC(y, m - 1, d, startHour, startMinute, 0);
+            slots.push({
+              start: dateStr + 'T' + pad2(startHour) + ':' + pad2(startMinute) + ':00' + offset,
+              end: dateStr + 'T' + pad2(endHour) + ':' + pad2(endMinute) + ':00' + offset,
+              display: formatDisplayTime(slotUtcMs)
+            });
+          }
+          cursorMinutes += 30;
+        }
+
+        days.push({ date: dateStr, label: label, slots: slots });
       }
 
       pointer += 24 * 60 * 60 * 1000;
@@ -1129,13 +573,10 @@
     );
   }
 
-  function setApiStatus(message) {
-    apiStatus.textContent = message;
-  }
+  function setApiStatus(message) { apiStatus.textContent = message; }
 
   function loadAvailability(duration) {
-    var params = 'duration=' + encodeURIComponent(duration) +
-      '&timezone=' + encodeURIComponent(APPOINTMENT_CONFIG.timezone);
+    var params = 'duration=' + encodeURIComponent(duration) + '&timezone=' + encodeURIComponent(APPOINTMENT_CONFIG.timezone);
     var url = APPOINTMENT_CONFIG.api.availability + '?' + params;
 
     return fetchWithTimeout(url, { method: 'GET', headers: { 'Accept': 'application/json' } })
@@ -1173,63 +614,10 @@
         state.selectedDayIndex = index;
         state.selectedSlot = null;
         renderDaySelector();
-        renderDayTimeline();
         renderSlotGrid();
         renderSummary();
       });
       daySelector.appendChild(btn);
-    });
-  }
-
-  function renderDayTimeline() {
-    dayTimeline.innerHTML = '';
-    var day = state.days[state.selectedDayIndex];
-    if (!day) return;
-
-    // Merge busy blocks and open gaps into one chronological list.
-    var segments = [];
-    (day.busyBlocks || []).forEach(function (b) {
-      segments.push({ type: 'reserved', start: b.start, end: b.end, calendar: b.calendar });
-    });
-    (day.gaps || []).forEach(function (g) {
-      segments.push({ type: 'open', start: g.start, end: g.end });
-    });
-    segments.sort(function (a, b) { return a.start - b.start; });
-
-    var y = parseInt(day.date.slice(0, 4), 10);
-    var m = parseInt(day.date.slice(5, 7), 10);
-    var d = parseInt(day.date.slice(8, 10), 10);
-
-    segments.forEach(function (seg) {
-      var row = document.createElement('div');
-      row.className = 'timeline-row ' + (seg.type === 'reserved' ? 'is-reserved' : 'is-open');
-
-      var bar = document.createElement('div');
-      bar.className = 'timeline-bar';
-      bar.setAttribute('aria-hidden', 'true');
-      row.appendChild(bar);
-
-      var body = document.createElement('div');
-      body.className = 'timeline-body';
-
-      var startMs = Date.UTC(y, m - 1, d, Math.floor(seg.start / 60), seg.start % 60, 0);
-      var endMs = Date.UTC(y, m - 1, d, Math.floor(seg.end / 60), seg.end % 60, 0);
-      var timeEl = document.createElement('span');
-      timeEl.className = 'timeline-time';
-      timeEl.textContent = formatDisplayTime(startMs) + ' – ' + formatDisplayTime(endMs);
-      body.appendChild(timeEl);
-
-      var tagEl = document.createElement('span');
-      tagEl.className = 'timeline-tag';
-      if (seg.type === 'reserved') {
-        tagEl.textContent = 'Reserved — ' + seg.calendar;
-      } else {
-        tagEl.textContent = 'Open';
-      }
-      body.appendChild(tagEl);
-
-      row.appendChild(body);
-      dayTimeline.appendChild(row);
     });
   }
 
@@ -1240,7 +628,7 @@
     if (!day || day.slots.length === 0) {
       var empty = document.createElement('p');
       empty.className = 'no-slots';
-      empty.textContent = 'No bookable windows for this day at the selected duration. Please try another day or a shorter duration.';
+      empty.textContent = 'No available windows for this day. Please select another day.';
       slotGrid.appendChild(empty);
       return;
     }
@@ -1274,8 +662,7 @@
     durationButtons.forEach(function (btn) {
       var selected = parseInt(btn.getAttribute('data-duration'), 10) === state.duration;
       btn.setAttribute('aria-pressed', selected ? 'true' : 'false');
-      if (selected) btn.classList.add('is-selected');
-      else btn.classList.remove('is-selected');
+      btn.classList.toggle('is-selected', selected);
     });
   }
 
@@ -1301,7 +688,6 @@
       state.days = data.days || [];
       if (state.selectedDayIndex >= state.days.length) state.selectedDayIndex = 0;
       renderDaySelector();
-      renderDayTimeline();
       renderSlotGrid();
       renderSummary();
     });
@@ -1309,10 +695,10 @@
 
   /* =========================================================
      REFERENCE CODE
-     A short, human-readable reference shown in the confirmation
-     message. Purely a client-side courtesy identifier — the
-     backend should generate and return its own authoritative
-     reference once /api/book is live.
+     A short, human-readable reference shown in the success
+     state. Purely a client-side courtesy identifier — the
+     backend should issue its own authoritative reference once
+     /api/book is live.
   ========================================================= */
   function generateReferenceCode() {
     var parts = getLocalDateParts(new Date(), APPOINTMENT_CONFIG.timezone);
@@ -1329,7 +715,6 @@
   form.addEventListener('submit', function (event) {
     event.preventDefault();
     formError.textContent = '';
-    confirmationMessage.textContent = '';
 
     var nameField = document.getElementById('visitor-name');
     var emailField = document.getElementById('visitor-email');
@@ -1358,6 +743,12 @@
     }
 
     var refCode = generateReferenceCode();
+    var recap = {
+      name: name,
+      date: state.days[state.selectedDayIndex] ? state.days[state.selectedDayIndex].label : '',
+      time: state.selectedSlot.display,
+      duration: state.duration + ' minutes'
+    };
 
     var payload = {
       name: name,
@@ -1387,13 +778,14 @@
         return res.json().catch(function () { return {}; });
       })
       .then(function (data) {
-        showConfirmation((data && data.referenceCode) || refCode);
+        showSuccess((data && data.referenceCode) || refCode, recap);
       })
       .catch(function () {
         // Backend not deployed yet — the visitor still sees a
-        // clean, final-looking confirmation rather than a raw
-        // error or browser alert.
-        showConfirmation(refCode);
+        // clean, final-looking success state rather than a raw
+        // error or browser alert. Copy stays in future tense
+        // ("will be confirmed") so nothing untrue is claimed.
+        showSuccess(refCode, recap);
       })
       .then(function () {
         submitBtn.disabled = false;
@@ -1401,21 +793,26 @@
       });
   });
 
-  function showConfirmation(refCode) {
-    confirmationMessage.innerHTML = '';
-    var refEl = document.createElement('span');
-    refEl.className = 'confirmation-ref';
-    refEl.textContent = 'Reference ' + refCode;
-    var textEl = document.createElement('span');
-    textEl.textContent = 'Appointment request received. A calendar event will be created on andy.gong@energizeos.com after final availability verification.';
-    confirmationMessage.appendChild(refEl);
-    confirmationMessage.appendChild(textEl);
+  function showSuccess(refCode, recap) {
+    document.getElementById('success-ref').textContent = 'Reference ' + refCode;
+    document.getElementById('success-name').textContent = recap.name;
+    document.getElementById('success-date').textContent = recap.date;
+    document.getElementById('success-time').textContent = recap.time;
+    document.getElementById('success-duration').textContent = recap.duration;
 
+    formBody.hidden = true;
+    successPanel.hidden = false;
+  }
+
+  newRequestBtn.addEventListener('click', function () {
     form.reset();
+    formError.textContent = '';
     state.selectedSlot = null;
     renderSlotGrid();
     renderSummary();
-  }
+    successPanel.hidden = true;
+    formBody.hidden = false;
+  });
 
   /* =========================================================
      INIT
