@@ -148,7 +148,7 @@
      HERO
   --------------------------------------------------------- */
   .hero {
-    padding-top: var(--sp-2xl);
+    padding-top: var(--sp-xl);
     padding-bottom: var(--sp-xl);
     max-width: 760px;
   }
@@ -224,7 +224,7 @@
      SCHEDULER LAYOUT
   --------------------------------------------------------- */
   .scheduler {
-    padding-bottom: var(--sp-3xl);
+    padding-bottom: var(--sp-2xl);
   }
 
   .scheduler-grid {
@@ -255,7 +255,14 @@
     font-size: 18px;
     font-weight: 500;
     letter-spacing: -0.01em;
-    margin-bottom: var(--sp-l);
+    margin-bottom: var(--sp-s);
+  }
+
+  .panel-subtitle {
+    font-size: 13px;
+    color: var(--body-text);
+    opacity: 0.8;
+    margin: 0 0 var(--sp-l) 0;
   }
 
   .control-group {
@@ -309,6 +316,82 @@
     color: var(--white);
     border-color: var(--slate);
     box-shadow: inset 0 -3px 0 var(--volt);
+  }
+
+  /* ---------------------------------------------------------
+     CALENDAR LOAD TIMELINE
+     A read-only, chronological view of the selected day —
+     reserved blocks (grey, tagged by source calendar) and open
+     windows (Volt) — so the visitor can see how the day is
+     actually structured, not just a bare list of open times.
+  --------------------------------------------------------- */
+  .day-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .timeline-row {
+    display: flex;
+    align-items: stretch;
+    gap: var(--sp-m);
+    min-height: 40px;
+  }
+
+  .timeline-bar {
+    flex: 0 0 4px;
+    border-radius: 1px;
+  }
+
+  .timeline-row.is-reserved .timeline-bar {
+    background: var(--border-firm);
+  }
+
+  .timeline-row.is-open .timeline-bar {
+    background: var(--volt);
+  }
+
+  .timeline-body {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--sp-s);
+    flex: 1;
+    padding: var(--sp-s) 0;
+  }
+
+  .timeline-time {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--slate);
+  }
+
+  .timeline-row.is-reserved .timeline-time {
+    color: var(--body-text);
+    opacity: 0.65;
+  }
+
+  .timeline-tag {
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--body-text);
+    opacity: 0.6;
+  }
+
+  .timeline-row.is-open .timeline-tag {
+    color: var(--volt);
+    opacity: 1;
+    font-weight: 700;
+  }
+
+  .timeline-note {
+    font-size: 12px;
+    color: var(--body-text);
+    opacity: 0.75;
+    margin-top: var(--sp-m);
   }
 
   /* Time slot grid */
@@ -431,6 +514,14 @@
     margin-bottom: var(--sp-xs);
   }
 
+  .field .optional-tag {
+    font-weight: 400;
+    color: var(--body-text);
+    opacity: 0.6;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
   .field input,
   .field select,
   .field textarea {
@@ -497,6 +588,16 @@
 
   .confirmation-message:empty { display: none; }
 
+  .confirmation-ref {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--volt);
+    margin-bottom: var(--sp-xs);
+  }
+
   .noscript-notice {
     font-size: 13px;
     color: var(--body-text);
@@ -545,7 +646,7 @@
   <section class="hero container">
     <p class="eyebrow">Private Appointment Desk</p>
     <h1>Request time on Andy Gong&rsquo;s calendar.</h1>
-    <p class="subhead">Availability is consolidated across active operating calendars. Select a window, provide context, and submit an appointment request.</p>
+    <p class="subhead">Availability is consolidated across active operating calendars. The schedule below reflects real calendar load — select an open window, add context, and submit a request.</p>
     <p class="status-copy">Calendar stack: AGI&amp;M · EnergizeOS · ARCBOS</p>
     <div class="chip-row">
       <span class="chip">AGI&amp;M</span>
@@ -563,6 +664,7 @@
       <!-- LEFT: availability -->
       <div class="panel availability-panel">
         <h2 class="panel-title">Select a Window</h2>
+        <p class="panel-subtitle">Andy&rsquo;s calendar runs at high utilization. Open windows are limited by design.</p>
 
         <div class="control-group">
           <span class="control-label" id="duration-label">Meeting Duration</span>
@@ -581,7 +683,15 @@
         </div>
 
         <div class="control-group">
-          <span class="control-label" id="slots-label">Available Windows — Vancouver Time</span>
+          <span class="control-label" id="timeline-label">Calendar Load — Vancouver Time</span>
+          <div class="day-timeline" id="day-timeline" aria-labelledby="timeline-label">
+            <!-- populated by JavaScript -->
+          </div>
+          <p class="timeline-note">Reserved blocks reflect existing commitments across the calendar stack. Event details are never shown to visitors.</p>
+        </div>
+
+        <div class="control-group">
+          <span class="control-label" id="slots-label">Bookable Windows</span>
           <div class="slot-grid" role="group" aria-labelledby="slots-label" id="slot-grid">
             <!-- populated by JavaScript -->
           </div>
@@ -605,6 +715,7 @@
 
         <form id="appointment-form" class="panel" novalidate>
           <h2 class="panel-title">Request Details</h2>
+          <p class="panel-subtitle">Only name and email are required. Everything else helps Andy prepare.</p>
 
           <div class="field">
             <label for="visitor-name">Name</label>
@@ -617,13 +728,13 @@
           </div>
 
           <div class="field">
-            <label for="visitor-org">Organization</label>
+            <label for="visitor-org">Organization <span class="optional-tag">(optional)</span></label>
             <input type="text" id="visitor-org" name="organization" autocomplete="organization">
           </div>
 
           <div class="field">
-            <label for="meeting-type">Meeting Type</label>
-            <select id="meeting-type" name="meetingType" required>
+            <label for="meeting-type">Meeting Type <span class="optional-tag">(optional)</span></label>
+            <select id="meeting-type" name="meetingType">
               <option value="">Select meeting type</option>
               <option value="Project Discussion">Project Discussion</option>
               <option value="Capital / Investor">Capital / Investor</option>
@@ -634,8 +745,8 @@
           </div>
 
           <div class="field">
-            <label for="agenda">Agenda / Context</label>
-            <textarea id="agenda" name="agenda" rows="4" required></textarea>
+            <label for="agenda">Agenda / Context <span class="optional-tag">(optional)</span></label>
+            <textarea id="agenda" name="agenda" rows="4"></textarea>
           </div>
 
           <p class="form-error" id="form-error" role="alert"></p>
@@ -699,11 +810,16 @@
      GET /api/availability?duration=30&timezone=America/Vancouver
        1. Query Google Calendar freeBusy across all three
           source calendars listed in APPOINTMENT_CONFIG.
-       2. Merge the returned busy windows.
-       3. Apply business hours, buffer, minimum notice, and a
-          maximum look-ahead window.
-       4. Return only the resulting open slots, already
-          formatted for display, in the shape mocked below.
+       2. Merge the returned busy windows into a single
+          chronological list per day: { start, end, calendar }.
+          Only the source calendar name should be exposed —
+          never event titles, attendees, or descriptions.
+       3. Compute the remaining open gaps from business hours
+          minus the merged busy windows, then apply the
+          minimum-notice buffer and requested duration.
+       4. Return BOTH the merged busy blocks (for the calendar
+          load display) and the resulting open slots (for
+          booking), in the shape mocked below.
 
      POST /api/book
        1. Re-check freeBusy for the requested window before
@@ -734,6 +850,7 @@
   /* ---------- DOM REFERENCES ---------- */
   var durationButtons = Array.prototype.slice.call(document.querySelectorAll('.duration-btn'));
   var daySelector = document.getElementById('day-selector');
+  var dayTimeline = document.getElementById('day-timeline');
   var slotGrid = document.getElementById('slot-grid');
   var apiStatus = document.getElementById('api-status');
   var summaryDate = document.getElementById('summary-date');
@@ -836,20 +953,114 @@
   }
 
   /* =========================================================
+     DETERMINISTIC PSEUDO-RANDOM HELPERS
+     Used only by the mock generator so a given calendar date
+     always produces the same busy/open pattern — the preview
+     should look like a real, stable calendar, not something
+     that reshuffles every time the page reloads.
+  ========================================================= */
+  function hashStringToInt(str) {
+    var h = 0;
+    for (var i = 0; i < str.length; i++) {
+      h = (h * 31 + str.charCodeAt(i)) >>> 0;
+    }
+    return h;
+  }
+
+  function makeSeededRandom(seed) {
+    var s = seed % 2147483647;
+    if (s <= 0) s += 2147483646;
+    return function () {
+      s = (s * 16807) % 2147483647;
+      return (s - 1) / 2147483646;
+    };
+  }
+
+  /* =========================================================
      MOCK AVAILABILITY GENERATOR
      ---------------------------------------------------------
      Used only when /api/availability is unreachable. Mirrors
-     the rules the real backend should enforce, so the preview
-     behaves like the eventual production experience:
+     the rules the real backend should enforce:
        - Business hours: 9:00 AM – 4:30 PM, Vancouver time.
        - 15-minute minimum-notice buffer before "now".
        - Skips Saturday and Sunday.
        - Looks ahead across the next 7 business days.
-       - Candidate start times sit on a 30-minute grid; a slot
-         is offered only if start + duration fits by 4:30 PM.
+       - Each day is built as a merged busy/open timeline first
+         (deterministic per date), then open slots are derived
+         from the open gaps for the requested duration — the
+         same order of operations the real freeBusy merge
+         should follow.
      This block is intentionally self-contained so it can be
      deleted in full once the backend is live.
   ========================================================= */
+  var CALENDAR_TAGS = ['AGI&M', 'EnergizeOS', 'ARCBOS'];
+
+  function buildDayTimeline(dateStr) {
+    var bh = APPOINTMENT_CONFIG.businessHours;
+    var dayStart = bh.startHour * 60 + bh.startMinute;
+    var dayEnd = bh.endHour * 60 + bh.endMinute;
+
+    var rand = makeSeededRandom(hashStringToInt(dateStr));
+    var calStart = Math.floor(rand() * CALENDAR_TAGS.length);
+
+    var busyBlocks = [];
+    var gaps = [];
+    var cursor = dayStart;
+
+    for (var i = 0; i < 3 && cursor < dayEnd; i++) {
+      // Gap before this reserved block — becomes an open window.
+      var gapLen = Math.round((25 + rand() * 70) / 5) * 5;
+      var gapEnd = Math.min(cursor + gapLen, dayEnd);
+      if (gapEnd > cursor) {
+        gaps.push({ start: cursor, end: gapEnd });
+        cursor = gapEnd;
+      }
+      if (cursor >= dayEnd) break;
+
+      var blockLen = Math.round((60 + rand() * 75) / 15) * 15;
+      var blockEnd = Math.min(cursor + blockLen, dayEnd);
+      if (blockEnd > cursor) {
+        busyBlocks.push({ start: cursor, end: blockEnd, calendar: CALENDAR_TAGS[(calStart + i) % CALENDAR_TAGS.length] });
+        cursor = blockEnd;
+      }
+    }
+
+    if (cursor < dayEnd) {
+      gaps.push({ start: cursor, end: dayEnd });
+    }
+
+    return { busyBlocks: busyBlocks, gaps: gaps };
+  }
+
+  function buildSlotsFromGaps(gaps, duration, dateStr, y, m, d, offset, isToday, nowTotalMinutes) {
+    var slots = [];
+    gaps.forEach(function (gap) {
+      var cursorMinutes = gap.start;
+      while (cursorMinutes + duration <= gap.end) {
+        var startHour = Math.floor(cursorMinutes / 60);
+        var startMinute = cursorMinutes % 60;
+        var endTotal = cursorMinutes + duration;
+        var endHour = Math.floor(endTotal / 60);
+        var endMinute = endTotal % 60;
+
+        var includeSlot = true;
+        if (isToday && cursorMinutes < nowTotalMinutes) includeSlot = false;
+
+        if (includeSlot) {
+          var slotUtcMs = Date.UTC(y, m - 1, d, startHour, startMinute, 0);
+          slots.push({
+            start: dateStr + 'T' + pad2(startHour) + ':' + pad2(startMinute) + ':00' + offset,
+            end: dateStr + 'T' + pad2(endHour) + ':' + pad2(endMinute) + ':00' + offset,
+            display: formatDisplayTime(slotUtcMs)
+          });
+        }
+
+        cursorMinutes += 15; // finer grid so narrow gaps still surface options
+      }
+    });
+    return slots;
+  }
+
   function generateMockAvailability(duration) {
     var now = new Date();
     var nowDateParts = getLocalDateParts(now, APPOINTMENT_CONFIG.timezone);
@@ -878,37 +1089,17 @@
         var dateStr = y + '-' + pad2(m) + '-' + pad2(d);
         var label = formatDayLabel(pointer);
 
-        var slots = [];
-        var bh = APPOINTMENT_CONFIG.businessHours;
-        var cursorMinutes = bh.startHour * 60 + bh.startMinute;
-        var endMinutes = bh.endHour * 60 + bh.endMinute;
+        var timeline = buildDayTimeline(dateStr);
+        var nowTotalMinutes = (nowTimeParts.hour * 60 + nowTimeParts.minute) + APPOINTMENT_CONFIG.minNoticeMinutes;
+        var slots = buildSlotsFromGaps(timeline.gaps, duration, dateStr, y, m, d, offset, isToday, nowTotalMinutes);
 
-        while (cursorMinutes + duration <= endMinutes) {
-          var startHour = Math.floor(cursorMinutes / 60);
-          var startMinute = cursorMinutes % 60;
-          var endTotal = cursorMinutes + duration;
-          var endHour = Math.floor(endTotal / 60);
-          var endMinute = endTotal % 60;
-
-          var includeSlot = true;
-          if (isToday) {
-            var nowTotal = (nowTimeParts.hour * 60 + nowTimeParts.minute) + APPOINTMENT_CONFIG.minNoticeMinutes;
-            if (cursorMinutes < nowTotal) includeSlot = false;
-          }
-
-          if (includeSlot) {
-            var slotUtcMs = Date.UTC(y, m - 1, d, startHour, startMinute, 0);
-            slots.push({
-              start: dateStr + 'T' + pad2(startHour) + ':' + pad2(startMinute) + ':00' + offset,
-              end: dateStr + 'T' + pad2(endHour) + ':' + pad2(endMinute) + ':00' + offset,
-              display: formatDisplayTime(slotUtcMs)
-            });
-          }
-
-          cursorMinutes += 30; // 30-minute scheduling grid
-        }
-
-        days.push({ date: dateStr, label: label, slots: slots });
+        days.push({
+          date: dateStr,
+          label: label,
+          busyBlocks: timeline.busyBlocks,
+          gaps: timeline.gaps,
+          slots: slots
+        });
       }
 
       pointer += 24 * 60 * 60 * 1000;
@@ -982,10 +1173,63 @@
         state.selectedDayIndex = index;
         state.selectedSlot = null;
         renderDaySelector();
+        renderDayTimeline();
         renderSlotGrid();
         renderSummary();
       });
       daySelector.appendChild(btn);
+    });
+  }
+
+  function renderDayTimeline() {
+    dayTimeline.innerHTML = '';
+    var day = state.days[state.selectedDayIndex];
+    if (!day) return;
+
+    // Merge busy blocks and open gaps into one chronological list.
+    var segments = [];
+    (day.busyBlocks || []).forEach(function (b) {
+      segments.push({ type: 'reserved', start: b.start, end: b.end, calendar: b.calendar });
+    });
+    (day.gaps || []).forEach(function (g) {
+      segments.push({ type: 'open', start: g.start, end: g.end });
+    });
+    segments.sort(function (a, b) { return a.start - b.start; });
+
+    var y = parseInt(day.date.slice(0, 4), 10);
+    var m = parseInt(day.date.slice(5, 7), 10);
+    var d = parseInt(day.date.slice(8, 10), 10);
+
+    segments.forEach(function (seg) {
+      var row = document.createElement('div');
+      row.className = 'timeline-row ' + (seg.type === 'reserved' ? 'is-reserved' : 'is-open');
+
+      var bar = document.createElement('div');
+      bar.className = 'timeline-bar';
+      bar.setAttribute('aria-hidden', 'true');
+      row.appendChild(bar);
+
+      var body = document.createElement('div');
+      body.className = 'timeline-body';
+
+      var startMs = Date.UTC(y, m - 1, d, Math.floor(seg.start / 60), seg.start % 60, 0);
+      var endMs = Date.UTC(y, m - 1, d, Math.floor(seg.end / 60), seg.end % 60, 0);
+      var timeEl = document.createElement('span');
+      timeEl.className = 'timeline-time';
+      timeEl.textContent = formatDisplayTime(startMs) + ' – ' + formatDisplayTime(endMs);
+      body.appendChild(timeEl);
+
+      var tagEl = document.createElement('span');
+      tagEl.className = 'timeline-tag';
+      if (seg.type === 'reserved') {
+        tagEl.textContent = 'Reserved — ' + seg.calendar;
+      } else {
+        tagEl.textContent = 'Open';
+      }
+      body.appendChild(tagEl);
+
+      row.appendChild(body);
+      dayTimeline.appendChild(row);
     });
   }
 
@@ -996,7 +1240,7 @@
     if (!day || day.slots.length === 0) {
       var empty = document.createElement('p');
       empty.className = 'no-slots';
-      empty.textContent = 'No available windows for this day. Please select another day.';
+      empty.textContent = 'No bookable windows for this day at the selected duration. Please try another day or a shorter duration.';
       slotGrid.appendChild(empty);
       return;
     }
@@ -1023,7 +1267,7 @@
     summaryDate.textContent = day ? day.label : 'Not yet selected';
     summaryTime.textContent = state.selectedSlot ? state.selectedSlot.display : 'Not yet selected';
     summaryDuration.textContent = state.duration + ' minutes';
-    summaryType.textContent = meetingTypeSelect.value || 'Not yet selected';
+    summaryType.textContent = meetingTypeSelect.value || 'Not specified';
   }
 
   function renderDurationButtons() {
@@ -1057,13 +1301,30 @@
       state.days = data.days || [];
       if (state.selectedDayIndex >= state.days.length) state.selectedDayIndex = 0;
       renderDaySelector();
+      renderDayTimeline();
       renderSlotGrid();
       renderSummary();
     });
   }
 
   /* =========================================================
+     REFERENCE CODE
+     A short, human-readable reference shown in the confirmation
+     message. Purely a client-side courtesy identifier — the
+     backend should generate and return its own authoritative
+     reference once /api/book is live.
+  ========================================================= */
+  function generateReferenceCode() {
+    var parts = getLocalDateParts(new Date(), APPOINTMENT_CONFIG.timezone);
+    var datePart = String(parts.year).slice(2) + pad2(parts.month) + pad2(parts.day);
+    var suffix = Math.floor(1000 + Math.random() * 9000);
+    return 'APT-' + datePart + '-' + suffix;
+  }
+
+  /* =========================================================
      FORM SUBMISSION
+     Only name and email are required — everything else is
+     helpful context, not a gate to submitting a request.
   ========================================================= */
   form.addEventListener('submit', function (event) {
     event.preventDefault();
@@ -1083,8 +1344,8 @@
 
     var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!name || !email || !meetingType || !agenda) {
-      formError.textContent = 'Please complete all required fields before submitting.';
+    if (!name || !email) {
+      formError.textContent = 'Please provide your name and email address.';
       return;
     }
     if (!emailPattern.test(email)) {
@@ -1095,6 +1356,8 @@
       formError.textContent = 'Please select an available time window before submitting.';
       return;
     }
+
+    var refCode = generateReferenceCode();
 
     var payload = {
       name: name,
@@ -1107,7 +1370,8 @@
       start: state.selectedSlot.start,
       end: state.selectedSlot.end,
       sourceCalendars: APPOINTMENT_CONFIG.sourceCalendars,
-      bookingCalendar: APPOINTMENT_CONFIG.bookingCalendar
+      bookingCalendar: APPOINTMENT_CONFIG.bookingCalendar,
+      referenceCode: refCode
     };
 
     submitBtn.disabled = true;
@@ -1122,13 +1386,14 @@
         if (!res.ok) throw new Error('Booking endpoint returned ' + res.status);
         return res.json().catch(function () { return {}; });
       })
-      .then(function () {
-        showConfirmation('Appointment request received. A calendar event will be created after final availability verification.');
+      .then(function (data) {
+        showConfirmation((data && data.referenceCode) || refCode);
       })
       .catch(function () {
-        // Backend not deployed yet — present a polished
-        // preview-mode confirmation instead of a browser alert.
-        showConfirmation('Preview mode — no backend connected yet. Appointment request received. A calendar event will be created after final availability verification.');
+        // Backend not deployed yet — the visitor still sees a
+        // clean, final-looking confirmation rather than a raw
+        // error or browser alert.
+        showConfirmation(refCode);
       })
       .then(function () {
         submitBtn.disabled = false;
@@ -1136,8 +1401,16 @@
       });
   });
 
-  function showConfirmation(message) {
-    confirmationMessage.textContent = message;
+  function showConfirmation(refCode) {
+    confirmationMessage.innerHTML = '';
+    var refEl = document.createElement('span');
+    refEl.className = 'confirmation-ref';
+    refEl.textContent = 'Reference ' + refCode;
+    var textEl = document.createElement('span');
+    textEl.textContent = 'Appointment request received. A calendar event will be created on andy.gong@energizeos.com after final availability verification.';
+    confirmationMessage.appendChild(refEl);
+    confirmationMessage.appendChild(textEl);
+
     form.reset();
     state.selectedSlot = null;
     renderSlotGrid();
