@@ -89,9 +89,16 @@
   .control-group:last-of-type{margin-bottom:var(--sp-m)}
   .control-label{display:block;font-size:10px;font-weight:400;letter-spacing:.16em;text-transform:uppercase;color:var(--volt);margin-bottom:var(--sp-m)}
 
-  .duration-selector,.day-selector{display:flex;flex-wrap:wrap;gap:var(--sp-s)}
+  /* Duration + day selectors use CSS Grid (not flex-wrap) so
+     every button is exactly equal width, regardless of label
+     length ("Tue, Jul 7" vs "Wed, Jul 15") — flex-wrap sized
+     each button to its own text and produced a ragged grid. */
+  .duration-selector{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-s)}
+  .day-selector{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--sp-s)}
+  @media (min-width:480px){.day-selector{grid-template-columns:repeat(3,1fr)}}
+
   .duration-btn,.day-btn{
-    min-height:44px;padding:var(--sp-s) var(--sp-l);font-family:inherit;font-size:14px;font-weight:500;
+    min-height:44px;padding:var(--sp-s) var(--sp-m);font-family:inherit;font-size:14px;font-weight:500;
     color:var(--slate);background:#fff;border:1px solid var(--rule-firm);cursor:pointer;
     transition:background var(--motion-fast),color var(--motion-fast),border-color var(--motion-fast);
   }
