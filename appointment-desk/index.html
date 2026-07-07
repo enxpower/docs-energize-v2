@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Andy Gong — Appointment Desk</title>
+<meta name="description" content="Private appointment desk for Andy Gong. Request a calendar window consolidated across AGI&amp;M, EnergizeOS, and ARCBOS operating calendars.">
+<meta name="robots" content="noindex, follow">
+<link rel="icon" type="image/svg+xml" href="../vi/assets/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="../vi/assets/favicon-32.png">
+<link rel="canonical" href="https://docs.energizeos.com/appointment-desk/">
+<meta property="og:title" content="Andy Gong — Appointment Desk — EnergizeOS">
+<meta property="og:description" content="Private appointment desk for Andy Gong. Request a calendar window consolidated across active operating calendars.">
+<meta property="og:image" content="https://docs.energizeos.com/vi/assets/og-1200x630.png">
+<meta property="og:type" content="website">
+<style>
+  /* =========================================================
+     ENERGIZEOS VISUAL IDENTITY — TOKENS
+     Slate & Volt palette, per docs.energizeos.com/vi/
+  ========================================================= */
+  :root {
+    --slate: #1A2B3C;
+    --deep-ocean: #2E4A6E;
+    --volt: #D4840A;
+    --tint: #FDF4E7;
+    --white: #FFFFFF;
+    --body-text: #334455;
+
+    /* Structural borders derived from Slate at low opacity —
+       used instead of drop shadows, per brand usage rules. */
+    --border-soft: rgba(26, 43, 60, 0.14);
+    --border-firm: rgba(26, 43, 60, 0.28);
+
+    /* Spacing scale, per VI grid system */
+    --sp-xs: 4px;
+    --sp-s: 8px;
+    --sp-m: 16px;
+    --sp-l: 24px;
+    --sp-xl: 48px;
+    --sp-2xl: 72px;
+    --sp-3xl: 120px;
+
+    /* Outer margins by breakpoint */
+    --outer-margin: 16px;
+
+    --font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --motion-fast: 150ms ease-out;
+    --motion-medium: 200ms ease-out;
+  }
+
+  @media (min-width: 768px) {
+    :root { --outer-margin: 24px; }
+  }
+
+  @media (min-width: 1024px) {
+    :root { --outer-margin: 48px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition-duration: 0.001ms !important; animation-duration: 0.001ms !important; }
+  }
+
+  * { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    font-family: var(--font-family);
+    color: var(--body-text);
+    background: var(--white);
+    line-height: 1.6;
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-left: var(--outer-margin);
+    padding-right: var(--outer-margin);
+  }
+
+  h1, h2, h3 { color: var(--slate); margin: 0; }
+
+  a { color: var(--deep-ocean); }
+
+  /* ---------------------------------------------------------
+     HEADER
+  --------------------------------------------------------- */
+  .site-header {
+    border-bottom: 1px solid var(--border-soft);
+  }
+
+  .header-inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-m);
+    padding-top: var(--sp-l);
+    padding-bottom: var(--sp-l);
+  }
+
+  @media (min-width: 768px) {
+    .header-inner {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  .brand-logo {
+    height: 34px;
+    width: auto;
+    display: block;
+  }
+
+  .desk-label {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-xs);
+  }
+
+  @media (min-width: 768px) {
+    .desk-label { text-align: right; align-items: flex-end; }
+  }
+
+  .label-tag {
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--volt);
+  }
+
+  .status-line {
+    font-size: 12px;
+    color: var(--body-text);
+    opacity: 0.75;
+  }
+
+  .volt-bar {
+    height: 3px;
+    background: var(--volt);
+    width: 100%;
+  }
+
+  /* ---------------------------------------------------------
+     HERO
+  --------------------------------------------------------- */
+  .hero {
+    padding-top: var(--sp-2xl);
+    padding-bottom: var(--sp-xl);
+    max-width: 760px;
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--volt);
+    margin: 0 0 var(--sp-m) 0;
+  }
+
+  .hero h1 {
+    font-size: 32px;
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: var(--sp-l);
+  }
+
+  @media (min-width: 768px) {
+    .hero h1 { font-size: 42px; }
+  }
+
+  @media (min-width: 1024px) {
+    .hero h1 { font-size: 52px; letter-spacing: -0.025em; }
+  }
+
+  .subhead {
+    font-size: 16px;
+    color: var(--body-text);
+    margin: 0 0 var(--sp-l) 0;
+    max-width: 620px;
+  }
+
+  .status-copy {
+    font-size: 13px;
+    color: var(--slate);
+    font-weight: 500;
+    margin: 0 0 var(--sp-l) 0;
+  }
+
+  .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-s);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-xs);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--slate);
+    background: var(--tint);
+    border: 1px solid var(--border-soft);
+    padding: var(--sp-xs) var(--sp-m);
+    border-radius: 2px;
+  }
+
+  .chip::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--volt);
+    display: inline-block;
+  }
+
+  /* ---------------------------------------------------------
+     SCHEDULER LAYOUT
+  --------------------------------------------------------- */
+  .scheduler {
+    padding-bottom: var(--sp-3xl);
+  }
+
+  .scheduler-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-xl);
+    align-items: start;
+  }
+
+  @media (min-width: 1024px) {
+    .scheduler-grid {
+      grid-template-columns: 1.25fr 1fr;
+      gap: var(--sp-2xl);
+    }
+  }
+
+  .panel {
+    border: 1px solid var(--border-soft);
+    padding: var(--sp-l);
+    background: var(--white);
+  }
+
+  @media (min-width: 768px) {
+    .panel { padding: var(--sp-xl); }
+  }
+
+  .panel-title {
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    margin-bottom: var(--sp-l);
+  }
+
+  .control-group {
+    margin-bottom: var(--sp-xl);
+  }
+
+  .control-group:last-of-type {
+    margin-bottom: var(--sp-m);
+  }
+
+  .control-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--volt);
+    margin-bottom: var(--sp-m);
+  }
+
+  /* Duration + day selector buttons */
+  .duration-selector,
+  .day-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-s);
+  }
+
+  .duration-btn,
+  .day-btn {
+    min-height: 44px;
+    padding: var(--sp-s) var(--sp-l);
+    font-family: var(--font-family);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--slate);
+    background: var(--white);
+    border: 1px solid var(--border-firm);
+    cursor: pointer;
+    transition: background var(--motion-fast), color var(--motion-fast), border-color var(--motion-fast);
+  }
+
+  .duration-btn:hover,
+  .day-btn:hover {
+    border-color: var(--slate);
+  }
+
+  .duration-btn.is-selected,
+  .day-btn.is-selected {
+    background: var(--slate);
+    color: var(--white);
+    border-color: var(--slate);
+    box-shadow: inset 0 -3px 0 var(--volt);
+  }
+
+  /* Time slot grid */
+  .slot-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--sp-s);
+  }
+
+  @media (min-width: 480px) {
+    .slot-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  @media (min-width: 1024px) {
+    .slot-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (min-width: 1280px) {
+    .slot-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  .slot-btn {
+    min-height: 48px;
+    font-family: var(--font-family);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--slate);
+    background: var(--white);
+    border: 1px solid var(--border-firm);
+    cursor: pointer;
+    transition: background var(--motion-fast), color var(--motion-fast), border-color var(--motion-fast);
+  }
+
+  .slot-btn:hover {
+    border-color: var(--slate);
+    background: var(--tint);
+  }
+
+  .slot-btn.is-selected {
+    background: var(--slate);
+    color: var(--white);
+    border-color: var(--slate);
+    box-shadow: inset 0 -3px 0 var(--volt);
+  }
+
+  .no-slots {
+    grid-column: 1 / -1;
+    font-size: 14px;
+    color: var(--body-text);
+    padding: var(--sp-m);
+    background: var(--tint);
+    border: 1px solid var(--border-soft);
+  }
+
+  .api-status {
+    font-size: 12px;
+    color: var(--body-text);
+    opacity: 0.8;
+    margin-top: var(--sp-l);
+    min-height: 16px;
+  }
+
+  /* ---------------------------------------------------------
+     REQUEST PANEL
+  --------------------------------------------------------- */
+  .summary-box {
+    background: var(--tint);
+    border: 1px solid var(--border-soft);
+    padding: var(--sp-l);
+    margin-bottom: var(--sp-xl);
+  }
+
+  @media (min-width: 1024px) {
+    .summary-box {
+      position: sticky;
+      top: var(--sp-l);
+    }
+  }
+
+  .summary-list {
+    margin: 0;
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--sp-m);
+    padding: var(--sp-s) 0;
+    border-bottom: 1px solid var(--border-soft);
+  }
+
+  .summary-row:last-child { border-bottom: none; }
+
+  .summary-row dt {
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--body-text);
+    opacity: 0.75;
+  }
+
+  .summary-row dd {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--slate);
+    text-align: right;
+  }
+
+  .field {
+    margin-bottom: var(--sp-l);
+  }
+
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--slate);
+    margin-bottom: var(--sp-xs);
+  }
+
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    min-height: 44px;
+    padding: var(--sp-s) var(--sp-m);
+    font-family: var(--font-family);
+    font-size: 15px;
+    color: var(--slate);
+    background: var(--white);
+    border: 1px solid var(--border-firm);
+    border-radius: 0;
+    transition: border-color var(--motion-fast);
+  }
+
+  .field textarea {
+    min-height: 96px;
+    resize: vertical;
+  }
+
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    outline: none;
+    border-color: var(--deep-ocean);
+    box-shadow: 0 0 0 1px var(--deep-ocean);
+  }
+
+  .form-error {
+    font-size: 13px;
+    color: #B3401A;
+    min-height: 18px;
+    margin: 0 0 var(--sp-m) 0;
+  }
+
+  .submit-btn {
+    width: 100%;
+    min-height: 48px;
+    padding: var(--sp-m) var(--sp-l);
+    font-family: var(--font-family);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--white);
+    background: var(--slate);
+    border: none;
+    cursor: pointer;
+    box-shadow: inset 0 -3px 0 var(--volt);
+    transition: background var(--motion-fast);
+  }
+
+  .submit-btn:hover { background: var(--deep-ocean); }
+  .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  .confirmation-message {
+    font-size: 14px;
+    color: var(--slate);
+    background: var(--tint);
+    border: 1px solid var(--border-soft);
+    padding: var(--sp-m);
+    margin-top: var(--sp-l);
+    display: block;
+  }
+
+  .confirmation-message:empty { display: none; }
+
+  .noscript-notice {
+    font-size: 13px;
+    color: var(--body-text);
+    background: var(--tint);
+    border: 1px solid var(--border-soft);
+    padding: var(--sp-m);
+  }
+
+  /* ---------------------------------------------------------
+     FOOTER
+  --------------------------------------------------------- */
+  .site-footer {
+    border-top: 1px solid var(--border-soft);
+    padding-top: var(--sp-l);
+    padding-bottom: var(--sp-xl);
+  }
+
+  .site-footer p {
+    font-size: 12px;
+    color: var(--body-text);
+    opacity: 0.8;
+    margin: 0 0 var(--sp-xs) 0;
+  }
+
+  .confidential-line {
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-size: 11px;
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <img class="brand-logo" src="../vi/assets/energize-logo-primary.svg" alt="EnergizeOS — Energize Solutions Inc.">
+    <div class="desk-label">
+      <span class="label-tag">Private Appointment Desk</span>
+      <span class="status-line">Consolidated calendar availability · Vancouver time</span>
+    </div>
+  </div>
+  <div class="volt-bar" aria-hidden="true"></div>
+</header>
+
+<main>
+  <section class="hero container">
+    <p class="eyebrow">Private Appointment Desk</p>
+    <h1>Request time on Andy Gong&rsquo;s calendar.</h1>
+    <p class="subhead">Availability is consolidated across active operating calendars. Select a window, provide context, and submit an appointment request.</p>
+    <p class="status-copy">Calendar stack: AGI&amp;M · EnergizeOS · ARCBOS</p>
+    <div class="chip-row">
+      <span class="chip">AGI&amp;M</span>
+      <span class="chip">EnergizeOS</span>
+      <span class="chip">ARCBOS</span>
+    </div>
+  </section>
+
+  <section class="scheduler container" aria-label="Appointment scheduling">
+    <noscript>
+      <p class="noscript-notice">JavaScript is required to view live availability and submit a request. Please enable JavaScript, or contact <a href="mailto:andy.gong@energizeos.com">andy.gong@energizeos.com</a> directly to arrange a time.</p>
+    </noscript>
+
+    <div class="scheduler-grid">
+      <!-- LEFT: availability -->
+      <div class="panel availability-panel">
+        <h2 class="panel-title">Select a Window</h2>
+
+        <div class="control-group">
+          <span class="control-label" id="duration-label">Meeting Duration</span>
+          <div class="duration-selector" role="group" aria-labelledby="duration-label">
+            <button type="button" class="duration-btn" data-duration="30" aria-pressed="true">30 min</button>
+            <button type="button" class="duration-btn" data-duration="45" aria-pressed="false">45 min</button>
+            <button type="button" class="duration-btn" data-duration="60" aria-pressed="false">60 min</button>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <span class="control-label" id="day-label">Day</span>
+          <div class="day-selector" role="group" aria-labelledby="day-label" id="day-selector">
+            <!-- populated by JavaScript -->
+          </div>
+        </div>
+
+        <div class="control-group">
+          <span class="control-label" id="slots-label">Available Windows — Vancouver Time</span>
+          <div class="slot-grid" role="group" aria-labelledby="slots-label" id="slot-grid">
+            <!-- populated by JavaScript -->
+          </div>
+        </div>
+
+        <p class="api-status" id="api-status" role="status" aria-live="polite"></p>
+      </div>
+
+      <!-- RIGHT: summary + form -->
+      <div class="request-panel">
+        <div class="summary-box" id="summary-box" aria-live="polite">
+          <h2 class="panel-title">Selected Appointment</h2>
+          <dl class="summary-list">
+            <div class="summary-row"><dt>Date</dt><dd id="summary-date">Not yet selected</dd></div>
+            <div class="summary-row"><dt>Time</dt><dd id="summary-time">Not yet selected</dd></div>
+            <div class="summary-row"><dt>Duration</dt><dd id="summary-duration">30 minutes</dd></div>
+            <div class="summary-row"><dt>Timezone</dt><dd id="summary-timezone">America/Vancouver</dd></div>
+            <div class="summary-row"><dt>Meeting Type</dt><dd id="summary-type">Not yet selected</dd></div>
+          </dl>
+        </div>
+
+        <form id="appointment-form" class="panel" novalidate>
+          <h2 class="panel-title">Request Details</h2>
+
+          <div class="field">
+            <label for="visitor-name">Name</label>
+            <input type="text" id="visitor-name" name="name" autocomplete="name" required>
+          </div>
+
+          <div class="field">
+            <label for="visitor-email">Email</label>
+            <input type="email" id="visitor-email" name="email" autocomplete="email" required>
+          </div>
+
+          <div class="field">
+            <label for="visitor-org">Organization</label>
+            <input type="text" id="visitor-org" name="organization" autocomplete="organization">
+          </div>
+
+          <div class="field">
+            <label for="meeting-type">Meeting Type</label>
+            <select id="meeting-type" name="meetingType" required>
+              <option value="">Select meeting type</option>
+              <option value="Project Discussion">Project Discussion</option>
+              <option value="Capital / Investor">Capital / Investor</option>
+              <option value="Partnership">Partnership</option>
+              <option value="Technical Review">Technical Review</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="agenda">Agenda / Context</label>
+            <textarea id="agenda" name="agenda" rows="4" required></textarea>
+          </div>
+
+          <p class="form-error" id="form-error" role="alert"></p>
+
+          <button type="submit" class="submit-btn" id="submit-btn">Submit Appointment Request</button>
+
+          <p class="confirmation-message" id="confirmation-message" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>Energize Solutions Inc. · Texas, United States · A subsidiary of AGI&amp;M ASSETS INC.</p>
+    <p class="confidential-line">Confidential. Authorized scheduling only.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  /* =========================================================
+     APPOINTMENT CONFIGURATION
+     Centralizes every value the future Google Calendar backend
+     will need. When the real endpoints below are deployed, no
+     other logic in this file should require changes.
+  ========================================================= */
+  var APPOINTMENT_CONFIG = {
+    timezone: 'America/Vancouver',
+    sourceCalendars: [
+      'andy.gong@agim.ca',
+      'andy.gong@energizeos.com',
+      'admin@arcbos.com'
+    ],
+    bookingCalendar: 'andy.gong@energizeos.com',
+    defaultDuration: 30,
+    durations: [30, 45, 60],
+    // Business hours the mock generator (and the real backend)
+    // should enforce, in Vancouver local time.
+    businessHours: { startHour: 9, startMinute: 0, endHour: 16, endMinute: 30 },
+    // Minimum notice, in minutes, before a slot can be requested.
+    // Mirrors the buffer the backend should apply against
+    // Google Calendar freeBusy results.
+    minNoticeMinutes: 15,
+    businessDaysAhead: 7,
+    api: {
+      availability: '/api/availability',
+      book: '/api/book'
+    },
+    // How long to wait for the backend before falling back to
+    // mock preview data.
+    requestTimeoutMs: 6000
+  };
+
+  /* =========================================================
+     BACKEND CONTRACT (for reference — implemented server-side)
+     ---------------------------------------------------------
+     GET /api/availability?duration=30&timezone=America/Vancouver
+       1. Query Google Calendar freeBusy across all three
+          source calendars listed in APPOINTMENT_CONFIG.
+       2. Merge the returned busy windows.
+       3. Apply business hours, buffer, minimum notice, and a
+          maximum look-ahead window.
+       4. Return only the resulting open slots, already
+          formatted for display, in the shape mocked below.
+
+     POST /api/book
+       1. Re-check freeBusy for the requested window before
+          writing anything (protects against race conditions).
+       2. Create the event only on the booking calendar
+          (andy.gong@energizeos.com) — never on the read-only
+          source calendars.
+       3. Optionally add the visitor as an attendee by email.
+          The visitor is never required to hold a Google
+          account or connect their own calendar.
+       4. Return a minimal confirmation only — never expose
+          the private details of other events on any calendar.
+
+     No credentials, tokens, or API keys are ever present on
+     this static page. All Google Calendar access happens
+     server-side, behind these two endpoints.
+  ========================================================= */
+
+  /* ---------- STATE ---------- */
+  var state = {
+    duration: APPOINTMENT_CONFIG.defaultDuration,
+    days: [],
+    selectedDayIndex: 0,
+    selectedSlot: null,
+    usingMock: false
+  };
+
+  /* ---------- DOM REFERENCES ---------- */
+  var durationButtons = Array.prototype.slice.call(document.querySelectorAll('.duration-btn'));
+  var daySelector = document.getElementById('day-selector');
+  var slotGrid = document.getElementById('slot-grid');
+  var apiStatus = document.getElementById('api-status');
+  var summaryDate = document.getElementById('summary-date');
+  var summaryTime = document.getElementById('summary-time');
+  var summaryDuration = document.getElementById('summary-duration');
+  var summaryType = document.getElementById('summary-type');
+  var form = document.getElementById('appointment-form');
+  var formError = document.getElementById('form-error');
+  var confirmationMessage = document.getElementById('confirmation-message');
+  var submitBtn = document.getElementById('submit-btn');
+  var meetingTypeSelect = document.getElementById('meeting-type');
+
+  var WEEKDAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  /* =========================================================
+     TIMEZONE HELPERS
+     These read the visitor's own clock but always resolve
+     dates and times in America/Vancouver, using Intl so the
+     correct PST/PDT offset is used automatically — nothing is
+     hardcoded.
+  ========================================================= */
+
+  function pad2(n) { return (n < 10 ? '0' : '') + n; }
+
+  // Returns a UTC offset string such as "-07:00" for the given
+  // instant, in the given IANA timezone.
+  function getUtcOffsetString(instant, timeZone) {
+    try {
+      var dtf = new Intl.DateTimeFormat('en-US', {
+        timeZone: timeZone,
+        timeZoneName: 'shortOffset'
+      });
+      var parts = dtf.formatToParts(instant);
+      var tzPart = null;
+      for (var i = 0; i < parts.length; i++) {
+        if (parts[i].type === 'timeZoneName') { tzPart = parts[i]; break; }
+      }
+      var match = /GMT([+-])(\d{1,2})(?::(\d{2}))?/.exec(tzPart ? tzPart.value : '');
+      if (!match) return '-08:00';
+      var sign = match[1];
+      var hh = pad2(parseInt(match[2], 10));
+      var mm = match[3] ? match[3] : '00';
+      return sign + hh + ':' + mm;
+    } catch (err) {
+      // Reasonable fallback: Pacific Standard Time offset.
+      return '-08:00';
+    }
+  }
+
+  // Returns { year, month, day, weekdayIndex } describing the
+  // given instant as a calendar date in the given timezone.
+  // weekdayIndex is 0=Sun..6=Sat.
+  function getLocalDateParts(instant, timeZone) {
+    var dtf = new Intl.DateTimeFormat('en-US', {
+      timeZone: timeZone,
+      year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short'
+    });
+    var parts = dtf.formatToParts(instant);
+    var map = {};
+    parts.forEach(function (p) { map[p.type] = p.value; });
+    return {
+      year: parseInt(map.year, 10),
+      month: parseInt(map.month, 10),
+      day: parseInt(map.day, 10),
+      weekdayIndex: WEEKDAY_NAMES.indexOf(map.weekday)
+    };
+  }
+
+  // Returns { hour, minute } describing the given instant as a
+  // clock time (24h) in the given timezone.
+  function getLocalTimeParts(instant, timeZone) {
+    var dtf = new Intl.DateTimeFormat('en-US', {
+      timeZone: timeZone,
+      hour: '2-digit', minute: '2-digit', hour12: false
+    });
+    var parts = dtf.formatToParts(instant);
+    var map = {};
+    parts.forEach(function (p) { map[p.type] = p.value; });
+    var hour = parseInt(map.hour, 10);
+    if (hour === 24) hour = 0;
+    return { hour: hour, minute: parseInt(map.minute, 10) };
+  }
+
+  // Readable formatters built on Intl.DateTimeFormat. Both take
+  // a UTC-in-milliseconds value that already encodes Vancouver's
+  // wall-clock Y/M/D/H/M (see the pointer-anchoring technique in
+  // generateMockAvailability below), so formatting with
+  // timeZone: 'UTC' here yields the correct Vancouver-local text
+  // without any further conversion.
+  function formatDisplayTime(utcMs) {
+    return new Intl.DateTimeFormat('en-US', {
+      timeZone: 'UTC', hour: 'numeric', minute: '2-digit', hour12: true
+    }).format(new Date(utcMs));
+  }
+
+  function formatDayLabel(utcMs) {
+    return new Intl.DateTimeFormat('en-US', {
+      timeZone: 'UTC', weekday: 'short', month: 'short', day: 'numeric'
+    }).format(new Date(utcMs));
+  }
+
+  /* =========================================================
+     MOCK AVAILABILITY GENERATOR
+     ---------------------------------------------------------
+     Used only when /api/availability is unreachable. Mirrors
+     the rules the real backend should enforce, so the preview
+     behaves like the eventual production experience:
+       - Business hours: 9:00 AM – 4:30 PM, Vancouver time.
+       - 15-minute minimum-notice buffer before "now".
+       - Skips Saturday and Sunday.
+       - Looks ahead across the next 7 business days.
+       - Candidate start times sit on a 30-minute grid; a slot
+         is offered only if start + duration fits by 4:30 PM.
+     This block is intentionally self-contained so it can be
+     deleted in full once the backend is live.
+  ========================================================= */
+  function generateMockAvailability(duration) {
+    var now = new Date();
+    var nowDateParts = getLocalDateParts(now, APPOINTMENT_CONFIG.timezone);
+    var nowTimeParts = getLocalTimeParts(now, APPOINTMENT_CONFIG.timezone);
+    var offset = getUtcOffsetString(now, APPOINTMENT_CONFIG.timezone);
+
+    // Anchor a pointer at UTC noon using Vancouver's Y/M/D, so
+    // we can step forward one calendar day at a time with a
+    // plain 24-hour increment, regardless of the visitor's own
+    // timezone or daylight-saving transitions elsewhere.
+    var pointer = Date.UTC(nowDateParts.year, nowDateParts.month - 1, nowDateParts.day, 12, 0, 0);
+
+    var days = [];
+    var guard = 0;
+
+    while (days.length < APPOINTMENT_CONFIG.businessDaysAhead && guard < 30) {
+      var isToday = (guard === 0);
+      var p = new Date(pointer);
+      var weekdayIndex = p.getUTCDay();
+      var isWeekend = (weekdayIndex === 0 || weekdayIndex === 6);
+
+      if (!isWeekend) {
+        var y = p.getUTCFullYear();
+        var m = p.getUTCMonth() + 1;
+        var d = p.getUTCDate();
+        var dateStr = y + '-' + pad2(m) + '-' + pad2(d);
+        var label = formatDayLabel(pointer);
+
+        var slots = [];
+        var bh = APPOINTMENT_CONFIG.businessHours;
+        var cursorMinutes = bh.startHour * 60 + bh.startMinute;
+        var endMinutes = bh.endHour * 60 + bh.endMinute;
+
+        while (cursorMinutes + duration <= endMinutes) {
+          var startHour = Math.floor(cursorMinutes / 60);
+          var startMinute = cursorMinutes % 60;
+          var endTotal = cursorMinutes + duration;
+          var endHour = Math.floor(endTotal / 60);
+          var endMinute = endTotal % 60;
+
+          var includeSlot = true;
+          if (isToday) {
+            var nowTotal = (nowTimeParts.hour * 60 + nowTimeParts.minute) + APPOINTMENT_CONFIG.minNoticeMinutes;
+            if (cursorMinutes < nowTotal) includeSlot = false;
+          }
+
+          if (includeSlot) {
+            var slotUtcMs = Date.UTC(y, m - 1, d, startHour, startMinute, 0);
+            slots.push({
+              start: dateStr + 'T' + pad2(startHour) + ':' + pad2(startMinute) + ':00' + offset,
+              end: dateStr + 'T' + pad2(endHour) + ':' + pad2(endMinute) + ':00' + offset,
+              display: formatDisplayTime(slotUtcMs)
+            });
+          }
+
+          cursorMinutes += 30; // 30-minute scheduling grid
+        }
+
+        days.push({ date: dateStr, label: label, slots: slots });
+      }
+
+      pointer += 24 * 60 * 60 * 1000;
+      guard++;
+    }
+
+    return {
+      timezone: APPOINTMENT_CONFIG.timezone,
+      sourceCalendars: APPOINTMENT_CONFIG.sourceCalendars,
+      bookingCalendar: APPOINTMENT_CONFIG.bookingCalendar,
+      days: days
+    };
+  }
+
+  /* =========================================================
+     BACKEND CALLS
+  ========================================================= */
+  function fetchWithTimeout(url, options) {
+    var controller = new AbortController();
+    var timer = setTimeout(function () { controller.abort(); }, APPOINTMENT_CONFIG.requestTimeoutMs);
+    var merged = {};
+    for (var key in options) { if (options.hasOwnProperty(key)) merged[key] = options[key]; }
+    merged.signal = controller.signal;
+    return fetch(url, merged).then(
+      function (res) { clearTimeout(timer); return res; },
+      function (err) { clearTimeout(timer); throw err; }
+    );
+  }
+
+  function setApiStatus(message) {
+    apiStatus.textContent = message;
+  }
+
+  function loadAvailability(duration) {
+    var params = 'duration=' + encodeURIComponent(duration) +
+      '&timezone=' + encodeURIComponent(APPOINTMENT_CONFIG.timezone);
+    var url = APPOINTMENT_CONFIG.api.availability + '?' + params;
+
+    return fetchWithTimeout(url, { method: 'GET', headers: { 'Accept': 'application/json' } })
+      .then(function (res) {
+        if (!res.ok) throw new Error('Availability endpoint returned ' + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        if (!data || !Array.isArray(data.days)) throw new Error('Malformed availability response');
+        state.usingMock = false;
+        setApiStatus('');
+        return data;
+      })
+      .catch(function () {
+        state.usingMock = true;
+        setApiStatus('Live calendar endpoint pending — preview availability shown.');
+        return generateMockAvailability(duration);
+      });
+  }
+
+  /* =========================================================
+     RENDERING
+  ========================================================= */
+  function renderDaySelector() {
+    daySelector.innerHTML = '';
+    state.days.forEach(function (day, index) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'day-btn';
+      btn.textContent = day.label;
+      var selected = index === state.selectedDayIndex;
+      btn.setAttribute('aria-pressed', selected ? 'true' : 'false');
+      if (selected) btn.classList.add('is-selected');
+      btn.addEventListener('click', function () {
+        state.selectedDayIndex = index;
+        state.selectedSlot = null;
+        renderDaySelector();
+        renderSlotGrid();
+        renderSummary();
+      });
+      daySelector.appendChild(btn);
+    });
+  }
+
+  function renderSlotGrid() {
+    slotGrid.innerHTML = '';
+    var day = state.days[state.selectedDayIndex];
+
+    if (!day || day.slots.length === 0) {
+      var empty = document.createElement('p');
+      empty.className = 'no-slots';
+      empty.textContent = 'No available windows for this day. Please select another day.';
+      slotGrid.appendChild(empty);
+      return;
+    }
+
+    day.slots.forEach(function (slot) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'slot-btn';
+      btn.textContent = slot.display;
+      var selected = !!(state.selectedSlot && state.selectedSlot.start === slot.start);
+      btn.setAttribute('aria-pressed', selected ? 'true' : 'false');
+      if (selected) btn.classList.add('is-selected');
+      btn.addEventListener('click', function () {
+        state.selectedSlot = slot;
+        renderSlotGrid();
+        renderSummary();
+      });
+      slotGrid.appendChild(btn);
+    });
+  }
+
+  function renderSummary() {
+    var day = state.days[state.selectedDayIndex];
+    summaryDate.textContent = day ? day.label : 'Not yet selected';
+    summaryTime.textContent = state.selectedSlot ? state.selectedSlot.display : 'Not yet selected';
+    summaryDuration.textContent = state.duration + ' minutes';
+    summaryType.textContent = meetingTypeSelect.value || 'Not yet selected';
+  }
+
+  function renderDurationButtons() {
+    durationButtons.forEach(function (btn) {
+      var selected = parseInt(btn.getAttribute('data-duration'), 10) === state.duration;
+      btn.setAttribute('aria-pressed', selected ? 'true' : 'false');
+      if (selected) btn.classList.add('is-selected');
+      else btn.classList.remove('is-selected');
+    });
+  }
+
+  /* =========================================================
+     EVENT WIRING
+  ========================================================= */
+  durationButtons.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var newDuration = parseInt(btn.getAttribute('data-duration'), 10);
+      if (newDuration === state.duration) return;
+      state.duration = newDuration;
+      state.selectedSlot = null;
+      renderDurationButtons();
+      refreshAvailability();
+    });
+  });
+
+  meetingTypeSelect.addEventListener('change', renderSummary);
+
+  function refreshAvailability() {
+    setApiStatus('Checking availability…');
+    loadAvailability(state.duration).then(function (data) {
+      state.days = data.days || [];
+      if (state.selectedDayIndex >= state.days.length) state.selectedDayIndex = 0;
+      renderDaySelector();
+      renderSlotGrid();
+      renderSummary();
+    });
+  }
+
+  /* =========================================================
+     FORM SUBMISSION
+  ========================================================= */
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+    formError.textContent = '';
+    confirmationMessage.textContent = '';
+
+    var nameField = document.getElementById('visitor-name');
+    var emailField = document.getElementById('visitor-email');
+    var orgField = document.getElementById('visitor-org');
+    var agendaField = document.getElementById('agenda');
+
+    var name = nameField.value.trim();
+    var email = emailField.value.trim();
+    var organization = orgField.value.trim();
+    var meetingType = meetingTypeSelect.value;
+    var agenda = agendaField.value.trim();
+
+    var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!name || !email || !meetingType || !agenda) {
+      formError.textContent = 'Please complete all required fields before submitting.';
+      return;
+    }
+    if (!emailPattern.test(email)) {
+      formError.textContent = 'Please enter a valid email address.';
+      return;
+    }
+    if (!state.selectedSlot) {
+      formError.textContent = 'Please select an available time window before submitting.';
+      return;
+    }
+
+    var payload = {
+      name: name,
+      email: email,
+      organization: organization,
+      meetingType: meetingType,
+      agenda: agenda,
+      duration: state.duration,
+      timezone: APPOINTMENT_CONFIG.timezone,
+      start: state.selectedSlot.start,
+      end: state.selectedSlot.end,
+      sourceCalendars: APPOINTMENT_CONFIG.sourceCalendars,
+      bookingCalendar: APPOINTMENT_CONFIG.bookingCalendar
+    };
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting…';
+
+    fetchWithTimeout(APPOINTMENT_CONFIG.api.book, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+      .then(function (res) {
+        if (!res.ok) throw new Error('Booking endpoint returned ' + res.status);
+        return res.json().catch(function () { return {}; });
+      })
+      .then(function () {
+        showConfirmation('Appointment request received. A calendar event will be created after final availability verification.');
+      })
+      .catch(function () {
+        // Backend not deployed yet — present a polished
+        // preview-mode confirmation instead of a browser alert.
+        showConfirmation('Preview mode — no backend connected yet. Appointment request received. A calendar event will be created after final availability verification.');
+      })
+      .then(function () {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Appointment Request';
+      });
+  });
+
+  function showConfirmation(message) {
+    confirmationMessage.textContent = message;
+    form.reset();
+    state.selectedSlot = null;
+    renderSlotGrid();
+    renderSummary();
+  }
+
+  /* =========================================================
+     INIT
+  ========================================================= */
+  renderDurationButtons();
+  refreshAvailability();
+})();
+</script>
+</body>
+</html>
