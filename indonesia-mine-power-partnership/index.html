@@ -123,15 +123,20 @@ img{display:block;max-width:100%}
   font-size:17px;color:rgba(255,255,255,.72);
   max-width:640px;line-height:1.72;margin-bottom:38px;
 }
-.hero__actions{display:flex;gap:14px;flex-wrap:wrap}
+.hero__actions{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start}
+@media(max-width:480px){
+  .hero__actions{flex-direction:column;align-items:stretch}
+  .hero__actions .btn{text-align:center;padding:16px 24px}
+}
 .btn{
   display:inline-block;
   font-size:12px;letter-spacing:.1em;text-transform:uppercase;
-  padding:13px 22px;
+  padding:14px 24px;
   border:1px solid rgba(255,255,255,.22);
   color:#fff;
   transition:background .18s, border-color .18s;
   cursor:pointer;
+  white-space:nowrap;
 }
 .btn:hover{background:rgba(255,255,255,.08)}
 .btn--primary{
@@ -178,36 +183,42 @@ img{display:block;max-width:100%}
 /* ── STATS STRIP ─────────────────────────────────────────── */
 .stats{
   background:#fff;
+  border-top:1px solid var(--rule);
   border-bottom:1px solid var(--rule);
 }
 .stats__inner{
-  max-width:var(--w);margin:0 auto;padding:0 var(--pad);
+  max-width:var(--w);margin:0 auto;
   display:grid;grid-template-columns:repeat(4,1fr);
   border-left:1px solid var(--rule);
 }
 .stat{
-  padding:34px var(--pad) 34px 0;
+  padding:38px 36px;
   border-right:1px solid var(--rule);
 }
 .stat__num{
-  font-size:clamp(28px,3.5vw,44px);
+  font-size:clamp(26px,3.2vw,42px);
   font-weight:280;letter-spacing:-.04em;
   color:var(--slate);
-  margin-bottom:4px;
+  margin-bottom:6px;
+  line-height:1.1;
 }
 .stat__num span{color:var(--volt)}
-.stat__desc{font-size:13px;color:var(--muted)}
-@media(max-width:760px){
-  .stats__inner{grid-template-columns:1fr 1fr}
-  .stat:nth-child(2){border-right:0}
+.stat__desc{font-size:13px;color:var(--muted);line-height:1.55;max-width:220px}
+@media(max-width:800px){
+  .stats__inner{grid-template-columns:1fr 1fr;border-left:none}
+  .stat{padding:24px 20px;border-left:1px solid var(--rule)}
+  .stat:nth-child(even){border-right:1px solid var(--rule)}
+  .stat:nth-child(3),.stat:nth-child(4){border-top:1px solid var(--rule)}
+  .stat__desc{max-width:none}
 }
-@media(max-width:480px){
-  .stats__inner{grid-template-columns:1fr}
-  .stat{border-right:0}
+@media(max-width:420px){
+  .stats__inner{grid-template-columns:1fr;border-left:none}
+  .stat{border-left:none;border-right:none;border-top:1px solid var(--rule);padding:20px var(--pad)}
+  .stat:first-child{border-top:none}
 }
 
 /* ── SECTION SHELL ───────────────────────────────────────── */
-section{padding:82px 0;border-bottom:1px solid var(--rule2)}
+section{padding:82px 0;border-bottom:1px solid var(--rule2);scroll-margin-top:66px}
 section:last-of-type{border-bottom:none}
 .s-tint{background:var(--tint)}
 .s-page{background:var(--page)}
@@ -291,22 +302,33 @@ section:last-of-type{border-bottom:none}
 .scenario-table{width:100%;border-collapse:collapse;border:1px solid var(--rule);background:#fff}
 .scenario-table th{
   font-size:10px;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--muted);padding:13px 18px;
+  color:var(--muted);padding:13px 16px;
   border-bottom:1px solid var(--rule);
   text-align:left;font-weight:400;background:var(--tint);
 }
 .scenario-table td{
   font-size:13.5px;color:#334;
-  padding:15px 18px;
+  padding:16px;
   border-bottom:1px solid var(--rule2);
   vertical-align:top;
-  line-height:1.6;
+  line-height:1.62;
 }
 .scenario-table tr:last-child td{border-bottom:none}
 .scenario-table td:first-child{
   font-size:13px;font-weight:600;color:var(--slate);
   border-right:1px solid var(--rule2);white-space:nowrap;
-  background:var(--page);
+  background:var(--page);width:180px;
+}
+.scenario-table td:nth-child(2){width:auto}
+.scenario-table td:last-child{width:120px}
+@media(max-width:680px){
+  .scenario-table thead{display:none}
+  .scenario-table tr{display:block;border-bottom:2px solid var(--rule);margin-bottom:0}
+  .scenario-table td{display:block;width:100%!important;border-right:none;white-space:normal;padding:10px 14px}
+  .scenario-table td:first-child{background:var(--slate);color:#fff;font-size:12px;letter-spacing:.04em;padding:10px 14px}
+  .scenario-table td:nth-child(2){font-size:13px;color:var(--muted);padding-bottom:6px}
+  .scenario-table td:last-child{padding-top:0;padding-bottom:14px}
+  .scenario-table tr:last-child{border-bottom:none}
 }
 .tag-a{
   display:inline-block;
@@ -373,7 +395,10 @@ section:last-of-type{border-bottom:none}
   .pkg-main{border-right:none;border-bottom:1px solid var(--rule)}
   .pkg-scope{grid-template-columns:1fr 1fr}
 }
-@media(max-width:540px){.pkg-scope{grid-template-columns:1fr}}
+@media(max-width:540px){
+  .pkg-scope{grid-template-columns:1fr}
+  .pkg-main,.pkg-side{padding:28px 22px}
+}
 
 /* ── FLOW (PROCESS) ──────────────────────────────────────── */
 .flow{border:1px solid var(--rule);background:#fff;overflow:hidden}
@@ -405,6 +430,8 @@ section:last-of-type{border-bottom:none}
 @media(max-width:820px){
   .flow-step{grid-template-columns:1fr}
   .flow-idx,.flow-body{border-right:none;border-bottom:1px solid var(--rule)}
+  .flow-idx{flex-direction:row;align-items:center;gap:12px;padding:14px 20px}
+  .flow-body,.flow-out{padding:18px 20px}
 }
 
 /* ── REVENUE LAYERS ──────────────────────────────────────── */
@@ -474,7 +501,11 @@ section:last-of-type{border-bottom:none}
   width:5px;height:5px;background:var(--volt);
 }
 @media(max-width:900px){.regions{grid-template-columns:1fr 1fr}}
-@media(max-width:560px){.regions{grid-template-columns:1fr}}
+@media(max-width:520px){.regions{grid-template-columns:1fr}}
+
+/* ── TABLE SCROLL WRAPPER ───────────────────────────────── */
+.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+@media(max-width:680px){.table-scroll{overflow-x:visible}}
 
 /* ── RISK TABLE ──────────────────────────────────────────── */
 .risk{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--rule)}
@@ -496,9 +527,19 @@ section:last-of-type{border-bottom:none}
   border-right:1px solid var(--rule2);
   background:var(--page);font-size:13px;
 }
+.risk td:first-child{width:210px}
+.risk td:nth-child(2){width:80px;text-align:center}
 .risk td:last-child{font-size:13px;color:var(--muted)}
 .impact--h{color:#9B2A2A;font-weight:700}
-.impact--m{color:#D4840A;font-weight:600}
+.impact--m{color:#B85F00;font-weight:600}
+@media(max-width:680px){
+  .risk thead{display:none}
+  .risk tr{display:block;border-bottom:2px solid var(--rule)}
+  .risk td{display:block;width:100%!important;border-right:none;border-bottom:1px solid var(--rule2);padding:10px 14px;text-align:left}
+  .risk td:first-child{background:var(--slate);color:#fff;font-size:12px;letter-spacing:.05em;padding:12px 14px;border-right:none}
+  .risk td:nth-child(2){padding-bottom:4px;font-size:13px}
+  .risk tr:last-child{border-bottom:none}
+}
 
 /* ── DATA REQUEST ────────────────────────────────────────── */
 .data-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--rule);border:1px solid var(--rule)}
@@ -514,7 +555,7 @@ section:last-of-type{border-bottom:none}
   width:5px;height:5px;background:var(--volt);border-radius:1px;
 }
 @media(max-width:760px){.data-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:480px){.data-grid{grid-template-columns:1fr}}
+@media(max-width:520px){.data-grid{grid-template-columns:1fr}}
 
 /* ── TIMELINE ─────────────────────────────────────────────── */
 .timeline{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--rule);background:var(--rule);gap:1px}
@@ -552,7 +593,11 @@ section:last-of-type{border-bottom:none}
 }
 .cta-sec h2 b{font-weight:650;color:var(--volt)}
 .cta-sec p{font-size:17px;color:rgba(255,255,255,.68);max-width:740px;line-height:1.72;margin-bottom:40px}
-.cta-sec .actions{display:flex;gap:16px;flex-wrap:wrap}
+.cta-sec .actions{display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+@media(max-width:520px){
+  .cta-sec .actions{flex-direction:column;align-items:stretch}
+  .cta-sec .actions .btn{text-align:center;padding:16px 22px}
+}
 
 /* ── BOUNDARY BOX ────────────────────────────────────────── */
 .boundary{
@@ -580,7 +625,7 @@ section:last-of-type{border-bottom:none}
 .footer{
   background:var(--slate);
   padding:36px 0;
-  border-top:none;
+  border-top:3px solid var(--volt);
 }
 .footer__inner{
   max-width:var(--w);margin:0 auto;padding:0 var(--pad);
@@ -766,7 +811,7 @@ section:last-of-type{border-bottom:none}
         </div>
       </div>
     </div>
-    <div style="margin-top:44px;overflow-x:auto">
+    <div class="table-scroll" style="margin-top:44px">
       <table class="scenario-table">
         <thead>
           <tr>
@@ -1195,7 +1240,7 @@ section:last-of-type{border-bottom:none}
     <span class="sec-eye">09 — Risk Matrix</span>
     <h2 class="sec-h2" style="margin-bottom:14px">项目风险矩阵与<b>缓解措施</b></h2>
     <p class="sec-lead" style="margin-bottom:44px">以下是印尼矿山项目最常见的高影响风险项及对应缓解策略。首单选择应优先降低这些风险的暴露面，而非追求宏大叙事。</p>
-    <div style="overflow-x:auto">
+    <div class="table-scroll">
       <table class="risk">
         <thead>
           <tr>
@@ -1321,7 +1366,7 @@ section:last-of-type{border-bottom:none}
       <a class="btn" href="https://docs.energizeos.com/ems/">了解EMS平台能力</a>
     </div>
     <div style="margin-top:44px;padding-top:32px;border-top:1px solid rgba(255,255,255,.08)">
-      <p style="font-size:13px;color:rgba(255,255,255,.38);line-height:1.7;max-width:680px">
+      <p style="font-size:12.5px;color:rgba(255,255,255,.35);line-height:1.72;max-width:720px">
         Energize Solutions Inc. 是一家在加拿大和美国注册的能源基础设施工程公司，专注于工业与矿山场景的EMS/BESS部署，在运项目超过500MW，客户包括PepsiCo/SDG&amp;E等工商业用户，并具备ERCOT、PJM和Hydro-Québec市场经验。我们在本页提出的合作建议基于公开市场数据与工程实践，不构成投资建议，所有项目参数以实际现场数据确认后为准。
       </p>
     </div>
