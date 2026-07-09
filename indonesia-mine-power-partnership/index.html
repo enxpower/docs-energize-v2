@@ -102,42 +102,31 @@ a{text-decoration:none;color:inherit}
   .hero-actions .btn{text-align:center;padding:15px 22px}
 }
 
-/* ── CREDIBILITY STRIP ───────────────────────────────────── */
-/* "Why us" bar immediately below hero */
-.cred{background:var(--tint);border-bottom:1px solid var(--rule)}
-.cred-in{max-width:var(--w);margin:0 auto;padding:0 var(--pad);display:grid;grid-template-columns:repeat(4,1fr);border-left:1px solid var(--rule)}
-.cred-item{padding:28px 24px;border-right:1px solid var(--rule);display:flex;flex-direction:column;gap:5px}
-.cred-num{font-size:26px;font-weight:280;letter-spacing:-.04em;color:var(--slate);line-height:1}
-.cred-num span{color:var(--volt)}
-.cred-label{font-size:12px;font-weight:600;color:var(--slate)}
-.cred-desc{font-size:12px;color:var(--muted);line-height:1.5}
+/* ── UNIFIED DATA BAR (2 rows × 4 cols) ─────────────────── */
+.databar{background:#fff;border-bottom:1px solid var(--rule)}
+.databar-in{max-width:var(--w);margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);border-left:1px solid var(--rule)}
+.db-cell{padding:30px 28px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);display:flex;flex-direction:column;gap:5px}
+.db-cell--us{background:var(--tint)}
+.db-cell--mkt{background:#fff;border-bottom:none!important}
+.db-num{font-size:clamp(20px,2.4vw,32px);font-weight:280;letter-spacing:-.04em;color:var(--slate);line-height:1.05}
+.db-num span{color:var(--volt)}
+.db-num--text{font-size:clamp(15px,1.7vw,20px);font-weight:600;letter-spacing:-.01em;line-height:1.25;color:var(--slate)}
+.db-num--text span{color:var(--volt)}
+.db-num--word{font-size:clamp(12px,1.4vw,16px);font-weight:600;letter-spacing:.03em;line-height:1.4;color:var(--slate)}
+.db-num--word span{color:var(--volt)}
+.db-label{font-size:11.5px;font-weight:700;color:var(--slate);letter-spacing:.01em}
+.db-desc{font-size:11.5px;color:var(--muted);line-height:1.52}
 @media(max-width:800px){
-  .cred-in{grid-template-columns:1fr 1fr;border-left:none}
-  .cred-item{border-left:1px solid var(--rule)}
-  .cred-item:nth-child(even){border-right:1px solid var(--rule)}
-  .cred-item:nth-child(3),.cred-item:nth-child(4){border-top:1px solid var(--rule)}
+  .databar-in{grid-template-columns:1fr 1fr;border-left:none}
+  .db-cell{border-left:1px solid var(--rule)}
+  .db-cell:nth-child(even){border-right:1px solid var(--rule)}
+  .db-cell:nth-child(5),.db-cell:nth-child(6),.db-cell:nth-child(7),.db-cell:nth-child(8){border-top:none}
+  .db-cell:nth-child(7),.db-cell:nth-child(8){border-bottom:none!important}
 }
 @media(max-width:420px){
-  .cred-in{grid-template-columns:1fr;border-left:none}
-  .cred-item{border-left:none;border-right:none;border-top:1px solid var(--rule);padding:20px var(--pad)}
-  .cred-item:first-child{border-top:none}
-}
-
-/* ── STATS STRIP ─────────────────────────────────────────── */
-.stats{background:#fff;border-bottom:1px solid var(--rule)}
-.stats-in{max-width:var(--w);margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);border-left:1px solid var(--rule);border-top:1px solid var(--rule)}
-.stat{padding:36px 32px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule)}
-.stat-num{font-size:clamp(24px,3vw,40px);font-weight:280;letter-spacing:-.04em;color:var(--slate);margin-bottom:6px;line-height:1.1}
-.stat-num span{color:var(--volt)}
-.stat-desc{font-size:12.5px;color:var(--muted);line-height:1.55}
-@media(max-width:800px){
-  .stats-in{grid-template-columns:1fr 1fr;border-left:none}
-  .stat{border-left:1px solid var(--rule)}
-  .stat:nth-child(even){border-right:1px solid var(--rule)}
-}
-@media(max-width:420px){
-  .stats-in{grid-template-columns:1fr;border-left:none}
-  .stat{border-left:none;border-right:none;padding:20px var(--pad)}
+  .databar-in{grid-template-columns:1fr;border-left:none}
+  .db-cell{border-left:none;border-right:none;padding:20px var(--pad)}
+  .db-cell:last-child{border-bottom:none!important}
 }
 
 /* ── SECTION SHELL ───────────────────────────────────────── */
@@ -443,51 +432,54 @@ section{padding:80px 0;border-bottom:1px solid var(--rule2);scroll-margin-top:66
   </div>
 </section>
 
-<!-- CREDIBILITY STRIP — "Why us" anchored at top -->
-<div class="cred" id="why-us">
-  <div class="cred-in">
-    <div class="cred-item">
-      <div class="cred-num"><span>500</span>MW+</div>
-      <div class="cred-label">工业与矿山在运项目</div>
-      <div class="cred-desc">2019年起持续部署，含PepsiCo/SDG&E、ERCOT、PJM和Hydro-Québec市场</div>
-    </div>
-    <div class="cred-item">
-      <div class="cred-num"><span>6</span>年+</div>
-      <div class="cred-label">工业储能与EMS专注</div>
-      <div class="cred-desc">非泛能源公司，专注工业负荷侧与微电网场景，EMS/BESS/ECP/SCADA深度集成</div>
-    </div>
-    <div class="cred-item">
-      <div class="cred-num"><span>3</span>大市场</div>
-      <div class="cred-label">北美电力市场经验</div>
-      <div class="cred-desc">ERCOT、PJM、Hydro-Québec跨市场合规交付，了解复杂项目的接口与责任边界</div>
-    </div>
-    <div class="cred-item">
-      <div class="cred-num"><span>0</span></div>
-      <div class="cred-label">不抢EPC总包位</div>
-      <div class="cred-desc">不与央企争总包，提供机会识别、系统架构、Energy Twin、EMS/SCADA接口与O&M数据服务</div>
-    </div>
-  </div>
-</div>
+<!-- UNIFIED DATABAR: Energize credentials + Indonesia market context -->
+<div class="databar" id="why-us">
+  <div class="databar-in">
 
-<!-- MARKET STATS -->
-<div class="stats">
-  <div class="stats-in">
-    <div class="stat">
-      <div class="stat-num">~<span>60</span>%</div>
-      <div class="stat-desc">印尼占全球镍矿供给权重，2020年起全面禁止原矿出口、强制下游化</div>
+    <!-- Row label: Energize -->
+    <div class="db-cell db-cell--us">
+      <div class="db-num"><span>500</span>MW+</div>
+      <div class="db-label">工业与矿山在运项目</div>
+      <div class="db-desc">2019年起持续部署，客户含PepsiCo/SDG&E，覆盖工商业储能与微电网场景</div>
     </div>
-    <div class="stat">
-      <div class="stat-num"><span>890</span>MW</div>
-      <div class="stat-desc">Harita Obi Island园区在运电力，另有1.2GW正在扩建</div>
+    <div class="db-cell db-cell--us">
+      <div class="db-num"><span>2019</span></div>
+      <div class="db-label">开始工业EMS/BESS部署</div>
+      <div class="db-desc">专注工业负荷侧与微电网，EMS、BESS、ECP、SCADA深度集成，非泛能源平台</div>
     </div>
-    <div class="stat">
-      <div class="stat-num"><span>4×</span>18MW</div>
-      <div class="stat-desc">PowerChina已公开KNI/IPIP燃机EPC开工，东南苏拉威西</div>
+    <div class="db-cell db-cell--us">
+      <div class="db-num--word">ERCOT · PJM<br><span>Hydro-Québec</span></div>
+      <div class="db-label">北美多市场合规交付</div>
+      <div class="db-desc">三个电力市场均有在运项目，了解复杂项目接口、合规边界与长周期O&M</div>
     </div>
-    <div class="stat">
-      <div class="stat-num"><span>12</span>个月</div>
-      <div class="stat-desc">首单推荐商业结构：EPC + O&M，锁定运行数据、绑定二期复购</div>
+    <div class="db-cell db-cell--us">
+      <div class="db-num--text">不抢 <span>EPC</span> 总包</div>
+      <div class="db-label">与央企互补，不竞争</div>
+      <div class="db-desc">不与央企争总包，专注机会识别、系统架构、EMS/SCADA接口与O&M数据服务</div>
     </div>
+
+    <!-- Row 2: Indonesia market context -->
+    <div class="db-cell db-cell--mkt">
+      <div class="db-num">~<span>60</span>%</div>
+      <div class="db-label">印尼占全球镍矿供给</div>
+      <div class="db-desc">2020年起全面禁止原矿出口、强制下游化，基础设施需求随产业链扩张持续增长</div>
+    </div>
+    <div class="db-cell db-cell--mkt">
+      <div class="db-num"><span>890</span>MW</div>
+      <div class="db-label">Harita Obi Island在运电力</div>
+      <div class="db-desc">另有1.2GW正在扩建；矿山至冶炼短倒距离短，是固定电气化的典型物理场景</div>
+    </div>
+    <div class="db-cell db-cell--mkt">
+      <div class="db-num"><span>4×</span>18MW</div>
+      <div class="db-label">KNI/IPIP燃机EPC开工</div>
+      <div class="db-desc">PowerChina已公开东南苏拉威西Pomalaa/Kolaka园区燃机电站EPC项目开工</div>
+    </div>
+    <div class="db-cell db-cell--mkt">
+      <div class="db-num"><span>12</span>个月</div>
+      <div class="db-label">首单推荐O&M期限</div>
+      <div class="db-desc">EPC+12个月O&M商业结构锁定运行数据，形成二期复制的数据与信任基础</div>
+    </div>
+
   </div>
 </div>
 
