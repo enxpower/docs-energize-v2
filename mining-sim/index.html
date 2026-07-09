@@ -3,153 +3,268 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Mine Microgrid Simulator · EnergizeOS · V4.0</title>
-<meta name="description" content="Professional mine microgrid simulation: off-grid, grid-tied, hybrid. VSG/BESS/PCS/Diesel/PV/Wind coordination, UFLS, N-1, black start, Q-V, protection."/>
+<title>Mine Microgrid Simulator · EnergizeOS · V4.1</title>
+<meta name="description" content="Professional mine microgrid simulation — Off-Grid, Grid-Tied, Hybrid. VSG · BESS · Diesel · PV · Wind · UFLS · Q-V · N-1"/>
 <style>
-/* ── EnergizeOS Design Tokens ───────────────────────────── */
+/* ═══════════════════════════════════════════════════════════
+   EnergizeOS VI — Slate & Volt, WHITE-GROUND PRIMARY
+   Ref: docs.energizeos.com/vi/
+   Palette: Slate #1A2B3C · Ocean #2E4A6E · Volt #D4840A
+            Tint #FDF4E7  · White #FFFFFF
+═══════════════════════════════════════════════════════════ */
 :root{
-  --slate:#1A2B3C; --mid:#2E4A6E; --volt:#D4840A; --volt-hi:#F59E0B;
-  --tint:#FDF4E7; --bg:#0D1B2A; --surface:#132233; --card:#1C3248;
-  --border:#243D56; --muted:#64849E; --text:#E8F0F7; --sub:#A8C0D4;
-  --ok:#22C55E; --warn:#F59E0B; --alert:#EF4444; --info:#3B82F6;
-  --pv:#F59E0B; --wind:#38BDF8; --diesel:#6366F1; --bess:#22C55E;
-  --grid:#A78BFA; --load:#94A3B8; --freq:#E879F9;
-  --r:10px; --r-sm:6px; --shadow:0 2px 16px #00000040;
-  font-size:13px;
+  /* Brand */
+  --slate:#1A2B3C; --ocean:#2E4A6E; --volt:#D4840A; --volt-dk:#B86D07;
+  --tint:#FDF4E7;
+  /* Semantic UI (light-ground) */
+  --bg:#F7F8FA;          /* page background — near-white, not black */
+  --surface:#FFFFFF;     /* card / panel background */
+  --sidebar-bg:#F0F2F5;  /* sidebar panel */
+  --border:#D8DDE5;      /* subtle grey border */
+  --text:#1A2B3C;        /* primary text = slate */
+  --sub:#4A6070;         /* secondary text */
+  --muted:#8096A8;       /* placeholder / disabled */
+  --input-bg:#FFFFFF;
+  --input-border:#C5CDD6;
+  /* Status colours */
+  --ok:#16A34A; --ok-bg:#DCFCE7; --ok-border:#86EFAC;
+  --warn:#B45309; --warn-bg:#FEF3C7; --warn-border:#FCD34D;
+  --alert:#DC2626; --alert-bg:#FEE2E2; --alert-border:#FCA5A5;
+  /* Chart series */
+  --c-pv:#D4840A; --c-wind:#0EA5E9; --c-diesel:#7C3AED;
+  --c-bess:#16A34A; --c-grid:#8B5CF6; --c-load:#64748B;
+  --c-freq:#C026D3; --c-volt:#B45309;
+  /* Spacing */
+  --r:8px; --r-sm:5px;
+  font-size:12px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter','Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
-#app{display:flex;flex-direction:column;min-height:100vh}
-.topbar{background:var(--slate);border-bottom:1px solid var(--border);padding:10px 18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;position:sticky;top:0;z-index:100}
+html,body{height:100%;font-family:'Helvetica Neue',Helvetica,Arial,system-ui,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+
+/* ── APP SHELL — full height, no overflow waste ── */
+#app{display:flex;flex-direction:column;height:100vh;min-height:600px}
+
+/* ── TOPBAR ── */
+.topbar{
+  background:var(--slate);color:#fff;
+  padding:0 20px;height:48px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;border-bottom:3px solid var(--volt)
+}
 .brand{display:flex;align-items:center;gap:10px}
-.brand-mark{width:28px;height:28px;background:var(--volt);border-radius:5px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:#fff;letter-spacing:-.5px}
-.brand-name{font-weight:700;font-size:15px;letter-spacing:-.2px}
-.brand-name span{color:var(--volt)}
-.topbar-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.badge{font-size:10px;font-weight:600;padding:3px 7px;border-radius:20px;background:var(--card);border:1px solid var(--border);color:var(--sub);letter-spacing:.4px;text-transform:uppercase}
-.badge.live{border-color:var(--ok);color:var(--ok)}
-.badge.paused{border-color:var(--warn);color:var(--warn)}
-.badge.ok{border-color:var(--ok);color:var(--ok)}
-.main{display:grid;grid-template-columns:260px 1fr;gap:0;flex:1}
-.sidebar{background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:12px 10px;display:flex;flex-direction:column;gap:4px}
-.section-head{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);padding:8px 6px 4px;margin-top:4px}
-.card-param{background:var(--card);border:1px solid var(--border);border-radius:var(--r-sm);padding:10px 10px 8px}
-.card-param .card-title{font-size:11px;font-weight:700;color:var(--volt);margin-bottom:6px;display:flex;align-items:center;gap:5px}
-.field{margin-bottom:5px}
-.field label{display:block;font-size:10px;color:var(--sub);margin-bottom:2px}
-.field input[type=number],.field select{width:100%;padding:5px 7px;background:var(--slate);border:1px solid var(--border);border-radius:var(--r-sm);color:var(--text);font-size:11px;outline:none;transition:.15s}
-.field input:focus,.field select:focus{border-color:var(--volt)}
+/* 2×2 mark — official grid */
+.mark{width:24px;height:24px;display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.mark-a,.mark-d{background:var(--slate);border:1.5px solid #fff}
+.mark-b,.mark-c{background:var(--volt)}
+.brand-text{font-size:14px;font-weight:700;letter-spacing:.02em;color:#fff}
+.brand-text em{color:var(--volt);font-style:normal}
+.brand-sub{font-size:9px;color:#A8C0D4;letter-spacing:.06em;text-transform:uppercase;margin-top:1px}
+.topbar-right{display:flex;align-items:center;gap:8px}
+.tbadge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:12px;border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.8);letter-spacing:.04em;text-transform:uppercase}
+.tbadge.live{border-color:#86EFAC;color:#86EFAC}
+.tbadge.done{border-color:var(--volt);color:var(--volt)}
+#fBadge{font-family:'Courier New',monospace;letter-spacing:.05em}
+.btn-lang{height:26px;padding:0 10px;border-radius:4px;border:1px solid rgba(255,255,255,.3);background:transparent;color:#fff;font-size:10px;font-weight:700;cursor:pointer;letter-spacing:.04em;transition:.15s}
+.btn-lang:hover{background:rgba(255,255,255,.1)}
+
+/* ── MAIN — sidebar + content fill remaining height ── */
+.main{display:flex;flex:1;min-height:0;overflow:hidden}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:248px;flex-shrink:0;background:var(--sidebar-bg);
+  border-right:1px solid var(--border);
+  overflow-y:auto;overflow-x:hidden;
+  padding:10px 8px 16px
+}
+.sidebar::-webkit-scrollbar{width:4px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.s-head{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--volt);padding:10px 6px 4px;border-top:1px solid var(--border);margin-top:6px}
+.s-head:first-child{border-top:none;margin-top:0}
+.s-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:8px;margin-bottom:6px}
+.s-card-title{font-size:10px;font-weight:700;color:var(--slate);margin-bottom:6px;display:flex;align-items:center;gap:4px}
+.field{margin-bottom:4px}
+.field label{display:block;font-size:9.5px;color:var(--sub);margin-bottom:2px;font-weight:500}
+.field input[type=number],
+.field select{
+  width:100%;padding:4px 6px;
+  background:var(--input-bg);border:1px solid var(--input-border);
+  border-radius:var(--r-sm);color:var(--text);font-size:10.5px;
+  outline:none;transition:.12s;-moz-appearance:textfield
+}
+.field input:focus,.field select:focus{border-color:var(--volt);box-shadow:0 0 0 2px #D4840A22}
+.field input::-webkit-inner-spin-button{opacity:.4}
 .field-row{display:flex;gap:4px}
 .field-row .field{flex:1}
-.content{display:flex;flex-direction:column;overflow:hidden}
-.plots-grid{display:grid;grid-template-columns:1fr 380px;gap:8px;padding:10px 12px 0}
-.plot-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:10px;position:relative}
-.plot-title{font-size:11px;font-weight:700;color:var(--sub);margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px}
-canvas.main-canvas{width:100%;height:220px;border-radius:var(--r-sm);display:block;background:var(--surface)}
-canvas.sub-canvas{width:100%;height:175px;border-radius:var(--r-sm);display:block;background:var(--surface)}
-.kpi-strip{display:flex;gap:6px;padding:8px 12px;overflow-x:auto;scrollbar-width:none;flex-wrap:wrap}
-.kpi-strip::-webkit-scrollbar{display:none}
-.kpi{background:var(--card);border:1px solid var(--border);border-radius:var(--r-sm);padding:7px 10px;min-width:108px;flex:0 0 auto}
-.kpi-label{font-size:9px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
-.kpi-val{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.5px}
-.kpi.alert .kpi-val{color:var(--alert)}
-.kpi.warn .kpi-val{color:var(--warn)}
+/* mode tabs */
+.mode-tabs{display:flex;gap:3px;margin-bottom:6px}
+.tab{
+  flex:1;text-align:center;padding:5px 4px;border-radius:var(--r-sm);
+  font-size:9.5px;font-weight:700;letter-spacing:.04em;
+  cursor:pointer;border:1.5px solid var(--border);
+  background:var(--surface);color:var(--muted);
+  transition:.12s;text-transform:uppercase
+}
+.tab.active{background:var(--slate);border-color:var(--slate);color:#fff}
+.tab:not(.active):hover{border-color:var(--ocean);color:var(--ocean)}
+/* toggle */
+.tog-wrap{display:flex;align-items:center;gap:6px;cursor:pointer;padding:4px 0;margin-top:2px}
+.tog-wrap span{font-size:9.5px;color:var(--sub)}
+.tog{width:28px;height:15px;border-radius:8px;background:var(--border);position:relative;transition:.2s;flex-shrink:0}
+.tog.on{background:var(--ok)}
+.tog::after{content:'';position:absolute;top:2px;left:2px;width:11px;height:11px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.tog.on::after{left:15px}
+/* alert label in sidebar */
+.s-alert-label{font-size:9px;font-weight:700;color:var(--alert);letter-spacing:.04em;margin:4px 0 2px;text-transform:uppercase}
+
+/* ── CONTENT ── */
+.content{flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
+
+/* ── STATUS ROW ── */
+.status-row{display:flex;gap:5px;flex-wrap:wrap;padding:8px 12px 6px;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0}
+.sp{font-size:9.5px;font-weight:700;padding:3px 8px;border-radius:12px;border:1px solid var(--border);color:var(--muted);display:inline-flex;align-items:center;gap:4px;letter-spacing:.02em}
+.sp::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0}
+.sp.ok{color:var(--ok);border-color:var(--ok-border);background:var(--ok-bg)}
+.sp.warn{color:var(--warn);border-color:var(--warn-border);background:var(--warn-bg)}
+.sp.alert{color:var(--alert);border-color:var(--alert-border);background:var(--alert-bg)}
+.sp.mode{color:var(--volt);border-color:var(--volt);background:var(--tint)}
+
+/* ── PLOTS AREA ── fills available space ── */
+.plots-area{display:flex;gap:8px;padding:8px 12px 0;flex:1;min-height:0;overflow:hidden}
+.plot-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:0}
+.plot-side{width:340px;flex-shrink:0;display:flex;flex-direction:column;gap:8px}
+.plot-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:8px;position:relative;display:flex;flex-direction:column}
+.plot-card.main{flex:1;min-height:0}
+.plot-card.sub{flex:1;min-height:0}
+.plot-title{font-size:9.5px;font-weight:700;color:var(--sub);margin-bottom:5px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:3px;flex-shrink:0}
+canvas{width:100%;flex:1;min-height:0;display:block;border-radius:var(--r-sm)}
+.legend{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.leg{display:flex;align-items:center;gap:3px;font-size:9px;color:var(--sub)}
+.leg-sw{width:14px;height:2.5px;border-radius:2px;flex-shrink:0}
+/* overlay */
+.overlay{position:absolute;inset:0;background:rgba(247,248,250,.85);display:flex;align-items:center;justify-content:center;border-radius:var(--r);pointer-events:none;backdrop-filter:blur(1px)}
+.overlay-txt{color:var(--muted);font-size:11px;font-weight:600;display:flex;align-items:center;gap:6px;border:1px solid var(--border);padding:7px 14px;border-radius:20px;background:var(--surface)}
+
+/* ── KPI STRIP ── */
+.kpi-strip{display:flex;gap:5px;padding:6px 12px;flex-wrap:wrap;background:var(--bg);border-top:1px solid var(--border);flex-shrink:0}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:5px 8px;min-width:100px;flex:0 1 auto}
+.kpi-lbl{font-size:8.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:1px}
+.kpi-val{font-size:14px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.3px;color:var(--slate)}
 .kpi.ok .kpi-val{color:var(--ok)}
-.schematic-strip{padding:0 12px 8px;display:flex;gap:8px}
-.schematic-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:10px;flex:1}
-svg.schematic{width:100%;height:175px}
-.log-row{padding:0 12px 10px}
-#log{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:8px 10px;font-family:'Courier New',monospace;font-size:10px;color:var(--sub);max-height:100px;overflow-y:auto;line-height:1.4}
-.ctrl-bar{background:var(--slate);border-top:1px solid var(--border);padding:10px 14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.btn{padding:0 14px;height:34px;border-radius:var(--r-sm);border:1.5px solid var(--border);background:var(--card);color:var(--text);font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:.15s}
-.btn:hover{border-color:var(--volt);color:var(--volt)}
+.kpi.warn .kpi-val{color:var(--warn)}
+.kpi.alert .kpi-val{color:var(--alert)}
+
+/* ── ONE-LINE ── */
+.oneline-row{padding:5px 12px 6px;flex-shrink:0}
+.oneline-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:8px}
+.oneline-title{font-size:9px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}
+svg.sld{width:100%;height:130px}
+
+/* ── LOG ── */
+.log-wrap{padding:0 12px 5px;flex-shrink:0}
+#log{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:6px 8px;font-family:'Courier New',monospace;font-size:9.5px;color:var(--sub);max-height:72px;overflow-y:auto;line-height:1.45}
+#log::-webkit-scrollbar{width:3px}
+#log::-webkit-scrollbar-thumb{background:var(--border)}
+
+/* ── CTRL BAR ── */
+.ctrl-bar{
+  background:var(--surface);border-top:1px solid var(--border);
+  padding:8px 14px;display:flex;align-items:center;gap:8px;
+  flex-shrink:0
+}
+/* ── BUTTON STATES — correct active/inactive logic ──
+   The ACTION button currently applicable = Volt filled (primary)
+   Other buttons = outline ghost
+   When running: Pause is primary, Start is ghost disabled-look
+   When paused/idle: Start is primary, Pause is ghost
+   Reset is always ghost
+*/
+.btn{
+  height:32px;padding:0 14px;border-radius:var(--r-sm);
+  font-size:11.5px;font-weight:700;cursor:pointer;
+  display:inline-flex;align-items:center;gap:5px;
+  transition:.12s;border:1.5px solid var(--border);
+  background:var(--surface);color:var(--sub);letter-spacing:.02em
+}
+.btn:hover:not(:disabled){border-color:var(--ocean);color:var(--ocean)}
+.btn:disabled{opacity:.45;cursor:default}
+/* primary = volt fill */
 .btn.primary{background:var(--volt);border-color:var(--volt);color:#fff}
-.btn.primary:hover{background:var(--volt-hi);border-color:var(--volt-hi)}
-.lang-btn{font-size:11px;padding:0 10px;height:30px}
-.legend{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.leg-item{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--sub)}
-.leg-swatch{width:18px;height:3px;border-radius:2px}
-.mode-tabs{display:flex;gap:4px;margin-bottom:6px}
-.tab{padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.3px;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--muted);transition:.15s;text-transform:uppercase}
-.tab.active{background:var(--volt);border-color:var(--volt);color:#fff}
-.status-row{display:flex;gap:6px;flex-wrap:wrap;padding:0 12px 4px}
-.status-pill{font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px;border:1px solid var(--border);display:flex;align-items:center;gap:4px;color:var(--muted)}
-.status-pill.ok{border-color:var(--ok);color:var(--ok);background:#22c55e18}
-.status-pill.warn{border-color:var(--warn);color:var(--warn);background:#f59e0b18}
-.status-pill.alert{border-color:var(--alert);color:var(--alert);background:#ef444418}
-.status-pill::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;display:inline-block}
-.overlay{position:absolute;inset:0;background:#0D1B2Acc;display:flex;align-items:center;justify-content:center;border-radius:var(--r);pointer-events:none;backdrop-filter:blur(2px)}
-.overlay-text{color:var(--muted);font-size:12px;display:flex;align-items:center;gap:8px;border:1px solid var(--border);padding:8px 14px;border-radius:20px;background:var(--card)}
-.toggle-wrap{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--sub);cursor:pointer;margin-top:6px}
-.toggle{width:28px;height:16px;background:var(--border);border-radius:8px;position:relative;transition:.2s;flex-shrink:0}
-.toggle.on{background:var(--ok)}
-.toggle::after{content:'';position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:#fff;transition:.2s}
-.toggle.on::after{left:14px}
+.btn.primary:hover:not(:disabled){background:var(--volt-dk);border-color:var(--volt-dk)}
+/* danger-ghost */
+.btn.danger-ghost{border-color:var(--alert-border);color:var(--alert)}
+.ctrl-hint{flex:1;font-size:9px;color:var(--muted);text-align:right}
+
+/* ── SCROLLBAR global ── */
 ::-webkit-scrollbar{width:5px;height:5px}
-::-webkit-scrollbar-track{background:var(--surface)}
+::-webkit-scrollbar-track{background:var(--bg)}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
-input[type=range]{-webkit-appearance:none;width:100%;height:4px;border-radius:2px;background:var(--border);outline:none;cursor:pointer}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--volt);cursor:pointer}
-@media(max-width:900px){.main{grid-template-columns:1fr}.sidebar{display:none}.plots-grid{grid-template-columns:1fr}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:860px){
+  .sidebar{display:none}
+  .plot-side{display:none}
+  .plots-area{flex-direction:column}
+}
 </style>
 </head>
 <body>
 <div id="app">
+
+<!-- ══ TOPBAR ══════════════════════════════════════════════ -->
 <div class="topbar">
   <div class="brand">
-    <div class="brand-mark">E</div>
+    <!-- 2×2 mark per VI spec -->
+    <div class="mark">
+      <div class="mark-a"></div><div class="mark-b"></div>
+      <div class="mark-c"></div><div class="mark-d"></div>
+    </div>
     <div>
-      <div class="brand-name"><span>Energize</span>OS · Mine Microgrid Simulator</div>
-      <div style="font-size:9px;color:var(--muted);letter-spacing:.5px">V4.0 — Off-Grid · Grid-Tied · Hybrid · VSG · Q-V · UFLS · N-1</div>
+      <div class="brand-text"><em>Energize</em>OS · Mine Microgrid Simulator</div>
+      <div class="brand-sub">V4.1 — Off-Grid · Grid-Tied · Hybrid · VSG · UFLS · Q-V</div>
     </div>
   </div>
   <div class="topbar-right">
-    <span class="badge" id="modeBadge">OFF-GRID</span>
-    <span class="badge" id="simBadge">IDLE</span>
-    <span class="badge" id="fBadge">f = 60.000 Hz</span>
-    <button class="btn lang-btn" id="langBtn">中文</button>
+    <span class="tbadge" id="modeBadge">OFF-GRID</span>
+    <span class="tbadge" id="simBadge">IDLE</span>
+    <span class="tbadge" id="fBadge">f = 60.000 Hz</span>
+    <button class="btn-lang" id="langBtn">中文</button>
   </div>
 </div>
 
+<!-- ══ MAIN ════════════════════════════════════════════════ -->
 <div class="main">
-<div class="sidebar" id="sidebar">
 
-  <div class="section-head" data-i18n="s_mode">System Mode</div>
-  <div class="card-param">
-    <div class="card-title">⚡ <span data-i18n="s_mode">Supply Mode</span></div>
+<!-- ── SIDEBAR ── -->
+<div class="sidebar">
+
+  <div class="s-head" data-i18n="s_mode">System Mode</div>
+  <div class="s-card">
     <div class="mode-tabs" id="modeTabs">
       <div class="tab active" data-mode="offgrid">Off-Grid</div>
       <div class="tab" data-mode="gridtied">Grid-Tied</div>
       <div class="tab" data-mode="hybrid">Hybrid</div>
     </div>
-    <div class="field">
-      <label data-i18n="p_simh">Simulation (hours)</label>
-      <input type="number" id="simHours" value="24" min="1" max="168">
-    </div>
+    <div class="field"><label data-i18n="p_simh">Simulation hours</label><input type="number" id="simHours" value="24" min="1" max="168"></div>
     <div class="field-row">
       <div class="field"><label>dt (s)</label><input type="number" id="dt" value="0.5" min="0.05" max="2" step="0.05"></div>
       <div class="field"><label>f₀ (Hz)</label><input type="number" id="f0" value="60" min="50" max="60" step="10"></div>
     </div>
-    <div class="field"><label data-i18n="p_dsys">System damping D (pu)</label><input type="number" id="Dsys" value="2.2" min="0.5" max="8" step="0.1"></div>
+    <div class="field"><label data-i18n="p_dsys">Damping D (pu)</label><input type="number" id="Dsys" value="2.2" min="0.5" max="8" step="0.1"></div>
   </div>
 
-  <div class="card-param" id="gridCard" style="display:none">
-    <div class="card-title">🔌 <span data-i18n="s_grid">Grid Supply</span></div>
+  <div class="s-card" id="gridCard" style="display:none">
+    <div class="s-card-title">🔌 <span data-i18n="s_grid">Grid Supply</span></div>
     <div class="field"><label data-i18n="p_gridMW">Grid capacity (MW)</label><input type="number" id="gridMW" value="20" min="0" step="1"></div>
-    <div class="field"><label data-i18n="p_gridSCR">Grid stiffness (SCR)</label><input type="number" id="gridSCR" value="5" min="0.5" max="50" step="0.5"></div>
-    <div class="field"><label data-i18n="p_tariff">Electricity tariff ($/kWh)</label><input type="number" id="tariff" value="0.12" min="0" step="0.01"></div>
-    <div class="toggle-wrap" onclick="toggleEl('islandable')">
-      <div class="toggle on" id="islandableToggle"></div>
-      <span data-i18n="p_island">Intentional island capable</span>
-    </div>
+    <div class="field"><label data-i18n="p_gridSCR">SCR stiffness</label><input type="number" id="gridSCR" value="5" min="0.5" max="50" step="0.5"></div>
+    <div class="field"><label data-i18n="p_tariff">Tariff ($/kWh)</label><input type="number" id="tariff" value="0.12" min="0" step="0.01"></div>
+    <div class="tog-wrap" onclick="togEl('islandable')"><div class="tog on" id="islandableToggle"></div><span data-i18n="p_island">Intentional island capable</span></div>
     <input type="hidden" id="islandable" value="1">
   </div>
 
-  <div class="section-head" data-i18n="s_geo">Geography / Insolation</div>
-  <div class="card-param">
-    <div class="card-title">🌍 <span data-i18n="s_geo">Geography</span></div>
-    <div class="field">
-      <label data-i18n="p_preset">Preset</label>
+  <div class="s-head" data-i18n="s_geo">Geography / Insolation</div>
+  <div class="s-card">
+    <div class="field"><label data-i18n="p_preset">Preset</label>
       <select id="geoPreset">
         <option value="custom">Custom</option>
         <option value="arctic">Arctic (φ≈70°N)</option>
@@ -166,258 +281,283 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
     <div class="field"><label data-i18n="p_soil">PV soiling (0.7–1)</label><input type="number" id="pvSoil" value="0.90" min="0.5" max="1" step="0.01"></div>
   </div>
 
-  <div class="section-head" data-i18n="s_load">Load Profile</div>
-  <div class="card-param">
-    <div class="card-title">⚙️ <span data-i18n="s_load">Mine Load</span></div>
+  <div class="s-head" data-i18n="s_load">Load Profile</div>
+  <div class="s-card">
     <div class="field"><label data-i18n="p_pload">Base load (MW)</label><input type="number" id="Pload" value="12" min="0" step="0.5"></div>
     <div class="field"><label data-i18n="p_lvar">Variation ± (MW)</label><input type="number" id="loadVar" value="1.5" min="0" step="0.1"></div>
     <div class="field"><label data-i18n="p_alpha">Freq sensitivity α (%/Hz)</label><input type="number" id="alpha" value="2.0" min="0" step="0.1"></div>
-    <div class="field"><label data-i18n="p_motorMW">Motor start impulse (MW)</label><input type="number" id="motorMW" value="2.0" min="0" step="0.2"></div>
-    <div class="field"><label data-i18n="p_motorInterval">Motor start interval (min)</label><input type="number" id="motorInterval" value="45" min="5" max="240" step="5"></div>
+    <div class="field-row">
+      <div class="field"><label data-i18n="p_motorMW">Motor impulse (MW)</label><input type="number" id="motorMW" value="2.0" min="0" step="0.2"></div>
+      <div class="field"><label data-i18n="p_motorInterval">Interval (min)</label><input type="number" id="motorInterval" value="45" min="5" max="240" step="5"></div>
+    </div>
   </div>
 
-  <div class="section-head" data-i18n="s_pv">PV / Solar</div>
-  <div class="card-param">
-    <div class="card-title" style="color:var(--pv)">☀️ <span data-i18n="s_pv">PV Array</span></div>
-    <div class="field"><label>P<sub>max</sub> (MW)</label><input type="number" id="pvMax" value="20" min="0" step="1"></div>
-    <div class="field"><label data-i18n="p_pvshape">Day shape (1–3)</label><input type="number" id="pvShape" value="1.5" min="1" max="3" step="0.1"></div>
-    <div class="field"><label data-i18n="p_cloud">Cloudiness (0–1)</label><input type="number" id="pvCloud" value="0.30" min="0" max="1" step="0.05"></div>
-    <div class="field"><label data-i18n="p_pvramp">Ramp limit (%Pmax/s)</label><input type="number" id="pvRamp" value="8" min="1" max="100" step="1"></div>
+  <div class="s-head" data-i18n="s_pv">PV / Solar</div>
+  <div class="s-card">
+    <div class="field-row">
+      <div class="field"><label>P<sub>max</sub> (MW)</label><input type="number" id="pvMax" value="20" min="0" step="1"></div>
+      <div class="field"><label data-i18n="p_pvshape">Shape (1–3)</label><input type="number" id="pvShape" value="1.5" min="1" max="3" step="0.1"></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label data-i18n="p_cloud">Cloudiness</label><input type="number" id="pvCloud" value="0.30" min="0" max="1" step="0.05"></div>
+      <div class="field"><label data-i18n="p_pvramp">Ramp %/s</label><input type="number" id="pvRamp" value="8" min="1" max="100" step="1"></div>
+    </div>
   </div>
 
-  <div class="section-head" data-i18n="s_wind">Wind</div>
-  <div class="card-param">
-    <div class="card-title" style="color:var(--wind)">💨 <span data-i18n="s_wind">Wind Turbines</span></div>
-    <div class="field"><label>P<sub>max</sub> (MW)</label><input type="number" id="windMax" value="6" min="0" step="1"></div>
-    <div class="field"><label data-i18n="p_vmean">Mean wind (m/s)</label><input type="number" id="windMean" value="8" min="0" step="0.5"></div>
-    <div class="field"><label data-i18n="p_vvar">Variability (0–1)</label><input type="number" id="windVar" value="0.40" min="0" max="1" step="0.05"></div>
-    <div class="field"><label data-i18n="p_windramp">Ramp limit (%Pmax/s)</label><input type="number" id="windRamp" value="5" min="1" max="100" step="1"></div>
+  <div class="s-head" data-i18n="s_wind">Wind</div>
+  <div class="s-card">
+    <div class="field-row">
+      <div class="field"><label>P<sub>max</sub> (MW)</label><input type="number" id="windMax" value="6" min="0" step="1"></div>
+      <div class="field"><label data-i18n="p_vmean">Mean (m/s)</label><input type="number" id="windMean" value="8" min="0" step="0.5"></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label data-i18n="p_vvar">Variability</label><input type="number" id="windVar" value="0.40" min="0" max="1" step="0.05"></div>
+      <div class="field"><label data-i18n="p_windramp">Ramp %/s</label><input type="number" id="windRamp" value="5" min="1" max="100" step="1"></div>
+    </div>
   </div>
 
-  <div class="section-head" data-i18n="s_diesel">Diesel Generators</div>
-  <div class="card-param">
-    <div class="card-title" style="color:var(--diesel)">🔧 <span data-i18n="s_diesel">Diesel Fleet</span></div>
+  <div class="s-head" data-i18n="s_diesel">Diesel Fleet</div>
+  <div class="s-card">
     <div class="field-row">
       <div class="field"><label data-i18n="p_dg33n">3.3 MW online</label><input type="number" id="dg33n" value="3" min="0" max="6" step="1"></div>
-      <div class="field"><label data-i18n="p_dg12n">1.25 MW online</label><input type="number" id="dg12n" value="0" min="0" max="2" step="1"></div>
+      <div class="field"><label data-i18n="p_dg12n">1.25 MW</label><input type="number" id="dg12n" value="0" min="0" max="2" step="1"></div>
     </div>
-    <div class="field"><label data-i18n="p_ddroop">Droop Rₚ (%)</label><input type="number" id="dDroop" value="4" min="1" max="10" step="0.5"></div>
-    <div class="field"><label data-i18n="p_dmin">Min load (pu)</label><input type="number" id="dMin" value="0.35" min="0.1" max="0.6" step="0.05"></div>
     <div class="field-row">
-      <div class="field"><label data-i18n="p_rampup">Ramp↑ (MW/s)</label><input type="number" id="rampUp" value="0.2" min="0.05" step="0.05"></div>
-      <div class="field"><label data-i18n="p_rampdn">Ramp↓ (MW/s)</label><input type="number" id="rampDn" value="1.0" min="0.1" step="0.1"></div>
+      <div class="field"><label data-i18n="p_ddroop">Droop (%)</label><input type="number" id="dDroop" value="4" min="1" max="10" step="0.5"></div>
+      <div class="field"><label data-i18n="p_dmin">Min load</label><input type="number" id="dMin" value="0.35" min="0.1" max="0.6" step="0.05"></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label data-i18n="p_rampup">Ramp↑ MW/s</label><input type="number" id="rampUp" value="0.2" min="0.05" step="0.05"></div>
+      <div class="field"><label data-i18n="p_rampdn">Ramp↓</label><input type="number" id="rampDn" value="1.0" min="0.1" step="0.1"></div>
     </div>
     <div class="field-row">
       <div class="field"><label data-i18n="p_ddelay">Start delay (s)</label><input type="number" id="dDelay" value="600" min="30" step="30"></div>
       <div class="field"><label data-i18n="p_dcool">Cooldown (s)</label><input type="number" id="dCool" value="300" min="30" step="30"></div>
     </div>
-    <div class="field"><label data-i18n="p_dhyst">Hysteresis (MW)</label><input type="number" id="dHyst" value="1.5" min="0.5" step="0.1"></div>
-    <div class="field"><label data-i18n="p_dprice">Diesel $/L</label><input type="number" id="dieselPrice" value="1.20" min="0.3" step="0.05"></div>
+    <div class="field-row">
+      <div class="field"><label data-i18n="p_dhyst">Hysteresis (MW)</label><input type="number" id="dHyst" value="1.5" min="0.5" step="0.1"></div>
+      <div class="field"><label data-i18n="p_dprice">Diesel $/L</label><input type="number" id="dieselPrice" value="1.20" min="0.3" step="0.05"></div>
+    </div>
   </div>
 
-  <div class="section-head" data-i18n="s_bess">BESS / PCS</div>
-  <div class="card-param">
-    <div class="card-title" style="color:var(--bess)">🔋 <span data-i18n="s_bess">BESS (VSG)</span></div>
+  <div class="s-head" data-i18n="s_bess">BESS / PCS</div>
+  <div class="s-card">
     <div class="field-row">
       <div class="field"><label>P<sub>max</sub> (MW)</label><input type="number" id="bPmax" value="8" min="0" step="0.5"></div>
       <div class="field"><label>E<sub>max</sub> (MWh)</label><input type="number" id="bEmax" value="20" min="0" step="1"></div>
     </div>
-    <div class="field"><label data-i18n="p_soc0">Initial SOC (%)</label><input type="number" id="bSOC0" value="60" min="5" max="95" step="1"></div>
     <div class="field-row">
-      <div class="field"><label data-i18n="p_bdroop">Droop Rₚ (%)</label><input type="number" id="bDroop" value="3" min="1" max="10" step="0.5"></div>
+      <div class="field"><label data-i18n="p_soc0">Init SOC (%)</label><input type="number" id="bSOC0" value="60" min="5" max="95" step="1"></div>
+      <div class="field"><label>η rt (%)</label><input type="number" id="bEta" value="96.5" min="80" max="100" step="0.5"></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label data-i18n="p_bdroop">Droop (%)</label><input type="number" id="bDroop" value="3" min="1" max="10" step="0.5"></div>
       <div class="field"><label>H<sub>vsg</sub> (s)</label><input type="number" id="bH" value="6.0" min="1" max="20" step="0.5"></div>
     </div>
-    <div class="field"><label>η round-trip (%)</label><input type="number" id="bEta" value="96.5" min="80" max="100" step="0.5"></div>
     <div class="field-row">
       <div class="field"><label>SOC target (%)</label><input type="number" id="bTarget" value="55" min="10" max="90" step="1"></div>
-      <div class="field"><label>SOC band (%)</label><input type="number" id="bBand" value="10" min="2" max="30" step="1"></div>
+      <div class="field"><label>Band (%)</label><input type="number" id="bBand" value="10" min="2" max="30" step="1"></div>
     </div>
     <div class="field-row">
       <div class="field"><label>Derate hi (%)</label><input type="number" id="bHi" value="82" min="60" max="98" step="1"></div>
       <div class="field"><label>Derate lo (%)</label><input type="number" id="bLo" value="18" min="2" max="40" step="1"></div>
     </div>
     <div class="field"><label data-i18n="p_thermalDerate">Thermal derate (0–1)</label><input type="number" id="thermalDerate" value="1.0" min="0.1" max="1.0" step="0.05"></div>
-    <div class="toggle-wrap" onclick="toggleEl('gfmMode')">
-      <div class="toggle on" id="gfmModeToggle"></div>
-      <span data-i18n="p_gfm">GFM mode (VSG active)</span>
-    </div>
+    <div class="tog-wrap" onclick="togEl('gfmMode')"><div class="tog on" id="gfmModeToggle"></div><span data-i18n="p_gfm">GFM mode (VSG active)</span></div>
     <input type="hidden" id="gfmMode" value="1">
   </div>
 
-  <div class="section-head" data-i18n="s_prot">Protection</div>
-  <div class="card-param">
-    <div class="card-title">🛡️ <span data-i18n="s_prot">Protection & UFLS</span></div>
+  <div class="s-head" data-i18n="s_prot">Protection & UFLS</div>
+  <div class="s-card">
     <div class="field"><label>RoCoF limit (Hz/s)</label><input type="number" id="rocMax" value="0.9" min="0.1" step="0.1"></div>
-    <div class="field"><label>OF1 (Hz) / time (s)</label></div>
-    <div class="field-row"><div class="field"><input type="number" id="of1f" value="60.5" step="0.1"></div><div class="field"><input type="number" id="of1t" value="10" step="1"></div></div>
-    <div class="field"><label>OF2 (Hz) / time (s)</label></div>
-    <div class="field-row"><div class="field"><input type="number" id="of2f" value="61.0" step="0.1"></div><div class="field"><input type="number" id="of2t" value="0.2" step="0.1"></div></div>
-    <div class="field"><label>Reclose after trip (s)</label><input type="number" id="reclose" value="30" step="1"></div>
-    <div class="field" style="margin-top:6px"><label style="color:var(--alert);font-size:10px">UFLS Stages (priority order)</label></div>
-    <div class="field"><label>Stage 1: Hz / shed% [Deferrable]</label></div>
-    <div class="field-row"><div class="field"><input type="number" id="uf1f" value="59.3" step="0.1"></div><div class="field"><input type="number" id="uf1s" value="10" step="5" min="0" max="50"></div></div>
-    <div class="field"><label>Stage 2: Hz / shed% [Interruptible]</label></div>
-    <div class="field-row"><div class="field"><input type="number" id="uf2f" value="58.8" step="0.1"></div><div class="field"><input type="number" id="uf2s" value="20" step="5" min="0" max="50"></div></div>
-    <div class="field"><label>Stage 3: Hz / shed% [Process]</label></div>
-    <div class="field-row"><div class="field"><input type="number" id="uf3f" value="58.3" step="0.1"></div><div class="field"><input type="number" id="uf3s" value="25" step="5" min="0" max="50"></div></div>
+    <div class="field-row">
+      <div class="field"><label>OF1 (Hz)</label><input type="number" id="of1f" value="60.5" step="0.1"></div>
+      <div class="field"><label>OF1 time (s)</label><input type="number" id="of1t" value="10" step="1"></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>OF2 (Hz)</label><input type="number" id="of2f" value="61.0" step="0.1"></div>
+      <div class="field"><label>OF2 time (s)</label><input type="number" id="of2t" value="0.2" step="0.1"></div>
+    </div>
+    <div class="field"><label>Reclose after (s)</label><input type="number" id="reclose" value="30" step="1"></div>
+    <div class="s-alert-label">UFLS — Priority Shedding</div>
+    <div class="field-row">
+      <div class="field"><label>St.1 Hz [Defer.]</label><input type="number" id="uf1f" value="59.3" step="0.1"></div>
+      <div class="field"><label>Shed %</label><input type="number" id="uf1s" value="10" step="5" min="0" max="50"></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>St.2 Hz [Intrpt.]</label><input type="number" id="uf2f" value="58.8" step="0.1"></div>
+      <div class="field"><label>Shed %</label><input type="number" id="uf2s" value="20" step="5" min="0" max="50"></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>St.3 Hz [Process]</label><input type="number" id="uf3f" value="58.3" step="0.1"></div>
+      <div class="field"><label>Shed %</label><input type="number" id="uf3s" value="25" step="5" min="0" max="50"></div>
+    </div>
   </div>
 
-  <div class="section-head" data-i18n="s_qv">Q-V / Voltage Control</div>
-  <div class="card-param">
-    <div class="card-title">⚡ <span data-i18n="s_qv">Voltage Model</span></div>
+  <div class="s-head" data-i18n="s_qv">Q-V / Voltage</div>
+  <div class="s-card">
     <div class="field"><label data-i18n="p_qdroop">AVR Q-droop Rq (pu)</label><input type="number" id="qDroop" value="0.05" min="0.01" max="0.2" step="0.01"></div>
     <div class="field"><label data-i18n="p_qpcs">PCS Q-support (MVAr)</label><input type="number" id="qPCS" value="2.0" min="0" step="0.5"></div>
     <div class="field"><label data-i18n="p_vbase">V nominal (pu)</label><input type="number" id="vBase" value="1.00" min="0.9" max="1.1" step="0.01"></div>
   </div>
 
-</div>
-<!-- END SIDEBAR -->
+</div><!-- end sidebar -->
 
+<!-- ── CONTENT ── -->
 <div class="content">
-  <div class="status-row" style="padding-top:10px" id="statusRow">
-    <div class="status-pill ok" id="sp_freq">Freq OK</div>
-    <div class="status-pill ok" id="sp_n1">N-1 OK</div>
-    <div class="status-pill ok" id="sp_soc">SOC OK</div>
-    <div class="status-pill ok" id="sp_bess">BESS GFM</div>
-    <div class="status-pill ok" id="sp_spin">Spin Reserve OK</div>
-    <div class="status-pill ok" id="sp_volt">Voltage OK</div>
-    <div class="status-pill" id="sp_mode" style="border-color:var(--volt);color:var(--volt)">OFF-GRID</div>
+
+  <!-- Status pills -->
+  <div class="status-row" id="statusRow">
+    <span class="sp ok" id="sp_freq">Freq OK</span>
+    <span class="sp ok" id="sp_n1">N-1 OK</span>
+    <span class="sp ok" id="sp_soc">SOC OK</span>
+    <span class="sp ok" id="sp_bess">BESS GFM</span>
+    <span class="sp ok" id="sp_spin">Spin OK</span>
+    <span class="sp ok" id="sp_volt">V OK</span>
+    <span class="sp mode" id="sp_mode">OFF-GRID</span>
   </div>
 
-  <div class="plots-grid">
-    <div class="plot-card" style="position:relative">
-      <div class="plot-title">
-        <span data-i18n="ch_power">Active Power Balance (MW)</span>
-        <div class="legend">
-          <div class="leg-item"><div class="leg-swatch" style="background:var(--pv)"></div>PV</div>
-          <div class="leg-item"><div class="leg-swatch" style="background:var(--wind)"></div>Wind</div>
-          <div class="leg-item"><div class="leg-swatch" style="background:var(--load)"></div>Load</div>
-          <div class="leg-item"><div class="leg-swatch" style="background:var(--diesel)"></div>Diesel</div>
-          <div class="leg-item"><div class="leg-swatch" style="background:var(--bess)"></div>BESS</div>
-          <div class="leg-item" id="gridLeg" style="display:none"><div class="leg-swatch" style="background:var(--grid)"></div>Grid</div>
+  <!-- Plots -->
+  <div class="plots-area">
+    <!-- Main power chart -->
+    <div class="plot-main">
+      <div class="plot-card main">
+        <div class="plot-title">
+          <span data-i18n="ch_power">Active Power Balance (MW)</span>
+          <div class="legend">
+            <div class="leg"><div class="leg-sw" style="background:var(--c-pv)"></div>PV</div>
+            <div class="leg"><div class="leg-sw" style="background:var(--c-wind)"></div>Wind</div>
+            <div class="leg"><div class="leg-sw" style="background:var(--c-load)"></div>Load</div>
+            <div class="leg"><div class="leg-sw" style="background:var(--c-diesel)"></div>Diesel</div>
+            <div class="leg"><div class="leg-sw" style="background:var(--c-bess)"></div>BESS</div>
+            <div class="leg" id="gridLeg" style="display:none"><div class="leg-sw" style="background:var(--c-grid)"></div>Grid</div>
+          </div>
         </div>
+        <canvas id="pCanvas"></canvas>
+        <div class="overlay" id="pOverlay"><div class="overlay-txt">▶ <span data-i18n="press_start">Press Start to simulate</span></div></div>
       </div>
-      <canvas id="pCanvas" class="main-canvas"></canvas>
-      <div class="overlay" id="pOverlay"><div class="overlay-text">▶ <span data-i18n="press_start">Press Start to simulate</span></div></div>
     </div>
-
-    <div style="display:flex;flex-direction:column;gap:8px">
-      <div class="plot-card" style="position:relative">
+    <!-- Side: freq + voltage -->
+    <div class="plot-side">
+      <div class="plot-card sub">
         <div class="plot-title">
           <span data-i18n="ch_freq">Frequency (Hz) / SOC (%)</span>
           <div class="legend">
-            <div class="leg-item"><div class="leg-swatch" style="background:var(--freq)"></div>Freq</div>
-            <div class="leg-item"><div class="leg-swatch" style="background:var(--bess);opacity:.7"></div>SOC</div>
+            <div class="leg"><div class="leg-sw" style="background:var(--c-freq)"></div>Freq</div>
+            <div class="leg"><div class="leg-sw" style="background:var(--c-bess);opacity:.6"></div>SOC</div>
           </div>
         </div>
-        <canvas id="fCanvas" class="sub-canvas"></canvas>
-        <div class="overlay" id="fOverlay"><div class="overlay-text">▶</div></div>
+        <canvas id="fCanvas"></canvas>
+        <div class="overlay" id="fOverlay"><div class="overlay-txt">▶</div></div>
       </div>
-      <div class="plot-card" style="position:relative">
+      <div class="plot-card sub">
         <div class="plot-title">
-          <span data-i18n="ch_volt">Bus Voltage (pu) / Reactive (MVAr)</span>
+          <span data-i18n="ch_volt">Bus Voltage (pu) / Q (MVAr)</span>
           <div class="legend">
-            <div class="leg-item"><div class="leg-swatch" style="background:var(--volt-hi)"></div>V(pu)</div>
-            <div class="leg-item"><div class="leg-swatch" style="background:var(--info)"></div>Q(MVAr)</div>
+            <div class="leg"><div class="leg-sw" style="background:var(--c-volt)"></div>V(pu)</div>
+            <div class="leg"><div class="leg-sw" style="background:#3B82F6"></div>Q</div>
           </div>
         </div>
-        <canvas id="vCanvas" class="sub-canvas"></canvas>
-        <div class="overlay" id="vOverlay"><div class="overlay-text">▶</div></div>
+        <canvas id="vCanvas"></canvas>
+        <div class="overlay" id="vOverlay"><div class="overlay-txt">▶</div></div>
       </div>
     </div>
   </div>
 
-  <div class="kpi-strip" id="kpiStrip">
-    <div class="kpi" id="k_fuel"><div class="kpi-label" data-i18n="k_fuel">Fuel Used</div><div class="kpi-val">—</div></div>
-    <div class="kpi" id="k_save"><div class="kpi-label" data-i18n="k_save">Fuel Saved</div><div class="kpi-val">—</div></div>
-    <div class="kpi" id="k_cost"><div class="kpi-label" data-i18n="k_cost">Fuel Cost</div><div class="kpi-val">—</div></div>
-    <div class="kpi" id="k_re"><div class="kpi-label" data-i18n="k_re">RE Share</div><div class="kpi-val">—</div></div>
-    <div class="kpi" id="k_curt"><div class="kpi-label" data-i18n="k_curt">Curtailment</div><div class="kpi-val">—</div></div>
-    <div class="kpi" id="k_spin"><div class="kpi-label" data-i18n="k_spin">Spin Reserve</div><div class="kpi-val">—</div></div>
-    <div class="kpi" id="k_n1"><div class="kpi-label">N-1 Status</div><div class="kpi-val">—</div></div>
-    <div class="kpi" id="k_fmin"><div class="kpi-label" data-i18n="k_fmin">f min / max (Hz)</div><div class="kpi-val">—</div></div>
-    <div class="kpi" id="k_rocof"><div class="kpi-label">RoCoF peak</div><div class="kpi-val">—</div></div>
-    <div class="kpi" id="k_ufls"><div class="kpi-label">UFLS Events</div><div class="kpi-val">—</div></div>
-    <div class="kpi" id="k_trips"><div class="kpi-label">IBR Trips / Recloses</div><div class="kpi-val">—</div></div>
-    <div class="kpi" id="k_volt"><div class="kpi-label">V min / max (pu)</div><div class="kpi-val">—</div></div>
-    <div class="kpi" id="k_bsoc"><div class="kpi-label">BESS SOC</div><div class="kpi-val">—</div></div>
-    <div class="kpi" id="k_motor"><div class="kpi-label">Motor Starts</div><div class="kpi-val">—</div></div>
+  <!-- KPI Strip -->
+  <div class="kpi-strip">
+    <div class="kpi" id="k_fuel"><div class="kpi-lbl" data-i18n="k_fuel">Fuel Used</div><div class="kpi-val">—</div></div>
+    <div class="kpi" id="k_save"><div class="kpi-lbl" data-i18n="k_save">Fuel Saved</div><div class="kpi-val">—</div></div>
+    <div class="kpi" id="k_cost"><div class="kpi-lbl" data-i18n="k_cost">Fuel Cost</div><div class="kpi-val">—</div></div>
+    <div class="kpi" id="k_re"><div class="kpi-lbl" data-i18n="k_re">RE Share</div><div class="kpi-val">—</div></div>
+    <div class="kpi" id="k_curt"><div class="kpi-lbl" data-i18n="k_curt">Curtailment</div><div class="kpi-val">—</div></div>
+    <div class="kpi" id="k_spin"><div class="kpi-lbl" data-i18n="k_spin">Spin Reserve</div><div class="kpi-val">—</div></div>
+    <div class="kpi" id="k_n1"><div class="kpi-lbl">N-1</div><div class="kpi-val">—</div></div>
+    <div class="kpi" id="k_fmin"><div class="kpi-lbl" data-i18n="k_fmin">f min/max (Hz)</div><div class="kpi-val">—</div></div>
+    <div class="kpi" id="k_rocof"><div class="kpi-lbl">RoCoF peak</div><div class="kpi-val">—</div></div>
+    <div class="kpi" id="k_ufls"><div class="kpi-lbl">UFLS Events</div><div class="kpi-val">—</div></div>
+    <div class="kpi" id="k_trips"><div class="kpi-lbl">IBR Trips</div><div class="kpi-val">—</div></div>
+    <div class="kpi" id="k_volt"><div class="kpi-lbl">V min/max</div><div class="kpi-val">—</div></div>
+    <div class="kpi" id="k_bsoc"><div class="kpi-lbl">BESS SOC</div><div class="kpi-val">—</div></div>
+    <div class="kpi" id="k_motor"><div class="kpi-lbl">Motor Starts</div><div class="kpi-val">—</div></div>
   </div>
 
-  <div class="schematic-strip">
-    <div class="schematic-card">
-      <div style="font-size:10px;font-weight:700;color:var(--sub);margin-bottom:6px" data-i18n="sch_title">System One-Line Diagram (Live)</div>
-      <svg class="schematic" id="schSVG" viewBox="0 0 720 165">
-        <rect x="55" y="76" width="610" height="6" rx="3" fill="#243D56" id="svgBus"/>
-        <text x="360" y="71" text-anchor="middle" fill="#64849E" font-size="9" font-family="monospace">35 kV MV BUS</text>
+  <!-- One-line diagram -->
+  <div class="oneline-row">
+    <div class="oneline-card">
+      <div class="oneline-title" data-i18n="sch_title">System One-Line Diagram (Live)</div>
+      <svg class="sld" id="schSVG" viewBox="0 0 720 120">
+        <!-- MV BUS -->
+        <rect x="50" y="62" width="620" height="5" rx="2" fill="#CBD5E1" id="svgBus"/>
+        <text x="360" y="56" text-anchor="middle" fill="#8096A8" font-size="8" font-family="Helvetica Neue,Arial">35 kV MV BUS</text>
         <!-- GRID -->
         <g id="svgGrid" style="display:none">
-          <line x1="75" y1="79" x2="75" y2="34" stroke="#A78BFA" stroke-width="2"/>
-          <rect x="45" y="20" width="60" height="14" rx="3" fill="#1C3248" stroke="#A78BFA" stroke-width="1.5"/>
-          <text x="75" y="30" text-anchor="middle" fill="#A78BFA" font-size="9" font-family="monospace">GRID</text>
-          <circle id="svgGridCB" cx="75" cy="62" r="6" fill="none" stroke="#A78BFA" stroke-width="1.5"/>
-          <text id="svgGRpow" x="75" y="54" text-anchor="middle" fill="#A78BFA" font-size="8" font-family="monospace"></text>
+          <line x1="72" y1="64" x2="72" y2="30" stroke="#7C3AED" stroke-width="1.5"/>
+          <rect x="42" y="17" width="60" height="13" rx="3" fill="#EDE9FE" stroke="#7C3AED" stroke-width="1"/>
+          <text x="72" y="27" text-anchor="middle" fill="#7C3AED" font-size="8" font-family="Helvetica Neue,Arial">GRID</text>
+          <circle id="svgGridCB" cx="72" cy="52" r="5" fill="none" stroke="#7C3AED" stroke-width="1.5"/>
+          <text id="svgGRpow" x="72" y="46" text-anchor="middle" fill="#7C3AED" font-size="7" font-family="monospace"></text>
         </g>
         <!-- PV -->
-        <line x1="165" y1="79" x2="165" y2="34" stroke="#F59E0B" stroke-width="2"/>
-        <rect x="133" y="20" width="64" height="14" rx="3" fill="#1C3248" stroke="#F59E0B" stroke-width="1.5"/>
-        <text x="165" y="30" text-anchor="middle" fill="#F59E0B" font-size="9" font-family="monospace" id="svgPVLabel">PV</text>
-        <circle id="svgPVCB" cx="165" cy="63" r="6" fill="none" stroke="#F59E0B" stroke-width="1.5"/>
-        <text id="svgPVpow" x="165" y="54" text-anchor="middle" fill="#F59E0B" font-size="8" font-family="monospace"></text>
+        <line x1="162" y1="64" x2="162" y2="30" stroke="#D4840A" stroke-width="1.5"/>
+        <rect x="130" y="17" width="64" height="13" rx="3" fill="#FEF3C7" stroke="#D4840A" stroke-width="1"/>
+        <text x="162" y="27" text-anchor="middle" fill="#B45309" font-size="8" font-family="Helvetica Neue,Arial">PV</text>
+        <circle id="svgPVCB" cx="162" cy="52" r="5" fill="none" stroke="#D4840A" stroke-width="1.5"/>
+        <text id="svgPVpow" x="162" y="46" text-anchor="middle" fill="#D4840A" font-size="7" font-family="monospace"></text>
         <!-- WIND -->
-        <line x1="265" y1="79" x2="265" y2="34" stroke="#38BDF8" stroke-width="2"/>
-        <rect x="233" y="20" width="64" height="14" rx="3" fill="#1C3248" stroke="#38BDF8" stroke-width="1.5"/>
-        <text x="265" y="30" text-anchor="middle" fill="#38BDF8" font-size="9" font-family="monospace">WIND</text>
-        <circle id="svgWindCB" cx="265" cy="63" r="6" fill="none" stroke="#38BDF8" stroke-width="1.5"/>
-        <text id="svgWpow" x="265" y="54" text-anchor="middle" fill="#38BDF8" font-size="8" font-family="monospace"></text>
+        <line x1="262" y1="64" x2="262" y2="30" stroke="#0EA5E9" stroke-width="1.5"/>
+        <rect x="230" y="17" width="64" height="13" rx="3" fill="#E0F2FE" stroke="#0EA5E9" stroke-width="1"/>
+        <text x="262" y="27" text-anchor="middle" fill="#0369A1" font-size="8" font-family="Helvetica Neue,Arial">WIND</text>
+        <circle id="svgWindCB" cx="262" cy="52" r="5" fill="none" stroke="#0EA5E9" stroke-width="1.5"/>
+        <text id="svgWpow" x="262" y="46" text-anchor="middle" fill="#0EA5E9" font-size="7" font-family="monospace"></text>
         <!-- DIESEL -->
-        <line x1="370" y1="79" x2="370" y2="34" stroke="#6366F1" stroke-width="2"/>
-        <rect x="333" y="20" width="74" height="14" rx="3" fill="#1C3248" stroke="#6366F1" stroke-width="1.5"/>
-        <text x="370" y="30" text-anchor="middle" fill="#6366F1" font-size="9" font-family="monospace" id="svgDGLabel">DG FLEET</text>
-        <circle id="svgDGCB" cx="370" cy="63" r="6" fill="#6366F1" stroke="#6366F1" stroke-width="1.5"/>
-        <text id="svgDGpow" x="370" y="54" text-anchor="middle" fill="#6366F1" font-size="8" font-family="monospace"></text>
+        <line x1="370" y1="64" x2="370" y2="30" stroke="#7C3AED" stroke-width="1.5"/>
+        <rect x="332" y="17" width="76" height="13" rx="3" fill="#EDE9FE" stroke="#7C3AED" stroke-width="1"/>
+        <text x="370" y="27" text-anchor="middle" fill="#6D28D9" font-size="8" font-family="Helvetica Neue,Arial" id="svgDGLabel">DG FLEET</text>
+        <circle id="svgDGCB" cx="370" cy="52" r="5" fill="#7C3AED" stroke="#7C3AED" stroke-width="1"/>
+        <text id="svgDGpow" x="370" y="46" text-anchor="middle" fill="#7C3AED" font-size="7" font-family="monospace"></text>
         <!-- BESS -->
-        <line x1="480" y1="79" x2="480" y2="34" stroke="#22C55E" stroke-width="2"/>
-        <rect x="445" y="20" width="70" height="14" rx="3" fill="#1C3248" stroke="#22C55E" stroke-width="1.5"/>
-        <text x="480" y="30" text-anchor="middle" fill="#22C55E" font-size="9" font-family="monospace">BESS</text>
-        <circle id="svgBESSCB" cx="480" cy="63" r="6" fill="#22C55E" stroke="#22C55E" stroke-width="1.5"/>
-        <text id="svgBEpow" x="480" y="54" text-anchor="middle" fill="#22C55E" font-size="8" font-family="monospace"></text>
-        <text id="svgGFM" x="480" y="12" text-anchor="middle" fill="#22C55E" font-size="8" font-family="monospace">GFM</text>
+        <line x1="478" y1="64" x2="478" y2="30" stroke="#16A34A" stroke-width="1.5"/>
+        <rect x="445" y="17" width="66" height="13" rx="3" fill="#DCFCE7" stroke="#16A34A" stroke-width="1"/>
+        <text x="478" y="27" text-anchor="middle" fill="#15803D" font-size="8" font-family="Helvetica Neue,Arial">BESS</text>
+        <circle id="svgBESSCB" cx="478" cy="52" r="5" fill="#16A34A" stroke="#16A34A" stroke-width="1"/>
+        <text id="svgBEpow" x="478" y="46" text-anchor="middle" fill="#16A34A" font-size="7" font-family="monospace"></text>
+        <text id="svgGFM" x="478" y="10" text-anchor="middle" fill="#16A34A" font-size="7" font-weight="700" font-family="Helvetica Neue,Arial">GFM</text>
         <!-- LOAD -->
-        <line x1="600" y1="79" x2="600" y2="34" stroke="#94A3B8" stroke-width="2"/>
-        <rect x="563" y="20" width="74" height="14" rx="3" fill="#1C3248" stroke="#94A3B8" stroke-width="1.5"/>
-        <text x="600" y="30" text-anchor="middle" fill="#94A3B8" font-size="9" font-family="monospace">LOAD</text>
+        <line x1="596" y1="64" x2="596" y2="30" stroke="#64748B" stroke-width="1.5"/>
+        <rect x="560" y="17" width="72" height="13" rx="3" fill="#F1F5F9" stroke="#64748B" stroke-width="1"/>
+        <text x="596" y="27" text-anchor="middle" fill="#475569" font-size="8" font-family="Helvetica Neue,Arial">LOAD</text>
         <!-- Live readings -->
-        <text id="svgFreq" x="360" y="112" text-anchor="middle" fill="#E879F9" font-size="12" font-family="monospace">f = 60.000 Hz</text>
-        <text id="svgVolt" x="360" y="130" text-anchor="middle" fill="#F59E0B" font-size="10" font-family="monospace">V = 1.000 pu</text>
-        <text id="svgSOC" x="360" y="148" text-anchor="middle" fill="#22C55E" font-size="10" font-family="monospace">SOC = — %</text>
-        <text id="svgMode" x="360" y="163" text-anchor="middle" fill="#64849E" font-size="9" font-family="monospace">MODE: OFF-GRID | DG-FORMING</text>
+        <text id="svgFreq" x="360" y="84" text-anchor="middle" fill="#C026D3" font-size="11" font-family="monospace" font-weight="700">f = 60.000 Hz</text>
+        <text id="svgVolt" x="360" y="98" text-anchor="middle" fill="#B45309" font-size="10" font-family="monospace">V = 1.000 pu</text>
+        <text id="svgSOC" x="360" y="111" text-anchor="middle" fill="#16A34A" font-size="9" font-family="monospace">SOC = — %</text>
+        <text id="svgMode" x="360" y="119" text-anchor="middle" fill="#8096A8" font-size="8" font-family="Helvetica Neue,Arial">MODE: OFF-GRID | DG-FORMING</text>
       </svg>
     </div>
   </div>
 
-  <div class="log-row">
-    <div id="log" class="muted">[Idle] Configure parameters and press Start…</div>
+  <!-- Log -->
+  <div class="log-wrap">
+    <div id="log">[Idle] Configure parameters and press Start…</div>
   </div>
 
+  <!-- Control bar -->
   <div class="ctrl-bar">
     <button class="btn primary" id="startBtn">▶ <span data-i18n="btn_start">Start</span></button>
-    <button class="btn" id="pauseBtn">⏸ <span data-i18n="btn_pause">Pause</span></button>
+    <button class="btn" id="pauseBtn" disabled>⏸ <span data-i18n="btn_pause">Pause</span></button>
     <button class="btn" id="resetBtn">↺ <span data-i18n="btn_reset">Reset</span></button>
-    <div style="flex:1"></div>
-    <div style="font-size:10px;color:var(--muted)" data-i18n="ctrl_hint">Tip: Modify parameters while running for live response</div>
-    <span style="font-size:10px;color:var(--border)">·</span>
-    <div style="font-size:10px;color:var(--muted)">© 2025 Energize Solutions Inc.</div>
+    <div class="ctrl-hint" data-i18n="ctrl_hint">Tip: Modify parameters while running for live response · © 2025 Energize Solutions Inc.</div>
   </div>
-</div>
-</div>
-</div>
+
+</div><!-- end content -->
+</div><!-- end main -->
+</div><!-- end app -->
 
 <script>
 (function(){
 'use strict';
 /* ── i18n ────────────────────────────────────────────────── */
-const I={en:{s_mode:'System Mode',s_geo:'Geography / Insolation',s_load:'Load Profile',s_pv:'PV / Solar',s_wind:'Wind',s_diesel:'Diesel Generators',s_bess:'BESS / PCS',s_prot:'Protection',s_qv:'Q-V / Voltage Control',s_grid:'Grid Supply',p_simh:'Simulation (hours)',p_preset:'Preset',p_doy:'Day-of-year',p_soil:'PV soiling (0.7–1)',p_dsys:'System damping D (pu)',p_pload:'Base load (MW)',p_lvar:'Variation ± (MW)',p_alpha:'Freq sensitivity α (%/Hz)',p_motorMW:'Motor start impulse (MW)',p_motorInterval:'Motor start interval (min)',p_pvshape:'Day shape (1–3)',p_cloud:'Cloudiness (0–1)',p_pvramp:'Ramp limit (%Pmax/s)',p_vmean:'Mean wind (m/s)',p_vvar:'Variability (0–1)',p_windramp:'Ramp limit (%Pmax/s)',p_dg33n:'3.3 MW online',p_dg12n:'1.25 MW online',p_ddroop:'Droop Rₚ (%)',p_dmin:'Min load (pu)',p_rampup:'Ramp↑ (MW/s)',p_rampdn:'Ramp↓ (MW/s)',p_ddelay:'Start delay (s)',p_dcool:'Cooldown (s)',p_dhyst:'Hysteresis (MW)',p_dprice:'Diesel $/L',p_soc0:'Initial SOC (%)',p_bdroop:'Droop Rₚ (%)',p_thermalDerate:'Thermal derate (0–1)',p_gfm:'GFM mode (VSG active)',p_island:'Intentional island capable',p_gridMW:'Grid capacity (MW)',p_gridSCR:'Grid stiffness (SCR)',p_tariff:'Electricity tariff ($/kWh)',p_qdroop:'AVR Q-droop Rq (pu)',p_qpcs:'PCS Q-support (MVAr)',p_vbase:'V nominal (pu)',ch_power:'Active Power Balance (MW)',ch_freq:'Frequency (Hz) / SOC (%)',ch_volt:'Bus Voltage (pu) / Reactive (MVAr)',sch_title:'System One-Line Diagram (Live)',press_start:'Press Start to simulate',btn_start:'Start',btn_pause:'Pause',btn_reset:'Reset',ctrl_hint:'Tip: Modify parameters while running for live response',k_fuel:'Fuel Used',k_save:'Fuel Saved',k_cost:'Fuel Cost',k_re:'RE Share',k_curt:'Curtailment',k_spin:'Spin Reserve',k_fmin:'f min / max (Hz)'},zh:{s_mode:'系统模式',s_geo:'地理/日照条件',s_load:'负荷配置',s_pv:'光伏',s_wind:'风电',s_diesel:'柴油发电机',s_bess:'BESS / PCS',s_prot:'保护系统',s_qv:'Q-V / 电压控制',s_grid:'电网供电',p_simh:'仿真时长（小时）',p_preset:'地理预设',p_doy:'年内日序',p_soil:'光伏污染系数',p_dsys:'系统阻尼D（pu）',p_pload:'负荷基线（MW）',p_lvar:'负荷波动±（MW）',p_alpha:'负荷随频系数α',p_motorMW:'电机启动冲击（MW）',p_motorInterval:'电机启动间隔（分钟）',p_pvshape:'日形系数（1–3）',p_cloud:'云影强度（0–1）',p_pvramp:'爬坡限速（%Pmax/s）',p_vmean:'平均风速（m/s）',p_vvar:'风速波动（0–1）',p_windramp:'爬坡限速（%Pmax/s）',p_dg33n:'3.3MW在线台数',p_dg12n:'1.25MW在线台数',p_ddroop:'有功下垂Rₚ（%）',p_dmin:'最低负载（pu）',p_rampup:'上调爬坡（MW/s）',p_rampdn:'下调爬坡（MW/s）',p_ddelay:'启动延时（秒）',p_dcool:'冷却时间（秒）',p_dhyst:'启停迟滞（MW）',p_dprice:'柴油价格（$/升）',p_soc0:'初始SOC（%）',p_bdroop:'下垂Rₚ（%）',p_thermalDerate:'热降额系数（0–1）',p_gfm:'GFM模式（VSG激活）',p_island:'有意孤岛功能开启',p_gridMW:'电网容量（MW）',p_gridSCR:'电网强度（SCR）',p_tariff:'电价（$/kWh）',p_qdroop:'AVR无功下垂Rq（pu）',p_qpcs:'PCS无功支撑（MVAr）',p_vbase:'额定电压（pu）',ch_power:'有功功率平衡（MW）',ch_freq:'频率（Hz）/ SOC（%）',ch_volt:'母线电压（pu）/ 无功（MVAr）',sch_title:'系统单线图（实时）',press_start:'按开始仿真',btn_start:'开始',btn_pause:'暂停',btn_reset:'重置',ctrl_hint:'提示：运行中可实时修改参数，即时查看系统响应',k_fuel:'燃油消耗',k_save:'节油量',k_cost:'燃油成本',k_re:'新能源占比',k_curt:'弃电量',k_spin:'旋转备用',k_fmin:'频率最低/最高'}};
+const I={en:{s_mode:'System Mode',s_geo:'Geography / Insolation',s_load:'Load Profile',s_pv:'PV / Solar',s_wind:'Wind',s_diesel:'Diesel Fleet',s_bess:'BESS / PCS',s_prot:'Protection & UFLS',s_qv:'Q-V / Voltage',s_grid:'Grid Supply',p_simh:'Simulation hours',p_preset:'Preset',p_doy:'Day-of-year',p_soil:'PV soiling (0.7–1)',p_dsys:'Damping D (pu)',p_pload:'Base load (MW)',p_lvar:'Variation ± (MW)',p_alpha:'Freq sensitivity α (%/Hz)',p_motorMW:'Motor impulse (MW)',p_motorInterval:'Interval (min)',p_pvshape:'Shape (1–3)',p_cloud:'Cloudiness',p_pvramp:'Ramp %/s',p_vmean:'Mean (m/s)',p_vvar:'Variability',p_windramp:'Ramp %/s',p_dg33n:'3.3 MW online',p_dg12n:'1.25 MW',p_ddroop:'Droop (%)',p_dmin:'Min load',p_rampup:'Ramp↑ MW/s',p_rampdn:'Ramp↓',p_ddelay:'Start delay (s)',p_dcool:'Cooldown (s)',p_dhyst:'Hysteresis (MW)',p_dprice:'Diesel $/L',p_soc0:'Init SOC (%)',p_bdroop:'Droop (%)',p_thermalDerate:'Thermal derate (0–1)',p_gfm:'GFM mode (VSG active)',p_island:'Intentional island capable',p_gridMW:'Grid capacity (MW)',p_gridSCR:'SCR stiffness',p_tariff:'Tariff ($/kWh)',p_qdroop:'AVR Q-droop Rq (pu)',p_qpcs:'PCS Q-support (MVAr)',p_vbase:'V nominal (pu)',ch_power:'Active Power Balance (MW)',ch_freq:'Frequency (Hz) / SOC (%)',ch_volt:'Bus Voltage (pu) / Q (MVAr)',sch_title:'System One-Line Diagram (Live)',press_start:'Press Start to simulate',btn_start:'Start',btn_pause:'Pause',btn_reset:'Reset',ctrl_hint:'Tip: Modify parameters while running for live response · © 2025 Energize Solutions Inc.',k_fuel:'Fuel Used',k_save:'Fuel Saved',k_cost:'Fuel Cost',k_re:'RE Share',k_curt:'Curtailment',k_spin:'Spin Reserve',k_fmin:'f min/max (Hz)'},zh:{s_mode:'系统模式',s_geo:'地理/日照条件',s_load:'负荷配置',s_pv:'光伏',s_wind:'风电',s_diesel:'柴油发电机',s_bess:'BESS / PCS',s_prot:'保护与UFLS',s_qv:'Q-V / 电压控制',s_grid:'电网供电',p_simh:'仿真时长（小时）',p_preset:'地理预设',p_doy:'年内日序',p_soil:'光伏污染系数（0.7–1）',p_dsys:'系统阻尼D（pu）',p_pload:'负荷基线（MW）',p_lvar:'负荷波动±（MW）',p_alpha:'负荷随频系数α',p_motorMW:'电机启动冲击（MW）',p_motorInterval:'启动间隔（分钟）',p_pvshape:'日形系数（1–3）',p_cloud:'云影强度',p_pvramp:'爬坡限速%/s',p_vmean:'平均风速（m/s）',p_vvar:'风速波动',p_windramp:'爬坡限速%/s',p_dg33n:'3.3MW在线台数',p_dg12n:'1.25MW台数',p_ddroop:'下垂Rₚ（%）',p_dmin:'最低负载（pu）',p_rampup:'上调爬坡MW/s',p_rampdn:'下调爬坡',p_ddelay:'启动延时（秒）',p_dcool:'冷却时间（秒）',p_dhyst:'启停迟滞（MW）',p_dprice:'柴油价格$/升',p_soc0:'初始SOC（%）',p_bdroop:'下垂Rₚ（%）',p_thermalDerate:'热降额系数（0–1）',p_gfm:'GFM模式（VSG激活）',p_island:'有意孤岛功能开启',p_gridMW:'电网容量（MW）',p_gridSCR:'电网强度（SCR）',p_tariff:'电价（$/kWh）',p_qdroop:'AVR无功下垂Rq（pu）',p_qpcs:'PCS无功支撑（MVAr）',p_vbase:'额定电压（pu）',ch_power:'有功功率平衡（MW）',ch_freq:'频率（Hz）/ SOC（%）',ch_volt:'母线电压（pu）/ 无功（MVAr）',sch_title:'系统单线图（实时）',press_start:'按开始仿真',btn_start:'开始',btn_pause:'暂停',btn_reset:'重置',ctrl_hint:'提示：仿真运行中可实时修改参数 · © 2025 Energize Solutions Inc.',k_fuel:'燃油消耗',k_save:'节油量',k_cost:'燃油成本',k_re:'新能源占比',k_curt:'弃电量',k_spin:'旋转备用',k_fmin:'频率最低/最高'}};
 let lang='en';
 function t(k){return I[lang][k]||I.en[k]||k;}
 function applyI18n(){document.querySelectorAll('[data-i18n]').forEach(el=>{const v=t(el.dataset.i18n);if(v)el.innerHTML=v;});G('langBtn').textContent=lang==='en'?'中文':'English';document.documentElement.lang=lang==='zh'?'zh':'en';}
@@ -429,11 +569,11 @@ function N(id){return parseFloat(G(id).value)||0;}
 function clamp(x,a,b){return Math.max(a,Math.min(b,x));}
 function lerp(a,b,t){return a+(b-a)*clamp(t,0,1);}
 function ts(s){const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),ss=Math.floor(s%60);return`[${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(ss).padStart(2,'0')}]`;}
-function logLine(m){const el=G('log');el.textContent+=m+'\n';el.scrollTop=1e9;el.classList.remove('muted');}
+function logLine(m){const el=G('log');el.textContent+=m+'\n';el.scrollTop=1e9;}
 function mulberry32(s){return()=>{let t=s+=0x6D2B79F5;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296;};}
 let rng=mulberry32(42);
 
-/* ── mode tabs ───────────────────────────────────────────── */
+/* ── mode ────────────────────────────────────────────────── */
 let simMode='offgrid';
 document.querySelectorAll('#modeTabs .tab').forEach(tab=>{
   tab.onclick=()=>{
@@ -442,11 +582,11 @@ document.querySelectorAll('#modeTabs .tab').forEach(tab=>{
     G('gridCard').style.display=simMode==='offgrid'?'none':'';
     G('svgGrid').style.display=simMode==='offgrid'?'none':'';
     G('gridLeg').style.display=simMode==='offgrid'?'none':'';
-    G('modeBadge').textContent=simMode==='gridtied'?'GRID-TIED':simMode.toUpperCase();
-    G('sp_mode').textContent=simMode==='gridtied'?'GRID-TIED':simMode.toUpperCase();
+    const lbl=simMode==='gridtied'?'GRID-TIED':simMode.toUpperCase();
+    G('modeBadge').textContent=lbl;G('sp_mode').textContent=lbl;
   };
 });
-function toggleEl(id){const i=G(id),to=G(id+'Toggle');i.value=i.value==='1'?'0':'1';to.classList.toggle('on',i.value==='1');}
+function togEl(id){const i=G(id),to=G(id+'Toggle');i.value=i.value==='1'?'0':'1';to.classList.toggle('on',i.value==='1');}
 G('geoPreset').onchange=()=>{const p=G('geoPreset').value,m={arctic:{lat:70,doy:10},desert:{lat:25,doy:172},africa:{lat:10,doy:100},andes:{lat:-20,doy:300},indonesia:{lat:-2,doy:172}};if(m[p]){G('lat').value=m[p].lat;G('doy').value=m[p].doy;}};
 
 /* ── solar ───────────────────────────────────────────────── */
@@ -463,41 +603,35 @@ function fuelRate(fleet){let L=0;for(const g of fleet){if(!g.online||g.P<=0)cont
 function bessControl(dt,fpu,dfdt,Pinj_pre,s){
   if(s.bPmax<=0||s.bEmax<=0){s.bP=0;return;}
   const soc=s.bE/s.bEmax,td=clamp(s.thermalDerate,0,1);
-  const dis=s.bPmax*td*(soc<s.bLo?soc/s.bLo:1);
-  const chg=s.bPmax*td*(soc>s.bHi?(1-soc)/(1-s.bHi):1);
+  const dis=s.bPmax*td*(soc<s.bLo?soc/s.bLo:1),chg=s.bPmax*td*(soc>s.bHi?(1-soc)/(1-s.bHi):1);
   const gfm=G('gfmMode').value==='1';
   const P_i=gfm?clamp(-(2*s.bH*s.bPmax/s.f0)*dfdt,-dis,dis):0;
   const P_d=clamp(-fpu/Math.max(.001,s.bDroop)*s.bPmax,-dis,dis);
   const P_c=clamp(-Pinj_pre,-dis,chg);
   const P_e=clamp((s.bTarget-soc)*s.bPmax*.22,-.4*chg,.4*dis);
   let Pc=gfm?(0.28*P_i+0.38*P_d+0.24*P_c+0.10*P_e):(0.50*P_d+0.35*P_c+0.15*P_e);
-  if(soc<=0.05)Pc=Math.min(Pc,.02*s.bPmax);
-  if(soc>=0.97)Pc=Math.max(Pc,0);
+  if(soc<=0.05)Pc=Math.min(Pc,.02*s.bPmax);if(soc>=0.97)Pc=Math.max(Pc,0);
   s.bP=clamp(Pc,-chg,dis);
 }
 
 /* ── Q-V ─────────────────────────────────────────────────── */
 function qvStep(dt,Pnet,s){
-  const Qload=Pnet*0.18+s.motorQ;
-  const Qavr=s.dFleet.filter(g=>g.online).reduce((a,g)=>a+g.P*.20,0);
+  const Qload=Pnet*0.18+s.motorQ,Qavr=s.dFleet.filter(g=>g.online).reduce((a,g)=>a+g.P*.20,0);
   const Qpcs=s.bPmax>0?Math.min(N('qPCS'),Math.sqrt(Math.max(0,s.bPmax*s.bPmax-s.bP*s.bP))):0;
-  const Qimb=Math.max(0,Qload-Qavr-Qpcs);
-  const Vt=N('vBase')-N('qDroop')*Qimb/Math.max(1,Pnet);
-  s.V+=((Vt-s.V)*dt/5);s.V=clamp(s.V,.70,1.15);
-  s.Q=(Qavr+Qpcs)-Qload;
+  const Qimb=Math.max(0,Qload-Qavr-Qpcs),Vt=N('vBase')-N('qDroop')*Qimb/Math.max(1,Pnet);
+  s.V+=((Vt-s.V)*dt/5);s.V=clamp(s.V,.70,1.15);s.Q=(Qavr+Qpcs)-Qload;
   s.Vmin=Math.min(s.Vmin,s.V);s.Vmax=Math.max(s.Vmax,s.V);
 }
 
-/* ── IBR limiting ────────────────────────────────────────── */
+/* ── IBR ─────────────────────────────────────────────────── */
 function ibrLimit(Pav,bag,f,dfdt,dt,s){
-  if(Pav<=0)return 0;
-  const f0=s.f0,of1f=N('of1f'),of1t=N('of1t'),of2f=N('of2f'),of2t=N('of2t'),rcl=N('reclose');
+  if(Pav<=0)return 0;const f0=s.f0,rcl=N('reclose');
   if(bag.tripTimer>0){bag.tripTimer-=dt;bag.ramp=0;return 0;}
   if(bag.ramp<1){if(Math.abs(f-f0)<0.1)bag.rcTimer+=dt;else bag.rcTimer=0;if(bag.rcTimer>5){bag.ramp=Math.min(1,bag.ramp+dt*0.05);if(bag.ramp>=1){bag.ramp=1;bag.recloses++;logLine(`${ts(s.t)} ✅ ${bag.name} reclose OK`);bag.rcTimer=0;}}return 0;}
-  const roc=Math.abs(dfdt)>N('rocMax')*.8;let band=0;if(f>=of2f)band=2;else if(f>=of1f)band=1;
-  if(!roc){if(band>0&&band===bag._band)bag.ofTimer+=dt;else if(band>0){bag.ofTimer=dt;bag._band=band;}else{bag.ofTimer=Math.max(0,bag.ofTimer-2*dt);bag._band=0;}}
-  if(band===2&&bag.ofTimer>=of2t){bag.tripTimer=rcl;bag.trips++;bag.ramp=0;bag.ofTimer=0;bag._band=0;logLine(`${ts(s.t)} ⚡ ${bag.name} OF2 trip f=${f.toFixed(2)} Hz`);return 0;}
-  if(band===1&&bag.ofTimer>=of1t){bag.tripTimer=rcl;bag.trips++;bag.ramp=0;bag.ofTimer=0;bag._band=0;logLine(`${ts(s.t)} ⚡ ${bag.name} OF1 trip f=${f.toFixed(2)} Hz`);return 0;}
+  let band=0;if(f>=N('of2f'))band=2;else if(f>=N('of1f'))band=1;
+  if(band>0&&band===bag._band)bag.ofTimer+=dt;else if(band>0){bag.ofTimer=dt;bag._band=band;}else{bag.ofTimer=Math.max(0,bag.ofTimer-2*dt);bag._band=0;}
+  if(band===2&&bag.ofTimer>=N('of2t')){bag.tripTimer=rcl;bag.trips++;bag.ramp=0;bag.ofTimer=0;bag._band=0;logLine(`${ts(s.t)} ⚡ ${bag.name} OF2 trip f=${f.toFixed(2)} Hz`);return 0;}
+  if(band===1&&bag.ofTimer>=N('of1t')){bag.tripTimer=rcl;bag.trips++;bag.ramp=0;bag.ofTimer=0;bag._band=0;logLine(`${ts(s.t)} ⚡ ${bag.name} OF1 trip f=${f.toFixed(2)} Hz`);return 0;}
   let Po=Pav;if(f>f0+0.2){const df1=clamp(f-(f0+.2),0,.3),df2=Math.max(0,f-(f0+.5));Po=Pav*Math.min(Math.max(0,1-.5*(df1/.3)),Math.max(0,1-2*df2));}
   return Po*bag.ramp;
 }
@@ -508,12 +642,11 @@ function applyUFLS(f,dt,s){
   s.ufls.totalShed=clamp(s.ufls.stages.filter(st=>st.active).reduce((a,st)=>a+st.shed,0),0,.65);
 }
 
-/* ── diesel dispatch ─────────────────────────────────────── */
+/* ── Diesel dispatch ─────────────────────────────────────── */
 function dieselDispatch(dt,fpu,residual,s){
   const u=s.dFleet;for(const g of u)if(g.cooldown>0)g.cooldown-=dt;
   const onCap=u.reduce((a,g)=>a+(g.online?g.cap:0),0),largest=Math.max(0,...u.filter(g=>g.online).map(g=>g.cap),0),need=Math.max(0,residual);
-  s.n1=(onCap-largest)>=need*.9;
-  const des=need>0?need/.72:3.3;
+  s.n1=(onCap-largest)>=need*.9;const des=need>0?need/.72:3.3;
   if(onCap<des-s.dHyst)st1('3.3MW')||st1('1.25MW');
   else if(onCap-des>s.dHyst*1.3&&!s.freezeStop&&s.bE/s.bEmax>.3)sp1();
   for(const g of u){if(g.starting){g.timer-=dt;if(g.timer<=0){g.starting=false;g.online=true;g.P=g.cap*.65;logLine(`${ts(s.t)} ✅ ${g.type} sync-in`);}}if(g.stopping){g.P=Math.max(0,g.P-s.rampDn*dt*1.5);g.timer-=dt;if(g.timer<=0){g.stopping=false;g.online=false;g.P=0;g.cooldown=s.dCool;logLine(`${ts(s.t)} 🔴 ${g.type} off`);}}}
@@ -526,11 +659,10 @@ function dieselDispatch(dt,fpu,residual,s){
 }
 function rampLim(tg,cur,pct,pm,dt){if(pm<=0)return tg;const mx=pct*pm*dt;return tg<cur?tg:clamp(tg,cur-mx,cur+mx);}
 
-/* ── state ───────────────────────────────────────────────── */
+/* ── State ───────────────────────────────────────────────── */
 let st={},series=[],running=false,started=false,animFrame=null;
 function initState(){
-  rng=mulberry32(42);const f0=N('f0')||60;
-  const etaOW=Math.sqrt(clamp(N('bEta')/100,.8,1));
+  rng=mulberry32(42);const f0=N('f0')||60,etaOW=Math.sqrt(clamp(N('bEta')/100,.8,1));
   st={t:0,f0,f:f0,dfdt:0,T:N('simHours')*3600,
     pvMax:N('pvMax'),pvShape:N('pvShape'),pvCloud:N('pvCloud'),pvSoil:N('pvSoil'),pvRamp:N('pvRamp')/100,pvBag:{name:'PV',tripTimer:0,ramp:1,recloses:0,trips:0,ofTimer:0,_band:0,rcTimer:0},Ppv:0,
     windMax:N('windMax'),windMean:N('windMean'),windVar:N('windVar'),windRamp:N('windRamp')/100,windBag:{name:'Wind',tripTimer:0,ramp:1,recloses:0,trips:0,ofTimer:0,_band:0,rcTimer:0},Pwind:0,
@@ -543,50 +675,38 @@ function initState(){
     V:N('vBase'),Q:0,Vmin:N('vBase'),Vmax:N('vBase'),
     ufls:{events:0,totalShed:0,stages:[{thresh:N('uf1f'),shed:N('uf1s')/100,label:'Deferrable',active:false,timer:0},{thresh:N('uf2f'),shed:N('uf2s')/100,label:'Interruptible',active:false,timer:0},{thresh:N('uf3f'),shed:N('uf3s')/100,label:'Process',active:false,timer:0}]},
     fuelL:0,fuelBaseL:0,Eload:0,Ere:0,Ecurt:0,fMin:f0,fMax:f0,rocofMax:0,Sbase:Math.max(N('Pload'),12)};
-  series=[];G('log').textContent='[Idle] Ready — press Start…';G('log').classList.add('muted');showOverlays(true);resetKPI();
+  series=[];G('log').textContent='[Idle] Ready — press Start…';showOverlays(true);resetKPI();
+  updBtnState('idle');
 }
 
-/* ── step ────────────────────────────────────────────────── */
+/* ── Step ────────────────────────────────────────────────── */
 function step(){
   const dt=N('dt')||0.5,f0=st.f0;
-  // motor start
   st.motorTimer-=dt;if(st.motorTimer<=0){st.motorActive=true;st.motorTimer=st.motorInterval;st.motorQ=st.motorMW*3.5;st.motorStarts++;logLine(`${ts(st.t)} ⚙️ Motor start ${st.motorMW.toFixed(1)} MW`);}
   if(st.motorActive){st.motorDecay-=dt;if(st.motorDecay<=0){st.motorActive=false;st.motorDecay=3;st.motorQ=0;}}
-  // availability
   const pvAv=pvAvail(st.t,st),wv=windSpeed(st.t,st),wdAv=windAvail(wv,st);
-  // load
   const Pb=st.Pload*(1+.3*Math.sin(2*Math.PI*st.t/900)+.15*Math.sin(2*Math.PI*st.t/120))*(1-st.alpha*((st.f-f0)/f0));
   const Pmotor=st.motorActive?st.motorMW*(st.motorDecay/3):0;
   applyUFLS(st.f,dt,st);
-  const Pload=Math.max(0,Pb+Pmotor)*(1-st.ufls.totalShed);
-  const fpu=(st.f-f0)/f0;
-  // IBR
+  const Pload=Math.max(0,Pb+Pmotor)*(1-st.ufls.totalShed),fpu=(st.f-f0)/f0;
   const PpvF=ibrLimit(pvAv,st.pvBag,st.f,st.dfdt,dt,st);
   const PwdF=ibrLimit(wdAv,st.windBag,st.f,st.dfdt,dt,st);
   const Ppv=rampLim(PpvF,st.Ppv,st.pvRamp,st.pvMax,dt);
   const Pwind=rampLim(PwdF,st.Pwind,st.windRamp,st.windMax,dt);
   st.Ppv=Ppv;st.Pwind=Pwind;
-  // grid
   let Pgrid=0;
   if(simMode!=='offgrid'){if(simMode==='gridtied')Pgrid=Math.min(st.gridMW,Math.max(0,Pload-(Ppv+Pwind+st.bP)));else Pgrid=Math.min(st.gridMW,Math.max(0,Pload*.55-(Ppv+Pwind)));st.gridP=Pgrid;}
-  // diesel
   const Pdg=dieselDispatch(dt,fpu,Math.max(0,Pload-(Ppv+Pwind+Pgrid)),st);
-  // BESS
   bessControl(dt,fpu,st.dfdt,(Pdg+Ppv+Pwind+Pgrid)-Pload,st);
-  // swing equation
   const onCap=st.dFleet.reduce((a,g)=>a+(g.online?g.cap:0),0),Hsys=Math.max(.5,onCap*.5);
   const Pinj=(Pdg+Ppv+Pwind+st.bP+Pgrid)-Pload,Pdamp=-st.alpha*(st.f-f0)*st.Sbase;
   let dfdt=(f0*((Pinj+Pdamp)/Math.max(st.Sbase,1)-st.D*fpu))/(2*Hsys);
   dfdt=clamp(dfdt,-N('rocMax'),N('rocMax'));st.dfdt=dfdt;st.f+=dfdt*dt;
   st.fMin=Math.min(st.fMin,st.f);st.fMax=Math.max(st.fMax,st.f);st.rocofMax=Math.max(st.rocofMax,Math.abs(dfdt));
-  // Q-V
   qvStep(dt,Pload,st);
-  // energy
-  st.Eload+=Pload*dt/3600;st.Ere+=(Ppv+Pwind)*dt/3600;
-  st.Ecurt+=Math.max(0,(Ppv+Pwind)-Pload+st.bP)*dt/3600;
+  st.Eload+=Pload*dt/3600;st.Ere+=(Ppv+Pwind)*dt/3600;st.Ecurt+=Math.max(0,(Ppv+Pwind)-Pload+st.bP)*dt/3600;
   st.fuelL+=fuelRate(st.dFleet)*dt/3600;
   const bp=Pload/Math.max(9.9,1);st.fuelBaseL+=(sfc(clamp(bp,0,1))/1000)*Math.min(Pload,9.9)*1000/0.84*dt/3600;
-  // BESS energy
   if(st.bEmax>0){if(st.bP>0)st.bE=clamp(st.bE-st.bP*dt/3600/st.etaOW,0,st.bEmax);else st.bE=clamp(st.bE+Math.abs(st.bP)*dt/3600*st.etaOW,0,st.bEmax);}
   if(Math.abs(st.f-f0)>.5){if(!st.freezeStop){st.freezeStop=true;st.freezeTimer=300;logLine(`${ts(st.t)} ⚠️ |Δf|>0.5 → freeze diesel stop`);}}
   if(st.freezeTimer>0){st.freezeTimer-=dt;if(st.freezeTimer<=0)st.freezeStop=false;}
@@ -595,100 +715,129 @@ function step(){
   if(series.length>60000)series.splice(0,20000);
 }
 
-/* ── canvas ──────────────────────────────────────────────── */
+/* ── BUTTON STATE MANAGEMENT ─────────────────────────────── */
+function updBtnState(state){
+  // state: 'idle'|'running'|'paused'|'done'
+  const s=G('startBtn'),p=G('pauseBtn'),r=G('resetBtn');
+  s.className='btn';p.className='btn';r.className='btn';
+  s.disabled=false;p.disabled=false;r.disabled=false;
+  if(state==='idle'){
+    s.classList.add('primary'); // Start = active/Volt
+    p.disabled=true;            // Pause = disabled (nothing running)
+  } else if(state==='running'){
+    p.classList.add('primary'); // Pause = active/Volt
+    s.disabled=true;            // Start = disabled (already running)
+  } else if(state==='paused'){
+    s.classList.add('primary'); // Start/Resume = active/Volt
+    // Pause stays ghost
+  } else if(state==='done'){
+    // only Reset is meaningful
+    r.classList.add('primary');
+    s.disabled=true;p.disabled=true;
+  }
+  G('simBadge').textContent=state==='running'?'LIVE':state==='paused'?'PAUSED':state==='done'?'DONE':'IDLE';
+  G('simBadge').className='tbadge'+(state==='running'?' live':state==='done'?' done':'');
+}
+
+/* ── Canvas ──────────────────────────────────────────────── */
 const DPR=Math.min(window.devicePixelRatio||1,2);
 function rsz(cv){const w=cv.clientWidth,h=cv.clientHeight;if(cv.width!==w*DPR||cv.height!==h*DPR){cv.width=w*DPR;cv.height=h*DPR;}return{w:cv.width,h:cv.height};}
 function ds(ctx,xs,ys,col,dsh,lw){if(!xs||xs.length<2)return;ctx.save();ctx.beginPath();ctx.setLineDash(dsh?[5,5]:[]);for(let i=0;i<xs.length;i++)i?ctx.lineTo(xs[i],ys[i]):ctx.moveTo(xs[i],ys[i]);ctx.strokeStyle=col;ctx.lineWidth=lw||2;ctx.stroke();ctx.restore();}
-function gridL(ctx,w,h,n,mg){ctx.save();ctx.strokeStyle='#1e324860';ctx.lineWidth=1;ctx.setLineDash([3,4]);for(let i=0;i<=n;i++){const y=mg+(h-2*mg)*i/n;ctx.beginPath();ctx.moveTo(mg,y);ctx.lineTo(w-4,y);ctx.stroke();}ctx.restore();}
-function axL(ctx,mn,mx,h,mg,d){ctx.save();ctx.fillStyle='#64849E';ctx.font=`${8.5*DPR}px monospace`;ctx.textAlign='right';for(let i=0;i<=4;i++){const v=mx-(mx-mn)*i/4,y=mg+(h-2*mg)*i/4;ctx.fillText(v.toFixed(d==null?1:d),mg-3,y+3);}ctx.restore();}
-function tmL(ctx,t0,t1,w,h,mg){ctx.save();ctx.fillStyle='#64849E';ctx.font=`${8.5*DPR}px monospace`;ctx.textAlign='center';for(let i=0;i<=5;i++){const x=mg+(w-mg-4)*(i/5);ctx.fillText(`${((t0+(t1-t0)*i/5)/3600).toFixed(1)}h`,x,h-3);}ctx.restore();}
+function gridL(ctx,w,h,n,mg,bg){
+  // light background = light grey grid lines
+  ctx.save();ctx.strokeStyle='#E2E8F0';ctx.lineWidth=1;ctx.setLineDash([3,4]);
+  for(let i=0;i<=n;i++){const y=mg+(h-2*mg)*i/n;ctx.beginPath();ctx.moveTo(mg,y);ctx.lineTo(w-4,y);ctx.stroke();}
+  ctx.restore();
+}
+function axL(ctx,mn,mx,h,mg,d){ctx.save();ctx.fillStyle='#8096A8';ctx.font=`${8*DPR}px "Helvetica Neue",Arial`;ctx.textAlign='right';for(let i=0;i<=4;i++){const v=mx-(mx-mn)*i/4,y=mg+(h-2*mg)*i/4;ctx.fillText(v.toFixed(d==null?1:d),mg-3,y+3);}ctx.restore();}
+function tmL(ctx,t0,t1,w,h,mg){ctx.save();ctx.fillStyle='#8096A8';ctx.font=`${8*DPR}px "Helvetica Neue",Arial`;ctx.textAlign='center';for(let i=0;i<=5;i++){const x=mg+(w-mg-4)*(i/5);ctx.fillText(`${((t0+(t1-t0)*i/5)/3600).toFixed(1)}h`,x,h-3);}ctx.restore();}
 
 function renderP(){
-  const cv=G('pCanvas');const{w,h}=rsz(cv);const ctx=cv.getContext('2d');ctx.clearRect(0,0,w,h);if(series.length<2)return;
-  const mg=36,b=16,seg=series,t0=seg[0].t,t1=seg[seg.length-1].t;
-  const xf=t=>mg+(w-mg-4)*(t-t0)/Math.max(1,t1-t0);const xs=seg.map(d=>xf(d.t));
+  const cv=G('pCanvas');const{w,h}=rsz(cv);const ctx=cv.getContext('2d');
+  ctx.fillStyle='#FFFFFF';ctx.fillRect(0,0,w,h);
+  if(series.length<2)return;
+  const mg=36,b=14,seg=series,t0=seg[0].t,t1=seg[seg.length-1].t;
+  const xf=t=>mg+(w-mg-4)*(t-t0)/Math.max(1,t1-t0),xs=seg.map(d=>xf(d.t));
   const all=seg.flatMap(d=>[d.Ppv,d.Pwind,d.Pdg,d.bP,d.Pgrid,d.Pload]);
   const mn=Math.min(0,...all),mx=Math.max(1,...all);
   const yf=v=>b+(h-b-mg)*(1-(v-mn)/(mx-mn||1));
   gridL(ctx,w,h,5,mg);axL(ctx,mn,mx,h,mg);tmL(ctx,t0,t1,w,h,mg);
-  ctx.save();ctx.strokeStyle='#24405060';ctx.lineWidth=1;ctx.setLineDash([3,3]);ctx.beginPath();ctx.moveTo(mg,yf(0));ctx.lineTo(w-4,yf(0));ctx.stroke();ctx.restore();
-  ds(ctx,xs,seg.map(d=>yf(d.Ppv)),'#F59E0B',false,2);
-  ds(ctx,xs,seg.map(d=>yf(d.Pwind)),'#38BDF8',true,2);
-  ds(ctx,xs,seg.map(d=>yf(d.Pload)),'#94A3B8',false,2.5);
-  ds(ctx,xs,seg.map(d=>yf(d.Pdg)),'#6366F1',false,2);
-  ds(ctx,xs,seg.map(d=>yf(d.bP)),'#22C55E',true,2);
-  if(simMode!=='offgrid')ds(ctx,xs,seg.map(d=>yf(d.Pgrid)),'#A78BFA',false,2);
+  ctx.save();ctx.strokeStyle='#CBD5E1';ctx.lineWidth=1;ctx.setLineDash([3,3]);ctx.beginPath();ctx.moveTo(mg,yf(0));ctx.lineTo(w-4,yf(0));ctx.stroke();ctx.restore();
   const{rise,set}=sunTimes(N('lat'),N('doy'));
-  [[rise*3600,'#F59E0B'],[set*3600,'#F59E0B']].forEach(([tt,c])=>{if(tt>=t0&&tt<=t1){ctx.save();ctx.fillStyle=c;ctx.beginPath();ctx.arc(xf(tt),b+8,4,0,Math.PI*2);ctx.fill();ctx.restore();}});
+  [[rise*3600,'#FEF3C7'],[set*3600,'#FEF3C7']].forEach(([tt])=>{if(tt>=t0&&tt<=t1){ctx.save();ctx.strokeStyle='#FCD34D';ctx.lineWidth=1;ctx.setLineDash([2,4]);ctx.beginPath();ctx.moveTo(xf(tt),b);ctx.lineTo(xf(tt),h-mg);ctx.stroke();ctx.restore();}});
+  ds(ctx,xs,seg.map(d=>yf(d.Ppv)),'#D4840A',false,2);
+  ds(ctx,xs,seg.map(d=>yf(d.Pwind)),'#0EA5E9',true,2);
+  ds(ctx,xs,seg.map(d=>yf(d.Pload)),'#64748B',false,2.5);
+  ds(ctx,xs,seg.map(d=>yf(d.Pdg)),'#7C3AED',false,2);
+  ds(ctx,xs,seg.map(d=>yf(d.bP)),'#16A34A',true,2);
+  if(simMode!=='offgrid')ds(ctx,xs,seg.map(d=>yf(d.Pgrid)),'#8B5CF6',false,2);
 }
-
 function renderF(){
-  const cv=G('fCanvas');const{w,h}=rsz(cv);const ctx=cv.getContext('2d');ctx.clearRect(0,0,w,h);if(series.length<2)return;
-  const mg=38,b=12,seg=series,t0=seg[0].t,t1=seg[seg.length-1].t;
-  const xf=t=>mg+(w-mg-4)*(t-t0)/Math.max(1,t1-t0);const xs=seg.map(d=>xf(d.t));
+  const cv=G('fCanvas');const{w,h}=rsz(cv);const ctx=cv.getContext('2d');
+  ctx.fillStyle='#FFFFFF';ctx.fillRect(0,0,w,h);
+  if(series.length<2)return;
+  const mg=38,b=10,seg=series,t0=seg[0].t,t1=seg[seg.length-1].t;
+  const xf=t=>mg+(w-mg-4)*(t-t0)/Math.max(1,t1-t0),xs=seg.map(d=>xf(d.t));
   const fv=seg.map(d=>d.f),sv=seg.map(d=>d.soc),f0=st.f0||60;
   const fmn=Math.min(...fv,f0-.8),fmx=Math.max(...fv,f0+.8);
-  const yf=v=>b+(h-b-mg)*(1-(v-fmn)/(fmx-fmn||.01));const ys=v=>b+(h-b-mg)*(1-v/100);
+  const yf=v=>b+(h-b-mg)*(1-(v-fmn)/(fmx-fmn||.01)),ys=v=>b+(h-b-mg)*(1-v/100);
   gridL(ctx,w,h,4,mg);axL(ctx,fmn,fmx,h,mg,3);tmL(ctx,t0,t1,w,h,mg);
-  ctx.save();ctx.strokeStyle='#64849E60';ctx.lineWidth=1;ctx.setLineDash([3,3]);ctx.beginPath();ctx.moveTo(mg,yf(f0));ctx.lineTo(w-4,yf(f0));ctx.stroke();ctx.restore();
-  [[N('uf1f'),'#ef444440'],[N('uf2f'),'#f59e0b40'],[N('uf3f'),'#ef444455']].forEach(([fth,col])=>{ctx.save();ctx.strokeStyle=col;ctx.lineWidth=1;ctx.setLineDash([2,4]);ctx.beginPath();ctx.moveTo(mg,yf(fth));ctx.lineTo(w-4,yf(fth));ctx.stroke();ctx.restore();});
-  ds(ctx,xs,sv.map(ys),'#22C55E70',true,1.5);
-  ds(ctx,xs,fv.map(yf),'#E879F9',false,2.5);
+  ctx.save();ctx.strokeStyle='#CBD5E1';ctx.lineWidth=1;ctx.setLineDash([3,3]);ctx.beginPath();ctx.moveTo(mg,yf(f0));ctx.lineTo(w-4,yf(f0));ctx.stroke();ctx.restore();
+  [[N('uf1f'),'#FCA5A5'],[N('uf2f'),'#FCD34D'],[N('uf3f'),'#F87171']].forEach(([fth,c])=>{ctx.save();ctx.strokeStyle=c;ctx.lineWidth=1;ctx.setLineDash([2,4]);ctx.beginPath();ctx.moveTo(mg,yf(fth));ctx.lineTo(w-4,yf(fth));ctx.stroke();ctx.restore();});
+  ds(ctx,xs,sv.map(ys),'#86EFAC',true,1.5);
+  ds(ctx,xs,fv.map(yf),'#C026D3',false,2.5);
 }
-
 function renderV(){
-  const cv=G('vCanvas');const{w,h}=rsz(cv);const ctx=cv.getContext('2d');ctx.clearRect(0,0,w,h);if(series.length<2)return;
-  const mg=38,b=12,seg=series,t0=seg[0].t,t1=seg[seg.length-1].t;
-  const xf=t=>mg+(w-mg-4)*(t-t0)/Math.max(1,t1-t0);const xs=seg.map(d=>xf(d.t));
+  const cv=G('vCanvas');const{w,h}=rsz(cv);const ctx=cv.getContext('2d');
+  ctx.fillStyle='#FFFFFF';ctx.fillRect(0,0,w,h);
+  if(series.length<2)return;
+  const mg=38,b=10,seg=series,t0=seg[0].t,t1=seg[seg.length-1].t;
+  const xf=t=>mg+(w-mg-4)*(t-t0)/Math.max(1,t1-t0),xs=seg.map(d=>xf(d.t));
   const vv=seg.map(d=>d.V),qv=seg.map(d=>d.Q);
-  const vmn=Math.min(...vv,.88),vmx=Math.max(...vv,1.12);
-  const qmn=Math.min(...qv,-2),qmx=Math.max(...qv,2);
-  const yvf=v=>b+(h-b-mg)*(1-(v-vmn)/(vmx-vmn||.01));const yqf=v=>b+(h-b-mg)*(1-(v-qmn)/(qmx-qmn||.01));
+  const vmn=Math.min(...vv,.88),vmx=Math.max(...vv,1.12),qmn=Math.min(...qv,-2),qmx=Math.max(...qv,2);
+  const yvf=v=>b+(h-b-mg)*(1-(v-vmn)/(vmx-vmn||.01)),yqf=v=>b+(h-b-mg)*(1-(v-qmn)/(qmx-qmn||.01));
   gridL(ctx,w,h,4,mg);axL(ctx,vmn,vmx,h,mg,3);tmL(ctx,t0,t1,w,h,mg);
-  ctx.save();ctx.strokeStyle='#64849E60';ctx.lineWidth=1;ctx.setLineDash([3,3]);ctx.beginPath();ctx.moveTo(mg,yvf(1.0));ctx.lineTo(w-4,yvf(1.0));ctx.stroke();ctx.restore();
-  [[.88,'#ef444425'],[1.10,'#ef444425']].forEach(([vth,c])=>{ctx.save();ctx.strokeStyle=c;ctx.lineWidth=1;ctx.setLineDash([2,4]);ctx.beginPath();ctx.moveTo(mg,yvf(vth));ctx.lineTo(w-4,yvf(vth));ctx.stroke();ctx.restore();});
-  ds(ctx,xs,qv.map(yqf),'#3B82F680',true,1.5);
-  ds(ctx,xs,vv.map(yvf),'#F59E0B',false,2.5);
+  ctx.save();ctx.strokeStyle='#CBD5E1';ctx.lineWidth=1;ctx.setLineDash([3,3]);ctx.beginPath();ctx.moveTo(mg,yvf(1.0));ctx.lineTo(w-4,yvf(1.0));ctx.stroke();ctx.restore();
+  [[.88,'#FCA5A5'],[1.10,'#FCA5A5']].forEach(([vth,c])=>{ctx.save();ctx.strokeStyle=c;ctx.lineWidth=1;ctx.setLineDash([2,4]);ctx.beginPath();ctx.moveTo(mg,yvf(vth));ctx.lineTo(w-4,yvf(vth));ctx.stroke();ctx.restore();});
+  ds(ctx,xs,qv.map(yqf),'#93C5FD',true,1.5);
+  ds(ctx,xs,vv.map(yvf),'#B45309',false,2.5);
 }
 
-/* ── schematic ───────────────────────────────────────────── */
+/* ── Schematic ───────────────────────────────────────────── */
 function updateSch(){
   if(!st.t)return;
-  const Pdg=st.dFleet.reduce((a,g)=>a+(g.online?g.P:0),0);
-  const soc=st.bEmax>0?st.bE/st.bEmax*100:0;
+  const Pdg=st.dFleet.reduce((a,g)=>a+(g.online?g.P:0),0),soc=st.bEmax>0?st.bE/st.bEmax*100:0;
   G('svgPVpow').textContent=st.Ppv>.1?`↓${st.Ppv.toFixed(1)}MW`:'';
   G('svgWpow').textContent=st.Pwind>.1?`↓${st.Pwind.toFixed(1)}MW`:'';
   G('svgDGpow').textContent=Pdg>.1?`↓${Pdg.toFixed(1)}MW`:'';
   G('svgBEpow').textContent=Math.abs(st.bP)>.05?(st.bP>0?`↓${st.bP.toFixed(1)}`:`↑${Math.abs(st.bP).toFixed(1)}`)+'MW':'';
-  G('svgGRpow').textContent=st.gridP>.1?`↓${st.gridP.toFixed(1)}MW`:'';
+  if(G('svgGRpow'))G('svgGRpow').textContent=st.gridP>.1?`↓${st.gridP.toFixed(1)}MW`:'';
   G('svgFreq').textContent=`f = ${st.f.toFixed(3)} Hz`;
   G('svgVolt').textContent=`V = ${st.V.toFixed(3)} pu`;
-  G('svgSOC').textContent=`SOC = ${soc.toFixed(1)}%`;
+  G('svgSOC').textContent=`SOC = ${soc.toFixed(1)} %`;
   const gfm=G('gfmMode').value==='1',dgOn=st.dFleet.some(g=>g.online);
-  G('svgMode').textContent=`MODE: ${simMode==='offgrid'?(dgOn?'OFF-GRID | DG-FORMING':(gfm?'OFF-GRID | BESS-GFM':'OFF-GRID ⚠')):(simMode==='gridtied'?'GRID-TIED':'HYBRID | ISLANDABLE')}`;
-  G('svgPVCB').setAttribute('fill',st.pvBag.ramp>=1&&st.pvBag.tripTimer<=0?'#F59E0B':'none');
-  G('svgWindCB').setAttribute('fill',st.windBag.ramp>=1&&st.windBag.tripTimer<=0?'#38BDF8':'none');
-  G('svgBus').setAttribute('fill',Math.abs(st.f-st.f0)<.5?'#243D56':'#3d1c2a');
-  G('svgGFM').textContent=gfm?'GFM':'GFL';G('svgGFM').setAttribute('fill',gfm?'#22C55E':'#64849E');
+  G('svgMode').textContent=`MODE: ${simMode==='offgrid'?(dgOn?'OFF-GRID | DG-FORMING':(gfm?'BESS-GFM':'OFF-GRID ⚠')):(simMode==='gridtied'?'GRID-TIED':'HYBRID | ISLANDABLE')}`;
+  G('svgPVCB').setAttribute('fill',st.pvBag.ramp>=1&&st.pvBag.tripTimer<=0?'#D4840A':'none');
+  G('svgWindCB').setAttribute('fill',st.windBag.ramp>=1&&st.windBag.tripTimer<=0?'#0EA5E9':'none');
+  G('svgBus').setAttribute('fill',Math.abs(st.f-st.f0)<.5?'#CBD5E1':'#FCA5A5');
+  G('svgGFM').textContent=gfm?'GFM':'GFL';G('svgGFM').setAttribute('fill',gfm?'#16A34A':'#8096A8');
   G('svgGrid').style.display=simMode!=='offgrid'?'':'none';
 }
 
-/* ── KPI ─────────────────────────────────────────────────── */
+/* ── KPI & Status ────────────────────────────────────────── */
 function setK(id,v,c){const el=G(id);if(!el)return;el.querySelector('.kpi-val').textContent=v;el.className='kpi'+(c?' '+c:'');}
-function setP(id,txt,c){const el=G(id);if(!el)return;el.textContent=txt;el.className='status-pill'+(c?' '+c:'');}
+function setP(id,txt,c){const el=G(id);if(!el)return;el.textContent=txt;el.className='sp'+(c?' '+c:'');}
 function resetKPI(){['k_fuel','k_save','k_cost','k_re','k_curt','k_spin','k_n1','k_fmin','k_rocof','k_ufls','k_trips','k_volt','k_bsoc','k_motor'].forEach(id=>{const el=G(id);if(el){el.querySelector('.kpi-val').textContent='—';el.className='kpi';}});}
 function updateKPI(){
   if(!started)return;
-  const Pdg=st.dFleet.reduce((a,g)=>a+(g.online?g.P:0),0),soc=st.bEmax>0?st.bE/st.bEmax*100:0;
-  const saved=Math.max(0,st.fuelBaseL-st.fuelL),re=st.Eload>0?st.Ere/st.Eload*100:0;
-  const df=st.f-st.f0;
+  const soc=st.bEmax>0?st.bE/st.bEmax*100:0,saved=Math.max(0,st.fuelBaseL-st.fuelL),re=st.Eload>0?st.Ere/st.Eload*100:0,df=st.f-st.f0;
   setK('k_fuel',`${st.fuelL.toFixed(0)} L`,st.fuelL>1000?'warn':'');
   setK('k_save',`${saved.toFixed(0)} L`,'ok');
   setK('k_cost',`$${(st.fuelL*st.dieselPrice/1000*3.785).toFixed(0)}`,'');
   setK('k_re',`${re.toFixed(1)}%`,re>50?'ok':'');
   setK('k_curt',`${st.Ecurt.toFixed(1)} MWh`,st.Ecurt>1?'warn':'');
   setK('k_spin',`${st.spinRes.toFixed(1)} MW`,st.spinRes<st.Pload*.1?'alert':st.spinRes<st.Pload*.2?'warn':'ok');
-  setK('k_n1',st.n1?'OK ✓':'NOT MET ⚠',st.n1?'ok':'alert');
+  setK('k_n1',st.n1?'OK ✓':'NOT MET',st.n1?'ok':'alert');
   setK('k_fmin',`${st.fMin.toFixed(3)} / ${st.fMax.toFixed(3)}`,st.fMin<N('uf1f')?'alert':Math.abs(st.fMin-st.f0)>.3?'warn':'ok');
   setK('k_rocof',`${st.rocofMax.toFixed(2)} Hz/s`,st.rocofMax>N('rocMax')*.9?'alert':st.rocofMax>N('rocMax')*.7?'warn':'ok');
   setK('k_ufls',`${st.ufls.events}`,st.ufls.events>0?'alert':'ok');
@@ -696,39 +845,51 @@ function updateKPI(){
   setK('k_volt',`${st.Vmin.toFixed(3)} / ${st.Vmax.toFixed(3)}`,st.Vmin<.88||st.Vmax>1.10?'alert':st.Vmin<.92?'warn':'ok');
   setK('k_bsoc',`${soc.toFixed(1)}%`,soc<15?'alert':soc<25?'warn':'ok');
   setK('k_motor',`${st.motorStarts}`,'');
-  G('fBadge').textContent=`f = ${st.f.toFixed(3)} Hz`;G('fBadge').style.borderColor=Math.abs(df)>.5?'var(--alert)':Math.abs(df)>.2?'var(--warn)':'var(--border)';
+  G('fBadge').textContent=`f = ${st.f.toFixed(3)} Hz`;
   setP('sp_freq',`Freq ${df>=0?'+':''}${df.toFixed(3)} Hz`,Math.abs(df)<.3?'ok':Math.abs(df)<.5?'warn':'alert');
   setP('sp_n1',st.n1?'N-1 OK':'N-1 ⚠',st.n1?'ok':'alert');
   setP('sp_soc',`SOC ${soc.toFixed(0)}%`,soc<15?'alert':soc<25?'warn':'ok');
   setP('sp_bess',G('gfmMode').value==='1'?'BESS GFM':'BESS GFL','ok');
   setP('sp_spin',`Spin ${st.spinRes.toFixed(1)} MW`,st.spinRes<st.Pload*.1?'alert':st.spinRes<st.Pload*.2?'warn':'ok');
   setP('sp_volt',`V=${st.V.toFixed(3)}`,st.V<.88||st.V>1.10?'alert':st.V<.92||st.V>1.06?'warn':'ok');
-  setP('sp_mode',simMode==='gridtied'?'GRID-TIED':simMode.toUpperCase(),'');
-  G('simBadge').textContent=running?'LIVE':st.t>=st.T?'DONE':'PAUSED';
-  G('simBadge').className='badge '+(running?'live':st.t>=st.T?'ok':'paused');
+  setP('sp_mode',simMode==='gridtied'?'GRID-TIED':simMode.toUpperCase(),'mode');
   G('modeBadge').textContent=simMode==='gridtied'?'GRID-TIED':simMode.toUpperCase();
 }
-
 function showOverlays(show){['pOverlay','fOverlay','vOverlay'].forEach(id=>{const el=G(id);if(el)el.style.display=show?'flex':'none';});}
 
-/* ── loop ────────────────────────────────────────────────── */
+/* ── Loop ────────────────────────────────────────────────── */
 function loop(){
   if(!running)return;
-  if(st.t>=st.T){running=false;updateKPI();updateSch();return;}
+  if(st.t>=st.T){running=false;updBtnState('done');updateKPI();updateSch();return;}
   const n=Math.max(1,Math.round(.016/(N('dt')||.5)));
   for(let i=0;i<n&&st.t<st.T;i++)step();
   showOverlays(false);renderP();renderF();renderV();updateKPI();updateSch();
   animFrame=requestAnimationFrame(loop);
 }
 
-/* ── controls ────────────────────────────────────────────── */
-G('startBtn').onclick=()=>{if(running)return;if(!started){initState();started=true;}running=true;logLine(`${ts(st.t)} ▶ Start — Mode: ${simMode}`);requestAnimationFrame(loop);};
-G('pauseBtn').onclick=()=>{running=false;if(animFrame)cancelAnimationFrame(animFrame);logLine(`${ts(st.t)} ⏸ Paused`);};
-G('resetBtn').onclick=()=>{running=false;if(animFrame)cancelAnimationFrame(animFrame);started=false;series=[];initState();showOverlays(true);logLine('[Reset] Ready');};
+/* ── Controls ────────────────────────────────────────────── */
+G('startBtn').onclick=()=>{
+  if(running)return;
+  if(!started){initState();started=true;}
+  running=true;updBtnState('running');
+  logLine(`${ts(st.t)} ▶ Start — Mode: ${simMode}`);
+  requestAnimationFrame(loop);
+};
+G('pauseBtn').onclick=()=>{
+  if(!running)return;
+  running=false;if(animFrame)cancelAnimationFrame(animFrame);
+  updBtnState('paused');logLine(`${ts(st.t)} ⏸ Paused`);
+};
+G('resetBtn').onclick=()=>{
+  running=false;if(animFrame)cancelAnimationFrame(animFrame);
+  started=false;series=[];initState();showOverlays(true);
+  logLine('[Reset] Ready');
+};
 window.addEventListener('resize',()=>{renderP();renderF();renderV();});
 
-/* ── boot ────────────────────────────────────────────────── */
-initState();applyI18n();G('gridCard').style.display='none';G('svgGrid').style.display='none';G('gridLeg').style.display='none';
+/* ── Boot ────────────────────────────────────────────────── */
+initState();applyI18n();
+G('gridCard').style.display='none';G('svgGrid').style.display='none';G('gridLeg').style.display='none';
 })();
 </script>
 </body>
