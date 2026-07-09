@@ -4,737 +4,489 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>印尼矿山电力基础设施与电气化项目合作建议 — EnergizeOS</title>
-<meta name="description" content="面向印尼镍矿、HPAL冶炼园区与专用港场景的电力基础设施与电气化整合方案。中压配电、BESS削峰、补能基础设施、EMS/SCADA与长期O&M。"/>
+<meta name="description" content="面向印尼镍矿、HPAL冶炼园区与专用港场景的电力基础设施与电气化整合方案。500MW+在运项目经验，专注中压配电、BESS削峰、EMS/SCADA与长期O&M。"/>
 <link rel="icon" type="image/svg+xml" href="/vi/assets/favicon.svg"/>
 <meta property="og:type" content="website"/>
 <meta property="og:title" content="印尼矿山电力基础设施与电气化项目合作建议 — EnergizeOS"/>
-<meta property="og:description" content="面向印尼镍矿与冶炼园区的中压配电、BESS储能、补能预留、EMS/SCADA与O&M整合方案。"/>
+<meta property="og:description" content="500MW+在运经验，专注工业与矿山场景EMS/BESS。面向印尼镍矿的中压配电、储能削峰、补能预留与长期O&M整合方案。"/>
 <meta property="og:image" content="https://docs.energizeos.com/vi/assets/og-1200x630.png"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <link rel="canonical" href="https://docs.energizeos.com/indonesia-mine-power-partnership/"/>
 <style>
-/* ── TOKENS ────────────────────────────────────────────── */
+/* ── TOKENS ─────────────────────────────────────────────── */
 :root{
   --slate:#1A2B3C;
   --mid:#2E4A6E;
   --volt:#D4840A;
   --volt-l:#F0A030;
   --tint:#FDF4E7;
-  --page:#F6F8FA;
+  --page:#F5F7F9;
   --rule:rgba(26,43,60,.10);
   --rule2:rgba(26,43,60,.055);
   --muted:#64788C;
+  --green:#2A7A45;
+  --red:#9B2A2A;
   --w:1160px;
   --pad:48px;
+  --r:2px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{overflow-x:hidden;scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
-body{
-  font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
-  color:var(--slate);
-  background:#fff;
-  line-height:1.72;
-  overflow-x:hidden;
-}
+body{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;color:var(--slate);background:#fff;line-height:1.72;overflow-x:hidden}
 a{text-decoration:none;color:inherit}
-img{display:block;max-width:100%}
 
 /* ── MARK ────────────────────────────────────────────────── */
 .mark{display:grid;grid-template-columns:1fr 1fr;gap:3px}
 .mark i{display:block}
 .mark i:nth-child(1),.mark i:nth-child(4){background:var(--slate)}
 .mark i:nth-child(2),.mark i:nth-child(3){background:var(--volt)}
-.mark--sm{width:24px;height:24px}
 .mark--md{width:32px;height:32px}
+.mark--sm{width:22px;height:22px}
 .mark--rev i:nth-child(1),.mark--rev i:nth-child(4){background:#fff}
-.mark--rev i:nth-child(2),.mark--rev i:nth-child(3){background:rgba(255,255,255,.32)}
-
-/* ── WRAP ────────────────────────────────────────────────── */
-.wrap{max-width:var(--w);margin:0 auto;padding:0 var(--pad)}
+.mark--rev i:nth-child(2),.mark--rev i:nth-child(3){background:rgba(255,255,255,.30)}
 
 /* ── NAV ─────────────────────────────────────────────────── */
-.nav{
-  position:sticky;top:0;z-index:100;
-  background:rgba(255,255,255,.96);
-  backdrop-filter:blur(16px);
-  border-bottom:1px solid var(--rule);
-}
-.nav__inner{
-  max-width:var(--w);margin:0 auto;padding:0 var(--pad);
-  height:66px;display:flex;align-items:center;justify-content:space-between;
-}
-.nav__brand{display:flex;align-items:center;gap:11px}
-.nav__name{font-size:13px;font-weight:700;letter-spacing:.055em}
-.nav__sub{display:block;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
-.nav__links{display:flex;gap:24px;align-items:center;font-size:12px;color:var(--muted)}
-.nav__links a{transition:color .15s}
-.nav__links a:hover{color:var(--slate)}
-.nav__cta{
-  background:var(--slate);color:#fff;
-  padding:10px 18px;
-  border-left:4px solid var(--volt);
-  font-size:12px;letter-spacing:.09em;text-transform:uppercase;
-  transition:background .15s;
-}
-.nav__cta:hover{background:var(--mid)}
-@media(max-width:760px){
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--rule)}
+.nav-in{max-width:var(--w);margin:0 auto;padding:0 var(--pad);height:66px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:11px}
+.brand-name{font-size:13px;font-weight:700;letter-spacing:.055em}
+.brand-sub{display:block;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.nav-links{display:flex;gap:22px;align-items:center;font-size:12px;color:var(--muted)}
+.nav-links a{transition:color .15s}
+.nav-links a:hover{color:var(--slate)}
+.nav-cta{background:var(--slate);color:#fff!important;padding:10px 18px;border-left:4px solid var(--volt);font-size:12px;letter-spacing:.09em;text-transform:uppercase;transition:background .15s}
+.nav-cta:hover{background:var(--mid)!important}
+@media(max-width:800px){
   :root{--pad:20px}
-  .nav__links a:not(.nav__cta){display:none}
-  .nav__sub{display:none}
+  .nav-links a:not(.nav-cta){display:none}
+  .brand-sub{display:none}
 }
 
 /* ── HERO ────────────────────────────────────────────────── */
-.hero{
-  background:var(--slate);
-  position:relative;
-  overflow:hidden;
-  padding:0;
-}
-.hero::after{
-  content:'';position:absolute;bottom:0;left:0;right:0;height:5px;
-  background:var(--volt);
-}
-/* large decorative marks */
-.hero__deco{
-  position:absolute;right:-60px;top:-60px;
-  display:grid;grid-template-columns:1fr 1fr;gap:6px;
-  opacity:.07;
-}
-.hero__deco i{display:block;width:220px;height:220px}
-.hero__deco i:nth-child(1),.hero__deco i:nth-child(4){background:#fff}
-.hero__deco i:nth-child(2),.hero__deco i:nth-child(3){background:var(--volt)}
-
-.hero__wrap{
-  max-width:var(--w);margin:0 auto;padding:0 var(--pad);
-  display:grid;grid-template-columns:1fr 380px;gap:64px;
-  padding-top:88px;padding-bottom:84px;
-}
-.hero__eye{
-  font-size:10px;letter-spacing:.24em;text-transform:uppercase;
-  color:rgba(255,255,255,.38);margin-bottom:22px;
-}
-.hero__h1{
-  font-size:clamp(34px,4.8vw,62px);
-  font-weight:280;line-height:1.05;letter-spacing:-.045em;
-  color:#fff;margin-bottom:28px;
-}
-.hero__h1 b{font-weight:650;color:var(--volt)}
-.hero__lead{
-  font-size:17px;color:rgba(255,255,255,.72);
-  max-width:640px;line-height:1.72;margin-bottom:38px;
-}
-.hero__actions{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start}
-@media(max-width:480px){
-  .hero__actions{flex-direction:column;align-items:stretch}
-  .hero__actions .btn{text-align:center;padding:16px 24px}
-}
-.btn{
-  display:inline-block;
-  font-size:12px;letter-spacing:.1em;text-transform:uppercase;
-  padding:14px 24px;
-  border:1px solid rgba(255,255,255,.22);
-  color:#fff;
-  transition:background .18s, border-color .18s;
-  cursor:pointer;
-  white-space:nowrap;
-}
+.hero{background:var(--slate);position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:5px;background:var(--volt)}
+.hero-deco{position:absolute;right:-40px;top:-40px;display:grid;grid-template-columns:1fr 1fr;gap:5px;opacity:.06;pointer-events:none}
+.hero-deco i{display:block;width:200px;height:200px}
+.hero-deco i:nth-child(1),.hero-deco i:nth-child(4){background:#fff}
+.hero-deco i:nth-child(2),.hero-deco i:nth-child(3){background:var(--volt)}
+.hero-in{max-width:var(--w);margin:0 auto;padding:0 var(--pad);display:grid;grid-template-columns:1fr 368px;gap:60px;padding-top:86px;padding-bottom:82px;position:relative}
+.hero-eye{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:20px}
+.hero-h1{font-size:clamp(32px,4.6vw,60px);font-weight:280;line-height:1.06;letter-spacing:-.045em;color:#fff;margin-bottom:10px}
+.hero-h1 b{font-weight:650;color:var(--volt)}
+/* hook line — the real opening */
+.hero-hook{font-size:18px;color:rgba(255,255,255,.55);font-weight:300;line-height:1.5;margin-bottom:26px;letter-spacing:-.01em;border-left:3px solid var(--volt);padding-left:16px}
+.hero-lead{font-size:15.5px;color:rgba(255,255,255,.65);max-width:600px;line-height:1.74;margin-bottom:36px}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start}
+.btn{display:inline-block;font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:13px 22px;border:1px solid rgba(255,255,255,.22);color:#fff;transition:background .18s,border-color .18s;cursor:pointer;white-space:nowrap}
 .btn:hover{background:rgba(255,255,255,.08)}
-.btn--primary{
-  background:var(--volt);
-  border-color:var(--volt);
-  color:#fff;
-}
-.btn--primary:hover{background:var(--volt-l);border-color:var(--volt-l)}
+.btn-primary{background:var(--volt);border-color:var(--volt);color:#fff}
+.btn-primary:hover{background:var(--volt-l);border-color:var(--volt-l)}
+.btn-ghost{border-color:rgba(255,255,255,.18)}
 
-/* hero sidebar panel */
-.hero__panel{
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.10);
-  border-bottom:4px solid var(--volt);
-  padding:32px;
-  align-self:center;
-}
-.hero__panel-label{
-  font-size:9px;letter-spacing:.22em;text-transform:uppercase;
-  color:rgba(255,255,255,.32);margin-bottom:18px;
-}
-.hero__panel h2{
-  font-size:22px;font-weight:300;line-height:1.28;
-  color:#fff;margin-bottom:16px;
-}
-.hero__panel h2 b{font-weight:650;color:var(--volt)}
-.hero__panel p{font-size:13.5px;color:rgba(255,255,255,.68);line-height:1.68}
-.hero__panel-items{margin-top:20px;display:grid;gap:10px}
-.hero__panel-item{
-  display:flex;align-items:flex-start;gap:10px;
-  font-size:13px;color:rgba(255,255,255,.72);
-}
-.hero__panel-item::before{
-  content:'';flex-shrink:0;margin-top:8px;
-  width:6px;height:6px;background:var(--volt);
-}
-
+/* hero panel */
+.hero-panel{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.09);border-bottom:4px solid var(--volt);padding:30px;align-self:center}
+.hero-panel-tag{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--volt);margin-bottom:16px}
+.hero-panel h2{font-size:20px;font-weight:300;line-height:1.30;color:#fff;margin-bottom:14px}
+.hero-panel h2 b{font-weight:650;color:var(--volt)}
+.hero-panel p{font-size:13px;color:rgba(255,255,255,.62);line-height:1.70;margin-bottom:18px}
+.hero-bullets{display:grid;gap:9px}
+.hero-bullet{display:flex;align-items:flex-start;gap:9px;font-size:12.5px;color:rgba(255,255,255,.68);line-height:1.55}
+.hero-bullet::before{content:'';flex-shrink:0;margin-top:6px;width:5px;height:5px;background:var(--volt)}
 @media(max-width:960px){
-  .hero__wrap{grid-template-columns:1fr;padding-top:60px}
-  .hero__panel{max-width:520px}
-  .hero__deco{display:none}
+  .hero-in{grid-template-columns:1fr;padding-top:56px;padding-bottom:56px}
+  .hero-panel{max-width:500px}
+  .hero-deco{display:none}
+}
+@media(max-width:480px){
+  .hero-actions{flex-direction:column;align-items:stretch}
+  .hero-actions .btn{text-align:center;padding:15px 22px}
+}
+
+/* ── CREDIBILITY STRIP ───────────────────────────────────── */
+/* "Why us" bar immediately below hero */
+.cred{background:var(--tint);border-bottom:1px solid var(--rule)}
+.cred-in{max-width:var(--w);margin:0 auto;padding:0 var(--pad);display:grid;grid-template-columns:repeat(4,1fr);border-left:1px solid var(--rule)}
+.cred-item{padding:28px 24px;border-right:1px solid var(--rule);display:flex;flex-direction:column;gap:5px}
+.cred-num{font-size:26px;font-weight:280;letter-spacing:-.04em;color:var(--slate);line-height:1}
+.cred-num span{color:var(--volt)}
+.cred-label{font-size:12px;font-weight:600;color:var(--slate)}
+.cred-desc{font-size:12px;color:var(--muted);line-height:1.5}
+@media(max-width:800px){
+  .cred-in{grid-template-columns:1fr 1fr;border-left:none}
+  .cred-item{border-left:1px solid var(--rule)}
+  .cred-item:nth-child(even){border-right:1px solid var(--rule)}
+  .cred-item:nth-child(3),.cred-item:nth-child(4){border-top:1px solid var(--rule)}
+}
+@media(max-width:420px){
+  .cred-in{grid-template-columns:1fr;border-left:none}
+  .cred-item{border-left:none;border-right:none;border-top:1px solid var(--rule);padding:20px var(--pad)}
+  .cred-item:first-child{border-top:none}
 }
 
 /* ── STATS STRIP ─────────────────────────────────────────── */
-.stats{
-  background:#fff;
-  border-top:1px solid var(--rule);
-  border-bottom:1px solid var(--rule);
-}
-.stats__inner{
-  max-width:var(--w);margin:0 auto;
-  display:grid;grid-template-columns:repeat(4,1fr);
-  border-left:1px solid var(--rule);
-}
-.stat{
-  padding:38px 36px;
-  border-right:1px solid var(--rule);
-}
-.stat__num{
-  font-size:clamp(26px,3.2vw,42px);
-  font-weight:280;letter-spacing:-.04em;
-  color:var(--slate);
-  margin-bottom:6px;
-  line-height:1.1;
-}
-.stat__num span{color:var(--volt)}
-.stat__desc{font-size:13px;color:var(--muted);line-height:1.55;max-width:220px}
+.stats{background:#fff;border-bottom:1px solid var(--rule)}
+.stats-in{max-width:var(--w);margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);border-left:1px solid var(--rule);border-top:1px solid var(--rule)}
+.stat{padding:36px 32px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.stat-num{font-size:clamp(24px,3vw,40px);font-weight:280;letter-spacing:-.04em;color:var(--slate);margin-bottom:6px;line-height:1.1}
+.stat-num span{color:var(--volt)}
+.stat-desc{font-size:12.5px;color:var(--muted);line-height:1.55}
 @media(max-width:800px){
-  .stats__inner{grid-template-columns:1fr 1fr;border-left:none}
-  .stat{padding:24px 20px;border-left:1px solid var(--rule)}
+  .stats-in{grid-template-columns:1fr 1fr;border-left:none}
+  .stat{border-left:1px solid var(--rule)}
   .stat:nth-child(even){border-right:1px solid var(--rule)}
-  .stat:nth-child(3),.stat:nth-child(4){border-top:1px solid var(--rule)}
-  .stat__desc{max-width:none}
 }
 @media(max-width:420px){
-  .stats__inner{grid-template-columns:1fr;border-left:none}
-  .stat{border-left:none;border-right:none;border-top:1px solid var(--rule);padding:20px var(--pad)}
-  .stat:first-child{border-top:none}
+  .stats-in{grid-template-columns:1fr;border-left:none}
+  .stat{border-left:none;border-right:none;padding:20px var(--pad)}
 }
 
 /* ── SECTION SHELL ───────────────────────────────────────── */
-section{padding:82px 0;border-bottom:1px solid var(--rule2);scroll-margin-top:66px}
-section:last-of-type{border-bottom:none}
+section{padding:80px 0;border-bottom:1px solid var(--rule2);scroll-margin-top:66px}
 .s-tint{background:var(--tint)}
 .s-page{background:var(--page)}
 .s-slate{background:var(--slate)}
-.s-mid{background:var(--mid)}
+.wrap{max-width:var(--w);margin:0 auto;padding:0 var(--pad)}
 
-.sec-eye{
-  display:block;
-  font-size:10px;letter-spacing:.22em;text-transform:uppercase;
-  color:var(--volt);margin-bottom:10px;
-}
-.sec-h2{
-  font-size:clamp(26px,3.2vw,42px);
-  font-weight:280;line-height:1.14;letter-spacing:-.035em;
-  color:var(--slate);margin-bottom:12px;
-}
-.sec-h2 b,.sec-h2 strong{font-weight:650}
-.sec-h2--white{color:#fff}
-.sec-lead{
-  font-size:16px;color:var(--muted);
-  max-width:720px;line-height:1.72;
-}
-.sec-lead--white{color:rgba(255,255,255,.70)}
+/* section headers */
+.sec-eye{display:block;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--volt);margin-bottom:10px}
+.sec-h2{font-size:clamp(26px,3.2vw,42px);font-weight:280;line-height:1.13;letter-spacing:-.035em;margin-bottom:12px}
+.sec-h2 b{font-weight:650}
+.sec-lead{font-size:15.5px;color:var(--muted);max-width:700px;line-height:1.74}
+.sec-lead--w{color:rgba(255,255,255,.68)}
+.sec-head-2col{display:grid;grid-template-columns:1fr 1.5fr;gap:56px;margin-bottom:48px;align-items:start}
+@media(max-width:800px){.sec-head-2col{grid-template-columns:1fr}}
 
-.rule{height:1px;background:var(--rule);margin:34px 0 52px}
-
-/* ── OPPORTUNITY GRID ────────────────────────────────────── */
-.opp-head{display:grid;grid-template-columns:1fr 1.6fr;gap:64px;margin-bottom:52px;align-items:start}
-@media(max-width:800px){.opp-head{grid-template-columns:1fr}}
-
-.opp-grid{
-  display:grid;grid-template-columns:repeat(4,1fr);
-  border:1px solid var(--rule);
-  background:var(--rule);
-  gap:1px;
-}
-.opp-card{
-  background:#fff;
-  padding:30px 26px;
-}
-.opp-card__num{
-  font-size:11px;letter-spacing:.16em;color:var(--volt);
-  margin-bottom:20px;
-}
-.opp-card h3{font-size:19px;font-weight:500;margin-bottom:10px}
-.opp-card p{font-size:14px;color:var(--muted);line-height:1.66}
-@media(max-width:900px){.opp-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:540px){.opp-grid{grid-template-columns:1fr}}
+/* ── OPPORTUNITY CARDS ───────────────────────────────────── */
+.opp-grid{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--rule);background:var(--rule);gap:1px}
+.opp-card{background:#fff;padding:28px 24px}
+.opp-card-n{font-size:10px;letter-spacing:.18em;color:var(--volt);margin-bottom:18px}
+.opp-card h3{font-size:18px;font-weight:600;margin-bottom:9px}
+.opp-card p{font-size:13.5px;color:var(--muted);line-height:1.66}
+@media(max-width:900px){.opp-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.opp-grid{grid-template-columns:1fr}}
 
 /* ── PRIORITY MATRIX ─────────────────────────────────────── */
-.priority{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--rule);border:1px solid var(--rule)}
-.priority__cell{background:#fff;padding:34px 30px}
-.priority__cell--a{background:var(--slate)}
-.priority__tag{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:8px}
-.priority__tag--go{color:#2A7A45}
-.priority__tag--no{color:#9B2A2A}
-.priority__tag--w{color:rgba(255,255,255,.42)}
-.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.dot--green{background:#2A7A45}
-.dot--red{background:#9B2A2A}
-.dot--volt{background:var(--volt)}
-.priority__h3{font-size:20px;font-weight:400;margin-bottom:16px}
-.priority__h3--w{color:#fff}
-.priority__list{display:grid;gap:9px}
-.priority__item{
-  font-size:13.5px;color:var(--muted);
-  padding-left:18px;position:relative;line-height:1.6;
-}
-.priority__item::before{
-  content:'';position:absolute;left:0;top:.65em;
-  width:6px;height:6px;background:var(--rule);
-  border-radius:1px;
-}
-.priority__item--go{color:#333}
-.priority__item--go::before{background:var(--volt)}
-.priority__item--w{color:rgba(255,255,255,.68)}
-.priority__item--w::before{background:rgba(255,255,255,.28)}
-@media(max-width:700px){.priority{grid-template-columns:1fr}}
+.priority{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.p-cell{background:#fff;padding:32px 28px}
+.p-cell--dark{background:var(--slate)}
+.p-tag{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.p-tag--go{color:var(--green)}
+.p-tag--no{color:var(--red)}
+.p-tag--w{color:rgba(255,255,255,.4)}
+.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.dot-g{background:var(--green)}.dot-r{background:var(--red)}.dot-v{background:var(--volt)}
+.p-h3{font-size:19px;font-weight:500;margin-bottom:14px}
+.p-h3--w{color:#fff}
+.p-list{display:grid;gap:8px}
+.p-item{font-size:13px;color:var(--muted);padding-left:16px;position:relative;line-height:1.58}
+.p-item::before{content:'';position:absolute;left:0;top:.64em;width:5px;height:5px;background:var(--rule);border-radius:1px}
+.p-item--w{color:rgba(255,255,255,.65)}
+.p-item--w::before{background:rgba(255,255,255,.22)}
+.p-item--on{color:#2a3a2a}.p-item--on::before{background:var(--volt)}
+@media(max-width:660px){.priority{grid-template-columns:1fr}}
 
-/* ── SCENARIO TABLE ──────────────────────────────────────── */
-.scenario-table{width:100%;border-collapse:collapse;border:1px solid var(--rule);background:#fff}
-.scenario-table th{
-  font-size:10px;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--muted);padding:13px 16px;
-  border-bottom:1px solid var(--rule);
-  text-align:left;font-weight:400;background:var(--tint);
+/* ── TABLE SHARED ────────────────────────────────────────── */
+.tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:40px}
+@media(max-width:640px){.tscroll{overflow-x:visible}}
+.t{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--rule)}
+.t th{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding:12px 16px;border-bottom:1px solid var(--rule);text-align:left;font-weight:400;background:var(--tint)}
+.t td{font-size:13.5px;color:#334;padding:15px 16px;border-bottom:1px solid var(--rule2);vertical-align:top;line-height:1.60}
+.t tr:last-child td{border-bottom:none}
+.t td:first-child{font-weight:600;color:var(--slate);border-right:1px solid var(--rule2);background:var(--page)}
+.tag-a{display:inline-block;font-size:10px;letter-spacing:.12em;font-weight:700;padding:2px 7px;background:var(--slate);color:#fff}
+.tag-b{display:inline-block;font-size:10px;letter-spacing:.12em;font-weight:700;padding:2px 7px;background:var(--volt);color:#fff}
+.tag-c{display:inline-block;font-size:10px;letter-spacing:.12em;font-weight:600;padding:2px 7px;border:1px solid var(--rule);color:var(--muted)}
+.hi{color:var(--red);font-weight:700}.mid{color:#B85F00;font-weight:600}
+@media(max-width:640px){
+  .t thead{display:none}
+  .t tr{display:block;border-bottom:2px solid var(--rule)}
+  .t td{display:block;width:100%!important;border-right:none;padding:10px 14px;font-size:13px}
+  .t td:first-child{background:var(--slate);color:#fff;letter-spacing:.03em;padding:11px 14px}
+  .t tr:last-child{border-bottom:none}
 }
-.scenario-table td{
-  font-size:13.5px;color:#334;
-  padding:16px;
-  border-bottom:1px solid var(--rule2);
-  vertical-align:top;
-  line-height:1.62;
-}
-.scenario-table tr:last-child td{border-bottom:none}
-.scenario-table td:first-child{
-  font-size:13px;font-weight:600;color:var(--slate);
-  border-right:1px solid var(--rule2);white-space:nowrap;
-  background:var(--page);width:180px;
-}
-.scenario-table td:nth-child(2){width:auto}
-.scenario-table td:last-child{width:120px}
-@media(max-width:680px){
-  .scenario-table thead{display:none}
-  .scenario-table tr{display:block;border-bottom:2px solid var(--rule);margin-bottom:0}
-  .scenario-table td{display:block;width:100%!important;border-right:none;white-space:normal;padding:10px 14px}
-  .scenario-table td:first-child{background:var(--slate);color:#fff;font-size:12px;letter-spacing:.04em;padding:10px 14px}
-  .scenario-table td:nth-child(2){font-size:13px;color:var(--muted);padding-bottom:6px}
-  .scenario-table td:last-child{padding-top:0;padding-bottom:14px}
-  .scenario-table tr:last-child{border-bottom:none}
-}
-.tag-a{
-  display:inline-block;
-  font-size:10px;letter-spacing:.12em;font-weight:700;
-  padding:2px 8px;background:var(--slate);color:#fff;
-}
-.tag-b{
-  display:inline-block;
-  font-size:10px;letter-spacing:.12em;font-weight:700;
-  padding:2px 8px;background:var(--volt);color:#fff;
-}
-.tag-c{
-  display:inline-block;
-  font-size:10px;letter-spacing:.12em;font-weight:600;
-  padding:2px 8px;border:1px solid var(--rule);color:var(--muted);
-}
+
+/* ── SCENARIO (transport table) specific col widths ─────── */
+.t--scenario td:first-child{width:160px;white-space:nowrap}
+.t--scenario td:last-child{width:110px}
+@media(max-width:640px){.t--scenario td:first-child{white-space:normal}}
 
 /* ── FIRST PACKAGE ───────────────────────────────────────── */
-.pkg-wrap{
-  border:1px solid var(--rule);
-  background:#fff;
-  box-shadow:0 24px 80px rgba(26,43,60,.09);
-}
-.pkg-top{
-  display:grid;grid-template-columns:1fr 340px;
-}
-.pkg-main{padding:44px 40px;border-right:1px solid var(--rule)}
-.pkg-main h3{
-  font-size:clamp(22px,2.8vw,30px);
-  font-weight:300;line-height:1.22;
-  margin-bottom:18px;letter-spacing:-.02em;
-}
-.pkg-main p{font-size:15px;color:var(--muted);line-height:1.70}
-.pkg-side{
-  background:var(--slate);
-  padding:38px 32px;
-  display:flex;flex-direction:column;justify-content:space-between;
-}
-.pkg-side-label{
-  font-size:9px;letter-spacing:.22em;text-transform:uppercase;
-  color:var(--volt);margin-bottom:16px;
-}
-.pkg-side p{font-size:13.5px;color:rgba(255,255,255,.70);line-height:1.70;margin-bottom:22px}
-.pkg-side-note{
-  font-size:11px;color:rgba(255,255,255,.32);
-  border-top:1px solid rgba(255,255,255,.08);
-  padding-top:16px;line-height:1.6;
-}
-
-.pkg-scope{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  border-top:1px solid var(--rule);
-  background:var(--rule);gap:1px;
-}
-.pkg-scope-cell{
-  background:#fff;padding:28px 26px;
-}
-.pkg-scope-cell h4{
-  font-size:15px;font-weight:600;margin-bottom:9px;
-}
-.pkg-scope-cell p{font-size:13px;color:var(--muted);line-height:1.65}
+.pkg{border:1px solid var(--rule);background:#fff;box-shadow:0 20px 64px rgba(26,43,60,.08)}
+.pkg-top{display:grid;grid-template-columns:1fr 330px}
+.pkg-main{padding:40px 36px;border-right:1px solid var(--rule)}
+.pkg-main h3{font-size:clamp(20px,2.6vw,28px);font-weight:300;line-height:1.22;margin-bottom:14px;letter-spacing:-.02em}
+.pkg-main p{font-size:14.5px;color:var(--muted);line-height:1.72}
+.pkg-side{background:var(--slate);padding:34px 28px;display:flex;flex-direction:column;justify-content:space-between}
+.pkg-side-tag{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--volt);margin-bottom:14px}
+.pkg-side p{font-size:13px;color:rgba(255,255,255,.68);line-height:1.70;margin-bottom:18px}
+.pkg-side-note{font-size:11px;color:rgba(255,255,255,.28);border-top:1px solid rgba(255,255,255,.07);padding-top:14px;line-height:1.65}
+.pkg-scope{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--rule);background:var(--rule);gap:1px}
+.pkg-cell{background:#fff;padding:26px 24px}
+.pkg-cell h4{font-size:14.5px;font-weight:600;margin-bottom:8px}
+.pkg-cell p{font-size:13px;color:var(--muted);line-height:1.65}
 @media(max-width:860px){
   .pkg-top{grid-template-columns:1fr}
-  .pkg-main{border-right:none;border-bottom:1px solid var(--rule)}
+  .pkg-main{border-right:none;border-bottom:1px solid var(--rule);padding:28px 22px}
+  .pkg-side{padding:26px 22px}
   .pkg-scope{grid-template-columns:1fr 1fr}
 }
-@media(max-width:540px){
-  .pkg-scope{grid-template-columns:1fr}
-  .pkg-main,.pkg-side{padding:28px 22px}
+@media(max-width:480px){.pkg-scope{grid-template-columns:1fr}}
+
+/* ── SCENARIO SNAPSHOT (project sample) ─────────────────── */
+/* The "假设性场景" block embedded inside package section */
+.snapshot{margin-top:40px;border:1px solid var(--rule);background:var(--page);overflow:hidden}
+.snapshot-head{background:var(--mid);padding:18px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.snapshot-head h4{font-size:14px;font-weight:600;color:#fff;letter-spacing:.02em}
+.snapshot-badge{font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.5);background:rgba(255,255,255,.08);padding:4px 10px}
+.snapshot-body{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.snapshot-left{padding:28px;border-right:1px solid var(--rule)}
+.snapshot-right{padding:28px}
+.snapshot-label{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--volt);margin-bottom:14px}
+.snap-row{display:flex;justify-content:space-between;align-items:baseline;padding:8px 0;border-bottom:1px solid var(--rule2);gap:16px}
+.snap-row:last-child{border-bottom:none}
+.snap-k{font-size:12.5px;color:var(--muted)}
+.snap-v{font-size:13px;font-weight:600;color:var(--slate);text-align:right}
+.snap-v span{color:var(--volt)}
+/* TCO highlight numbers */
+.tco-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px}
+.tco-cell{background:#fff;border:1px solid var(--rule);padding:14px 16px}
+.tco-n{font-size:20px;font-weight:280;letter-spacing:-.03em;color:var(--slate);line-height:1}
+.tco-n span{color:var(--volt)}
+.tco-d{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.4}
+.snapshot-note{padding:14px 28px;border-top:1px solid var(--rule2);background:#fff;font-size:11.5px;color:var(--muted);line-height:1.6;font-style:italic}
+@media(max-width:640px){
+  .snapshot-body{grid-template-columns:1fr}
+  .snapshot-left{border-right:none;border-bottom:1px solid var(--rule)}
 }
 
-/* ── FLOW (PROCESS) ──────────────────────────────────────── */
+/* ── FLOW ────────────────────────────────────────────────── */
 .flow{border:1px solid var(--rule);background:#fff;overflow:hidden}
-.flow-step{
-  display:grid;grid-template-columns:160px 1fr 260px;
-  border-bottom:1px solid var(--rule);
-}
+.flow-step{display:grid;grid-template-columns:148px 1fr 250px;border-bottom:1px solid var(--rule)}
 .flow-step:last-child{border-bottom:none}
-.flow-idx{
-  padding:22px 24px;
-  border-right:1px solid var(--rule);
-  color:var(--volt);font-size:12px;letter-spacing:.16em;
-  background:var(--page);
-  display:flex;flex-direction:column;gap:6px;
-}
-.flow-idx strong{font-size:15px;font-weight:600;color:var(--slate);letter-spacing:0}
-.flow-body{padding:22px 28px;border-right:1px solid var(--rule)}
-.flow-body h3{font-size:18px;font-weight:500;margin-bottom:8px}
-.flow-body p{font-size:14px;color:var(--muted);line-height:1.65}
-.flow-out{
-  padding:22px 24px;
-  background:var(--tint);
-  font-size:13px;color:var(--slate);line-height:1.65;
-}
-.flow-out-label{
-  font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;
-  color:var(--volt);margin-bottom:8px;
-}
+.flow-idx{padding:20px 22px;border-right:1px solid var(--rule);color:var(--volt);font-size:11px;letter-spacing:.16em;background:var(--page);display:flex;flex-direction:column;gap:5px}
+.flow-idx strong{font-size:14px;font-weight:600;color:var(--slate);letter-spacing:0}
+.flow-body{padding:20px 26px;border-right:1px solid var(--rule)}
+.flow-body h3{font-size:17px;font-weight:600;margin-bottom:7px}
+.flow-body p{font-size:13.5px;color:var(--muted);line-height:1.64}
+.flow-out{padding:20px 22px;background:var(--tint);font-size:13px;color:var(--slate);line-height:1.64}
+.flow-out-tag{font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--volt);margin-bottom:7px}
 @media(max-width:820px){
   .flow-step{grid-template-columns:1fr}
-  .flow-idx,.flow-body{border-right:none;border-bottom:1px solid var(--rule)}
-  .flow-idx{flex-direction:row;align-items:center;gap:12px;padding:14px 20px}
-  .flow-body,.flow-out{padding:18px 20px}
+  .flow-idx{flex-direction:row;align-items:center;gap:12px;padding:13px 18px;border-right:none;border-bottom:1px solid var(--rule)}
+  .flow-body{border-right:none;border-bottom:1px solid var(--rule);padding:16px 18px}
+  .flow-out{padding:14px 18px}
 }
+
+/* ── PARTNER VALUE (why us for SOE) ─────────────────────── */
+/* new section replacing plain revenue grid */
+.collab-split{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);border:1px solid var(--rule);margin-top:0}
+.collab-cell{background:#fff;padding:36px 32px}
+.collab-cell--dark{background:var(--slate)}
+.collab-tag{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--volt);margin-bottom:16px;display:block}
+.collab-tag--dim{color:rgba(255,255,255,.35)}
+.collab-h3{font-size:20px;font-weight:600;margin-bottom:14px}
+.collab-h3--w{color:#fff}
+.collab-p{font-size:13.5px;color:var(--muted);line-height:1.68;margin-bottom:18px}
+.collab-p--w{color:rgba(255,255,255,.65)}
+.collab-list{display:grid;gap:9px}
+.collab-item{font-size:13.5px;color:var(--muted);padding-left:18px;position:relative;line-height:1.60}
+.collab-item::before{content:'—';position:absolute;left:0;color:var(--volt);font-size:11px;top:1px}
+.collab-item--w{color:rgba(255,255,255,.65)}
+@media(max-width:660px){.collab-split{grid-template-columns:1fr}.collab-cell,.collab-cell--dark{padding:26px 20px}}
 
 /* ── REVENUE LAYERS ──────────────────────────────────────── */
-.revenue-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--rule);border:1px solid var(--rule)}
-.rev-cell{background:#fff;padding:28px}
-.rev-cell__n{font-size:10px;letter-spacing:.16em;color:var(--volt);margin-bottom:14px}
-.rev-cell h3{font-size:17px;font-weight:600;margin-bottom:10px}
-.rev-cell p{font-size:13.5px;color:var(--muted);line-height:1.65}
-.rev-cell__price{
-  margin-top:14px;
-  font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--slate);
-}
-@media(max-width:860px){.revenue-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:500px){.revenue-grid{grid-template-columns:1fr}}
+.rev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);margin-top:40px}
+.rev-cell{background:#fff;padding:26px 24px}
+.rev-n{font-size:9.5px;letter-spacing:.18em;color:var(--volt);margin-bottom:12px}
+.rev-cell h3{font-size:16px;font-weight:600;margin-bottom:9px}
+.rev-cell p{font-size:13px;color:var(--muted);line-height:1.64}
+.rev-price{margin-top:12px;font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--slate)}
+@media(max-width:860px){.rev-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:460px){.rev-grid{grid-template-columns:1fr}}
 
-/* ── ROLES MATRIX ────────────────────────────────────────── */
-.roles{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;background:var(--rule);border:1px solid var(--rule)}
-.role{background:#fff;padding:28px 24px}
+/* ── ROLES ───────────────────────────────────────────────── */
+.roles{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.role{background:#fff;padding:26px 22px}
 .role--dark{background:var(--slate)}
-.role-tag{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--volt);margin-bottom:18px;display:block}
-.role h3{font-size:17px;font-weight:600;margin-bottom:16px}
+.role-tag{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--volt);margin-bottom:14px;display:block}
+.role h3{font-size:16px;font-weight:600;margin-bottom:14px}
 .role--dark h3{color:#fff}
 .role ul{display:grid;gap:8px;padding-left:0}
-.role li{
-  list-style:none;font-size:13.5px;color:var(--muted);
-  padding-left:14px;position:relative;line-height:1.6;
-}
-.role li::before{content:'—';position:absolute;left:0;color:var(--volt);font-size:11px}
-.role--dark li{color:rgba(255,255,255,.65)}
-.role--dark li::before{color:rgba(255,255,255,.3)}
-@media(max-width:1000px){.roles{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:540px){.roles{grid-template-columns:1fr}}
+.role li{list-style:none;font-size:13px;color:var(--muted);padding-left:13px;position:relative;line-height:1.58}
+.role li::before{content:'—';position:absolute;left:0;color:var(--volt);font-size:10px;top:1px}
+.role--dark li{color:rgba(255,255,255,.62)}
+.role--dark li::before{color:rgba(255,255,255,.28)}
+@media(max-width:1000px){.roles{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.roles{grid-template-columns:1fr}}
+
+/* boundary do/don't */
+.boundary{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);border:1px solid var(--rule);margin-top:2px}
+.bnd-cell{background:#fff;padding:28px}
+.bnd-tag{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;margin-bottom:14px;display:block}
+.bnd-tag--do{color:var(--green)}.bnd-tag--no{color:var(--red)}
+.bnd-list{display:grid;gap:8px}
+.bnd-item{font-size:13.5px;color:var(--muted);padding-left:18px;position:relative;line-height:1.58}
+.bnd-item::before{content:'✓';position:absolute;left:0;font-size:11px;color:var(--green);margin-top:1px}
+.bnd-cell:last-child .bnd-item::before{content:'✗';color:var(--red)}
+@media(max-width:600px){.boundary{grid-template-columns:1fr}}
 
 /* ── REGION CARDS ────────────────────────────────────────── */
-.regions{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.region-card{
-  border:1px solid var(--rule);
-  background:#fff;
-  overflow:hidden;
-}
-.region-card__head{
-  background:var(--slate);padding:20px 24px;
-  display:flex;justify-content:space-between;align-items:flex-start;
-}
-.region-card__name{font-size:16px;font-weight:600;color:#fff;margin-bottom:4px}
-.region-card__sub{font-size:12px;color:rgba(255,255,255,.48);letter-spacing:.04em}
-.region-badge{
-  font-size:10px;letter-spacing:.12em;font-weight:700;
-  padding:4px 10px;background:var(--volt);color:#fff;
-  flex-shrink:0;align-self:center;
-}
-.region-badge--b{background:rgba(255,255,255,.14);color:rgba(255,255,255,.6)}
-.region-card__body{padding:22px 24px}
-.region-card__body p{font-size:13.5px;color:var(--muted);margin-bottom:14px;line-height:1.66}
-.region-card__pkg{
-  font-size:12px;font-weight:700;color:var(--slate);
-  letter-spacing:.04em;margin-bottom:8px;
-  border-top:1px solid var(--rule2);padding-top:14px;
-}
-.region-card__items{display:grid;gap:6px}
-.region-card__item{
-  font-size:12.5px;color:var(--muted);
-  padding-left:14px;position:relative;
-}
-.region-card__item::before{
-  content:'';position:absolute;left:0;top:.62em;
-  width:5px;height:5px;background:var(--volt);
-}
-@media(max-width:900px){.regions{grid-template-columns:1fr 1fr}}
-@media(max-width:520px){.regions{grid-template-columns:1fr}}
-
-/* ── TABLE SCROLL WRAPPER ───────────────────────────────── */
-.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
-@media(max-width:680px){.table-scroll{overflow-x:visible}}
-
-/* ── RISK TABLE ──────────────────────────────────────────── */
-.risk{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--rule)}
-.risk th{
-  font-size:10px;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--muted);padding:12px 18px;
-  border-bottom:1px solid var(--rule);text-align:left;
-  font-weight:400;background:var(--tint);
-}
-.risk td{
-  font-size:13.5px;color:#334;
-  padding:15px 18px;
-  border-bottom:1px solid var(--rule2);vertical-align:top;
-  line-height:1.60;
-}
-.risk tr:last-child td{border-bottom:none}
-.risk td:first-child{
-  font-weight:600;color:var(--slate);
-  border-right:1px solid var(--rule2);
-  background:var(--page);font-size:13px;
-}
-.risk td:first-child{width:210px}
-.risk td:nth-child(2){width:80px;text-align:center}
-.risk td:last-child{font-size:13px;color:var(--muted)}
-.impact--h{color:#9B2A2A;font-weight:700}
-.impact--m{color:#B85F00;font-weight:600}
-@media(max-width:680px){
-  .risk thead{display:none}
-  .risk tr{display:block;border-bottom:2px solid var(--rule)}
-  .risk td{display:block;width:100%!important;border-right:none;border-bottom:1px solid var(--rule2);padding:10px 14px;text-align:left}
-  .risk td:first-child{background:var(--slate);color:#fff;font-size:12px;letter-spacing:.05em;padding:12px 14px;border-right:none}
-  .risk td:nth-child(2){padding-bottom:4px;font-size:13px}
-  .risk tr:last-child{border-bottom:none}
-}
+.regions{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.region{border:1px solid var(--rule);background:#fff;overflow:hidden}
+.region-head{background:var(--slate);padding:18px 22px;display:flex;justify-content:space-between;align-items:flex-start}
+.region-name{font-size:15px;font-weight:600;color:#fff;margin-bottom:3px}
+.region-sub{font-size:11.5px;color:rgba(255,255,255,.42);letter-spacing:.03em}
+.region-badge{font-size:9.5px;letter-spacing:.12em;font-weight:700;padding:4px 9px;background:var(--volt);color:#fff;flex-shrink:0;align-self:center}
+.region-badge--b{background:rgba(255,255,255,.12);color:rgba(255,255,255,.55)}
+.region-body{padding:20px 22px}
+.region-body p{font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.65}
+.region-pkg{font-size:11px;font-weight:700;color:var(--slate);letter-spacing:.05em;margin-bottom:8px;border-top:1px solid var(--rule2);padding-top:12px}
+.region-items{display:grid;gap:5px}
+.region-item{font-size:12px;color:var(--muted);padding-left:12px;position:relative}
+.region-item::before{content:'';position:absolute;left:0;top:.58em;width:4px;height:4px;background:var(--volt)}
+@media(max-width:880px){.regions{grid-template-columns:1fr 1fr}}
+@media(max-width:500px){.regions{grid-template-columns:1fr}}
 
 /* ── DATA REQUEST ────────────────────────────────────────── */
-.data-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--rule);border:1px solid var(--rule)}
-.data-cell{background:#fff;padding:28px 26px}
-.data-cell h3{font-size:16px;font-weight:600;margin-bottom:16px}
-.data-list{display:grid;gap:9px}
-.data-item{
-  font-size:13px;color:var(--muted);
-  padding-left:16px;position:relative;line-height:1.6;
-}
-.data-item::before{
-  content:'';position:absolute;left:0;top:.72em;
-  width:5px;height:5px;background:var(--volt);border-radius:1px;
-}
+.data-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.data-cell{background:#fff;padding:26px 24px}
+.data-cell h3{font-size:15px;font-weight:600;margin-bottom:14px}
+.data-list{display:grid;gap:8px}
+.data-item{font-size:13px;color:var(--muted);padding-left:14px;position:relative;line-height:1.58}
+.data-item::before{content:'';position:absolute;left:0;top:.68em;width:4px;height:4px;background:var(--volt);border-radius:1px}
 @media(max-width:760px){.data-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:520px){.data-grid{grid-template-columns:1fr}}
+@media(max-width:460px){.data-grid{grid-template-columns:1fr}}
 
 /* ── TIMELINE ─────────────────────────────────────────────── */
-.timeline{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--rule);background:var(--rule);gap:1px}
-.tl-cell{background:#fff;padding:26px 22px}
-.tl-period{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--volt);margin-bottom:14px}
-.tl-cell h3{font-size:17px;font-weight:600;margin-bottom:12px}
-.tl-list{display:grid;gap:8px}
-.tl-item{font-size:13px;color:var(--muted);padding-left:14px;position:relative;line-height:1.58}
+.tl{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.tl-cell{background:#fff;padding:24px 20px}
+.tl-period{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--volt);margin-bottom:12px}
+.tl-cell h3{font-size:16px;font-weight:600;margin-bottom:11px}
+.tl-list{display:grid;gap:7px}
+.tl-item{font-size:12.5px;color:var(--muted);padding-left:12px;position:relative;line-height:1.55}
 .tl-item::before{content:'·';position:absolute;left:0;color:var(--volt);font-weight:700}
-.tl-deliverable{
-  margin-top:16px;padding-top:12px;border-top:1px solid var(--rule2);
-  font-size:11.5px;color:var(--slate);font-weight:600;letter-spacing:.04em;
-}
-@media(max-width:960px){.timeline{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:520px){.timeline{grid-template-columns:1fr}}
+.tl-kpi{margin-top:14px;padding-top:11px;border-top:1px solid var(--rule2);font-size:11.5px;color:var(--slate);font-weight:600;letter-spacing:.03em;line-height:1.5}
+@media(max-width:900px){.tl{grid-template-columns:1fr 1fr}}
+@media(max-width:460px){.tl{grid-template-columns:1fr}}
 
-/* ── CLOSING CTA ─────────────────────────────────────────── */
-.cta-sec{
-  background:var(--slate);
-  padding:88px 0;
-  border-bottom:5px solid var(--volt);
-  position:relative;overflow:hidden;
-}
-.cta-sec::before{
-  content:'';position:absolute;right:-80px;top:-80px;
-  display:block;width:400px;height:400px;
-  background:rgba(255,255,255,.025);
-  border-radius:50%;
-}
+/* ── CTA ─────────────────────────────────────────────────── */
+.cta-sec{background:var(--slate);padding:82px 0;border-bottom:5px solid var(--volt);position:relative;overflow:hidden}
+.cta-sec::before{content:'';position:absolute;right:-60px;top:-60px;width:360px;height:360px;background:rgba(255,255,255,.02);border-radius:50%}
 .cta-sec .wrap{position:relative}
-.cta-sec h2{
-  font-size:clamp(28px,3.8vw,52px);
-  font-weight:280;color:#fff;line-height:1.12;
-  letter-spacing:-.04em;margin-bottom:20px;
-}
+.cta-sec h2{font-size:clamp(26px,3.6vw,50px);font-weight:280;color:#fff;line-height:1.12;letter-spacing:-.04em;margin-bottom:18px}
 .cta-sec h2 b{font-weight:650;color:var(--volt)}
-.cta-sec p{font-size:17px;color:rgba(255,255,255,.68);max-width:740px;line-height:1.72;margin-bottom:40px}
-.cta-sec .actions{display:flex;gap:16px;flex-wrap:wrap;align-items:center}
-@media(max-width:520px){
-  .cta-sec .actions{flex-direction:column;align-items:stretch}
-  .cta-sec .actions .btn{text-align:center;padding:16px 22px}
+.cta-sec .lead{font-size:16px;color:rgba(255,255,255,.65);max-width:720px;line-height:1.72;margin-bottom:36px}
+.cta-actions{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.cta-divider{margin-top:44px;padding-top:32px;border-top:1px solid rgba(255,255,255,.07)}
+.cta-note{font-size:12.5px;color:rgba(255,255,255,.32);line-height:1.72;max-width:760px}
+@media(max-width:480px){
+  .cta-actions{flex-direction:column;align-items:stretch}
+  .cta-actions .btn{text-align:center;padding:15px 22px}
 }
-
-/* ── BOUNDARY BOX ────────────────────────────────────────── */
-.boundary{
-  display:grid;grid-template-columns:1fr 1fr;gap:2px;
-  background:var(--rule);border:1px solid var(--rule);
-  margin-top:44px;
-}
-.boundary__cell{background:#fff;padding:30px}
-.boundary__tag{
-  font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;
-  font-weight:700;margin-bottom:16px;display:block;
-}
-.boundary__tag--do{color:#2A7A45}
-.boundary__tag--no{color:#9B2A2A}
-.boundary__list{display:grid;gap:9px}
-.boundary__item{
-  font-size:13.5px;color:var(--muted);
-  padding-left:20px;position:relative;line-height:1.60;
-}
-.boundary__item::before{content:'✓';position:absolute;left:0;font-size:11px;color:#2A7A45;margin-top:1px}
-.boundary__cell:last-child .boundary__item::before{content:'✗';color:#9B2A2A}
-@media(max-width:640px){.boundary{grid-template-columns:1fr}}
 
 /* ── FOOTER ──────────────────────────────────────────────── */
-.footer{
-  background:var(--slate);
-  padding:36px 0;
-  border-top:3px solid var(--volt);
-}
-.footer__inner{
-  max-width:var(--w);margin:0 auto;padding:0 var(--pad);
-  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;
-}
-.footer__brand{display:flex;align-items:center;gap:10px}
-.footer__name{font-size:12px;color:rgba(255,255,255,.45);letter-spacing:.04em}
-.footer__meta{font-size:11px;color:rgba(255,255,255,.22);letter-spacing:.06em}
+.footer{background:var(--slate);padding:32px 0;border-top:3px solid var(--volt)}
+.footer-in{max-width:var(--w);margin:0 auto;padding:0 var(--pad);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
+.footer-brand{display:flex;align-items:center;gap:10px}
+.footer-name{font-size:12px;color:rgba(255,255,255,.40);letter-spacing:.04em}
+.footer-copy{font-size:11px;color:rgba(255,255,255,.20);letter-spacing:.05em}
 
-/* ── CONTACT BAR ─────────────────────────────────────────── */
-.contact-bar{
-  background:var(--volt);padding:20px 0;
-}
-.contact-bar .wrap{
-  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;
-}
-.contact-bar p{font-size:14px;color:#fff;font-weight:600}
-.contact-bar a{
-  font-size:12px;letter-spacing:.1em;text-transform:uppercase;
-  color:#fff;border:1px solid rgba(255,255,255,.4);
-  padding:10px 20px;transition:background .18s;
-}
-.contact-bar a:hover{background:rgba(255,255,255,.18)}
-
-/* ── UTILITY ─────────────────────────────────────────────── */
-.mt12{margin-top:12px}
-.mt24{margin-top:24px}
-.mt36{margin-top:36px}
-.mt52{margin-top:52px}
-@media(max-width:760px){
-  section{padding:56px 0}
-  .hero__wrap{padding-top:52px;padding-bottom:52px}
-}
+@media(max-width:760px){section{padding:56px 0}}
 </style>
 </head>
 <body>
 
 <!-- NAV -->
 <header class="nav">
-  <div class="nav__inner">
-    <a class="nav__brand" href="https://energizeos.com">
-      <div class="mark mark--md">
-        <i></i><i></i><i></i><i></i>
-      </div>
-      <span>
-        <strong class="nav__name">EnergizeOS
-          <small class="nav__sub">Energize Solutions Inc.</small>
-        </strong>
-      </span>
+  <div class="nav-in">
+    <a class="brand" href="https://energizeos.com">
+      <div class="mark mark--md"><i></i><i></i><i></i><i></i></div>
+      <span class="brand-name">EnergizeOS<small class="brand-sub">Energize Solutions Inc.</small></span>
     </a>
-    <nav class="nav__links">
-      <a href="#opportunity">市场机会</a>
+    <nav class="nav-links">
+      <a href="#why-us">我们的能力</a>
       <a href="#package">推荐项目包</a>
       <a href="#structure">合作结构</a>
+      <a href="#regions">目标区域</a>
       <a href="#roadmap">90天计划</a>
-      <a class="nav__cta" href="#contact">立即沟通</a>
+      <a class="nav-cta" href="#contact">立即沟通</a>
     </nav>
   </div>
 </header>
 
 <!-- HERO -->
-<section class="hero" style="padding:0">
-  <div class="hero__deco">
-    <i></i><i></i><i></i><i></i>
-  </div>
-  <div class="hero__wrap">
+<section class="hero" style="padding:0;border-bottom:none">
+  <div class="hero-deco"><i></i><i></i><i></i><i></i></div>
+  <div class="hero-in">
     <div>
-      <div class="hero__eye">Indonesia Mine Power &amp; Electrification</div>
-      <h1 class="hero__h1">印尼矿山电力基础设施<br>与电气化<b>项目合作建议</b></h1>
-      <p class="hero__lead">
-        面向印尼镍矿、HPAL冶炼园区与专用港场景，将中压配电升级、BESS削峰、补能站预留、固定短倒验证与EMS/SCADA，组织成央企EPC可牵头、业主愿签约、可融资、可复制的项目包。
-      </p>
-      <div class="hero__actions">
-        <a class="btn btn--primary" href="#package">查看推荐项目包</a>
-        <a class="btn" href="#roadmap">90天推进计划</a>
+      <div class="hero-eye">Indonesia Mine Power &amp; Electrification · EnergizeOS</div>
+      <h1 class="hero-h1">印尼矿山电力基础设施<br>与电气化<b>项目合作</b></h1>
+      <!-- HOOK: the real opening sentence -->
+      <p class="hero-hook">矿卡先到了，主变容量不够，补能站还没建——这是印尼镍矿扩产最常见的卡脖子顺序。</p>
+      <p class="hero-lead">我们专注于把这个问题变成一个可以签约、可以交付、可以复制的工程项目：中压配电升级、BESS削峰、补能站预留、EMS/SCADA——在央企EPC框架下完成，带12个月O&M。</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#package">查看推荐项目包</a>
+        <a class="btn btn-ghost" href="#contact">安排视频沟通</a>
       </div>
     </div>
-    <aside class="hero__panel">
-      <div class="hero__panel-label">Director's Conclusion</div>
-      <h2 class="hero__panel-h2">第一单不是整车，<br><b>而是先做电力。</b></h2>
-      <p>推荐首单锁定：东南苏拉威西或北马鲁古一个镍矿/HPAL园区短倒场景中的中压配电升级+BESS削峰+补能站预留+固定短倒小规模验证。</p>
-      <div class="hero__panel-items">
-        <div class="hero__panel-item">买单方清晰：园区公司或冶炼厂，非分散承包商</div>
-        <div class="hero__panel-item">EPC边界清晰：配电、储能、补能、消防、控制可总包</div>
-        <div class="hero__panel-item">不扰生产：先改公辅，再逐步叠加车辆</div>
-        <div class="hero__panel-item">适合央企牵头 + 12个月O&M + 二期复制</div>
+    <aside class="hero-panel">
+      <div class="hero-panel-tag">Director's Conclusion</div>
+      <h2>第一单不是整车，<b>而是先做电力。</b></h2>
+      <p>推荐首单：东南苏拉威西或北马鲁古一个镍矿/HPAL短倒场景，中压配电+BESS+补能预留+小规模验证。</p>
+      <div class="hero-bullets">
+        <div class="hero-bullet">买单方清晰：园区公司或冶炼厂，非分散承包商</div>
+        <div class="hero-bullet">EPC边界明确：配电、储能、补能、控制可总包</div>
+        <div class="hero-bullet">不扰生产：先改公辅，再逐步叠加车辆</div>
+        <div class="hero-bullet">适合央企牵头 · 12个月O&M · 二期可复制</div>
       </div>
     </aside>
   </div>
 </section>
 
-<!-- STATS -->
+<!-- CREDIBILITY STRIP — "Why us" anchored at top -->
+<div class="cred" id="why-us">
+  <div class="cred-in">
+    <div class="cred-item">
+      <div class="cred-num"><span>500</span>MW+</div>
+      <div class="cred-label">工业与矿山在运项目</div>
+      <div class="cred-desc">2019年起持续部署，含PepsiCo/SDG&E、ERCOT、PJM和Hydro-Québec市场</div>
+    </div>
+    <div class="cred-item">
+      <div class="cred-num"><span>6</span>年+</div>
+      <div class="cred-label">工业储能与EMS专注</div>
+      <div class="cred-desc">非泛能源公司，专注工业负荷侧与微电网场景，EMS/BESS/ECP/SCADA深度集成</div>
+    </div>
+    <div class="cred-item">
+      <div class="cred-num"><span>3</span>大市场</div>
+      <div class="cred-label">北美电力市场经验</div>
+      <div class="cred-desc">ERCOT、PJM、Hydro-Québec跨市场合规交付，了解复杂项目的接口与责任边界</div>
+    </div>
+    <div class="cred-item">
+      <div class="cred-num"><span>0</span></div>
+      <div class="cred-label">不抢EPC总包位</div>
+      <div class="cred-desc">不与央企争总包，提供机会识别、系统架构、Energy Twin、EMS/SCADA接口与O&M数据服务</div>
+    </div>
+  </div>
+</div>
+
+<!-- MARKET STATS -->
 <div class="stats">
-  <div class="stats__inner">
+  <div class="stats-in">
     <div class="stat">
-      <div class="stat__num">~<span>60</span>%</div>
-      <div class="stat__desc">印尼占全球镍矿供给权重，2020年起全面禁止原矿出口</div>
+      <div class="stat-num">~<span>60</span>%</div>
+      <div class="stat-desc">印尼占全球镍矿供给权重，2020年起全面禁止原矿出口、强制下游化</div>
     </div>
     <div class="stat">
-      <div class="stat__num"><span>890</span>MW</div>
-      <div class="stat__desc">Harita Obi Island园区在运电力，另有1.2GW正在扩建</div>
+      <div class="stat-num"><span>890</span>MW</div>
+      <div class="stat-desc">Harita Obi Island园区在运电力，另有1.2GW正在扩建</div>
     </div>
     <div class="stat">
-      <div class="stat__num"><span>4×</span>18MW</div>
-      <div class="stat__desc">PowerChina已公开KNI/IPIP燃机EPC开工，东南苏拉威西</div>
+      <div class="stat-num"><span>4×</span>18MW</div>
+      <div class="stat-desc">PowerChina已公开KNI/IPIP燃机EPC开工，东南苏拉威西</div>
     </div>
     <div class="stat">
-      <div class="stat__num"><span>12</span>个月</div>
-      <div class="stat__desc">首单标准商业结构：EPC + O&M，锁定数据、绑定复购</div>
+      <div class="stat-num"><span>12</span>个月</div>
+      <div class="stat-desc">首单推荐商业结构：EPC + O&M，锁定运行数据、绑定二期复购</div>
     </div>
   </div>
 </div>
@@ -742,35 +494,33 @@ section:last-of-type{border-bottom:none}
 <!-- 01 OPPORTUNITY -->
 <section id="opportunity">
   <div class="wrap">
-    <div class="opp-head">
+    <div class="sec-head-2col">
       <div>
         <span class="sec-eye">01 — Market Entry</span>
-        <h2 class="sec-h2">合作机会在<br><b>项目组织</b>，不在设备销售。</h2>
+        <h2 class="sec-h2">合作机会在<b>项目组织</b>，不在设备销售。</h2>
       </div>
-      <p class="sec-lead">
-        印尼矿山客户采购的不是一台BESS或一套EMS，而是：产能不断、电力稳定、成本下降、出了问题能恢复。因此，项目的关键不是方案有多完整，而是能不能把设备、工程、运维组织成客户愿签约、央企愿意牵头、供应商愿意配合的可执行包。
-      </p>
+      <p class="sec-lead">印尼矿山客户采购的不是一台BESS或一套EMS，而是：产能不断、电力稳定、成本下降、出了问题能恢复。因此，项目的关键不是方案有多完整，而是能不能把设备、工程、运维组织成客户愿签约、央企愿意牵头、供应商愿意配合的可执行包。做不到这一点，方案再好也只是免费咨询。</p>
     </div>
     <div class="opp-grid">
       <article class="opp-card">
-        <div class="opp-card__num">01</div>
+        <div class="opp-card-n">01</div>
         <h3>电力先行</h3>
         <p>中压配电、主变、开关柜、保护与自备电源协同，是后续所有电气化落地的前置条件。未解决电力边界，任何车辆电动化都不具备复制条件。</p>
       </article>
       <article class="opp-card">
-        <div class="opp-card__num">02</div>
+        <div class="opp-card-n">02</div>
         <h3>储能缓冲</h3>
-        <p>BESS在矿山场景中最核心的价值是削峰缓冲、稳压稳频、降低柴油/燃机频繁启停，并为补能系统提供瞬时大功率缓冲，避免主母线扩容过大。</p>
+        <p>BESS最核心的价值是削峰缓冲、稳压稳频、降低柴油/燃机频繁启停，并为补能系统提供瞬时大功率缓冲，避免主母线扩容过大。</p>
       </article>
       <article class="opp-card">
-        <div class="opp-card__num">03</div>
+        <div class="opp-card-n">03</div>
         <h3>短倒先行</h3>
-        <p>固定路线、班次稳定、电力可接、业主边界清晰的封闭短倒场景，是第一阶段验证电动化可行性的最优切入点，风险最低、可复制性最强。</p>
+        <p>固定路线、班次稳定、电力可接、业主边界清晰的封闭短倒场景，是第一阶段验证电动化的最优切入点，风险最低、可复制性最强。</p>
       </article>
       <article class="opp-card">
-        <div class="opp-card__num">04</div>
+        <div class="opp-card-n">04</div>
         <h3>长期运维</h3>
-        <p>将12个月O&M、BESS健康分析、KPI报告与二期扩容建议纳入首单合同结构，形成长期收入绑定与数据积累，是进入二期大单的核心通道。</p>
+        <p>将12个月O&M、BESS健康分析、KPI报告与二期扩容建议纳入首单合同，形成长期收入绑定与数据积累，是进入二期大单的核心通道。</p>
       </article>
     </div>
   </div>
@@ -780,39 +530,39 @@ section:last-of-type{border-bottom:none}
 <section class="s-tint" id="priority">
   <div class="wrap">
     <span class="sec-eye">02 — Scenario Prioritization</span>
-    <h2 class="sec-h2" style="margin-bottom:14px">第一阶段推进场景 vs. <b>不建议触碰</b>的方向</h2>
-    <p class="sec-lead" style="margin-bottom:44px">判断标准是：付款主体是否清晰、EPC边界是否可定义、生产中断风险是否可控。以下场景排序基于实地调研数据与项目可开发性综合评分。</p>
+    <h2 class="sec-h2" style="margin-bottom:12px">第一阶段推进场景 vs. <b>不建议触碰</b>的方向</h2>
+    <p class="sec-lead" style="margin-bottom:42px">判断标准：付款主体是否清晰、EPC边界是否可定义、生产中断风险是否可控。以下评分基于市场调研与项目可开发性综合评估。</p>
     <div class="priority">
-      <div class="priority__cell priority__cell--a">
-        <div class="priority__tag priority__tag--w"><div class="dot dot--volt"></div>优先推进</div>
-        <h3 class="priority__h3 priority__h3--w">A类机会</h3>
-        <div class="priority__list">
-          <div class="priority__item priority__item--w">矿区中压配电升级（评分 88/100）</div>
-          <div class="priority__item priority__item--w">BESS + 柴发/气电优化（评分 84/100）</div>
-          <div class="priority__item priority__item--w">堆场至园区短倒电气化（评分 82/100）</div>
-          <div class="priority__item priority__item--w">堆场至专用码头短倒（评分 81/100）</div>
-          <div class="priority__item priority__item--w">港口内部运输电气化（评分 80/100）</div>
-          <div class="priority__item priority__item--w">港口BESS + 港机电气化（评分 79/100）</div>
-          <div class="priority__item priority__item--w">EPC + 12个月O&M结构（评分 78/100）</div>
-          <div class="priority__item priority__item--w">园区能源调度EMS/SCADA（评分 77/100）</div>
+      <div class="p-cell p-cell--dark">
+        <div class="p-tag p-tag--w"><div class="dot dot-v"></div>优先推进 — A类机会</div>
+        <h3 class="p-h3 p-h3--w">建议作为首单范围</h3>
+        <div class="p-list">
+          <div class="p-item p-item--w">矿区中压配电升级（评分 88/100）</div>
+          <div class="p-item p-item--w">BESS + 柴发/气电协同优化（评分 84/100）</div>
+          <div class="p-item p-item--w">堆场至冶炼园区短倒电气化（评分 82/100）</div>
+          <div class="p-item p-item--w">堆场至专用码头短倒（评分 81/100）</div>
+          <div class="p-item p-item--w">港口内部运输电气化（评分 80/100）</div>
+          <div class="p-item p-item--w">港口BESS + 港机电气化（评分 79/100）</div>
+          <div class="p-item p-item--w">EPC + 12个月O&M结构（评分 78/100）</div>
+          <div class="p-item p-item--w">园区能源调度EMS/SCADA（评分 77/100）</div>
         </div>
       </div>
-      <div class="priority__cell">
-        <div class="priority__tag priority__tag--no"><div class="dot dot--red"></div>12个月内不建议作为第一单</div>
-        <h3 class="priority__h3">避免触碰的方向</h3>
-        <div class="priority__list">
-          <div class="priority__item">整车队一次性电动化替换</div>
-          <div class="priority__item">长距离矿山至公共港口公路电动化（评分 45/100）</div>
-          <div class="priority__item">整园区脱煤 / 大规模绿电替代基荷（评分 42/100）</div>
-          <div class="priority__item">纯光伏替代全部矿区基荷</div>
-          <div class="priority__item">电动驳船 / 纯电拖轮首单（评分 49/100）</div>
-          <div class="priority__item">无车辆数据共享权的移动负荷调度承诺</div>
-          <div class="priority__item">没有明确付款主体的第三方运输承包商项目</div>
+      <div class="p-cell">
+        <div class="p-tag p-tag--no"><div class="dot dot-r"></div>12个月内不建议作为第一单</div>
+        <h3 class="p-h3">暂时避开的方向</h3>
+        <div class="p-list">
+          <div class="p-item">整车队一次性电动化替换</div>
+          <div class="p-item">长距离矿山至公共港口公路电动化（评分 45/100）</div>
+          <div class="p-item">整园区脱煤 / 大规模绿电替代基荷（评分 42/100）</div>
+          <div class="p-item">纯光伏替代全部矿区基荷</div>
+          <div class="p-item">电动驳船 / 纯电拖轮首单（评分 49/100）</div>
+          <div class="p-item">无车辆数据共享权的移动负荷调度承诺</div>
+          <div class="p-item">没有明确付款主体的运输承包商项目</div>
         </div>
       </div>
     </div>
-    <div class="table-scroll" style="margin-top:44px">
-      <table class="scenario-table">
+    <div class="tscroll">
+      <table class="t t--scenario">
         <thead>
           <tr>
             <th>运输链场景</th>
@@ -823,38 +573,38 @@ section:last-of-type{border-bottom:none}
         </thead>
         <tbody>
           <tr>
-            <td>破碎站→堆场</td>
-            <td>距离最短、节拍最稳、路线固定，最容易做固定路线电动化。</td>
-            <td>A类机会，建议纳入首单验证</td>
+            <td>破碎站 → 堆场</td>
+            <td>距离最短、节拍最稳、路线固定，最容易做固定路线电动化验证。</td>
+            <td>建议纳入首单</td>
             <td><span class="tag-a">A</span></td>
           </tr>
           <tr>
-            <td>堆场→冶炼园区</td>
-            <td>业主边界清晰，最适合"中压配电+BESS+补能预留+电动短倒"一体包。</td>
-            <td>A类机会，首选之一</td>
+            <td>堆场 → 冶炼园区</td>
+            <td>业主边界清晰，最适合"中压配电+BESS+补能预留+电动短倒"一体包切入。</td>
+            <td>A类首选之一</td>
             <td><span class="tag-a">A</span></td>
           </tr>
           <tr>
-            <td>堆场→专用码头</td>
-            <td>与港口扩容、堆料系统和专用码头容量直接挂钩，路线最固定。</td>
-            <td>A类机会，适合镍/铝土矿园区</td>
+            <td>堆场 → 专用码头</td>
+            <td>与港口扩容、堆料系统和码头容量直接挂钩，路线最固定。</td>
+            <td>适合镍/铝土矿园区</td>
             <td><span class="tag-a">A</span></td>
           </tr>
           <tr>
             <td>港口内部运输</td>
-            <td>封闭场景、低速高频、易调度，BESS可与港口设备协同。</td>
-            <td>A类机会，见效快</td>
+            <td>封闭场景、低速高频、易调度，BESS可与港口设备协同管理。</td>
+            <td>A类，见效快</td>
             <td><span class="tag-a">A</span></td>
           </tr>
           <tr>
-            <td>矿坑→破碎站</td>
+            <td>矿坑 → 破碎站</td>
             <td>坡度大、对车辆能力要求高，需配电升级先行，否则补能卡脖子。</td>
-            <td>适合中期，配电先行后推进</td>
+            <td>适合中期推进</td>
             <td><span class="tag-b">B</span></td>
           </tr>
           <tr>
-            <td>矿山→公共港口公路运输</td>
-            <td>里程长、路权复杂、雨季干扰大，买单边界最难。</td>
+            <td>矿山 → 公共港口</td>
+            <td>里程长、路权复杂、雨季干扰大，买单边界难定、停产风险高。</td>
             <td>不建议作为首单</td>
             <td><span class="tag-c">C</span></td>
           </tr>
@@ -864,52 +614,96 @@ section:last-of-type{border-bottom:none}
   </div>
 </section>
 
-<!-- 03 FIRST PACKAGE -->
+<!-- 03 FIRST PACKAGE + SCENARIO SNAPSHOT -->
 <section id="package">
   <div class="wrap">
     <span class="sec-eye">03 — First Project Package</span>
-    <h2 class="sec-h2" style="margin-bottom:14px">推荐第一单：<b>印尼镍园区电力基础设施与短倒电气化前置项目包</b></h2>
-    <p class="sec-lead" style="margin-bottom:44px">一期目标不是完成全园区电气化，而是建立可交付、可测量、可向二期扩展的基础设施边界。所有容量参数应在现场数据和负荷曲线确认后确定。</p>
-    <div class="pkg-wrap">
+    <h2 class="sec-h2" style="margin-bottom:12px">推荐第一单：<b>镍园区电力基础设施与短倒电气化前置项目包</b></h2>
+    <p class="sec-lead" style="margin-bottom:40px">一期目标不是完成全园区电气化，而是建立可交付、可测量、可向二期扩展的基础设施边界。一期跑通，二期才有数据和信任基础来谈整车队。</p>
+    <div class="pkg">
       <div class="pkg-top">
         <div class="pkg-main">
           <h3>中压配电升级 + BESS削峰 + 补能站预留 + 固定短倒验证 + EMS/SCADA + 12个月O&M</h3>
-          <p>该项目包可作为央企EPC平台的首个工程切入点，也可作为业主扩产、降本与电气化转型的低风险第一步。涵盖从电力系统诊断、储能削峰、补能基础设施到小规模固定路线验证的完整工程边界。</p>
+          <p>该项目包可作为央企EPC的首个工程切入点，也可作为业主扩产、降本与电气化转型的低风险第一步。涵盖从电力系统诊断、储能削峰、补能基础设施到小规模固定路线验证的完整工程边界，所有容量参数在现场数据确认后确定。</p>
         </div>
         <div class="pkg-side">
           <div>
-            <div class="pkg-side-label">Budgetary Scope</div>
-            <p>10–35kV中压接入审查；主变/开关柜/保护；BESS预算级Sizing（20–80MWh区间）；4–12MW补能端口预留；固定短倒小规模验证；EMS/SCADA架构与接口；12个月运维技术支持。</p>
+            <div class="pkg-side-tag">Budgetary Scope</div>
+            <p>10–35kV中压接入审查；主变/开关柜/保护；BESS预算级Sizing（20–80MWh）；4–12MW补能端口预留；固定短倒小规模验证；EMS/SCADA架构；12个月运维支持。</p>
           </div>
-          <div class="pkg-side-note">所有容量参数需基于实际负荷曲线、主变容量和运输循环数据确认后给出；以上为预算级范围估算，仅供项目立项参考。</div>
+          <div class="pkg-side-note">所有容量参数需基于实际负荷曲线与运输循环数据确认；以上为预算级范围估算，仅供立项参考。</div>
         </div>
       </div>
       <div class="pkg-scope">
-        <div class="pkg-scope-cell">
+        <div class="pkg-cell">
           <h4>电力系统审查</h4>
-          <p>单线图、主变容量、母线电压、开关柜、保护配置、电缆路径与负荷曲线基准测量。</p>
+          <p>单线图、主变容量、母线电压、开关柜与保护配置、负荷曲线基准测量。</p>
         </div>
-        <div class="pkg-scope-cell">
+        <div class="pkg-cell">
           <h4>BESS削峰与备用</h4>
-          <p>评估MW/MWh区间、削峰策略、补能冲击缓冲、弱网稳压与备用功能，提供TCO初步测算。</p>
+          <p>MW/MWh区间评估、削峰策略、补能冲击缓冲与TCO初步测算。</p>
         </div>
-        <div class="pkg-scope-cell">
+        <div class="pkg-cell">
           <h4>补能基础设施预留</h4>
-          <p>定义充电或换电端口、变压器、开关柜、电缆路径、消防、通信与功率限制边界。</p>
+          <p>充电或换电端口、变压器、电缆、消防、通信与功率限制边界定义。</p>
         </div>
-        <div class="pkg-scope-cell">
+        <div class="pkg-cell">
           <h4>固定短倒验证</h4>
-          <p>选择路线稳定、班次明确、数据可采集的短倒场景进行小规模验证，建立KPI基线。</p>
+          <p>选择路线稳定、班次明确、数据可采集的短倒场景验证，建立KPI基线。</p>
         </div>
-        <div class="pkg-scope-cell">
+        <div class="pkg-cell">
           <h4>EMS/SCADA接口</h4>
-          <p>建立BESS、补能系统、电源侧、计量与告警的数据接口，支持Modbus/MQTT/OPC-UA协议。</p>
+          <p>BESS、补能、电源侧与计量数据接口，支持Modbus/MQTT/OPC-UA协议。</p>
         </div>
-        <div class="pkg-scope-cell">
+        <div class="pkg-cell">
           <h4>O&M与二期复制</h4>
-          <p>12个月运行支持、月度KPI、故障RCA、电池健康分析与二期扩容路线图建议。</p>
+          <p>12个月运行支持、月度KPI、故障RCA、电池健康分析与二期扩容路线图。</p>
         </div>
       </div>
+    </div>
+
+    <!-- SCENARIO SNAPSHOT: 假设性项目样本，自然融合 -->
+    <div class="snapshot">
+      <div class="snapshot-head">
+        <h4>参考场景：东南苏拉威西 HPAL 园区 — 假设性项目样本</h4>
+        <div class="snapshot-badge">Illustrative · 所有数值为假设参考，非承诺</div>
+      </div>
+      <div class="snapshot-body">
+        <div class="snapshot-left">
+          <div class="snapshot-label">项目参数假设</div>
+          <div class="snap-row"><span class="snap-k">主变配置</span><span class="snap-v">2 × <span>31.5</span> MVA，10kV母线</span></div>
+          <div class="snap-row"><span class="snap-k">日运输量</span><span class="snap-v"><span>8,000</span> 吨/日（堆场→冶炼）</span></div>
+          <div class="snap-row"><span class="snap-k">短倒路线长度</span><span class="snap-v"><span>3.2</span> km，坡度≤8%</span></div>
+          <div class="snap-row"><span class="snap-k">柴油到岸成本</span><span class="snap-v">USD <span>0.92</span>/L</span></div>
+          <div class="snap-row"><span class="snap-k">扩产节点</span><span class="snap-v">12 个月内计划产能 +40%</span></div>
+          <div class="snap-row"><span class="snap-k">自备电源</span><span class="snap-v">燃机 <span>4×18</span> MW，无PLN接入</span></div>
+          <div class="snap-row"><span class="snap-k">建议BESS配置</span><span class="snap-v"><span>40</span> MWh / <span>10</span> MW</span></div>
+          <div class="snap-row"><span class="snap-k">补能端口预留</span><span class="snap-v"><span>8</span> MW（2×4MW快充）</span></div>
+        </div>
+        <div class="snapshot-right">
+          <div class="snapshot-label">初步TCO效益测算（假设值）</div>
+          <div class="tco-grid">
+            <div class="tco-cell">
+              <div class="tco-n">USD <span>180</span>万</div>
+              <div class="tco-d">预计年节省燃料与峰值容量费用（假设）</div>
+            </div>
+            <div class="tco-cell">
+              <div class="tco-n"><span>3.2</span> 年</div>
+              <div class="tco-d">初步测算BESS+配电投资回收期（假设）</div>
+            </div>
+            <div class="tco-cell">
+              <div class="tco-n"><span>−22</span>%</div>
+              <div class="tco-d">短倒路线柴油消耗降幅（假设基于类似场景）</div>
+            </div>
+            <div class="tco-cell">
+              <div class="tco-n"><span>+40</span>%</div>
+              <div class="tco-d">主变可释放扩产容量，无需增容（假设）</div>
+            </div>
+          </div>
+          <p style="font-size:12.5px;color:var(--muted);margin-top:16px;line-height:1.65">以上测算来自类似场景的工程参数推演，非现场数据测量结果。<strong>正式TCO建模以Diagnostic Study和现场数据为基础。</strong>该场景帮助判断量级是否与贵方项目匹配。</p>
+        </div>
+      </div>
+      <div class="snapshot-note">如贵方项目参数与上述场景接近，可直接启动Quick Assessment，2–3页方向性判断，免费提供。若参数差异较大，欢迎提供实际数据后由我方重新测算。</div>
     </div>
   </div>
 </section>
@@ -918,146 +712,168 @@ section:last-of-type{border-bottom:none}
 <section class="s-page" id="process">
   <div class="wrap">
     <span class="sec-eye">04 — Development Path</span>
-    <h2 class="sec-h2" style="margin-bottom:14px">分阶段推进：<b>从Diagnostic Study到EPC交付</b></h2>
-    <p class="sec-lead" style="margin-bottom:44px">项目不应从完整EPC报价直接开始。应先用付费Diagnostic Study取得数据和工程边界，再进入Pre-FEED和EPC投标。数据是交易门槛——没有负荷曲线，不做正式方案。</p>
+    <h2 class="sec-h2" style="margin-bottom:12px">分阶段推进：<b>从Quick Assessment到EPC交付</b></h2>
+    <p class="sec-lead" style="margin-bottom:40px">项目不应从完整EPC报价开始。数据是交易门槛——没有负荷曲线，不输出施工图级方案或容量承诺。付费Study是进入工程合同的唯一通道。</p>
     <div class="flow">
       <div class="flow-step">
-        <div class="flow-idx">
-          STEP 01
-          <strong>机会筛选</strong>
-        </div>
+        <div class="flow-idx">STEP 01<strong>机会筛选</strong></div>
         <div class="flow-body">
           <h3>Opportunity Screening</h3>
-          <p>确认付款主体、资产边界、中压接入点、固定短倒路线、央企EPC进入路径和数据可得性。通过Scorecard评分判断是否值得投入。</p>
+          <p>确认付款主体、资产边界、中压接入点、固定短倒路线、央企EPC进入路径和数据可得性。通过Scorecard判断是否值得投入。</p>
         </div>
         <div class="flow-out">
-          <div class="flow-out-label">输出</div>
-          项目评分表 · Quick Assessment（2–3页）· 数据请求清单 · 下阶段Study报价
+          <div class="flow-out-tag">输出</div>
+          评分表 · Quick Assessment（2–3页，免费）· 数据请求清单
         </div>
       </div>
       <div class="flow-step">
-        <div class="flow-idx">
-          STEP 02
-          <strong>付费Study</strong>
-        </div>
+        <div class="flow-idx">STEP 02<strong>付费Study</strong></div>
         <div class="flow-body">
           <h3>Diagnostic Study（付费启动）</h3>
-          <p>评估电源与负荷基线、BESS容量区间、补能端口需求和一期项目范围边界。正式Study以数据清单为前提，不在未获数据授权的前提下输出系统级方案。</p>
+          <p>评估电源与负荷基线、BESS容量区间、补能端口需求和一期项目范围。未获数据授权，不进入正式Study，不给出系统级方案。</p>
         </div>
         <div class="flow-out">
-          <div class="flow-out-label">建议报价</div>
+          <div class="flow-out-tag">参考报价</div>
           Diagnostic Study：USD 10k–30k<br>Standard Study：USD 30k–80k<br>Pre-FEED Support：USD 80k–200k
         </div>
       </div>
       <div class="flow-step">
-        <div class="flow-idx">
-          STEP 03
-          <strong>Pre-FEED</strong>
-        </div>
+        <div class="flow-idx">STEP 03<strong>Pre-FEED</strong></div>
         <div class="flow-body">
           <h3>Pre-FEED / EPC投标支持</h3>
-          <p>形成初步系统架构、单线图框架、设备预算清单、EMS/SCADA接口定义、O&M范围和工程责任边界，支持央企EPC平台完成投标技术包。</p>
+          <p>形成初步系统架构、SLD框架、设备预算清单、EMS/SCADA接口定义与责任边界，支持央企EPC完成投标技术包。</p>
         </div>
         <div class="flow-out">
-          <div class="flow-out-label">输出</div>
-          SLD初稿 · 设备预算 · 控制架构 · EPC+O&M结构 · 供应链报价
+          <div class="flow-out-tag">输出</div>
+          SLD初稿 · 设备预算 · 控制架构 · EPC+O&M结构
         </div>
       </div>
       <div class="flow-step">
-        <div class="flow-idx">
-          STEP 04
-          <strong>EPC实施</strong>
-        </div>
+        <div class="flow-idx">STEP 04<strong>EPC实施</strong></div>
         <div class="flow-body">
           <h3>EPC实施与系统集成</h3>
-          <p>在央企EPC总包框架下完成工程实施。我方承担：系统架构设计、EMS/SCADA/ECP接口交付、设备技术整合、FAT/SAT支持和调试技术服务。</p>
+          <p>在央企EPC总包框架下，我方承担系统架构设计、EMS/SCADA/ECP接口交付、设备技术整合、FAT/SAT与调试技术服务。</p>
         </div>
         <div class="flow-out">
-          <div class="flow-out-label">交付边界</div>
-          技术分包 · 控制系统交付 · 工厂验收 · 现场调试技术支持
+          <div class="flow-out-tag">交付边界</div>
+          技术分包 · 控制系统 · 工厂验收 · 现场调试支持
         </div>
       </div>
       <div class="flow-step">
-        <div class="flow-idx">
-          STEP 05
-          <strong>O&M复制</strong>
-        </div>
+        <div class="flow-idx">STEP 05<strong>O&M复制</strong></div>
         <div class="flow-body">
           <h3>12个月O&M与二期复制</h3>
-          <p>基于运行数据输出月度KPI报告、BESS健康分析、故障RCA与补能峰值优化建议。首单数据沉淀后，触发第二条短倒、第二个码头或第二个园区的复制机会。</p>
+          <p>基于运行数据输出月度KPI、BESS健康分析、故障RCA与补能优化建议。首单数据沉淀后，触发第二条短倒或第二个园区的复制机会。</p>
         </div>
         <div class="flow-out">
-          <div class="flow-out-label">服务参考价</div>
-          USD 5k–30k/月<br>含KPI · 故障复盘 · 电池健康 · 二期扩展建议
+          <div class="flow-out-tag">参考价</div>
+          USD 5k–30k/月<br>KPI · RCA · 电池健康 · 二期建议
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- 05 REVENUE LAYERS -->
-<section id="revenue">
+<!-- 05 PARTNERSHIP VALUE (replaces flat revenue grid) -->
+<section id="structure">
   <div class="wrap">
-    <span class="sec-eye">05 — Revenue Structure</span>
-    <h2 class="sec-h2" style="margin-bottom:14px">六层收入设计：<b>从Study到长期O&M</b></h2>
-    <p class="sec-lead" style="margin-bottom:44px">矿山生意不能只靠一次Study或一次设备销售。以下六层收入结构覆盖项目全生命周期，每一层都是进入下一层的通道。</p>
-    <div class="revenue-grid">
+    <span class="sec-eye">05 — Partnership Value</span>
+    <h2 class="sec-h2" style="margin-bottom:12px">我们给央企带来的，<b>不是设备，而是项目</b>。</h2>
+    <p class="sec-lead" style="margin-bottom:40px">央企关心的不是你有什么设备，而是：有没有项目机会、能不能变成EPC合同、设备拼盘有没有人负责、O&M有没有数据支撑。我们把这些补上。</p>
+
+    <!-- The "why Energize" split for SOE audience -->
+    <div class="collab-split">
+      <div class="collab-cell collab-cell--dark">
+        <span class="collab-tag collab-tag--dim">We Bring</span>
+        <h3 class="collab-h3 collab-h3--w">我们给央企带来什么</h3>
+        <p class="collab-p collab-p--w">机会识别不是靠关系猜测，而是靠Market Study和TCO建模把机会变成可以立项、可以投标的文件包。</p>
+        <div class="collab-list">
+          <div class="collab-item collab-item--w">矿山能源与运输场景识别与Screening</div>
+          <div class="collab-item collab-item--w">Mine Energy Twin建模 · TCO与节油测算</div>
+          <div class="collab-item collab-item--w">BESS/PCS/补能系统Sizing与技术规范</div>
+          <div class="collab-item collab-item--w">EMS/SCADA/ECP/AIPP方案与接口定义</div>
+          <div class="collab-item collab-item--w">设备供应链组织 · 合格供应商池管理</div>
+          <div class="collab-item collab-item--w">FAT/SAT执行 · 调试支持 · O&M数据服务</div>
+          <div class="collab-item collab-item--w">Diagnostic Study → 立项包 → 可直接用于投标</div>
+        </div>
+      </div>
+      <div class="collab-cell">
+        <span class="collab-tag">We Don't Compete</span>
+        <h3 class="collab-h3">我们不与央企争的部分</h3>
+        <p class="collab-p">不是拿来抢总包的，是帮央企把"设备拼盘"变成"可交付工程项目"的那个角色。</p>
+        <div class="collab-list">
+          <div class="collab-item">EPC总包施工与项目管理</div>
+          <div class="collab-item">本地施工分包组织与劳工管理</div>
+          <div class="collab-item">融资、保险与本地许可协调</div>
+          <div class="collab-item">业主商务关系与合同谈判主导</div>
+          <div class="collab-item">节油量 / 回本期 / 产量保证</div>
+          <div class="collab-item">Trolley接触网或地下矿消防专业</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Revenue layers — concise, integrated after the "why" -->
+    <div style="margin-top:48px">
+      <div class="sec-eye">收入层次设计</div>
+      <p class="sec-lead" style="margin-top:6px;margin-bottom:0">每一层都是进入下一层的通道。首单不追求赚尽，追求拿入口、拿数据、拿样板。</p>
+    </div>
+    <div class="rev-grid">
       <div class="rev-cell">
-        <div class="rev-cell__n">LAYER 01</div>
+        <div class="rev-n">LAYER 01</div>
         <h3>机会开发与Study</h3>
-        <p>以付费Diagnostic Study启动，取得数据、锁定业主、进入工程合同通道。这是最快能收到的第一笔钱。</p>
-        <div class="rev-cell__price">USD 10k – 200k / 项目</div>
+        <p>付费Diagnostic Study启动，取得数据、锁定业主、进入工程合同。最快收到的第一笔钱。</p>
+        <div class="rev-price">USD 10k – 200k / 项目</div>
       </div>
       <div class="rev-cell">
-        <div class="rev-cell__n">LAYER 02</div>
-        <h3>技术方案与工程包</h3>
-        <p>电气基础设施审查、BESS/PCS Sizing、补能电气接入、微电网控制架构、保护与控制接口定义。</p>
-        <div class="rev-cell__price">工程包另行报价</div>
+        <div class="rev-n">LAYER 02</div>
+        <h3>技术方案与Pre-FEED</h3>
+        <p>电气基础设施审查、BESS Sizing、补能接入、微电网控制架构、保护与接口定义。</p>
+        <div class="rev-price">工程包另行约定</div>
       </div>
       <div class="rev-cell">
-        <div class="rev-cell__n">LAYER 03</div>
-        <h3>设备整合与供应链收益</h3>
-        <p>以技术整合费、渠道服务费、供应商成功费和EPC技术分包费形式收取，前期合同中明确约定。</p>
-        <div class="rev-cell__price">按项目结构约定</div>
+        <div class="rev-n">LAYER 03</div>
+        <h3>设备整合与供应链</h3>
+        <p>技术整合费、渠道服务费、供应商成功费和EPC技术分包费，前期合同中明确约定。</p>
+        <div class="rev-price">按项目结构约定</div>
       </div>
       <div class="rev-cell">
-        <div class="rev-cell__n">LAYER 04</div>
-        <h3>EMS / 控制柜 / 接口</h3>
-        <p>EMS、ECP、AIPP、SCADA接口、Modbus/MQTT/OPC-UA集成、FAT/SAT与调试支持，是核心技术能力所在。</p>
-        <div class="rev-cell__price">含于EPC分包</div>
+        <div class="rev-n">LAYER 04</div>
+        <h3>EMS / 控制 / 接口</h3>
+        <p>EMS、ECP、AIPP、SCADA接口、Modbus/MQTT/OPC-UA集成、FAT/SAT与调试，核心技术能力。</p>
+        <div class="rev-price">含于EPC技术分包</div>
       </div>
       <div class="rev-cell">
-        <div class="rev-cell__n">LAYER 05</div>
+        <div class="rev-n">LAYER 05</div>
         <h3>O&M 长期服务</h3>
-        <p>月度KPI报告、故障RCA、BESS健康分析、能源优化建议与远程支持留存。矿山客户最怕投运后无人管。</p>
-        <div class="rev-cell__price">USD 5k – 30k / 月</div>
+        <p>月度KPI、故障RCA、BESS健康、能源优化与远程支持。矿山客户最怕投运后无人管。</p>
+        <div class="rev-price">USD 5k – 30k / 月</div>
       </div>
       <div class="rev-cell">
-        <div class="rev-cell__n">LAYER 06</div>
+        <div class="rev-n">LAYER 06</div>
         <h3>二期复制</h3>
-        <p>首单跑通后，第二条短倒路线、第二个补能站、港口电气化、车辆租赁、SPV/BOOT服务才是真正的大钱。</p>
-        <div class="rev-cell__price">首单数据驱动二期</div>
+        <p>首单跑通后，第二条短倒、第二个补能站、港口电气化、车辆租赁与SPV/BOOT是真正的大钱。</p>
+        <div class="rev-price">首单数据驱动二期</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- 06 PARTNERSHIP STRUCTURE -->
-<section class="s-tint" id="structure">
+<!-- 06 ROLES + BOUNDARY -->
+<section class="s-tint" id="roles">
   <div class="wrap">
-    <span class="sec-eye">06 — Partnership Structure</span>
-    <h2 class="sec-h2" style="margin-bottom:14px">四方协作结构：<b>责任清晰，利益对齐</b></h2>
-    <p class="sec-lead" style="margin-bottom:44px">矿山业主不会为一套没有责任闭环的多供应商拼盘买单。央企EPC负责交付平台，我方负责项目前端与技术系统，设备商进入合格供应商池，业主提供数据与付款边界。</p>
+    <span class="sec-eye">06 — Four-Party Structure</span>
+    <h2 class="sec-h2" style="margin-bottom:12px">四方协作结构：<b>责任清晰，无灰色地带</b></h2>
+    <p class="sec-lead" style="margin-bottom:40px">矿山业主不会为多供应商拼盘买单。央企EPC负责交付平台，我方补项目前端与技术系统，设备商进合格供应商池，业主提供数据与付款边界。</p>
     <div class="roles">
       <div class="role role--dark">
-        <span class="role-tag">Central SOE</span>
+        <span class="role-tag">Central SOE · EPC</span>
         <h3>央企EPC牵头方</h3>
         <ul>
           <li>业主进入与商务牵头</li>
-          <li>EPC或EPC+O&M总包框架</li>
-          <li>本地施工组织与分包管理</li>
-          <li>融资、保险、许可与本地关系协调</li>
-          <li>项目管理、KPI控制与风险承担</li>
+          <li>EPC或EPC+O&M总包</li>
+          <li>本地施工与分包管理</li>
+          <li>融资、保险与本地许可</li>
+          <li>项目管理与风险承担</li>
         </ul>
       </div>
       <div class="role">
@@ -1065,10 +881,10 @@ section:last-of-type{border-bottom:none}
         <h3>我方角色</h3>
         <ul>
           <li>机会识别与付费Study</li>
-          <li>Mine Energy Twin建模与TCO分析</li>
-          <li>BESS/PCS/补能系统Sizing</li>
-          <li>EMS/SCADA/ECP/AIPP方案与接口</li>
-          <li>FAT/SAT支持、调试与O&M数据服务</li>
+          <li>Mine Energy Twin · TCO分析</li>
+          <li>BESS/PCS/补能Sizing</li>
+          <li>EMS/SCADA/ECP/AIPP接口</li>
+          <li>FAT/SAT · 调试 · O&M数据服务</li>
         </ul>
       </div>
       <div class="role">
@@ -1076,46 +892,45 @@ section:last-of-type{border-bottom:none}
         <h3>合格设备供应商池</h3>
         <ul>
           <li>BESS、PCS、充电/换电系统</li>
-          <li>变压器、中压开关柜、保护继电器</li>
+          <li>变压器、中压开关柜、保护</li>
           <li>SCADA、通信、消防与热管理</li>
-          <li>预算报价、交付周期与接口资料</li>
-          <li>质保、售后与海外交付支持能力</li>
+          <li>预算报价、交付周期与接口</li>
+          <li>质保、售后与海外交付能力</li>
         </ul>
       </div>
       <div class="role">
         <span class="role-tag">Mine Owner / Park</span>
         <h3>印尼业主/园区公司</h3>
         <ul>
-          <li>提供生产数据与电力数据授权</li>
-          <li>确认资产边界、许可与付款主体</li>
-          <li>配合Diagnostic Study现场审计</li>
-          <li>确认一期施工窗口与二期计划</li>
+          <li>提供生产数据与电力数据</li>
+          <li>确认资产边界与付款主体</li>
+          <li>配合现场数据采集</li>
+          <li>确认施工窗口与二期计划</li>
           <li>作为长期O&M合同签约方</li>
         </ul>
       </div>
     </div>
-
     <div class="boundary">
-      <div class="boundary__cell">
-        <span class="boundary__tag boundary__tag--do">✓ 我方承担范围</span>
-        <div class="boundary__list">
-          <div class="boundary__item">Energy Twin / TCO建模与Study</div>
-          <div class="boundary__item">BESS/PCS Sizing与方案设计</div>
-          <div class="boundary__item">EMS策略、ECP/AIPP控制逻辑</div>
-          <div class="boundary__item">微电网控制架构与接口集成</div>
-          <div class="boundary__item">FAT/SAT技术方法与执行支持</div>
-          <div class="boundary__item">远程O&M报告与数据分析</div>
+      <div class="bnd-cell">
+        <span class="bnd-tag bnd-tag--do">✓ 我方承担范围</span>
+        <div class="bnd-list">
+          <div class="bnd-item">Energy Twin / TCO建模与Study</div>
+          <div class="bnd-item">BESS/PCS Sizing与方案设计</div>
+          <div class="bnd-item">EMS策略、ECP/AIPP控制逻辑</div>
+          <div class="bnd-item">微电网控制架构与接口集成</div>
+          <div class="bnd-item">FAT/SAT技术方法与支持</div>
+          <div class="bnd-item">远程O&M报告与数据分析</div>
         </div>
       </div>
-      <div class="boundary__cell">
-        <span class="boundary__tag boundary__tag--no">✗ 明确不承担范围</span>
-        <div class="boundary__list">
-          <div class="boundary__item">EPC总包施工风险与责任</div>
-          <div class="boundary__item">本地许可、证照与合规责任</div>
-          <div class="boundary__item">节油量/回本期/产量保证</div>
-          <div class="boundary__item">车辆制造、车载BMS或FMS</div>
-          <div class="boundary__item">未授权车辆数据采集义务</div>
-          <div class="boundary__item">Trolley接触网或地下矿消防</div>
+      <div class="bnd-cell">
+        <span class="bnd-tag bnd-tag--no">✗ 明确不承担范围</span>
+        <div class="bnd-list">
+          <div class="bnd-item">EPC总包施工风险与责任</div>
+          <div class="bnd-item">本地许可、证照与合规责任</div>
+          <div class="bnd-item">节油量 / 回本期 / 产量保证</div>
+          <div class="bnd-item">车辆制造、车载BMS或FMS</div>
+          <div class="bnd-item">未授权车辆数据采集义务</div>
+          <div class="bnd-item">Trolley接触网或地下矿消防</div>
         </div>
       </div>
     </div>
@@ -1126,60 +941,60 @@ section:last-of-type{border-bottom:none}
 <section id="regions">
   <div class="wrap">
     <span class="sec-eye">07 — Target Regions</span>
-    <h2 class="sec-h2" style="margin-bottom:14px">区域优先级：<b>东南苏拉威西与北马鲁古为首选落点</b></h2>
-    <p class="sec-lead" style="margin-bottom:44px">基于项目可开发性、买单方清晰度、央企EPC进入路径和现有公开案例综合评估。第一单落点必须具备：正在扩产的资产、清晰的产权边界、可接触的数据授权方。</p>
+    <h2 class="sec-h2" style="margin-bottom:12px">区域优先级：<b>三个首选落点</b></h2>
+    <p class="sec-lead" style="margin-bottom:40px">第一单落点必须具备：正在扩产的资产、清晰的产权边界、可接触的数据授权方，以及央企EPC现有进入路径。三个区域均已有公开的央企参与案例。</p>
     <div class="regions">
-      <div class="region-card">
-        <div class="region-card__head">
+      <div class="region">
+        <div class="region-head">
           <div>
-            <div class="region-card__name">东南苏拉威西</div>
-            <div class="region-card__sub">Pomalaa / Kolaka</div>
+            <div class="region-name">东南苏拉威西</div>
+            <div class="region-sub">Pomalaa / Kolaka</div>
           </div>
           <div class="region-badge">A+ 首选</div>
         </div>
-        <div class="region-card__body">
-          <p>Vale–华友–Ford KNI/IPIP项目计划年产12万吨镍金属量，PowerChina已公开4×18MW燃机电站EPC开工。新建园区遗留包袱少、能源与物流边界清晰。</p>
-          <div class="region-card__pkg">推荐切入包</div>
-          <div class="region-card__items">
-            <div class="region-card__item">中压配电 + BESS削峰 + 补能站预留</div>
-            <div class="region-card__item">固定短倒运输电气化试点</div>
-            <div class="region-card__item">EMS/SCADA + 12个月O&M</div>
+        <div class="region-body">
+          <p>Vale–华友–Ford KNI/IPIP项目计划年产12万吨镍金属量，PowerChina已公开4×18MW燃机电站EPC开工。新建园区遗留包袱少、能源与物流边界清晰，是当前最适合"配电+储能+补能预留"一体切入的新项目场景。</p>
+          <div class="region-pkg">推荐首单切入包</div>
+          <div class="region-items">
+            <div class="region-item">中压配电 + BESS削峰 + 补能站预留</div>
+            <div class="region-item">固定短倒运输电气化试点 + KPI基线</div>
+            <div class="region-item">EMS/SCADA + 12个月O&M</div>
           </div>
         </div>
       </div>
-      <div class="region-card">
-        <div class="region-card__head">
+      <div class="region">
+        <div class="region-head">
           <div>
-            <div class="region-card__name">北马鲁古 · Obi Island</div>
-            <div class="region-card__sub">Harita一体化体系</div>
+            <div class="region-name">北马鲁古 · Obi Island</div>
+            <div class="region-sub">Harita一体化体系</div>
           </div>
           <div class="region-badge">A 首选</div>
         </div>
-        <div class="region-card__body">
-          <p>Harita在Obi已形成5个专用码头、890MW在运电力，继续扩建1.2GW，矿山至冶炼设施距离短——是印尼最典型的固定短倒+港口能源升级物理场景。</p>
-          <div class="region-card__pkg">推荐切入包</div>
-          <div class="region-card__items">
-            <div class="region-card__item">港口BESS + 港机电气化</div>
-            <div class="region-card__item">园区配电升级 + 短倒电动化</div>
-            <div class="region-card__item">煤/料输送系统优化 + EMS</div>
+        <div class="region-body">
+          <p>Harita在Obi已形成5个专用码头、890MW在运电力，继续扩建1.2GW，矿山至冶炼设施距离短——是印尼最典型的固定短倒+港口能源升级物理场景。园区封闭度高，进入需强业主关系。</p>
+          <div class="region-pkg">推荐首单切入包</div>
+          <div class="region-items">
+            <div class="region-item">港口BESS + 港机电气化</div>
+            <div class="region-item">园区配电升级 + 短倒电动化</div>
+            <div class="region-item">煤/料输送系统优化 + EMS</div>
           </div>
         </div>
       </div>
-      <div class="region-card">
-        <div class="region-card__head">
+      <div class="region">
+        <div class="region-head">
           <div>
-            <div class="region-card__name">中央苏拉威西</div>
-            <div class="region-card__sub">Morowali / IMIP</div>
+            <div class="region-name">中央苏拉威西</div>
+            <div class="region-sub">Morowali / IMIP</div>
           </div>
           <div class="region-badge">A</div>
         </div>
-        <div class="region-card__body">
-          <p>规模最大、物流最复杂、能源最重。中国能建已完成2.5公里5000吨/小时输煤通廊，青山系园区是验证"物流+能源"复合项目的现实场景。竞争激烈。</p>
-          <div class="region-card__pkg">推荐切入包</div>
-          <div class="region-card__items">
-            <div class="region-card__item">大型公辅、输煤/输料系统优化</div>
-            <div class="region-card__item">电力系统调度 + 港口/码头升级</div>
-            <div class="region-card__item">园区BESS + EMS集成</div>
+        <div class="region-body">
+          <p>规模最大、物流最复杂、能源最重。中国能建已完成2.5km、5000吨/小时输煤通廊，验证了"物流+能源"复合项目的可行性。竞争最激烈，进入以公辅系统为切口。</p>
+          <div class="region-pkg">推荐首单切入包</div>
+          <div class="region-items">
+            <div class="region-item">大型公辅、输煤/输料系统优化</div>
+            <div class="region-item">电力系统调度 + 港口/码头升级</div>
+            <div class="region-item">园区BESS + EMS集成</div>
           </div>
         </div>
       </div>
@@ -1187,22 +1002,23 @@ section:last-of-type{border-bottom:none}
   </div>
 </section>
 
-<!-- 08 DATA REQUEST -->
+<!-- 08 DATA + RISK combined -->
 <section class="s-page" id="data">
   <div class="wrap">
-    <span class="sec-eye">08 — Required Data</span>
-    <h2 class="sec-h2" style="margin-bottom:14px">数据是交易门槛：<b>正式Study以数据清单为前提</b></h2>
-    <p class="sec-lead" style="margin-bottom:44px">没有负荷曲线和运输循环数据，不输出施工图级方案、容量承诺或投资回收承诺。以下数据清单是启动Diagnostic Study的前提条件。Quick Assessment不受此约束，仅作方向性判断。</p>
+    <span class="sec-eye">08 — Data &amp; Risk</span>
+    <h2 class="sec-h2" style="margin-bottom:12px">数据是交易门槛，<b>风险是边界条件</b>。</h2>
+    <p class="sec-lead" style="margin-bottom:40px">正式Study以数据授权为前提；风险矩阵决定首单选择标准——凡无法降低以下主要风险的项目，不作为第一单优先推进。</p>
+
     <div class="data-grid">
       <div class="data-cell">
         <h3>电力系统数据</h3>
         <div class="data-list">
           <div class="data-item">单线图、主变容量与型号</div>
-          <div class="data-item">母线电压、中压开关柜与保护配置</div>
-          <div class="data-item">历史负荷曲线（峰值、均值、谷值）</div>
-          <div class="data-item">自备电源类型、出力与油耗记录</div>
+          <div class="data-item">母线电压、开关柜与保护配置</div>
+          <div class="data-item">历史负荷曲线（峰值/均值/谷值）</div>
+          <div class="data-item">自备电源类型、出力与油耗</div>
           <div class="data-item">PLN接入状态与电价</div>
-          <div class="data-item">电能质量记录、停电事件台账</div>
+          <div class="data-item">电能质量记录与停电事件台账</div>
           <div class="data-item">柴油/燃气到岸成本</div>
         </div>
       </div>
@@ -1225,70 +1041,57 @@ section:last-of-type{border-bottom:none}
           <div class="data-item">运输通道净空与障碍物</div>
           <div class="data-item">消防要求与安全分区</div>
           <div class="data-item">施工窗口与生产停机约束</div>
-          <div class="data-item">通信覆盖情况（光纤/4G/5G）</div>
+          <div class="data-item">通信覆盖（光纤/4G/5G）</div>
           <div class="data-item">许可边界与审批主管机构</div>
           <div class="data-item">付款主体与合同路径确认</div>
         </div>
       </div>
     </div>
-  </div>
-</section>
 
-<!-- 09 RISK -->
-<section id="risk">
-  <div class="wrap">
-    <span class="sec-eye">09 — Risk Matrix</span>
-    <h2 class="sec-h2" style="margin-bottom:14px">项目风险矩阵与<b>缓解措施</b></h2>
-    <p class="sec-lead" style="margin-bottom:44px">以下是印尼矿山项目最常见的高影响风险项及对应缓解策略。首单选择应优先降低这些风险的暴露面，而非追求宏大叙事。</p>
-    <div class="table-scroll">
-      <table class="risk">
+    <div class="tscroll" style="margin-top:36px">
+      <table class="t">
         <thead>
           <tr>
-            <th>风险项</th>
-            <th>影响程度</th>
+            <th>主要风险项</th>
+            <th>影响</th>
             <th>首单缓解措施</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>政策变化与资源民族主义</td>
-            <td><span class="impact--h">高</span></td>
-            <td>合同设置政策变化条款；优先选择不依赖出口套利的公辅类项目。</td>
-          </tr>
-          <tr>
-            <td>PLN接入与电价不确定性</td>
-            <td><span class="impact--h">高</span></td>
-            <td>先做自备系统兼容设计，避免单纯押注PLN扩容节奏。</td>
-          </tr>
-          <tr>
-            <td>镍价格波动与行业过剩</td>
-            <td><span class="impact--h">高</span></td>
-            <td>首单方案聚焦"保产/降本"，而非扩杠杆赌价格；以TCO量化价值。</td>
+            <td style="width:200px">政策变化与资源民族主义</td>
+            <td style="width:60px;text-align:center"><span class="hi">高</span></td>
+            <td>优先选不依赖出口套利的公辅类项目；合同设政策变化条款。</td>
           </tr>
           <tr>
             <td>生产中断风险</td>
-            <td><span class="impact--h">高</span></td>
-            <td>先做配电侧和旁路设计；施工窗口与计划停机绑定；不承诺0停机。</td>
+            <td style="text-align:center"><span class="hi">高</span></td>
+            <td>先做配电侧与旁路设计；施工窗口与计划停机绑定；不承诺零停机。</td>
           </tr>
           <tr>
             <td>数据不透明导致方案失真</td>
-            <td><span class="impact--h">高</span></td>
-            <td>前期签署数据共享协议；未获数据不进入正式Study和容量承诺。</td>
+            <td style="text-align:center"><span class="hi">高</span></td>
+            <td>前期签数据共享协议；未获数据授权不进入正式Study或容量承诺。</td>
           </tr>
           <tr>
-            <td>环保与社区争议</td>
-            <td><span class="impact--m">中高</span></td>
-            <td>优先选择棕地园区、既有工业边界内项目；引入本地合作方处理社区关系。</td>
+            <td>镍价波动与行业过剩</td>
+            <td style="text-align:center"><span class="hi">高</span></td>
+            <td>首单方案聚焦"保产/降本"而非扩杠杆；以TCO量化价值，不赌价格。</td>
+          </tr>
+          <tr>
+            <td>责任界面不清</td>
+            <td style="text-align:center"><span class="hi">高</span></td>
+            <td>由央企EPC锁定单点总包责任；我方合同明确不承担EPC施工与许可。</td>
           </tr>
           <tr>
             <td>高温高湿对BESS影响</td>
-            <td><span class="impact--m">中</span></td>
-            <td>要求集装箱级热管理、消防认证和防腐设计标准；写入设备技术规范。</td>
+            <td style="text-align:center"><span class="mid">中</span></td>
+            <td>要求集装箱级热管理、消防认证与防腐设计；写入设备技术规范。</td>
           </tr>
           <tr>
-            <td>责任界面不清导致多方扯皮</td>
-            <td><span class="impact--h">高</span></td>
-            <td>由央企EPC锁定单点责任；Energize合同中明确不承担EPC施工和本地许可。</td>
+            <td>PLN接入与电价不确定</td>
+            <td style="text-align:center"><span class="hi">高</span></td>
+            <td>先做自备系统兼容设计，不单纯押注PLN扩容节奏。</td>
           </tr>
         </tbody>
       </table>
@@ -1296,24 +1099,23 @@ section:last-of-type{border-bottom:none}
   </div>
 </section>
 
-<!-- 10 ROADMAP -->
-<section class="s-tint" id="roadmap">
+<!-- 09 ROADMAP -->
+<section id="roadmap">
   <div class="wrap">
-    <span class="sec-eye">10 — 90-Day Roadmap</span>
-    <h2 class="sec-h2" style="margin-bottom:14px">未来90天：<b>从关系阶段到生意阶段</b></h2>
-    <p class="sec-lead" style="margin-bottom:44px">90天的目标不是讨论愿景，而是锁定第一笔付费Study合同。以下计划以实际商业里程碑为导向，每个阶段有明确交付物和硬性指标。</p>
-    <div class="timeline">
+    <span class="sec-eye">09 — 90-Day Roadmap</span>
+    <h2 class="sec-h2" style="margin-bottom:12px">未来90天：<b>从关系阶段到第一笔付费</b></h2>
+    <p class="sec-lead" style="margin-bottom:40px">90天的目标不是讨论愿景，而是签出第一份Diagnostic Study合同。如果90天内没有业主付费，说明还停留在关系阶段，需要重新评估机会质量。</p>
+    <div class="tl">
       <div class="tl-cell">
         <div class="tl-period">Day 01 – 15</div>
         <h3>文件与资源建立</h3>
         <div class="tl-list">
-          <div class="tl-item">完成央企合作说明书</div>
-          <div class="tl-item">完成Diagnostic Study SOW模板</div>
+          <div class="tl-item">完成央企合作说明书与Diagnostic SOW模板</div>
           <div class="tl-item">锁定1–2家A类BESS/PCS供应商</div>
           <div class="tl-item">锁定1家印尼本地合作方候选</div>
           <div class="tl-item">筛出3–5个目标项目候选点</div>
         </div>
-        <div class="tl-deliverable">交付物：供应商池 · 合作说明书 · 候选项目长名单</div>
+        <div class="tl-kpi">交付：供应商池 · 合作说明书 · 候选项目长名单</div>
       </div>
       <div class="tl-cell">
         <div class="tl-period">Day 16 – 30</div>
@@ -1321,10 +1123,10 @@ section:last-of-type{border-bottom:none}
         <div class="tl-list">
           <div class="tl-item">与央企EPC海外事业部召开正式合作会</div>
           <div class="tl-item">与供应商确认不绕单协议</div>
-          <div class="tl-item">形成2个印尼目标项目一页纸机会简报</div>
-          <div class="tl-item">确认哪个园区、哪个业主、谁能安排会议</div>
+          <div class="tl-item">形成2个目标项目一页纸机会简报</div>
+          <div class="tl-item">确认业主联络路径与数据意向</div>
         </div>
-        <div class="tl-deliverable">交付物：EPC合作MOU · 机会简报 · 业主联络路径</div>
+        <div class="tl-kpi">交付：EPC合作MOU · 机会简报 · 业主联络路径</div>
       </div>
       <div class="tl-cell">
         <div class="tl-period">Day 31 – 60</div>
@@ -1335,39 +1137,39 @@ section:last-of-type{border-bottom:none}
           <div class="tl-item">获取设备预算级报价</div>
           <div class="tl-item">发出第一份Diagnostic Study Proposal</div>
         </div>
-        <div class="tl-deliverable">交付物：Quick Assessment · Study Proposal（USD 10k–30k）</div>
+        <div class="tl-kpi">交付：Quick Assessment · Study Proposal（USD 10k–30k）</div>
       </div>
       <div class="tl-cell">
         <div class="tl-period">Day 61 – 90</div>
         <h3>锁定第一笔付费</h3>
         <div class="tl-list">
           <div class="tl-item">推进Study付款谈判</div>
-          <div class="tl-item">如客户不付费，降级处理不再投入高级资源</div>
+          <div class="tl-item">未付费则降级，不再投入高级资源</div>
           <div class="tl-item">获取现场数据，进入正式建模</div>
           <div class="tl-item">输出一期项目边界与Pre-FEED范围</div>
         </div>
-        <div class="tl-deliverable">硬性指标：1份Study付款确认 · 1个央企EPC合作入口 · 3家A类供应商</div>
+        <div class="tl-kpi">硬指标：1份Study付款确认 · 1个EPC合作入口 · 3家A类供应商</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- 11 CONTACT SECTION -->
-<section class="cta-sec" id="contact">
+<!-- 10 CTA -->
+<section class="cta-sec" id="contact" style="border-bottom:none">
   <div class="wrap">
-    <h2>准备好启动<b>第一次正式沟通</b>？</h2>
-    <p>
-      我们不提供免费的完整方案，但提供2–3页Quick Assessment作为项目方向性判断的起点。<br>
-      如果贵方对印尼镍矿/HPAL园区或专用港场景有实质性推进意向，我们建议以一次视频会议开始，确认项目场景、数据可得性和合作路径。
+    <h2>准备好开始<b>第一次正式沟通</b>？</h2>
+    <p class="lead">
+      我们不提供免费完整方案，但提供2–3页Quick Assessment作为方向性判断的起点——判断贵方项目的场景参数是否落在我们服务的量级区间内。<br><br>
+      如果对印尼镍矿/HPAL园区或专用港场景有实质性推进意向，建议以一次视频会议开始，30分钟确认：项目场景、数据可得性、央企EPC进入路径，以及Diagnostic Study是否值得启动。
     </p>
-    <div class="actions">
-      <a class="btn btn--primary" href="mailto:info@energizeos.com?subject=印尼矿山项目合作沟通">发送合作邮件</a>
-      <a class="btn" href="https://docs.energizeos.com/appointment-desk/">预约沟通时间</a>
-      <a class="btn" href="https://docs.energizeos.com/ems/">了解EMS平台能力</a>
+    <div class="cta-actions">
+      <a class="btn btn-primary" href="mailto:info@energizeos.com?subject=印尼矿山项目合作沟通申请">发送合作邮件</a>
+      <a class="btn btn-ghost" href="https://docs.energizeos.com/appointment-desk/">预约视频沟通</a>
+      <a class="btn btn-ghost" href="https://docs.energizeos.com/ems/">了解EMS平台能力</a>
     </div>
-    <div style="margin-top:44px;padding-top:32px;border-top:1px solid rgba(255,255,255,.08)">
-      <p style="font-size:12.5px;color:rgba(255,255,255,.35);line-height:1.72;max-width:720px">
-        Energize Solutions Inc. 是一家在加拿大和美国注册的能源基础设施工程公司，专注于工业与矿山场景的EMS/BESS部署，在运项目超过500MW，客户包括PepsiCo/SDG&amp;E等工商业用户，并具备ERCOT、PJM和Hydro-Québec市场经验。我们在本页提出的合作建议基于公开市场数据与工程实践，不构成投资建议，所有项目参数以实际现场数据确认后为准。
+    <div class="cta-divider">
+      <p class="cta-note">
+        Energize Solutions Inc. 是一家在加拿大和美国注册的能源基础设施工程公司，专注于工业与矿山场景的EMS/BESS部署，在运项目超过500MW，客户包括PepsiCo/SDG&E等工商业用户，并具备ERCOT、PJM和Hydro-Québec市场经验。本页合作建议基于公开市场数据与工程实践，不构成投资建议。所有容量参数与TCO测算以实际现场数据确认后为准。参考场景中的数值均为假设性示例，非任何具体项目数据。
       </p>
     </div>
   </div>
@@ -1375,14 +1177,12 @@ section:last-of-type{border-bottom:none}
 
 <!-- FOOTER -->
 <footer class="footer">
-  <div class="footer__inner">
-    <div class="footer__brand">
-      <div class="mark mark--sm mark--rev">
-        <i></i><i></i><i></i><i></i>
-      </div>
-      <span class="footer__name">EnergizeOS — Energize Solutions Inc.</span>
+  <div class="footer-in">
+    <div class="footer-brand">
+      <div class="mark mark--sm mark--rev"><i></i><i></i><i></i><i></i></div>
+      <span class="footer-name">EnergizeOS — Energize Solutions Inc.</span>
     </div>
-    <span class="footer__meta">© 2026 Energize Solutions Inc. All rights reserved.</span>
+    <span class="footer-copy">© 2026 Energize Solutions Inc. All rights reserved.</span>
   </div>
 </footer>
 
