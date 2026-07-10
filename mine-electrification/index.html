@@ -73,7 +73,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;height:64px;display:flex;ali
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
 .hero-h1{font-size:clamp(32px,4.7vw,56px);font-weight:700;line-height:1.2;letter-spacing:-.025em;color:var(--ink);margin-bottom:24px;max-width:900px}
 .hero-h1 .accent{color:var(--gold)}
-.hero-h1 .light{display:block;font-weight:400;font-size:.4em;color:var(--muted);letter-spacing:.03em;margin-bottom:14px;line-height:1.5}
+.hero-h1 .light{display:block;font-weight:500;font-size:.42em;color:var(--gold);letter-spacing:.01em;margin-bottom:10px;line-height:1.4}
 .hero-body{font-size:17px;font-weight:400;color:var(--body);line-height:1.85;max-width:660px;margin-bottom:34px}
 .hero-body strong{color:var(--ink);font-weight:600}
 .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:52px}
@@ -353,6 +353,39 @@ footer{background:#131F2B;border-top:1px solid rgba(255,255,255,.06)}
   .layer-row{grid-template-columns:1fr}
   .layer-badge{flex-direction:row;gap:12px;padding:16px 20px;align-items:center}
 }
+
+/* ── BENEFIT GRID ────────────────────────────────────────── */
+.benefit-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);margin-bottom:2px}
+.benefit-card{background:var(--white);padding:32px 28px}
+.benefit-icon{font-size:22px;margin-bottom:14px;line-height:1}
+.benefit-t{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:10px;line-height:1.35}
+.benefit-d{font-size:13.5px;color:var(--body);line-height:1.72}
+
+/* ── USP STRIP ───────────────────────────────────────────── */
+.usp-strip{background:var(--slate);padding:32px 36px;margin-bottom:2px}
+.usp-label{font-family:var(--fm);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+.usp-items{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.usp-item{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:rgba(255,255,255,.72);line-height:1.58}
+.usp-tag{flex-shrink:0;background:rgba(212,132,10,.22);color:var(--gold);font-size:11px;font-weight:700;padding:2px 9px;letter-spacing:.04em;white-space:nowrap;margin-top:1px}
+
+/* ── BOUNDARY STRIP ──────────────────────────────────────── */
+.boundary-strip{background:var(--stone);border:1px solid var(--rule);padding:28px 32px;margin-bottom:36px}
+.boundary-label{font-family:var(--fm);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
+.boundary-items{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:16px}
+.boundary-item{display:flex;align-items:flex-start;gap:9px;font-size:13px;color:var(--body);line-height:1.55}
+.bx{flex-shrink:0;color:var(--red);font-weight:700;font-size:12px;margin-top:1px}
+.boundary-note{font-size:12.5px;color:var(--muted);line-height:1.65;border-top:1px solid var(--rule);padding-top:14px;font-style:italic}
+
+@media(max-width:900px){
+  .benefit-grid{grid-template-columns:1fr 1fr}
+  .usp-items{grid-template-columns:1fr}
+  .boundary-items{grid-template-columns:1fr}
+  .usp-strip{padding:26px 24px}
+  .boundary-strip{padding:24px 22px}
+}
+@media(max-width:600px){
+  .benefit-grid{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
@@ -394,14 +427,14 @@ footer{background:#131F2B;border-top:1px solid rgba(255,255,255,.06)}
 <header class="hero">
   <div class="hero-badge"><span class="badge-dot"></span>矿山电气化能源整体解决方案 · 面向矿业公司、矿卡 OEM、EPC 与矿山承包商开放合作</div>
   <h1 class="hero-h1">
-    <span class="light">电动矿卡能不能规模化，从来不取决于车。</span>
+    <span class="light">矿山电气化，卡在电，不卡在车。</span>
     先把<span class="accent">电</span>的问题算清楚、管起来，矿山电气化才能真正落地、可复制、可扩张。
   </h1>
   <p class="hero-body">
-    <strong>EnergizeOS™</strong> 不造矿卡，也不做"全矿山平台"。我们是<strong>中立、矿山专用、软件定义的电气与能源基础设施集成商</strong>——把电网、微电网、储能 BESS、快充 / 换电 / Trolley 补能系统，以及电动矿卡这一全新的"移动负荷"，统一建模、控制、调度和优化。让您在投资之前先算清账，在运营之中真正管住电。
+    <strong>EnergizeOS™</strong> 是矿山电气化的<strong>中立能源系统集成商</strong>。我们帮您在投资前用工程级 TCO 模型算清楚电气化方案，在运营中把电网、储能、补能系统与电动矿卡移动负荷统一调度管起来——让柴油成本可测量地下降，让补能不成为车队的瓶颈，让多厂家设备真正协同运行。
   </p>
   <div class="hero-actions">
-    <a class="btn-primary" href="#products">查看核心产品与交付路径
+    <a class="btn-primary" href="#products">先帮我算清楚电气化方案
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" stroke-width="1.5"/></svg></a>
     <a class="btn-outline" href="#challenge">先了解行业挑战</a>
   </div>
@@ -418,7 +451,7 @@ footer{background:#131F2B;border-top:1px solid rgba(255,255,255,.06)}
   <div class="container">
     <div class="sec-head reveal">
       <div class="eyebrow">The Real Challenge</div>
-      <h2 class="sec-h2">矿山客户真正采购的，<em>从来不是一台车</em></h2>
+      <h2 class="sec-h2">您采购的不是车，<em>是吨公里成本和可用率</em></h2>
       <p class="sec-sub">全球电动矿卡已经跨过概念验证：地下矿电动化已商业化，中国宽体电动矿卡已规模化，220–290 吨级刚性矿卡正处于首批验证窗口。但真正卡住规模化的，不是车辆本身，而是车辆背后那套没有被系统性解决的"电"。</p>
     </div>
     <div class="pain-stats reveal">
@@ -467,32 +500,72 @@ footer{background:#131F2B;border-top:1px solid rgba(255,255,255,.06)}
 <section id="position">
   <div class="container">
     <div class="sec-head reveal">
-      <div class="eyebrow">Our Position</div>
-      <h2 class="sec-h2">我们把行业重新定义为<em>矿山电气化</em></h2>
-      <p class="sec-sub">Mine Electrification。电动矿卡只是入口，不是全部。矿山电气化领域并非没有强玩家——ABB、Schneider、Hitachi Energy、Siemens 都在其中。但设备巨头的方案往往自然导向自家 PCS、开关柜与平台，交付偏重、软件复用慢。真正尚未被充分满足的，是三个交叉点：矿山专用、多 OEM 中立、软件定义且可快速复制——这也正是我们为矿业客户创造价值的方式。</p>
+      <div class="eyebrow">What We Do For You</div>
+      <h2 class="sec-h2">帮您把矿山电气化<em>算清楚、管起来</em></h2>
+      <p class="sec-sub">电动矿卡只是入口。真正卡住规模化的，是矿卡背后没有被系统性解决的"电"——补能能不能跟上、峰值负荷能不能吸收、多厂家系统能不能协同。我们做的，就是这件事。</p>
     </div>
-    <div class="pos-wrap">
-      <div class="pos-col dont reveal">
-        <div class="pos-lab">✕ 我们不做</div>
-        <div class="pos-item"><span class="ic">✕</span>不造矿卡，不与矿卡 OEM 争车辆生意</div>
-        <div class="pos-item"><span class="ic">✕</span>不做全矿山生产调度平台</div>
-        <div class="pos-item"><span class="ic">✕</span>不承诺覆盖破碎、磨矿、浮选、输送带等生产系统</div>
-        <div class="pos-item"><span class="ic">✕</span>不把 TCO / ROI 包装成收益承诺</div>
-        <div class="pos-item"><span class="ic">✕</span>不绑定任何单一 PCS、电池、充电桩或换电站</div>
+
+    <!-- BENEFIT GRID: Client-outcome first -->
+    <div class="benefit-grid reveal">
+      <div class="benefit-card">
+        <div class="benefit-icon">⚡</div>
+        <div class="benefit-t">降低吨公里能耗成本</div>
+        <div class="benefit-d">通过 BESS 削峰、柴发优化、充电排队管理与绿电优先分配，把每吨公里的能耗成本做到可测量、可持续下降。</div>
       </div>
-      <div class="pos-col do reveal">
-        <div class="pos-lab">✓ 我们专注做</div>
-        <div class="pos-item"><span class="ic">✓</span>矿山电气化前期测算与微电网 / 能源系统规划</div>
-        <div class="pos-item"><span class="ic">✓</span>BESS 与 PCS 容量设计、补能电气接入与调度逻辑</div>
-        <div class="pos-item"><span class="ic">✓</span>矿卡作为"移动负荷"的能源建模与管理</div>
-        <div class="pos-item"><span class="ic">✓</span>多厂家 PCS / BESS / 充电站 / 矿卡接口集成</div>
-        <div class="pos-item"><span class="ic">✓</span>继电保护、互锁、EMS 控制策略、FAT/SAT 与远程能源运维</div>
+      <div class="benefit-card">
+        <div class="benefit-icon">📉</div>
+        <div class="benefit-t">减少柴油依赖与碳排放</div>
+        <div class="benefit-d">用工程级 TCO 模型算清楚：上多少台电动矿卡、配多大储能、少用多少柴油、减多少吨 CO₂、几年回本——投资前先把账算明白。</div>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">🔁</div>
+        <div class="benefit-t">补能不卡脖子，运输不停摆</div>
+        <div class="benefit-d">充电 / 换电峰值负荷预测、BESS 缓冲、排队优化——让矿卡车队真正跑满、跑稳，不因补能瓶颈拖垮运输产能。</div>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">🔌</div>
+        <div class="benefit-t">多厂家设备统一接入</div>
+        <div class="benefit-d">不绑定任何单一 PCS、电池、充电桩或矿卡品牌。中立集成多 OEM 接口，让您按最优性价比选设备，系统由我们统一调度。</div>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">📊</div>
+        <div class="benefit-t">让资本决策可被董事会接受</div>
+        <div class="benefit-d">TCO 对比、分阶段路线图、敏感性分析——让矿山业主、财务、运营与 ESG 团队能共同理解并接受一个电气化投资决策。</div>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">🔄</div>
+        <div class="benefit-t">可复制，不是每次从零开始</div>
+        <div class="benefit-d">软件定义的 EMS 策略、可复用的接口模板与 TCO 模型——一个矿山跑通，下一个矿山迁移成本大幅下降，项目交付可规模化。</div>
       </div>
     </div>
+
+    <!-- USP: What makes us different — compact, not leading -->
+    <div class="usp-strip reveal">
+      <div class="usp-label">我们的独特定位</div>
+      <div class="usp-items">
+        <div class="usp-item"><span class="usp-tag">矿山专用</span>不是通用 EMS 贴矿山标签，而是从矿山运输与能源场景重新设计控制逻辑</div>
+        <div class="usp-item"><span class="usp-tag">多 OEM 中立</span>不推自家设备，不绑定 PCS / 电池 / 充电桩，按矿山需求选最优方案</div>
+        <div class="usp-item"><span class="usp-tag">软件定义</span>策略可升级、接口可扩展，不依赖单次工程交付，支持持续优化</div>
+        <div class="usp-item"><span class="usp-tag">先算清账</span>用 Energy Twin 在投资前完成工程级 TCO 建模，不卖方案卖 PPT</div>
+      </div>
+    </div>
+
+    <!-- BOUNDARY: compact, positioned as trust signal not apology -->
+    <div class="boundary-strip reveal">
+      <div class="boundary-label">我们的能力边界（也是我们的信任基础）</div>
+      <div class="boundary-items">
+        <div class="boundary-item"><span class="bx">✕</span>不造矿卡，不与矿卡 OEM 争车辆生意</div>
+        <div class="boundary-item"><span class="bx">✕</span>不做全矿山生产调度平台（FMS / AHS）</div>
+        <div class="boundary-item"><span class="bx">✕</span>不承诺覆盖破碎、磨矿、浮选等生产工艺系统</div>
+        <div class="boundary-item"><span class="bx">✕</span>不把 TCO / ROI 包装成收益保证——只提供有依据的工程测算</div>
+      </div>
+      <div class="boundary-note">明确边界不是能力不足，而是专注才能做深。我们把精力集中在矿山能源与电气这一层，做到可交付、可验证、可复制。</div>
+    </div>
+
     <div class="pos-statement reveal">
       <div class="pos-statement-lab">One-line Positioning</div>
-      <div class="pos-statement-zh">EnergizeOS 是面向矿山电气化的<em>中立电气与能源基础设施集成商</em>，帮助矿业客户把电网、微电网、储能、补能系统和电动矿卡移动负荷，统一建模、控制、调度和优化。</div>
-      <div class="pos-statement-en">A neutral electrical and energy infrastructure integrator for mine electrification — connecting grid, microgrid, storage, charging, swapping, trolley power and mobile mining fleets into one controllable and optimizable energy system.</div>
+      <div class="pos-statement-zh">EnergizeOS 是面向矿山电气化的<em>中立电气与能源基础设施集成商</em>——帮助矿业客户把电网、微电网、储能、补能系统和电动矿卡移动负荷，统一建模、控制、调度和优化。</div>
+      <div class="pos-statement-en">A neutral electrical and energy infrastructure integrator for mine electrification — connecting grid, microgrid, storage, charging, swapping, trolley and mobile mining fleets into one controllable, optimizable energy system.</div>
     </div>
   </div>
 </section>
@@ -610,7 +683,7 @@ footer{background:#131F2B;border-top:1px solid rgba(255,255,255,.06)}
   <div class="container">
     <div class="sec-head reveal">
       <div class="eyebrow">Core Products</div>
-      <h2 class="sec-h2">两个即刻可交付的<em>核心产品</em></h2>
+      <h2 class="sec-h2">两个产品，<em>先算清楚，再管起来</em></h2>
       <p class="sec-sub">矿山电气化的能力覆盖面很广，但我们当前只聚焦两个可立即交付的核心产品——先帮您把电气化算清楚，再帮您把它管起来。其余能力将随项目需要逐步展开。</p>
     </div>
     <div class="prod-grid">
@@ -939,7 +1012,7 @@ footer{background:#131F2B;border-top:1px solid rgba(255,255,255,.06)}
   <div class="cta-inner">
     <div class="cta-eyebrow reveal">Let's Start With The Numbers</div>
     <h2 class="cta-h2 reveal">先把电气化<em>算清楚</em>，<br>再谈规模化。</h2>
-    <p class="cta-sub reveal">一次免费技术研讨，一份基于您现场参数的初步能源与 TCO 评估。无需任何前置承诺——让我们先帮您把账算明白。</p>
+    <p class="cta-sub reveal">一次免费技术研讨，一份基于您现场参数的初步 TCO 评估。告诉我们您的矿区条件，我们告诉您：能少用多少柴油、需要多大 BESS、补能站放哪、几年回本。</p>
     <div class="cta-steps reveal">
       <div class="cta-step"><div class="step-n">STEP 01</div><div class="step-t">预约技术研讨</div><div class="step-s">免费咨询，了解矿区现状与电气化目标</div></div>
       <div class="cta-step"><div class="step-n">STEP 02</div><div class="step-t">能源 Twin 初评</div><div class="step-s">基于现场参数输出初步 TCO 与路线建议</div></div>
