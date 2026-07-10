@@ -130,14 +130,16 @@ canvas{width:100%;flex:1;min-height:0;display:block;border-radius:var(--rs);back
 .kpi.warn .kpi-val{color:var(--warn)}
 .kpi.alert .kpi-val{color:var(--alert)}
 
-/* BESS ALLOCATION */
+/* BESS ALLOCATION — dual bar (MW power + MWh energy) */
 .alloc-row{padding:0 10px 5px;flex-shrink:0}
 .alloc-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:6px 8px}
 .alloc-title{font-size:8.5px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px;display:flex;align-items:center;justify-content:space-between}
-.alloc-bars{display:flex;gap:3px;align-items:stretch;height:18px}
-.alloc-seg{border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:7.5px;font-weight:700;color:#fff;overflow:hidden;white-space:nowrap;transition:.3s}
-.alloc-legend{display:flex;gap:8px;flex-wrap:wrap;margin-top:3px}
-.alloc-leg{display:flex;align-items:center;gap:3px;font-size:7.5px;color:var(--sub)}
+.alloc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.alloc-section-label{font-size:8px;font-weight:700;color:var(--sub);margin-bottom:3px}
+.alloc-bars{display:flex;gap:2px;align-items:stretch;height:16px}
+.alloc-seg{border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:700;color:#fff;overflow:hidden;white-space:nowrap;transition:.3s;min-width:3px}
+.alloc-legend{display:flex;gap:6px;flex-wrap:wrap;margin-top:3px}
+.alloc-leg{display:flex;align-items:center;gap:3px;font-size:7px;color:var(--sub)}
 .alloc-dot{width:7px;height:7px;border-radius:2px;flex-shrink:0}
 
 /* ONE-LINE */
@@ -209,6 +211,7 @@ svg.sld{width:100%;height:118px}
     <div class="view-tabs" id="viewTabs">
       <div class="vtab active" data-view="basic">Basic</div>
       <div class="vtab" data-view="eng">Engineering</div>
+      <div class="vtab" data-view="expert" title="Expert: CSV import, protection curves, Monte Carlo — planned">Expert*</div>
     </div>
     <div class="mode-tabs" id="modeTabs">
       <div class="tab active" data-mode="offgrid">Off-Grid</div>
@@ -343,6 +346,9 @@ svg.sld{width:100%;height:118px}
 
   <div class="s-head eng-only" style="display:none" data-i18n="s_prot">Protection & UFLS</div>
   <div class="s-card eng-only" style="display:none">
+    <div style="font-size:8px;background:var(--info-bg);border:1px solid var(--info-bd);border-radius:3px;padding:3px 5px;color:var(--info);margin-bottom:5px">
+      ℹ Layers: <strong>UF relay</strong> = IBR ride-through boundary (equipment protection) · <strong>UFLS</strong> = load shedding to save system · These are independent — UFLS fires first, UF relay trips only if system still collapses.
+    </div>
     <div class="field"><label>RoCoF limit (Hz/s)</label><input type="number" id="rocMax" value="0.9" min="0.1" step="0.1"></div>
     <!-- Over-frequency -->
     <div style="font-size:8.5px;color:var(--muted);margin:3px 0 2px;font-weight:600">Over-Frequency (OF)</div>
@@ -434,7 +440,7 @@ svg.sld{width:100%;height:118px}
       <!-- VOLT + Q — dual-axis -->
       <div class="plot-card sub">
         <div class="plot-title">
-          <span data-i18n="ch_volt">Bus Voltage (p.u.) &amp; Reactive (MVAr)</span>
+          <span data-i18n="ch_volt">Bus Voltage (p.u.) · Q (MVAr, +inject/−absorb)</span>
           <div class="legend">
             <div class="leg"><div class="leg-sw" style="background:var(--c-volt)"></div><span style="color:var(--c-volt)">V →L-axis</span></div>
             <div class="leg"><div class="leg-sw" style="background:var(--c-q)"></div><span style="color:var(--c-q)">Q →R-axis</span></div>
@@ -453,8 +459,9 @@ svg.sld{width:100%;height:118px}
     <div class="kpi" id="k_cost"><div class="kpi-lbl" data-i18n="k_cost">Fuel Cost</div><div class="kpi-val">—</div></div>
     <div class="kpi" id="k_re"><div class="kpi-lbl" data-i18n="k_re">RE Share</div><div class="kpi-val">—<span class="kpi-unit"> %</span></div></div>
     <div class="kpi" id="k_curt"><div class="kpi-lbl" data-i18n="k_curt">Curtailment</div><div class="kpi-val">—<span class="kpi-unit"> MWh</span></div></div>
-    <div class="kpi" id="k_spin"><div class="kpi-lbl" data-i18n="k_spin">Spin Reserve</div><div class="kpi-val">—<span class="kpi-unit"> MW</span></div></div>
-    <div class="kpi" id="k_n1"><div class="kpi-lbl">N-1 Gen</div><div class="kpi-val">—</div></div>
+    <div class="kpi" id="k_spin"><div class="kpi-lbl">Spin Rsv. (10s/60s)</div><div class="kpi-val">—<span class="kpi-unit"> MW</span></div></div>
+    <div class="kpi" id="k_spin10m"><div class="kpi-lbl">Startup Rsv. (10min)</div><div class="kpi-val">—<span class="kpi-unit"> MW</span></div></div>
+    <div class="kpi" id="k_n1"><div class="kpi-lbl">N-1 Gen <span style="font-weight:400;font-size:7px">(gen. adequacy only)</span></div><div class="kpi-val">—</div></div>
     <div class="kpi" id="k_fmin"><div class="kpi-lbl" data-i18n="k_fmin">f min/max</div><div class="kpi-val">—<span class="kpi-unit"> Hz</span></div></div>
     <div class="kpi" id="k_rocof"><div class="kpi-lbl">RoCoF peak</div><div class="kpi-val">—<span class="kpi-unit"> Hz/s</span></div></div>
     <div class="kpi" id="k_ufls"><div class="kpi-lbl">UFLS Events</div><div class="kpi-val">—</div></div>
@@ -465,26 +472,48 @@ svg.sld{width:100%;height:118px}
     <div class="kpi" id="k_eens"><div class="kpi-lbl">EENS</div><div class="kpi-val">—<span class="kpi-unit"> MWh</span></div></div>
   </div>
 
-  <!-- BESS Capacity Allocation bar -->
+  <!-- BESS Capacity Allocation — dual bar: MW (power) + MWh (energy) -->
   <div class="alloc-row">
     <div class="alloc-card">
       <div class="alloc-title">
-        <span data-i18n="alloc_title">BESS Capacity Allocation (MW·function basis)</span>
-        <span id="allocNote" style="font-size:7.5px;color:var(--muted)">Indicative sizing rationale only</span>
+        <span data-i18n="alloc_title">BESS Capacity Allocation</span>
+        <span style="font-size:7px;color:var(--muted)">Indicative sizing rationale — MW ≠ MWh, shown separately</span>
       </div>
-      <div class="alloc-bars" id="allocBars">
-        <div class="alloc-seg" id="al_inertia" style="background:#C026D3;min-width:4px"></div>
-        <div class="alloc-seg" id="al_droop" style="background:#D4840A;min-width:4px"></div>
-        <div class="alloc-seg" id="al_bridge" style="background:#7C3AED;min-width:4px"></div>
-        <div class="alloc-seg" id="al_smooth" style="background:#0EA5E9;min-width:4px"></div>
-        <div class="alloc-seg" id="al_reserve" style="background:#16A34A;min-width:4px"></div>
-      </div>
-      <div class="alloc-legend">
-        <div class="alloc-leg"><div class="alloc-dot" style="background:#C026D3"></div><span id="al_inertia_lbl">VSG Inertia</span></div>
-        <div class="alloc-leg"><div class="alloc-dot" style="background:#D4840A"></div><span id="al_droop_lbl">Primary Droop</span></div>
-        <div class="alloc-leg"><div class="alloc-dot" style="background:#7C3AED"></div><span id="al_bridge_lbl">DG Bridge</span></div>
-        <div class="alloc-leg"><div class="alloc-dot" style="background:#0EA5E9"></div><span id="al_smooth_lbl">RE Smoothing</span></div>
-        <div class="alloc-leg"><div class="alloc-dot" style="background:#16A34A"></div><span id="al_reserve_lbl">Dynamic Reserve</span></div>
+      <div class="alloc-grid">
+        <!-- Power MW -->
+        <div>
+          <div class="alloc-section-label">⚡ Power Allocation (MW) — fast response</div>
+          <div class="alloc-bars" id="allocBarsMW">
+            <div class="alloc-seg" id="al_inertia" style="background:#C026D3"></div>
+            <div class="alloc-seg" id="al_trip" style="background:#DC2626"></div>
+            <div class="alloc-seg" id="al_ramp" style="background:#0EA5E9"></div>
+            <div class="alloc-seg" id="al_reserve_mw" style="background:#16A34A"></div>
+          </div>
+          <div class="alloc-legend">
+            <div class="alloc-leg"><div class="alloc-dot" style="background:#C026D3"></div><span id="al_inertia_lbl">VSG Inertia</span></div>
+            <div class="alloc-leg"><div class="alloc-dot" style="background:#DC2626"></div><span id="al_trip_lbl">DG Trip Cover</span></div>
+            <div class="alloc-leg"><div class="alloc-dot" style="background:#0EA5E9"></div><span id="al_ramp_lbl">RE Ramp</span></div>
+            <div class="alloc-leg"><div class="alloc-dot" style="background:#16A34A"></div><span id="al_reserve_mw_lbl">Dyn. Reserve</span></div>
+          </div>
+        </div>
+        <!-- Energy MWh -->
+        <div>
+          <div class="alloc-section-label">🔋 Energy Allocation (MWh) — duration / shifting</div>
+          <div class="alloc-bars" id="allocBarsMWh">
+            <div class="alloc-seg" id="al_bridge" style="background:#7C3AED"></div>
+            <div class="alloc-seg" id="al_smooth" style="background:#D4840A"></div>
+            <div class="alloc-seg" id="al_econ" style="background:#0369A1"></div>
+            <div class="alloc-seg" id="al_blackstart" style="background:#1A2B3C"></div>
+            <div class="alloc-seg" id="al_margin" style="background:#CBD5E1"></div>
+          </div>
+          <div class="alloc-legend">
+            <div class="alloc-leg"><div class="alloc-dot" style="background:#7C3AED"></div><span id="al_bridge_lbl">DG Start Bridge</span></div>
+            <div class="alloc-leg"><div class="alloc-dot" style="background:#D4840A"></div><span id="al_smooth_lbl">RE Smooth</span></div>
+            <div class="alloc-leg"><div class="alloc-dot" style="background:#0369A1"></div><span id="al_econ_lbl">Econ. Shifting</span></div>
+            <div class="alloc-leg"><div class="alloc-dot" style="background:#1A2B3C"></div><span id="al_bs_lbl">Black Start Rsv.</span></div>
+            <div class="alloc-leg"><div class="alloc-dot" style="background:#CBD5E1"></div><span id="al_margin_lbl">SOC Margin</span></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -569,7 +598,7 @@ svg.sld{width:100%;height:118px}
 (function(){
 'use strict';
 /* ── i18n ─────────────────────────────────────────────────── */
-const I={en:{s_mode:'System Mode',s_view:'View Level',s_geo:'Geography',s_load:'Load Profile',s_pv:'PV / Solar',s_wind:'Wind',s_diesel:'Diesel Fleet',s_bess:'BESS / PCS',s_prot:'Protection & UFLS',s_qv:'Q-V / Voltage',s_grid:'Grid Supply',s_scenarios:'Fault Scenarios',s_scenarios_note:'Inject while running to test response',sc_dg:'⚡ Trip largest DG',sc_pv:'☁️ PV cloud shadow 80%',sc_load:'⚙️ Load surge +3 MW',sc_grid:'🔌 Grid loss (island)',sc_bs:'🌑 Black Start sim',p_simh:'Simulation hours',p_preset:'Preset',p_doy:'Day-of-year',p_soil:'PV soiling (0.7–1)',p_dsys:'Damping D (pu)',p_pload:'Base load (MW)',p_lvar:'Variation ± (MW)',p_alpha:'Freq sensitivity α (%/Hz)',p_motorMW:'Motor impulse (MW)',p_motorInterval:'Interval (min)',p_pvshape:'Shape (1–3)',p_cloud:'Cloudiness',p_pvramp:'Ramp %/s',p_vmean:'Mean (m/s)',p_vvar:'Variability',p_windramp:'Ramp %/s',p_dg33n:'3.3 MW online',p_dg12n:'1.25 MW',p_ddroop:'Droop (%)',p_dmin:'Min load',p_rampup:'Ramp↑ MW/s',p_rampdn:'Ramp↓',p_ddelay:'Start delay (s)',p_dcool:'Cooldown (s)',p_dhyst:'Hysteresis (MW)',p_dprice:'Diesel $/L',p_soc0:'Init SOC (%)',p_bdroop:'Droop (%)',p_thermalDerate:'Thermal derate (0–1)',p_gfm:'GFM mode (VSG active)',p_island:'Intentional island capable',p_gridMW:'Grid capacity (MW)',p_gridSCR:'SCR stiffness',p_tariff:'Tariff ($/kWh)',p_qdroop:'AVR Q-droop Rq (pu)',p_qpcs:'PCS Q-support (MVAr)',p_vbase:'V nominal (pu)',ch_power:'Active Power Balance (MW) · +discharge / −charge for BESS',ch_freq:'Frequency (Hz) & SOC (%)',ch_volt:'Bus Voltage (p.u.) & Reactive (MVAr)',sch_title:'System One-Line Diagram (Live) · Equivalent Single-Bus Dynamic Model',press_start:'Press Start',btn_start:'Start',btn_pause:'Pause',btn_reset:'Reset',btn_dl:'Export',ctrl_hint:'Modify parameters while running · © 2025 Energize Solutions Inc.',k_fuel:'Fuel Used',k_save:'Fuel Saved',k_cost:'Fuel Cost',k_re:'RE Share',k_curt:'Curtailment',k_spin:'Spin Reserve (Rotating)',k_fmin:'f min/max',alloc_title:'BESS Capacity Allocation (indicative)',disc_label:'Engineering Disclaimer:',disc_text:'Conceptual & preliminary design only. Not a substitute for load-flow, short-circuit, protection coordination, EMT or detailed engineering studies.'},zh:{s_mode:'系统模式',s_view:'视图级别',s_geo:'地理/日照',s_load:'负荷配置',s_pv:'光伏',s_wind:'风电',s_diesel:'柴油发电机',s_bess:'BESS / PCS',s_prot:'保护与UFLS',s_qv:'Q-V / 电压',s_grid:'电网供电',s_scenarios:'故障场景注入',s_scenarios_note:'仿真运行中注入，测试系统响应',sc_dg:'⚡ 跳闸最大柴油机',sc_pv:'☁️ PV云影80%',sc_load:'⚙️ 负荷冲击+3 MW',sc_grid:'🔌 电网失电（孤岛）',sc_bs:'🌑 黑启动仿真',p_simh:'仿真时长（小时）',p_preset:'地理预设',p_doy:'年内日序',p_soil:'光伏污染系数',p_dsys:'系统阻尼D（pu）',p_pload:'负荷基线（MW）',p_lvar:'负荷波动±（MW）',p_alpha:'负荷随频系数α',p_motorMW:'电机启动冲击（MW）',p_motorInterval:'启动间隔（分钟）',p_pvshape:'日形系数',p_cloud:'云影强度',p_pvramp:'爬坡限速%/s',p_vmean:'平均风速（m/s）',p_vvar:'风速波动',p_windramp:'爬坡限速%/s',p_dg33n:'3.3MW在线台数',p_dg12n:'1.25MW台数',p_ddroop:'下垂Rₚ（%）',p_dmin:'最低负载',p_rampup:'上调爬坡MW/s',p_rampdn:'下调爬坡',p_ddelay:'启动延时（秒）',p_dcool:'冷却时间（秒）',p_dhyst:'启停迟滞（MW）',p_dprice:'柴油价格$/升',p_soc0:'初始SOC（%）',p_bdroop:'下垂Rₚ（%）',p_thermalDerate:'热降额（0–1）',p_gfm:'GFM模式（VSG激活）',p_island:'有意孤岛功能',p_gridMW:'电网容量（MW）',p_gridSCR:'电网强度（SCR）',p_tariff:'电价（$/kWh）',p_qdroop:'AVR无功下垂Rq（pu）',p_qpcs:'PCS无功支撑（MVAr）',p_vbase:'额定电压（pu）',ch_power:'有功功率平衡（MW）· BESS正=放电/负=充电',ch_freq:'频率（Hz）与SOC（%）',ch_volt:'母线电压（p.u.）与无功（MVAr）',sch_title:'系统单线图（实时）· 等效单母线动态模型',press_start:'按开始',btn_start:'开始',btn_pause:'暂停',btn_reset:'重置',btn_dl:'导出',ctrl_hint:'运行中可实时修改参数 · © 2025 Energize Solutions Inc.',k_fuel:'燃油消耗',k_save:'节油量',k_cost:'燃油成本',k_re:'新能源占比',k_curt:'弃电量',k_spin:'旋转备用',k_fmin:'频率最低/最高',alloc_title:'BESS容量分配（示意）',disc_label:'工程免责声明：',disc_text:'仅用于概念设计与前期方案评估，不能替代潮流计算、短路计算、保护配合、电磁暂态或详细工程研究。'}};
+const I={en:{s_mode:'System Mode',s_view:'View Level',s_geo:'Geography',s_load:'Load Profile',s_pv:'PV / Solar',s_wind:'Wind',s_diesel:'Diesel Fleet',s_bess:'BESS / PCS',s_prot:'Protection & UFLS',s_qv:'Q-V / Voltage',s_grid:'Grid Supply',s_scenarios:'Fault Scenarios',s_scenarios_note:'Inject while running to test response',sc_dg:'⚡ Trip largest DG',sc_pv:'☁️ PV cloud shadow 80%',sc_load:'⚙️ Load surge +3 MW',sc_grid:'🔌 Grid loss (island)',sc_bs:'🌑 Black Start sim',p_simh:'Simulation hours',p_preset:'Preset',p_doy:'Day-of-year',p_soil:'PV soiling (0.7–1)',p_dsys:'Damping D (pu)',p_pload:'Base load (MW)',p_lvar:'Variation ± (MW)',p_alpha:'Freq sensitivity α (%/Hz)',p_motorMW:'Motor impulse (MW)',p_motorInterval:'Interval (min)',p_pvshape:'Shape (1–3)',p_cloud:'Cloudiness',p_pvramp:'Ramp %/s',p_vmean:'Mean (m/s)',p_vvar:'Variability',p_windramp:'Ramp %/s',p_dg33n:'3.3 MW online',p_dg12n:'1.25 MW',p_ddroop:'Droop (%)',p_dmin:'Min load',p_rampup:'Ramp↑ MW/s',p_rampdn:'Ramp↓',p_ddelay:'Start delay (s)',p_dcool:'Cooldown (s)',p_dhyst:'Hysteresis (MW)',p_dprice:'Diesel $/L',p_soc0:'Init SOC (%)',p_bdroop:'Droop (%)',p_thermalDerate:'Thermal derate (0–1)',p_gfm:'GFM mode (VSG active)',p_island:'Intentional island capable',p_gridMW:'Grid capacity (MW)',p_gridSCR:'SCR stiffness',p_tariff:'Tariff ($/kWh)',p_qdroop:'AVR Q-droop Rq (pu)',p_qpcs:'PCS Q-support (MVAr)',p_vbase:'V nominal (pu)',ch_power:'Active Power Balance (MW) · +discharge / −charge for BESS',ch_freq:'Frequency (Hz) & SOC (%)',ch_volt:'Bus Voltage (p.u.) · Q (MVAr, +inject/−absorb)',sch_title:'System One-Line Diagram (Live) · Equivalent Single-Bus Dynamic Model',press_start:'Press Start',btn_start:'Start',btn_pause:'Pause',btn_reset:'Reset',btn_dl:'Export',ctrl_hint:'Modify parameters while running · © 2025 Energize Solutions Inc.',k_fuel:'Fuel Used',k_save:'Fuel Saved',k_cost:'Fuel Cost',k_re:'RE Share',k_curt:'Curtailment',k_spin:'Spin Reserve (Rotating)',k_fmin:'f min/max',alloc_title:'BESS Capacity Allocation (indicative)',disc_label:'Engineering Disclaimer:',disc_text:'Conceptual & preliminary design only. Not a substitute for load-flow, short-circuit, protection coordination, EMT or detailed engineering studies.'},zh:{s_mode:'系统模式',s_view:'视图级别',s_geo:'地理/日照',s_load:'负荷配置',s_pv:'光伏',s_wind:'风电',s_diesel:'柴油发电机',s_bess:'BESS / PCS',s_prot:'保护与UFLS',s_qv:'Q-V / 电压',s_grid:'电网供电',s_scenarios:'故障场景注入',s_scenarios_note:'仿真运行中注入，测试系统响应',sc_dg:'⚡ 跳闸最大柴油机',sc_pv:'☁️ PV云影80%',sc_load:'⚙️ 负荷冲击+3 MW',sc_grid:'🔌 电网失电（孤岛）',sc_bs:'🌑 黑启动仿真',p_simh:'仿真时长（小时）',p_preset:'地理预设',p_doy:'年内日序',p_soil:'光伏污染系数',p_dsys:'系统阻尼D（pu）',p_pload:'负荷基线（MW）',p_lvar:'负荷波动±（MW）',p_alpha:'负荷随频系数α',p_motorMW:'电机启动冲击（MW）',p_motorInterval:'启动间隔（分钟）',p_pvshape:'日形系数',p_cloud:'云影强度',p_pvramp:'爬坡限速%/s',p_vmean:'平均风速（m/s）',p_vvar:'风速波动',p_windramp:'爬坡限速%/s',p_dg33n:'3.3MW在线台数',p_dg12n:'1.25MW台数',p_ddroop:'下垂Rₚ（%）',p_dmin:'最低负载',p_rampup:'上调爬坡MW/s',p_rampdn:'下调爬坡',p_ddelay:'启动延时（秒）',p_dcool:'冷却时间（秒）',p_dhyst:'启停迟滞（MW）',p_dprice:'柴油价格$/升',p_soc0:'初始SOC（%）',p_bdroop:'下垂Rₚ（%）',p_thermalDerate:'热降额（0–1）',p_gfm:'GFM模式（VSG激活）',p_island:'有意孤岛功能',p_gridMW:'电网容量（MW）',p_gridSCR:'电网强度（SCR）',p_tariff:'电价（$/kWh）',p_qdroop:'AVR无功下垂Rq（pu）',p_qpcs:'PCS无功支撑（MVAr）',p_vbase:'额定电压（pu）',ch_power:'有功功率平衡（MW）· BESS正=放电/负=充电',ch_freq:'频率（Hz）与SOC（%）',ch_volt:'母线电压（p.u.）与无功（MVAr）',sch_title:'系统单线图（实时）· 等效单母线动态模型',press_start:'按开始',btn_start:'开始',btn_pause:'暂停',btn_reset:'重置',btn_dl:'导出',ctrl_hint:'运行中可实时修改参数 · © 2025 Energize Solutions Inc.',k_fuel:'燃油消耗',k_save:'节油量',k_cost:'燃油成本',k_re:'新能源占比',k_curt:'弃电量',k_spin:'旋转备用',k_fmin:'频率最低/最高',alloc_title:'BESS容量分配（示意）',disc_label:'工程免责声明：',disc_text:'仅用于概念设计与前期方案评估，不能替代潮流计算、短路计算、保护配合、电磁暂态或详细工程研究。'}};
 let lang='en';
 function t(k){return I[lang][k]||I.en[k]||k;}
 function applyI18n(){document.querySelectorAll('[data-i18n]').forEach(el=>{const v=t(el.dataset.i18n);if(v)el.innerHTML=v;});G('langBtn').textContent=lang==='en'?'中文':'English';document.documentElement.lang=lang==='zh'?'zh':'en';}
@@ -581,7 +610,7 @@ function N(id){const el=G(id);return el?parseFloat(el.value)||0:0;}
 function clamp(x,a,b){return Math.max(a,Math.min(b,x));}
 function lerp(a,b,t){return a+(b-a)*clamp(t,0,1);}
 function ts(s){const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),ss=Math.floor(s%60);return`[${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(ss).padStart(2,'0')}]`;}
-function logLine(m){const el=G('log');el.textContent+=m+'\n';el.scrollTop=1e9;}
+function logLine(m){const el=G('log');el.textContent+=m+'\n';el.scrollTop=1e9;if(started)snapEvents.push({sim_t:st?ts(st.t):'?',msg:m,wall:new Date().toISOString()});}
 function mulberry32(s){return()=>{let t=s+=0x6D2B79F5;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296;};}
 let rng=mulberry32(42);
 
@@ -589,6 +618,11 @@ let rng=mulberry32(42);
 let viewLevel='basic';
 document.querySelectorAll('#viewTabs .vtab').forEach(vt=>{
   vt.onclick=()=>{
+    if(vt.dataset.view==='expert'){
+      // Expert view planned — show roadmap tooltip
+      alert('Expert Mode (Planned):\n• CSV data import (8760h)\n• PCS P/Q capability curves\n• Protection time-current curves\n• Monte Carlo reliability\n• MILP economic dispatch\n• PSCAD/DIgSILENT export\n\nCurrent release: Basic & Engineering modes only.');
+      return;
+    }
     document.querySelectorAll('#viewTabs .vtab').forEach(x=>x.classList.remove('active'));
     vt.classList.add('active');viewLevel=vt.dataset.view;
     document.querySelectorAll('.eng-only').forEach(el=>el.style.display=viewLevel==='eng'?'':'none');
@@ -737,8 +771,14 @@ function dieselDispatch(dt,fpu,residual,s){
   for(const g of ol){const tg=clamp(tpu*g.cap,g.cap*s.dMin,g.cap),rr=tg<g.P?s.rampDn:s.rampUp;g.P=clamp(g.P+clamp(tg-g.P,-rr*dt,rr*dt),0,g.cap);}
   const Pa=ol.reduce((a,g)=>a+g.P,0),sc=s.bEmax>0?s.bE/s.bEmax:0;
   // Spinning reserve = (online rated - current dispatch) + BESS headroom (from current SOC)
+  // Spinning reserve (rotating, available in ~10 s):
+  // = Σ(online DG rated - current dispatch) + BESS headroom (SOC-limited)
+  // Note: offline DG = startup reserve (10 min), NOT spinning reserve
   const bessSpinHeadroom=s.bPmax>0?Math.min(s.bPmax-Math.max(s.bP,0),s.bPmax*Math.min(1,sc/.2)):0;
   s.spinRes=Math.max(0,(tot-Pa)+bessSpinHeadroom);
+  // Startup reserve (non-spinning DG that can start in ~10 min)
+  const offlineCap=u.filter(g=>!g.online&&!g.starting&&g.cooldown<=0).reduce((a,g)=>a+g.cap,0);
+  s.startupRes=offlineCap;
   return Pa;
   function st1(tp){const c=u.find(g=>!g.online&&!g.starting&&!g.stopping&&g.cooldown<=0&&g.type===tp);if(c){c.starting=true;c.timer=s.dDelay;logLine(`${ts(s.t)} 🔄 Start: ${tp}`);return true;}return false;}
   function sp1(){const c=u.filter(g=>g.online&&!g.stopping&&!g.starting&&g.P<g.cap*.65).sort((a,b)=>a.cap-b.cap)[0];if(c){c.stopping=true;c.timer=s.dDelay;logLine(`${ts(s.t)} ⏏ Stop: ${c.type}`);}}
@@ -770,13 +810,21 @@ function injectFault(type){
 }
 
 /* ── Operating state machine ─────────────────────────────── */
+// Allowed transitions (simplified):
+// OFF-GRID: DG-FORMING ↔ BESS-FORMING ↔ DG+BESS OFFGRID
+// GRID-TIED: GRID-TIED → [grid loss] → ISLANDED (if islandable=true)
+// HYBRID: HYBRID ↔ ISLANDED
+// BLACK START → DG+BESS OFFGRID (after DG sync-in)
+// Guard: BESS-FORMING only allowed if SOC > 20% and GFM=on
 function getOpState(s){
   if(s.blackStartMode)return'BLACK START';
   if(simMode==='gridtied')return'GRID-TIED';
   if(simMode==='hybrid'){const iso=s.gridP<0.1;return iso?'ISLANDED':'HYBRID';}
   const dgOn=s.dFleet.some(g=>g.online);
   const gfm=G('gfmMode').value==='1';
-  if(!dgOn&&gfm)return'BESS-FORMING';
+  const soc=s.bEmax>0?s.bE/s.bEmax:0;
+  if(!dgOn&&gfm&&soc>0.20)return'BESS-FORMING';
+  if(!dgOn&&(!gfm||soc<=0.20))return'DEGRADED ⚠';
   if(dgOn&&s.bPmax>0)return'DG+BESS OFFGRID';
   return'DG-FORMING';
 }
@@ -794,7 +842,7 @@ function initState(){
     pvMax:N('pvMax'),pvShape:N('pvShape')||1.5,pvCloud:N('pvCloud')||0.3,pvSoil:N('pvSoil')||0.9,pvRamp:(N('pvRamp')||8)/100,pvBag:{name:'PV',tripTimer:0,ramp:1,recloses:0,trips:0,ofTimer:0,_band:0,rcTimer:0,uftimer:0,_ufband:0},Ppv:0,faultPVScale:1,
     windMax:N('windMax'),windMean:N('windMean')||8,windVar:N('windVar')||0.4,windRamp:(N('windRamp')||5)/100,windBag:{name:'Wind',tripTimer:0,ramp:1,recloses:0,trips:0,ofTimer:0,_band:0,rcTimer:0,uftimer:0,_ufband:0},Pwind:0,
     dFleet:(()=>{const f=[];for(let i=0;i<6;i++)f.push({cap:3.3,type:'3.3MW',online:i<n33,P:i<n33?3.3*.7:0,starting:false,stopping:false,timer:0,cooldown:0});for(let i=0;i<2;i++)f.push({cap:1.25,type:'1.25MW',online:i<n12,P:i<n12?1.25*.7:0,starting:false,stopping:false,timer:0,cooldown:0});return f;})(),
-    dDroop:(N('dDroop')||4)/100,dMin:N('dMin')||0.35,rampUp:N('rampUp')||0.2,rampDn:N('rampDn')||1.0,dDelay:N('dDelay')||600,dCool:N('dCool')||300,dHyst:N('dHyst')||1.5,dieselPrice:N('dieselPrice')||1.2,n1:true,spinRes:0,freezeStop:false,freezeTimer:0,
+    dDroop:(N('dDroop')||4)/100,dMin:N('dMin')||0.35,rampUp:N('rampUp')||0.2,rampDn:N('rampDn')||1.0,dDelay:N('dDelay')||600,dCool:N('dCool')||300,dHyst:N('dHyst')||1.5,dieselPrice:N('dieselPrice')||1.2,n1:true,spinRes:0,startupRes:0,freezeStop:false,freezeTimer:0,
     bPmax:N('bPmax'),bEmax:N('bEmax'),bE:N('bEmax')*(N('bSOC0')/100),bP:0,bH:N('bH')||6,bDroop:(N('bDroop')||3)/100,etaOW,thermalDerate:N('thermalDerate')||1,bTarget:(N('bTarget')||55)/100,bBand:(N('bBand')||10)/100,bHi:(N('bHi')||82)/100,bLo:(N('bLo')||18)/100,
     gridMW:N('gridMW'),gridSCR:N('gridSCR')||5,tariff:N('tariff')||0.12,gridP:0,
     motorMW:N('motorMW')||2,motorInterval:(N('motorInterval')||45)*60,motorTimer:(N('motorInterval')||45)*30,motorActive:false,motorDecay:3,motorQ:0,motorStarts:0,
@@ -987,25 +1035,37 @@ function renderV(){
 function updateAllocBar(){
   const Pmax=N('bPmax')||8,Emax=N('bEmax')||20;
   if(Pmax<=0)return;
-  // Indicative MW allocation
-  const inertia=Math.min(Pmax*.15,Pmax);
-  const droop=Math.min(Pmax*.25,Pmax);
-  const bridge=Math.min(N('dg33n')*3.3*.4||3,Pmax*.4);
-  const smooth=Math.min((N('pvMax')+N('windMax'))*.1,Pmax*.2);
-  const reserve=Math.max(0,Pmax-inertia-droop-bridge-smooth);
-  const total=inertia+droop+bridge+smooth+reserve;
-  const pct=v=>`${(v/total*100).toFixed(0)}%`;
-  ['al_inertia','al_droop','al_bridge','al_smooth','al_reserve'].forEach((id,i)=>{
+  const dgLargest=(N('dg33n')>0?3.3:N('dg12n')>0?1.25:0);
+  const pvMW=N('pvMax'),windMW=N('windMax');
+  // ── Power MW allocation (fast response, ≤10 s) ──
+  // Each function competing for the same PCS MW capacity
+  const mw_inertia=Pmax*.15;                              // VSG virtual inertia (concurrent with droop)
+  const mw_trip=Math.min(dgLargest*.75,Pmax*.40);        // largest DG trip cover
+  const mw_ramp=Math.min((pvMW+windMW)*.08,Pmax*.20);   // RE ramp smoothing
+  const mw_reserve=Math.max(0,Pmax-mw_inertia-mw_trip-mw_ramp);
+  const mwT=Math.max(mw_inertia+mw_trip+mw_ramp+mw_reserve,0.1);
+  [['al_inertia',mw_inertia,'VSG Inertia'],['al_trip',mw_trip,'DG Trip'],['al_ramp',mw_ramp,'RE Ramp'],['al_reserve_mw',mw_reserve,'Dyn. Rsv.']].forEach(([id,v,lbl])=>{
     const el=G(id);if(!el)return;
-    const vals=[inertia,droop,bridge,smooth,reserve];
-    el.style.flex=vals[i].toString();
-    el.title=`${vals[i].toFixed(1)} MW (${pct(vals[i])})`;
+    el.style.flex=Math.max(v,0.04).toFixed(2);
+    el.title=`${v.toFixed(1)} MW (${(v/mwT*100).toFixed(0)}%)`;
+    const lel=G(id+'_lbl');if(lel)lel.textContent=`${lbl} ${v.toFixed(1)} MW`;
   });
-  G('al_inertia_lbl').textContent=`VSG Inertia ${inertia.toFixed(1)} MW`;
-  G('al_droop_lbl').textContent=`Primary Droop ${droop.toFixed(1)} MW`;
-  G('al_bridge_lbl').textContent=`DG Bridge ${bridge.toFixed(1)} MW`;
-  G('al_smooth_lbl').textContent=`RE Smooth ${smooth.toFixed(1)} MW`;
-  G('al_reserve_lbl').textContent=`Dyn Reserve ${reserve.toFixed(1)} MW`;
+  // ── Energy MWh allocation (duration-dependent, NOT additive to MW) ──
+  const dDelay=(N('dDelay')||600)/3600;
+  const mwh_bridge=Math.min(dgLargest*dDelay*1.3,Emax*.25);  // DG start bridge
+  const mwh_smooth=Math.min((pvMW+windMW)*.06,Emax*.20);      // RE smoothing
+  const mwh_econ=Emax*.30;                                      // economic dispatch
+  const mwh_bs=Math.max(Emax*.15,0.5);                         // black-start reserve
+  const mwh_margin=Math.max(0,Emax-mwh_bridge-mwh_smooth-mwh_econ-mwh_bs);
+  const mwhT=Math.max(mwh_bridge+mwh_smooth+mwh_econ+mwh_bs+mwh_margin,0.1);
+  [['al_bridge',mwh_bridge,'DG Bridge'],['al_smooth',mwh_smooth,'RE Smooth'],['al_econ',mwh_econ,'Econ.'],['al_blackstart',mwh_bs,'BS Rsv.'],['al_margin',mwh_margin,'Margin']].forEach(([id,v,lbl])=>{
+    const el=G(id);if(!el)return;
+    el.style.flex=Math.max(v,0.04).toFixed(2);
+    el.title=`${v.toFixed(1)} MWh (${(v/mwhT*100).toFixed(0)}%)`;
+    const lel=G(id+'_lbl')||G(id.replace('al_','al_')+'_lbl');
+    if(lel)lel.textContent=`${lbl} ${v.toFixed(1)} MWh`;
+  });
+  if(G('al_bs_lbl'))G('al_bs_lbl').textContent=`BS Rsv. ${mwh_bs.toFixed(1)} MWh`;
 }
 
 /* ── Schematic live update ───────────────────────────────── */
@@ -1044,7 +1104,7 @@ function updateSch(){
 function setK(id,val,cls){const el=G(id);if(!el)return;const v=el.querySelector('.kpi-val'),u=el.querySelector('.kpi-unit');if(v){const txt=String(val);const sp=txt.indexOf(' ');v.innerHTML=sp>-1?txt.substring(0,sp)+(u?`<span class="kpi-unit"> ${txt.substring(sp+1)}</span>`:''):txt;}el.className='kpi'+(cls?' '+cls:'');}
 function setKV(id,val,unit,cls){const el=G(id);if(!el)return;const v=el.querySelector('.kpi-val');if(v)v.innerHTML=val+(unit?`<span class="kpi-unit"> ${unit}</span>`:'');el.className='kpi'+(cls?' '+cls:'');}
 function setP(id,txt,c){const el=G(id);if(!el)return;el.textContent=txt;el.className='sp'+(c?' '+c:'');}
-function resetKPI(){['k_fuel','k_save','k_cost','k_re','k_curt','k_spin','k_n1','k_fmin','k_rocof','k_ufls','k_trips','k_volt','k_bsoc','k_motor','k_eens'].forEach(id=>{const el=G(id);if(el)el.className='kpi';const v=el?.querySelector('.kpi-val');if(v)v.innerHTML='—';});}
+function resetKPI(){['k_fuel','k_save','k_cost','k_re','k_curt','k_spin','k_spin10m','k_n1','k_fmin','k_rocof','k_ufls','k_trips','k_volt','k_bsoc','k_motor','k_eens'].forEach(id=>{const el=G(id);if(el)el.className='kpi';const v=el?.querySelector('.kpi-val');if(v)v.innerHTML='—';});}
 
 function updateKPI(){
   if(!started)return;
@@ -1060,6 +1120,7 @@ function updateKPI(){
   setKV('k_re',re.toFixed(1),'%',re>50?'ok':'');
   setKV('k_curt',st.Ecurt.toFixed(1),'MWh',st.Ecurt>1?'warn':'');
   setKV('k_spin',st.spinRes.toFixed(1),'MW',st.spinRes<st.Pload*.1?'alert':st.spinRes<st.Pload*.2?'warn':'ok');
+  setKV('k_spin10m',(st.spinRes+st.startupRes).toFixed(1),'MW',(st.spinRes+st.startupRes)<st.Pload*.1?'alert':'ok');
   setKV('k_n1',st.n1?'OK ✓':'FAIL','',st.n1?'ok':'alert');
   setKV('k_fmin',`${st.fMin.toFixed(3)} / ${st.fMax.toFixed(3)}`,'Hz',st.fMin<(N('uf1f')||59.3)?'alert':Math.abs(st.fMin-st.f0)>.3?'warn':'ok');
   setKV('k_rocof',st.rocofMax.toFixed(2),'Hz/s',st.rocofMax>(N('rocMax')||.9)*.9?'alert':st.rocofMax>(N('rocMax')||.9)*.7?'warn':'ok');
@@ -1074,7 +1135,7 @@ function updateKPI(){
   setP('sp_n1',st.n1?'N-1 Gen OK':'N-1 ⚠',st.n1?'ok':'alert');
   setP('sp_soc',`SOC ${soc.toFixed(0)}%`,soc<15?'alert':soc<25?'warn':'ok');
   setP('sp_bess',G('gfmMode').value==='1'?'BESS GFM':'BESS GFL','ok');
-  setP('sp_spin',`Spin ${st.spinRes.toFixed(1)} MW`,st.spinRes<st.Pload*.1?'alert':st.spinRes<st.Pload*.2?'warn':'ok');
+  setP('sp_spin',`Spin ${st.spinRes.toFixed(1)}+${st.startupRes.toFixed(1)} MW`,st.spinRes<st.Pload*.1?'alert':st.spinRes<st.Pload*.2?'warn':'ok');
   setP('sp_volt',`V=${st.V.toFixed(3)}`,st.V<.88||st.V>1.10?'alert':st.V<.92||st.V>1.06?'warn':'ok');
   setP('sp_ufls',st.ufls.events>0?`UFLS ${st.ufls.events}evt`:'UFLS–',st.ufls.events>0?'alert':'ok');
   setP('sp_mode',simMode==='gridtied'?'GRID-TIED':simMode.toUpperCase(),'mode');
@@ -1097,10 +1158,67 @@ function updBtn(state){
 
 /* ── Export / download snapshot ──────────────────────────── */
 function downloadSnapshot(){
+  if(!started){alert('Start simulation first');return;}
   const soc=st&&st.bEmax>0?st.bE/st.bEmax*100:0;
-  const obj={version:'V5.0',generatedAt:new Date().toISOString(),modelNote:'Conceptual single-bus dynamic model. Not a substitute for detailed engineering studies.',inputs:snapInputs,summary:{fuelUsed_L:st?.fuelL?.toFixed(1),fuelCost_USD:(st?.fuelL*st?.dieselPrice)?.toFixed(2),fuelSaved_L:Math.max(0,st?.fuelBaseL-st?.fuelL)?.toFixed(1),reShare_pct:(st?.Eload>0?st?.Ere/st?.Eload*100:0)?.toFixed(1),curtailment_MWh:st?.Ecurt?.toFixed(2),fMin_Hz:st?.fMin?.toFixed(3),fMax_Hz:st?.fMax?.toFixed(3),rocofPeak_Hzs:st?.rocofMax?.toFixed(3),ufls_events:st?.ufls?.events,EENS_MWh:st?.EENS?.toFixed(3),Vmin_pu:st?.Vmin?.toFixed(3),Vmax_pu:st?.Vmax?.toFixed(3),finalSOC_pct:soc?.toFixed(1),n1_gen_ok:st?.n1,spinResMW:st?.spinRes?.toFixed(1),motorStarts:st?.motorStarts},events:snapEvents,seed:42};
+  // Sample time-series (every 60 sim-seconds to keep JSON small)
+  const tsample=[];
+  for(let i=0;i<series.length;i+=Math.max(1,Math.round(60/(N('dt')||0.5)))){
+    const d=series[i];
+    tsample.push({t_h:+(d.t/3600).toFixed(3),Ppv:+d.Ppv.toFixed(2),Pwind:+d.Pwind.toFixed(2),Pdg:+d.Pdg.toFixed(2),Pbess:+d.bP.toFixed(2),Pgrid:+d.Pgrid.toFixed(2),Pload:+d.Pload.toFixed(2),f_Hz:+d.f.toFixed(4),df_Hz:+d.df.toFixed(4),soc_pct:+d.soc.toFixed(1),V_pu:+d.V.toFixed(4),Q_MVAr:+d.Q.toFixed(2)});
+  }
+  const obj={
+    modelVersion:'V5.0',
+    commit:'b71dce2',  // GitHub commit hash
+    generatedAt:new Date().toISOString(),
+    simStartedAt:snapInputs.timestamp||'unknown',
+    modelNote:'Conceptual single-bus dynamic model. NOT a substitute for load-flow, short-circuit, protection coordination, EMT, harmonic, arc-flash or detailed engineering studies. Results are indicative only.',
+    supportedN1Tests:['Generation adequacy (online DG − largest unit ≥ load)'],
+    unsupportedN1:'PCS N-1, Transformer N-1, Control N-1, Communication N-1 — not simulated',
+    qConvention:'+Q = reactive power injection into bus, −Q = reactive power absorption',
+    spinReserveDefinition:'Rotating (≤10 s): (online DG rated − dispatch) + BESS headroom. Startup (≤10 min): offline DG with cooldown=0.',
+    inputs:{...snapInputs,dt_s:N('dt')||0.5,seed:42,simMode},
+    scenario:{mode:simMode,faultEvents:snapEvents},
+    kpis:{
+      fuelUsed_L:+st.fuelL.toFixed(1),
+      fuelCost_USD:+(st.fuelL*st.dieselPrice).toFixed(2),
+      fuelCost_note:'USD = L × $/L (no unit conversion applied)',
+      fuelSaved_vs_allDiesel_L:+Math.max(0,st.fuelBaseL-st.fuelL).toFixed(1),
+      reShare_pct:+(st.Eload>0?st.Ere/st.Eload*100:0).toFixed(1),
+      curtailment_MWh:+st.Ecurt.toFixed(2),
+      EENS_MWh:+st.EENS.toFixed(3),
+      fMin_Hz:+st.fMin.toFixed(4),
+      fMax_Hz:+st.fMax.toFixed(4),
+      rocofPeak_Hzs:+st.rocofMax.toFixed(4),
+      uflsEvents:st.ufls.events,
+      pvTrips:st.pvBag.trips,pvRecloses:st.pvBag.recloses,
+      windTrips:st.windBag.trips,windRecloses:st.windBag.recloses,
+      Vmin_pu:+st.Vmin.toFixed(4),
+      Vmax_pu:+st.Vmax.toFixed(4),
+      finalSOC_pct:+soc.toFixed(2),
+      n1_gen_adequacy:st.n1,
+      spinReserveRotating_MW:+st.spinRes.toFixed(2),
+      startupReserve_MW:+st.startupRes.toFixed(2),
+      motorStarts:st.motorStarts,
+    },
+    events:snapEvents,
+    timeseries:{
+      columns:['t_h','Ppv','Pwind','Pdg','Pbess','Pgrid','Pload','f_Hz','df_Hz','soc_pct','V_pu','Q_MVAr'],
+      units:['h','MW','MW','MW','MW','MW','MW','Hz','Hz','%','p.u.','MVAr'],
+      note:'Sampled at ~60 s intervals from simulation. Full resolution available in browser memory.',
+      rows:tsample
+    },
+    warnings:[]
+  };
+  // Auto-add warnings
+  if(st.fMin<(N('uf1f')||59.3))obj.warnings.push(`Frequency dropped below UFLS Stage 1 (${(N('uf1f')||59.3)} Hz)`);
+  if(!st.n1)obj.warnings.push('N-1 generation adequacy was not met during simulation');
+  if(st.EENS>0.1)obj.warnings.push(`EENS ${st.EENS.toFixed(2)} MWh — load shedding occurred`);
+  if(soc<20)obj.warnings.push(`Final BESS SOC ${soc.toFixed(1)}% — below recommended minimum`);
   const blob=new Blob([JSON.stringify(obj,null,2)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`mine-sim-${new Date().toISOString().slice(0,19).replace(/:/g,'-')}.json`;a.click();
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download=`energize-mine-sim-${new Date().toISOString().slice(0,19).replace(/:/g,'-')}.json`;
+  a.click();
+  logLine(`${ts(st.t)} ⬇ Snapshot exported (${tsample.length} ts rows, ${snapEvents.length} events)`);
 }
 G('dlBtn').onclick=downloadSnapshot;
 
