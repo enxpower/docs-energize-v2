@@ -83,7 +83,9 @@ a{text-decoration:none;color:inherit}
 .hero-h1 b{font-weight:650;color:var(--volt)}
 /* hook line — the real opening */
 .hero-hook{font-size:18px;color:rgba(255,255,255,.55);font-weight:300;line-height:1.5;margin-bottom:26px;letter-spacing:-.01em;border-left:3px solid var(--volt);padding-left:16px}
-.hero-lead{font-size:15.5px;color:rgba(255,255,255,.65);max-width:600px;line-height:1.74;margin-bottom:36px}
+.hero-lead{font-size:15.5px;color:rgba(255,255,255,.65);max-width:600px;line-height:1.74;margin-bottom:14px}
+.hero-sub{font-size:14px;color:rgba(255,255,255,.50);max-width:580px;line-height:1.68;margin-bottom:32px}
+.hero-sub strong{color:rgba(255,255,255,.78);font-weight:600}
 .hero-actions{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start}
 .btn{display:inline-block;font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:13px 22px;border:1px solid rgba(255,255,255,.22);color:#fff;transition:background .18s,border-color .18s;cursor:pointer;white-space:nowrap}
 .btn:hover{background:rgba(255,255,255,.08)}
@@ -237,20 +239,33 @@ section{padding:80px 0;border-bottom:1px solid var(--rule2);scroll-margin-top:66
 .snapshot-badge{font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.5);background:rgba(255,255,255,.08);padding:4px 10px}
 .snapshot-body{display:grid;grid-template-columns:1fr 1fr;gap:0}
 .snapshot-left{padding:28px;border-right:1px solid var(--rule)}
-.snapshot-right{padding:28px}
-.snapshot-label{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--volt);margin-bottom:14px}
-.snap-row{display:flex;justify-content:space-between;align-items:baseline;padding:8px 0;border-bottom:1px solid var(--rule2);gap:16px}
-.snap-row:last-child{border-bottom:none}
-.snap-k{font-size:12.5px;color:var(--muted)}
-.snap-v{font-size:13px;font-weight:600;color:var(--slate);text-align:right}
-.snap-v span{color:var(--volt)}
-/* TCO highlight numbers */
-.tco-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px}
-.tco-cell{background:#fff;border:1px solid var(--rule);padding:14px 16px}
-.tco-n{font-size:20px;font-weight:280;letter-spacing:-.03em;color:var(--slate);line-height:1}
-.tco-n span{color:var(--volt)}
-.tco-d{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.4}
-.snapshot-note{padding:14px 28px;border-top:1px solid var(--rule2);background:#fff;font-size:11.5px;color:var(--muted);line-height:1.6;font-style:italic}
+        <div class="snapshot-right">
+          <div class="snapshot-label">TCO效益方向（需基于现场数据测算）</div>
+          <div class="tco-grid">
+            <div class="tco-cell">
+              <div class="tco-n" style="font-size:15px;font-weight:600;line-height:1.4;letter-spacing:0;color:var(--slate)">年化节省<br><span>现场测算确定</span></div>
+              <div class="tco-d">取决于柴油基准、电源结构与负荷曲线，不在初步文件中承诺数值</div>
+            </div>
+            <div class="tco-cell">
+              <div class="tco-n" style="font-size:15px;font-weight:600;line-height:1.4;letter-spacing:0;color:var(--slate)">投资回收期<br><span>Study阶段确定</span></div>
+              <div class="tco-d">正式测算基于现场数据；不在客户沟通阶段作出回收期承诺</div>
+            </div>
+            <div class="tco-cell">
+              <div class="tco-n"><span>↓</span> 燃料</div>
+              <div class="tco-d">固定短倒路线电气化后，燃料消耗可实现可测量的下降，具体幅度取决于路线参数与班次</div>
+            </div>
+            <div class="tco-cell">
+              <div class="tco-n"><span>↑</span> 扩产容量</div>
+              <div class="tco-d">BESS削峰与配电优化可释放主变余量，减少扩产增容投资，避免错误CAPEX</div>
+            </div>
+          </div>
+          <p style="font-size:12.5px;color:var(--muted);margin-top:16px;line-height:1.65">以上为方向性示意，不构成收益承诺或投资建议。<strong>具体TCO测算以现场负荷曲线、柴油成本与运输循环数据为输入，在付费Diagnostic Study阶段完成。</strong></p>
+        </div>
+      </div>
+      <div class="snapshot-note">如贵方项目场景接近上述参数，可申请免费Quick Assessment（2–3页方向性判断）。如需正式测算，Diagnostic Study报价范围USD 10k–30k，以现场数据授权为前提。</div>
+    </div>
+  </div>
+</section>
 @media(max-width:640px){
   .snapshot-body{grid-template-columns:1fr}
   .snapshot-left{border-right:none;border-bottom:1px solid var(--rule)}
@@ -419,15 +434,16 @@ section{padding:80px 0;border-bottom:1px solid var(--rule2);scroll-margin-top:66
       <div class="hero-eye">Indonesia Mine Power &amp; Electrification · EnergizeOS</div>
       <h1 class="hero-h1">印尼矿山电力基础设施<br>与电气化<b>项目合作</b></h1>
       <!-- HOOK: the real opening sentence -->
-      <p class="hero-hook">矿卡先到了，主变容量不够，补能站还没建——这是印尼镍矿扩产最常见的卡脖子顺序。</p>
-      <p class="hero-lead">我们专注于把这个问题变成一个可以签约、可以交付、可以复制的工程项目：中压配电升级、BESS削峰、补能站预留、EMS/SCADA——在央企EPC框架下完成，带12个月O&M。</p>
+      <p class="hero-hook">矿卡先到了，主变容量不够，补能站还没建——这是印尼镍矿与冶炼园区扩产过程中常见的基础设施约束。</p>
+      <p class="hero-lead">我们专注于把这个问题变成一个可以签约、可以交付、可以复制的工程项目：中压配电升级、BESS削峰、补能站预留、EMS/SCADA——在中国大型央企EPC框架下完成，带12个月O&M。</p>
+      <p class="hero-sub">第一步不是要求业主立即采购车辆或大规模建设补能系统，而是用较小成本确认电力基础设施能否支撑扩产和电气化，<strong>避免在基础条件不具备时投入错误CAPEX。</strong></p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="#package">查看推荐项目包</a>
         <a class="btn btn-ghost" href="#contact">安排视频沟通</a>
       </div>
     </div>
     <aside class="hero-panel">
-      <div class="hero-panel-tag">Director's Conclusion</div>
+      <div class="hero-panel-tag">核心判断 · Executive Summary</div>
       <h2>第一单不是整车，<b>而是先做电力。</b></h2>
       <p>推荐首单：东南苏拉威西或北马鲁古一个镍矿/HPAL短倒场景，中压配电+BESS+补能预留+小规模验证。</p>
       <div class="hero-bullets">
@@ -447,8 +463,8 @@ section{padding:80px 0;border-bottom:1px solid var(--rule2);scroll-margin-top:66
     <!-- Row label: Energize -->
     <div class="db-cell db-cell--us">
       <div class="db-num"><span>500</span>MW+</div>
-      <div class="db-label">工业与矿山在运项目</div>
-      <div class="db-desc">2019年起持续部署，客户含PepsiCo/SDG&E，覆盖工商业储能与微电网场景</div>
+      <div class="db-label">北美能源基础设施在运规模</div>
+      <div class="db-desc">2019年起持续部署，覆盖北美工商业储能、微电网与EMS/SCADA场景，具备复杂接口与长周期O&M交付经验</div>
     </div>
     <div class="db-cell db-cell--us">
       <div class="db-num"><span>2019</span></div>
@@ -479,8 +495,8 @@ section{padding:80px 0;border-bottom:1px solid var(--rule2);scroll-margin-top:66
     </div>
     <div class="db-cell db-cell--mkt">
       <div class="db-num"><span>4×</span>18MW</div>
-      <div class="db-label">KNI/IPIP燃机EPC开工</div>
-      <div class="db-desc">PowerChina已公开东南苏拉威西Pomalaa/Kolaka园区燃机电站EPC项目开工</div>
+      <div class="db-label">东南苏拉威西园区能源EPC</div>
+      <div class="db-desc">中国大型央企已公开参与Pomalaa/Kolaka园区能源基础设施建设，央企EPC进入条件成熟</div>
     </div>
     <div class="db-cell db-cell--mkt">
       <div class="db-num"><span>12</span>个月</div>
@@ -657,7 +673,7 @@ section{padding:80px 0;border-bottom:1px solid var(--rule2);scroll-margin-top:66
         </div>
         <div class="pkg-cell">
           <h4>O&M与二期复制</h4>
-          <p>12个月运行支持、月度KPI、故障RCA、电池健康分析与二期扩容路线图。</p>
+          <p>12个月运行支持、月度KPI、故障RCA、电池健康分析与二期扩容条件评估，形成运行数据闭环。</p>
         </div>
       </div>
     </div>
@@ -665,8 +681,8 @@ section{padding:80px 0;border-bottom:1px solid var(--rule2);scroll-margin-top:66
     <!-- SCENARIO SNAPSHOT: 假设性项目样本，自然融合 -->
     <div class="snapshot">
       <div class="snapshot-head">
-        <h4>参考场景：东南苏拉威西 HPAL 园区 — 假设性项目样本</h4>
-        <div class="snapshot-badge">Illustrative · 所有数值为假设参考，非承诺</div>
+        <h4>参考场景：东南苏拉威西 HPAL 园区 — 参数框架示例</h4>
+        <div class="snapshot-badge">参数框架示例 · 非报价、非收益承诺 · 正式测算须基于现场数据</div>
       </div>
       <div class="snapshot-body">
         <div class="snapshot-left">
@@ -681,29 +697,32 @@ section{padding:80px 0;border-bottom:1px solid var(--rule2);scroll-margin-top:66
           <div class="snap-row"><span class="snap-k">补能端口预留</span><span class="snap-v"><span>8</span> MW（2×4MW快充）</span></div>
         </div>
         <div class="snapshot-right">
-          <div class="snapshot-label">初步TCO效益测算（假设值）</div>
+          <div class="snapshot-label">TCO效益方向（需基于现场数据测算）</div>
           <div class="tco-grid">
             <div class="tco-cell">
-              <div class="tco-n">USD <span>180</span>万</div>
-              <div class="tco-d">预计年节省燃料与峰值容量费用（假设）</div>
+              <div class="tco-n" style="font-size:15px;font-weight:600;line-height:1.4;letter-spacing:0;color:var(--slate)">年化节省<br><span>现场数据确定</span></div>
+              <div class="tco-d">取决于柴油基准、电源结构与负荷曲线，不在初步沟通阶段承诺数值</div>
             </div>
             <div class="tco-cell">
-              <div class="tco-n"><span>3.2</span> 年</div>
-              <div class="tco-d">初步测算BESS+配电投资回收期（假设）</div>
+              <div class="tco-n" style="font-size:15px;font-weight:600;line-height:1.4;letter-spacing:0;color:var(--slate)">投资回收期<br><span>Study阶段确定</span></div>
+              <div class="tco-d">正式测算基于现场数据完成；不在客户沟通阶段作出回收期承诺</div>
             </div>
             <div class="tco-cell">
-              <div class="tco-n"><span>−22</span>%</div>
-              <div class="tco-d">短倒路线柴油消耗降幅（假设基于类似场景）</div>
+              <div class="tco-n"><span>↓</span> 燃料成本</div>
+              <div class="tco-d">固定短倒路线电气化后，燃料消耗可实现可测量的下降，幅度取决于路线参数与班次</div>
             </div>
             <div class="tco-cell">
-              <div class="tco-n"><span>+40</span>%</div>
-              <div class="tco-d">主变可释放扩产容量，无需增容（假设）</div>
+              <div class="tco-n"><span>↑</span> 扩产容量</div>
+              <div class="tco-d">BESS削峰与配电优化可释放主变余量，减少扩产增容投资，避免错误CAPEX</div>
             </div>
           </div>
-          <p style="font-size:12.5px;color:var(--muted);margin-top:16px;line-height:1.65">以上测算来自类似场景的工程参数推演，非现场数据测量结果。<strong>正式TCO建模以Diagnostic Study和现场数据为基础。</strong>该场景帮助判断量级是否与贵方项目匹配。</p>
+          <p style="font-size:12.5px;color:var(--muted);margin-top:16px;line-height:1.65">以上为方向性示意，不构成收益承诺或投资建议。<strong>具体TCO测算以现场负荷曲线、柴油成本与运输循环数据为输入，在付费Diagnostic Study阶段完成。</strong></p>
         </div>
       </div>
-      <div class="snapshot-note">如贵方项目参数与上述场景接近，可直接启动Quick Assessment，2–3页方向性判断，免费提供。若参数差异较大，欢迎提供实际数据后由我方重新测算。</div>
+      <div class="snapshot-note">如贵方项目场景接近上述参数，可申请免费Quick Assessment（2–3页方向性判断）。如需正式测算，Diagnostic Study报价范围USD 10k–30k，以现场数据授权为前提启动。</div>
+    </div>
+  </div>
+</section>
     </div>
   </div>
 </section>
@@ -713,7 +732,7 @@ section{padding:80px 0;border-bottom:1px solid var(--rule2);scroll-margin-top:66
   <div class="wrap">
     <span class="sec-eye">04 — Development Path</span>
     <h2 class="sec-h2" style="margin-bottom:12px">分阶段推进：<b>从Quick Assessment到EPC交付</b></h2>
-    <p class="sec-lead" style="margin-bottom:40px">项目不应从完整EPC报价开始。数据是交易门槛——没有负荷曲线，不输出施工图级方案或容量承诺。付费Study是进入工程合同的唯一通道。</p>
+    <p class="sec-lead" style="margin-bottom:40px">项目不应从完整EPC报价开始。数据是合作前提——没有负荷曲线，不输出施工图级方案或容量承诺。付费Diagnostic Study是进入正式工程合同的必要起点。</p>
     <div class="flow">
       <div class="flow-step">
         <div class="flow-idx">STEP 01<strong>机会筛选</strong></div>
@@ -844,14 +863,14 @@ section{padding:80px 0;border-bottom:1px solid var(--rule2);scroll-margin-top:66
       </div>
       <div class="rev-cell">
         <div class="rev-n">LAYER 05</div>
-        <h3>O&M 长期服务</h3>
-        <p>月度KPI、故障RCA、BESS健康、能源优化与远程支持。矿山客户最怕投运后无人管。</p>
+        <h3>O&M 长期运行支持</h3>
+        <p>月度KPI报告、故障复盘、BESS健康分析与远程支持，确保系统投运后持续可测量、可优化，形成运行数据闭环与二期扩展依据。</p>
         <div class="rev-price">USD 5k – 30k / 月</div>
       </div>
       <div class="rev-cell">
         <div class="rev-n">LAYER 06</div>
-        <h3>二期复制</h3>
-        <p>首单跑通后，第二条短倒、第二个补能站、港口电气化、车辆租赁与SPV/BOOT是真正的大钱。</p>
+        <h3>二期扩展</h3>
+        <p>首单运行数据经验证后，为第二条短倒路线、第二个补能站、港口电气化或更大规模EMS部署提供可信基准，降低二期决策风险。</p>
         <div class="rev-price">首单数据驱动二期</div>
       </div>
     </div>
@@ -953,7 +972,7 @@ section{padding:80px 0;border-bottom:1px solid var(--rule2);scroll-margin-top:66
           <div class="region-badge">A+ 首选</div>
         </div>
         <div class="region-body">
-          <p>Vale–华友–Ford KNI/IPIP项目计划年产12万吨镍金属量，PowerChina已公开4×18MW燃机电站EPC开工。新建园区遗留包袱少、能源与物流边界清晰，是当前最适合"配电+储能+补能预留"一体切入的新项目场景。</p>
+          <p>Vale–华友–Ford KNI/IPIP项目计划年产12万吨镍金属量，中国大型央企已公开参与该园区能源基础设施EPC建设。新建园区遗留包袱少、能源与物流边界清晰，是当前最适合"配电+储能+补能预留"一体切入的新项目场景。</p>
           <div class="region-pkg">推荐首单切入包</div>
           <div class="region-items">
             <div class="region-item">中压配电 + BESS削峰 + 补能站预留</div>
@@ -1159,8 +1178,8 @@ section{padding:80px 0;border-bottom:1px solid var(--rule2);scroll-margin-top:66
   <div class="wrap">
     <h2>准备好开始<b>第一次正式沟通</b>？</h2>
     <p class="lead">
-      我们不提供免费完整方案，但提供2–3页Quick Assessment作为方向性判断的起点——判断贵方项目的场景参数是否落在我们服务的量级区间内。<br><br>
-      如果对印尼镍矿/HPAL园区或专用港场景有实质性推进意向，建议以一次视频会议开始，30分钟确认：项目场景、数据可得性、央企EPC进入路径，以及Diagnostic Study是否值得启动。
+      第一步不需要立即投入大量资源。我们提供免费Quick Assessment（2–3页），用于确认贵方项目是否具备启动Diagnostic Study的基本条件：付款主体是否清晰、中压接入点是否可确认、固定短倒路线是否存在，以及数据是否可共享。<br><br>
+      如有推进意向，建议安排30分钟视频会议，确认项目场景与区域、数据可得性、中国大型央企EPC进入路径，以及Diagnostic Study（USD 10k–30k）是否值得启动。
     </p>
     <div class="cta-actions">
       <a class="btn btn-primary" href="mailto:info@energizeos.com?subject=印尼矿山项目合作沟通申请">发送合作邮件</a>
@@ -1169,7 +1188,7 @@ section{padding:80px 0;border-bottom:1px solid var(--rule2);scroll-margin-top:66
     </div>
     <div class="cta-divider">
       <p class="cta-note">
-        Energize Solutions Inc. 是一家在加拿大和美国注册的能源基础设施工程公司，专注于工业与矿山场景的EMS/BESS部署，在运项目超过500MW，客户包括PepsiCo/SDG&E等工商业用户，并具备ERCOT、PJM和Hydro-Québec市场经验。本页合作建议基于公开市场数据与工程实践，不构成投资建议。所有容量参数与TCO测算以实际现场数据确认后为准。参考场景中的数值均为假设性示例，非任何具体项目数据。
+        Energize Solutions Inc. 是一家在加拿大和美国注册的能源基础设施工程公司，专注于工商业储能、微电网与EMS/BESS系统集成，在北美在运项目规模超过500MW，服务北美食品饮料、公共事业与工商业能源客户，并具备ERCOT、PJM和Hydro-Québec多市场交付经验。本页合作建议基于公开市场数据与工程实践，不构成投资建议。所有容量参数与TCO测算以实际现场数据确认后为准。参考场景中的数值均为假设性示例，非任何具体项目数据。
       </p>
     </div>
   </div>
