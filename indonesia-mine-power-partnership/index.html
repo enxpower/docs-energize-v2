@@ -238,37 +238,34 @@ section{padding:80px 0;border-bottom:1px solid var(--rule2);scroll-margin-top:66
 .snapshot-head h4{font-size:14px;font-weight:600;color:#fff;letter-spacing:.02em}
 .snapshot-badge{font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.5);background:rgba(255,255,255,.08);padding:4px 10px}
 .snapshot-body{display:grid;grid-template-columns:1fr 1fr;gap:0}
-.snapshot-left{padding:28px;border-right:1px solid var(--rule)}
-        <div class="snapshot-right">
-          <div class="snapshot-label">TCO效益方向（需基于现场数据测算）</div>
-          <div class="tco-grid">
-            <div class="tco-cell">
-              <div class="tco-n" style="font-size:15px;font-weight:600;line-height:1.4;letter-spacing:0;color:var(--slate)">年化节省<br><span>现场测算确定</span></div>
-              <div class="tco-d">取决于柴油基准、电源结构与负荷曲线，不在初步文件中承诺数值</div>
-            </div>
-            <div class="tco-cell">
-              <div class="tco-n" style="font-size:15px;font-weight:600;line-height:1.4;letter-spacing:0;color:var(--slate)">投资回收期<br><span>Study阶段确定</span></div>
-              <div class="tco-d">正式测算基于现场数据；不在客户沟通阶段作出回收期承诺</div>
-            </div>
-            <div class="tco-cell">
-              <div class="tco-n"><span>↓</span> 燃料</div>
-              <div class="tco-d">固定短倒路线电气化后，燃料消耗可实现可测量的下降，具体幅度取决于路线参数与班次</div>
-            </div>
-            <div class="tco-cell">
-              <div class="tco-n"><span>↑</span> 扩产容量</div>
-              <div class="tco-d">BESS削峰与配电优化可释放主变余量，减少扩产增容投资，避免错误CAPEX</div>
-            </div>
-          </div>
-          <p style="font-size:12.5px;color:var(--muted);margin-top:16px;line-height:1.65">以上为方向性示意，不构成收益承诺或投资建议。<strong>具体TCO测算以现场负荷曲线、柴油成本与运输循环数据为输入，在付费Diagnostic Study阶段完成。</strong></p>
-        </div>
-      </div>
-      <div class="snapshot-note">如贵方项目场景接近上述参数，可申请免费Quick Assessment（2–3页方向性判断）。如需正式测算，Diagnostic Study报价范围USD 10k–30k，以现场数据授权为前提。</div>
-    </div>
-  </div>
-</section>
+.snapshot-left{padding:28px 24px;border-right:1px solid var(--rule)}
+.snapshot-right{padding:28px 24px;background:#fff}
+.snapshot-label{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--volt);margin-bottom:16px}
+/* snap-row: left side key-value pairs */
+.snap-row{display:flex;justify-content:space-between;align-items:baseline;padding:8px 0;border-bottom:1px solid var(--rule2);gap:12px}
+.snap-row:last-child{border-bottom:none}
+.snap-k{font-size:12.5px;color:var(--muted)}
+.snap-v{font-size:12.5px;font-weight:600;color:var(--slate);text-align:right}
+.snap-v span{color:var(--volt)}
+/* tco-rows: right side — same key-value style for visual consistency */
+.tco-rows{display:grid;gap:0}
+.tco-row{display:grid;grid-template-columns:1fr;padding:12px 0;border-bottom:1px solid var(--rule2)}
+.tco-row:last-child{border-bottom:none}
+.tco-row-head{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.tco-icon{width:22px;height:22px;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.tco-icon--q{background:var(--tint);color:var(--volt)}
+.tco-icon--dn{background:rgba(42,122,69,.12);color:#2A7A45}
+.tco-icon--up{background:rgba(212,132,10,.12);color:var(--volt)}
+.tco-label{font-size:13px;font-weight:600;color:var(--slate)}
+.tco-label span{color:var(--muted);font-weight:400;font-size:12px;margin-left:4px}
+.tco-desc{font-size:12px;color:var(--muted);line-height:1.58;padding-left:30px}
+.snapshot-disclaimer{margin-top:14px;padding-top:12px;border-top:1px solid var(--rule2);font-size:11.5px;color:var(--muted);line-height:1.60}
+.snapshot-disclaimer strong{color:var(--slate);font-weight:600}
+.snapshot-note{padding:14px 24px;border-top:1px solid var(--rule2);background:var(--tint);font-size:12px;color:var(--muted);line-height:1.62}
 @media(max-width:640px){
   .snapshot-body{grid-template-columns:1fr}
-  .snapshot-left{border-right:none;border-bottom:1px solid var(--rule)}
+  .snapshot-left{border-right:none;border-bottom:1px solid var(--rule);padding:20px 18px}
+  .snapshot-right{padding:20px 18px}
 }
 
 /* ── FLOW ────────────────────────────────────────────────── */
@@ -697,32 +694,41 @@ section{padding:80px 0;border-bottom:1px solid var(--rule2);scroll-margin-top:66
           <div class="snap-row"><span class="snap-k">补能端口预留</span><span class="snap-v"><span>8</span> MW（2×4MW快充）</span></div>
         </div>
         <div class="snapshot-right">
-          <div class="snapshot-label">TCO效益方向（需基于现场数据测算）</div>
-          <div class="tco-grid">
-            <div class="tco-cell">
-              <div class="tco-n" style="font-size:15px;font-weight:600;line-height:1.4;letter-spacing:0;color:var(--slate)">年化节省<br><span>现场数据确定</span></div>
-              <div class="tco-d">取决于柴油基准、电源结构与负荷曲线，不在初步沟通阶段承诺数值</div>
+          <div class="snapshot-label">TCO效益方向</div>
+          <div class="tco-rows">
+            <div class="tco-row">
+              <div class="tco-row-head">
+                <div class="tco-icon tco-icon--q">?</div>
+                <div class="tco-label">年化节省<span>· 基于现场数据测算</span></div>
+              </div>
+              <div class="tco-desc">取决于柴油基准、电源结构与负荷曲线；不在初步沟通阶段承诺数值</div>
             </div>
-            <div class="tco-cell">
-              <div class="tco-n" style="font-size:15px;font-weight:600;line-height:1.4;letter-spacing:0;color:var(--slate)">投资回收期<br><span>Study阶段确定</span></div>
-              <div class="tco-d">正式测算基于现场数据完成；不在客户沟通阶段作出回收期承诺</div>
+            <div class="tco-row">
+              <div class="tco-row-head">
+                <div class="tco-icon tco-icon--q">?</div>
+                <div class="tco-label">投资回收期<span>· Study阶段确定</span></div>
+              </div>
+              <div class="tco-desc">正式测算基于现场数据；不在客户沟通阶段作出回收期承诺</div>
             </div>
-            <div class="tco-cell">
-              <div class="tco-n"><span>↓</span> 燃料成本</div>
-              <div class="tco-d">固定短倒路线电气化后，燃料消耗可实现可测量的下降，幅度取决于路线参数与班次</div>
+            <div class="tco-row">
+              <div class="tco-row-head">
+                <div class="tco-icon tco-icon--dn">↓</div>
+                <div class="tco-label">燃料成本</div>
+              </div>
+              <div class="tco-desc">固定短倒路线电气化后，燃料消耗可实现可测量的下降，幅度取决于路线参数与班次</div>
             </div>
-            <div class="tco-cell">
-              <div class="tco-n"><span>↑</span> 扩产容量</div>
-              <div class="tco-d">BESS削峰与配电优化可释放主变余量，减少扩产增容投资，避免错误CAPEX</div>
+            <div class="tco-row">
+              <div class="tco-row-head">
+                <div class="tco-icon tco-icon--up">↑</div>
+                <div class="tco-label">可释放扩产容量</div>
+              </div>
+              <div class="tco-desc">BESS削峰与配电优化释放主变余量，减少扩产增容投资，避免错误CAPEX</div>
             </div>
           </div>
-          <p style="font-size:12.5px;color:var(--muted);margin-top:16px;line-height:1.65">以上为方向性示意，不构成收益承诺或投资建议。<strong>具体TCO测算以现场负荷曲线、柴油成本与运输循环数据为输入，在付费Diagnostic Study阶段完成。</strong></p>
+          <div class="snapshot-disclaimer">以上为方向性示意，不构成收益承诺或投资建议。<strong>具体TCO测算以现场负荷曲线、柴油成本与运输循环数据为输入，在付费Diagnostic Study阶段完成。</strong></div>
         </div>
       </div>
       <div class="snapshot-note">如贵方项目场景接近上述参数，可申请免费Quick Assessment（2–3页方向性判断）。如需正式测算，Diagnostic Study报价范围USD 10k–30k，以现场数据授权为前提启动。</div>
-    </div>
-  </div>
-</section>
     </div>
   </div>
 </section>
