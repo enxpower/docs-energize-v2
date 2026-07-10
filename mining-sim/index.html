@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Mine Microgrid Simulator · EnergizeOS · V5.0</title>
+<title>Mine Microgrid Simulator · EnergizeOS · V5.2</title>
 <meta name="description" content="EnergizeOS Mine Microgrid — Concept Design & Control Strategy Simulator. Off-Grid, Grid-Tied, Hybrid. VSG·BESS·Diesel·PV·Wind·UFLS·Q-V·N-1"/>
 <style>
 /* ═══════════════════════════════════════════════════════
@@ -181,7 +181,7 @@ svg.sld{width:100%;height:118px}
     <div class="mark"><div class="ma"></div><div class="mb"></div><div class="mc"></div><div class="md"></div></div>
     <div>
       <div class="brand-text"><em>Energize</em>OS · Mine Microgrid Simulator</div>
-      <div class="brand-sub">V5.0 — Concept Design &amp; Control Strategy Simulator</div>
+      <div class="brand-sub">V5.2 — Concept Design &amp; Control Strategy Simulator</div>
     </div>
   </div>
   <div class="topbar-right">
@@ -260,7 +260,6 @@ svg.sld{width:100%;height:118px}
     <div class="field"><label data-i18n="p_pload">Base load (MW)</label><input type="number" id="Pload" value="12" min="0" step="0.5"></div>
     <div class="field"><label data-i18n="p_lvar">Variation ± (MW)</label><input type="number" id="loadVar" value="1.5" min="0" step="0.1"></div>
     <div class="field eng-only" style="display:none"><label data-i18n="p_alpha">Freq sensitivity α (%/Hz)</label><input type="number" id="alpha" value="2.0" min="0" step="0.1"></div>
-    <input type="hidden" id="alpha" value="2.0">
     <div class="field-row eng-only" style="display:none">
       <div class="field"><label data-i18n="p_motorMW">Motor impulse (MW)</label><input type="number" id="motorMW" value="2.0" min="0" step="0.2"></div>
       <div class="field"><label data-i18n="p_motorInterval">Interval (min)</label><input type="number" id="motorInterval" value="45" min="5" max="240" step="5"></div>
@@ -384,7 +383,7 @@ svg.sld{width:100%;height:118px}
       <button class="btn" style="height:24px;font-size:9px;justify-content:flex-start;padding:0 7px" onclick="injectFault('dg_trip')" data-i18n="sc_dg">⚡ Trip largest DG</button>
       <button class="btn" style="height:24px;font-size:9px;justify-content:flex-start;padding:0 7px" onclick="injectFault('pv_cloud')" data-i18n="sc_pv">☁️ PV cloud shadow 80%</button>
       <button class="btn" style="height:24px;font-size:9px;justify-content:flex-start;padding:0 7px" onclick="injectFault('load_surge')" data-i18n="sc_load">⚙️ Load surge +3 MW</button>
-      <button class="btn" style="height:24px;font-size:9px;justify-content:flex-start;padding:0 7px" onclick="injectFault('grid_loss')" id="btnGridLoss" style="display:none" data-i18n="sc_grid">🔌 Grid loss (island)</button>
+      <button class="btn" id="btnGridLoss" style="display:none;height:24px;font-size:9px;justify-content:flex-start;padding:0 7px" onclick="injectFault('grid_loss')" data-i18n="sc_grid">🔌 Grid loss (island)</button>
       <button class="btn" style="height:24px;font-size:9px;justify-content:flex-start;padding:0 7px" onclick="injectFault('black_start')" data-i18n="sc_bs">🌑 Black Start sim</button>
     </div>
   </div>
@@ -459,8 +458,9 @@ svg.sld{width:100%;height:118px}
     <div class="kpi" id="k_cost"><div class="kpi-lbl" data-i18n="k_cost">Fuel Cost</div><div class="kpi-val">—</div></div>
     <div class="kpi" id="k_re"><div class="kpi-lbl" data-i18n="k_re">RE Share</div><div class="kpi-val">—<span class="kpi-unit"> %</span></div></div>
     <div class="kpi" id="k_curt"><div class="kpi-lbl" data-i18n="k_curt">Curtailment</div><div class="kpi-val">—<span class="kpi-unit"> MWh</span></div></div>
-    <div class="kpi" id="k_spin"><div class="kpi-lbl">Spin Rsv. (10s/60s)</div><div class="kpi-val">—<span class="kpi-unit"> MW</span></div></div>
-    <div class="kpi" id="k_spin10m"><div class="kpi-lbl">Startup Rsv. (10min)</div><div class="kpi-val">—<span class="kpi-unit"> MW</span></div></div>
+    <div class="kpi" id="k_fast10"><div class="kpi-lbl">Fast Rsv. (10s)</div><div class="kpi-val">—<span class="kpi-unit"> MW</span></div></div>
+    <div class="kpi" id="k_spin60"><div class="kpi-lbl">Spin Rsv. (60s)</div><div class="kpi-val">—<span class="kpi-unit"> MW</span></div></div>
+    <div class="kpi" id="k_start10m"><div class="kpi-lbl">Startup Rsv. (10min)</div><div class="kpi-val">—<span class="kpi-unit"> MW</span></div></div>
     <div class="kpi" id="k_n1"><div class="kpi-lbl">N-1 Gen <span style="font-weight:400;font-size:7px">(gen. adequacy only)</span></div><div class="kpi-val">—</div></div>
     <div class="kpi" id="k_fmin"><div class="kpi-lbl" data-i18n="k_fmin">f min/max</div><div class="kpi-val">—<span class="kpi-unit"> Hz</span></div></div>
     <div class="kpi" id="k_rocof"><div class="kpi-lbl">RoCoF peak</div><div class="kpi-val">—<span class="kpi-unit"> Hz/s</span></div></div>
@@ -697,13 +697,21 @@ function bessControl(dt,fpu,dfdt,Pinj_pre,s){
   s.bP=clamp(Pc,-chg,dis);
 }
 
-/* ── Q-V simplified ──────────────────────────────────────── */
+/* ── Q-V: bidirectional reactive power control ───────────── */
 function qvStep(dt,Pnet,s){
   const Qload=Pnet*0.18+s.motorQ;
   const Qavr=s.dFleet.filter(g=>g.online).reduce((a,g)=>a+g.P*.20,0);
-  const Qpcs=s.bPmax>0?Math.min(N('qPCS'),Math.sqrt(Math.max(0,s.bPmax*s.bPmax-s.bP*s.bP))):0;
-  const Qimb=Math.max(0,Qload-Qavr-Qpcs),Vt=N('vBase')-N('qDroop')*Qimb/Math.max(1,Pnet);
-  s.V+=(Vt-s.V)*dt/5;s.V=clamp(s.V,.70,1.15);s.Q=(Qavr+Qpcs)-Qload;
+  // PCS Q capability = sqrt(Smax²−P²), bidirectional: +inject / −absorb
+  const qCap=s.bPmax>0?Math.min(N('qPCS'),Math.sqrt(Math.max(0,s.bPmax*s.bPmax-s.bP*s.bP))):0;
+  // Voltage-droop Q control: positive V error → inject Q, negative → absorb
+  const vErr=N('vBase')-s.V;
+  const Qpcs=clamp(vErr/Math.max(0.001,N('qDroop'))*qCap,-qCap,qCap);
+  s.Qpcs=Qpcs;
+  const Qtotal=Qavr+Qpcs;
+  const Qimb=Qload-Qtotal; // positive = unmet demand
+  const Vt=N('vBase')-Math.max(0,Qimb)*N('qDroop')/Math.max(1,Pnet);
+  s.V+=(Vt-s.V)*dt/5;s.V=clamp(s.V,.70,1.15);
+  s.Q=Qtotal-Qload; // net reactive balance: +inject surplus, −absorb deficit
   s.Vmin=Math.min(s.Vmin,s.V);s.Vmax=Math.max(s.Vmax,s.V);
 }
 
@@ -750,8 +758,13 @@ function dieselDispatch(dt,fpu,residual,s){
   const onCap=u.reduce((a,g)=>a+(g.online?g.cap:0),0);
   const largest=Math.max(0,...u.filter(g=>g.online).map(g=>g.cap),0);
   const need=Math.max(0,residual);
-  // N-1 generation adequacy: can we cover load after losing largest unit?
-  s.n1=(onCap-largest)>=need*.9;
+  // N-1 generation adequacy: remaining DG + immediately-available BESS + grid ≥ load + 10% reserve
+  // (BESS available = power headroom, SOC-limited to ≥20% floor)
+  const remainDG=Math.max(0,onCap-largest);
+  const bessNow=Math.min(s.bPmax*s.thermalDerate,Math.max(0,(s.bE-s.bEmax*0.20)*3600/60));
+  const gridNow=(simMode==='offgrid')?0:Math.max(0,s.gridMW);
+  const reqRsv=Math.max(0,s.Pload*0.10);
+  s.n1=(remainDG+bessNow+gridNow)>=(need+reqRsv);
   // Start/stop logic
   const des=need>0?need/.72:3.3;
   if(onCap<des-s.dHyst)st1('3.3MW')||st1('1.25MW');
@@ -770,15 +783,22 @@ function dieselDispatch(dt,fpu,residual,s){
   const tpu=tot>0?clamp(Pd/tot,s.dMin,1):0;
   for(const g of ol){const tg=clamp(tpu*g.cap,g.cap*s.dMin,g.cap),rr=tg<g.P?s.rampDn:s.rampUp;g.P=clamp(g.P+clamp(tg-g.P,-rr*dt,rr*dt),0,g.cap);}
   const Pa=ol.reduce((a,g)=>a+g.P,0),sc=s.bEmax>0?s.bE/s.bEmax:0;
-  // Spinning reserve = (online rated - current dispatch) + BESS headroom (from current SOC)
-  // Spinning reserve (rotating, available in ~10 s):
-  // = Σ(online DG rated - current dispatch) + BESS headroom (SOC-limited)
-  // Note: offline DG = startup reserve (10 min), NOT spinning reserve
-  const bessSpinHeadroom=s.bPmax>0?Math.min(s.bPmax-Math.max(s.bP,0),s.bPmax*Math.min(1,sc/.2)):0;
-  s.spinRes=Math.max(0,(tot-Pa)+bessSpinHeadroom);
-  // Startup reserve (non-spinning DG that can start in ~10 min)
-  const offlineCap=u.filter(g=>!g.online&&!g.starting&&g.cooldown<=0).reduce((a,g)=>a+g.cap,0);
-  s.startupRes=offlineCap;
+  // ── Three reserve time-windows (per IEEE/NERC definitions) ───
+  const socFloor=0.20;
+  const usableMWh=Math.max(0,s.bE-s.bEmax*socFloor);
+  const bessPwrHdrm=Math.max(0,s.bPmax*s.thermalDerate-Math.max(s.bP,0));
+  // Fast reserve ≤10 s: DG ramp×10 + BESS (energy-limited to 10 s delivery)
+  const dgFast10=ol.reduce((a,g)=>a+Math.min(Math.max(0,g.cap-g.P),s.rampUp*10),0);
+  const bessFast10=Math.min(bessPwrHdrm,usableMWh*3600/10);
+  s.fastReserve10s=Math.max(0,dgFast10+bessFast10);
+  // Spinning reserve ≤60 s: DG ramp×60 + BESS (energy-limited to 60 s)
+  const dgSpin60=ol.reduce((a,g)=>a+Math.min(Math.max(0,g.cap-g.P),s.rampUp*60),0);
+  const bessSpin60=Math.min(bessPwrHdrm,usableMWh*3600/60);
+  s.spinReserve60s=Math.max(0,dgSpin60+bessSpin60);
+  // Startup reserve ≤10 min: offline DG, cooldown=0, dDelay≤600 s
+  s.startupReserve10m=u.filter(g=>!g.online&&!g.starting&&!g.stopping&&g.cooldown<=0&&s.dDelay<=600).reduce((a,g)=>a+g.cap,0);
+  // Aliases for legacy callers
+  s.spinRes=s.spinReserve60s; s.startupRes=s.startupReserve10m;
   return Pa;
   function st1(tp){const c=u.find(g=>!g.online&&!g.starting&&!g.stopping&&g.cooldown<=0&&g.type===tp);if(c){c.starting=true;c.timer=s.dDelay;logLine(`${ts(s.t)} 🔄 Start: ${tp}`);return true;}return false;}
   function sp1(){const c=u.filter(g=>g.online&&!g.stopping&&!g.starting&&g.P<g.cap*.65).sort((a,b)=>a.cap-b.cap)[0];if(c){c.stopping=true;c.timer=s.dDelay;logLine(`${ts(s.t)} ⏏ Stop: ${c.type}`);}}
@@ -793,19 +813,19 @@ function injectFault(type){
     const big=st.dFleet.filter(g=>g.online).sort((a,b)=>b.cap-a.cap)[0];
     if(big){big.online=false;big.P=0;big.cooldown=st.dCool;faultMsg=`DG TRIP: ${big.type}`;faultTimer=10;logLine(`${ts(st.t)} 🔴 FAULT: Trip ${big.type}`);}
   } else if(type==='pv_cloud'){
-    st.faultPVScale=0.2;faultMsg='PV CLOUD SHADOW';faultTimer=20;logLine(`${ts(st.t)} ☁️ FAULT: PV cloud shadow 80%`);
-    setTimeout(()=>{if(st)st.faultPVScale=1;},20000);
+    // Use simulated time, NOT wall-clock setTimeout
+    st.faultPVScale=0.2;st.pvCloudFaultUntil=st.t+300; // 300 sim-seconds
+    faultMsg='PV CLOUD SHADOW';faultTimer=20;logLine(`${ts(st.t)} ☁️ FAULT: PV cloud shadow 80% (clears at sim t+300 s)`);
   } else if(type==='load_surge'){
     st.Pload=Math.min(st.Pload+3,30);faultMsg='LOAD SURGE +3 MW';faultTimer=10;logLine(`${ts(st.t)} ⚙️ FAULT: Load surge +3 MW`);
     G('Pload')&&(G('Pload').value=st.Pload);
   } else if(type==='grid_loss'){
     if(simMode!=='offgrid'){simMode='offgrid';document.querySelectorAll('#modeTabs .tab').forEach(t=>t.classList.remove('active'));G('gridCard').style.display='none';faultMsg='GRID LOSS — ISLANDED';faultTimer=15;logLine(`${ts(st.t)} 🔌 FAULT: Grid loss — islanded`);}}
   else if(type==='black_start'){
-    // Force all DG offline, BESS to low SOC
     st.dFleet.forEach(g=>{g.online=false;g.P=0;g.starting=false;g.stopping=false;});
     st.bE=Math.max(st.bEmax*0.25,0);st.blackStartMode=true;
+    st.blackStartUntil=st.t+600; // 600 sim-seconds initial phase
     faultMsg='BLACK START INITIATED';faultTimer=30;logLine(`${ts(st.t)} 🌑 BLACK START: DG offline, BESS SOC→25%`);
-    setTimeout(()=>{if(st)st.blackStartMode=false;},30000);
   }
 }
 
@@ -829,7 +849,17 @@ function getOpState(s){
   return'DG-FORMING';
 }
 
-/* ── State init ──────────────────────────────────────────── */
+/* ── UF / UFLS coordination validation ───────────────────── */
+function validateUFCoordination(){
+  const ufls=[N('uf1f')||59.3,N('uf2f')||58.8,N('uf3f')||58.3];
+  const ufr=[N('uf_trip1')||58.0,N('uf_trip2')||57.5];
+  const warns=[];
+  if(!(ufls[0]>ufls[1]&&ufls[1]>ufls[2]))warns.push('⚠ UFLS thresholds must descend: Stage1 > Stage2 > Stage3');
+  if(ufr[1]>=ufr[0])warns.push('⚠ UF2 relay threshold must be below UF1');
+  if(ufr[0]>=ufls[2])warns.push(`⚠ UF1 relay (${ufr[0]} Hz) ≥ UFLS Stage3 (${ufls[2]} Hz): IBR may trip before all UFLS stages complete`);
+  if(ufr[0]>=ufls[1])warns.push(`⚠ UF1 relay (${ufr[0]} Hz) ≥ UFLS Stage2 (${ufls[1]} Hz): risk of cascaded IBR trip`);
+  return warns;
+}
 let st={},series=[],running=false,started=false,animFrame=null;
 // Snapshot for export
 let snapInputs={},snapEvents=[];
@@ -850,7 +880,7 @@ function initState(){
     V:N('vBase')||1,Q:0,Vmin:N('vBase')||1,Vmax:N('vBase')||1,
     ufls:{events:0,totalShed:0,stages:[{thresh:N('uf1f')||59.3,shed:(N('uf1s')||10)/100,label:'Deferrable',active:false,timer:0},{thresh:N('uf2f')||58.8,shed:(N('uf2s')||20)/100,label:'Interruptible',active:false,timer:0},{thresh:N('uf3f')||58.3,shed:(N('uf3s')||25)/100,label:'Process',active:false,timer:0}]},
     fuelL:0,fuelBaseL:0,Eload:0,Ere:0,Ecurt:0,fMin:f0,fMax:f0,rocofMax:0,Sbase:Math.max(N('Pload')||12,12),
-    blackStartMode:false,EENS:0
+    blackStartMode:false,EENS:0,pvCloudFaultUntil:null,blackStartUntil:null
   };
   // Save input snapshot for export
   snapInputs={simMode,timestamp:new Date().toISOString(),f0,pvMax:st.pvMax,windMax:st.windMax,dieselFleet:`${n33}×3.3MW + ${n12}×1.25MW`,bPmax:st.bPmax,bEmax:st.bEmax,Pload:st.Pload,simHours:N('simHours'),seed:42};
@@ -867,6 +897,15 @@ function step(){
   if(st.motorActive){st.motorDecay-=dt;if(st.motorDecay<=0){st.motorActive=false;st.motorDecay=3;st.motorQ=0;}}
   // Fault message timer
   if(faultTimer>0)faultTimer-=dt;else faultMsg='';
+  // ── Simulated-time fault recovery (NOT wall-clock setTimeout) ──
+  if(st.pvCloudFaultUntil!==null&&st.t>=st.pvCloudFaultUntil){
+    st.faultPVScale=1;st.pvCloudFaultUntil=null;
+    logLine(`${ts(st.t)} ☀️ PV cloud shadow cleared`);
+  }
+  if(st.blackStartUntil!==null&&st.t>=st.blackStartUntil){
+    st.blackStartMode=false;st.blackStartUntil=null;
+    logLine(`${ts(st.t)} ✅ Black-start initial interval complete — DGs may now restart`);
+  }
   // Resource availability
   const pvAv=pvAvail(st.t,st),wv=windSpeed(st.t,st),wdAv=windAvail(wv,st);
   // Load (freq-sensitive + UFLS shedding)
@@ -1104,7 +1143,7 @@ function updateSch(){
 function setK(id,val,cls){const el=G(id);if(!el)return;const v=el.querySelector('.kpi-val'),u=el.querySelector('.kpi-unit');if(v){const txt=String(val);const sp=txt.indexOf(' ');v.innerHTML=sp>-1?txt.substring(0,sp)+(u?`<span class="kpi-unit"> ${txt.substring(sp+1)}</span>`:''):txt;}el.className='kpi'+(cls?' '+cls:'');}
 function setKV(id,val,unit,cls){const el=G(id);if(!el)return;const v=el.querySelector('.kpi-val');if(v)v.innerHTML=val+(unit?`<span class="kpi-unit"> ${unit}</span>`:'');el.className='kpi'+(cls?' '+cls:'');}
 function setP(id,txt,c){const el=G(id);if(!el)return;el.textContent=txt;el.className='sp'+(c?' '+c:'');}
-function resetKPI(){['k_fuel','k_save','k_cost','k_re','k_curt','k_spin','k_spin10m','k_n1','k_fmin','k_rocof','k_ufls','k_trips','k_volt','k_bsoc','k_motor','k_eens'].forEach(id=>{const el=G(id);if(el)el.className='kpi';const v=el?.querySelector('.kpi-val');if(v)v.innerHTML='—';});}
+function resetKPI(){['k_fuel','k_save','k_cost','k_re','k_curt','k_fast10','k_spin60','k_start10m','k_n1','k_fmin','k_rocof','k_ufls','k_trips','k_volt','k_bsoc','k_motor','k_eens'].forEach(id=>{const el=G(id);if(el)el.className='kpi';const v=el?.querySelector('.kpi-val');if(v)v.innerHTML='—';});}
 
 function updateKPI(){
   if(!started)return;
@@ -1119,8 +1158,9 @@ function updateKPI(){
   setKV('k_cost',costUSD>=1000?`$${(costUSD/1000).toFixed(1)}k`:`$${costUSD.toFixed(0)}`,'','');
   setKV('k_re',re.toFixed(1),'%',re>50?'ok':'');
   setKV('k_curt',st.Ecurt.toFixed(1),'MWh',st.Ecurt>1?'warn':'');
-  setKV('k_spin',st.spinRes.toFixed(1),'MW',st.spinRes<st.Pload*.1?'alert':st.spinRes<st.Pload*.2?'warn':'ok');
-  setKV('k_spin10m',(st.spinRes+st.startupRes).toFixed(1),'MW',(st.spinRes+st.startupRes)<st.Pload*.1?'alert':'ok');
+  setKV('k_fast10',(st.fastReserve10s||0).toFixed(1),'MW',(st.fastReserve10s||0)<st.Pload*.1?'alert':(st.fastReserve10s||0)<st.Pload*.15?'warn':'ok');
+  setKV('k_spin60',(st.spinReserve60s||0).toFixed(1),'MW',(st.spinReserve60s||0)<st.Pload*.15?'alert':(st.spinReserve60s||0)<st.Pload*.2?'warn':'ok');
+  setKV('k_start10m',(st.startupReserve10m||0).toFixed(1),'MW','');
   setKV('k_n1',st.n1?'OK ✓':'FAIL','',st.n1?'ok':'alert');
   setKV('k_fmin',`${st.fMin.toFixed(3)} / ${st.fMax.toFixed(3)}`,'Hz',st.fMin<(N('uf1f')||59.3)?'alert':Math.abs(st.fMin-st.f0)>.3?'warn':'ok');
   setKV('k_rocof',st.rocofMax.toFixed(2),'Hz/s',st.rocofMax>(N('rocMax')||.9)*.9?'alert':st.rocofMax>(N('rocMax')||.9)*.7?'warn':'ok');
@@ -1135,7 +1175,7 @@ function updateKPI(){
   setP('sp_n1',st.n1?'N-1 Gen OK':'N-1 ⚠',st.n1?'ok':'alert');
   setP('sp_soc',`SOC ${soc.toFixed(0)}%`,soc<15?'alert':soc<25?'warn':'ok');
   setP('sp_bess',G('gfmMode').value==='1'?'BESS GFM':'BESS GFL','ok');
-  setP('sp_spin',`Spin ${st.spinRes.toFixed(1)}+${st.startupRes.toFixed(1)} MW`,st.spinRes<st.Pload*.1?'alert':st.spinRes<st.Pload*.2?'warn':'ok');
+  setP('sp_spin',`F10s:${(st.fastReserve10s||0).toFixed(1)} S60s:${(st.spinReserve60s||0).toFixed(1)} MW`,(st.fastReserve10s||0)<st.Pload*.1?'alert':(st.fastReserve10s||0)<st.Pload*.15?'warn':'ok');
   setP('sp_volt',`V=${st.V.toFixed(3)}`,st.V<.88||st.V>1.10?'alert':st.V<.92||st.V>1.06?'warn':'ok');
   setP('sp_ufls',st.ufls.events>0?`UFLS ${st.ufls.events}evt`:'UFLS–',st.ufls.events>0?'alert':'ok');
   setP('sp_mode',simMode==='gridtied'?'GRID-TIED':simMode.toUpperCase(),'mode');
@@ -1160,19 +1200,21 @@ function updBtn(state){
 function downloadSnapshot(){
   if(!started){alert('Start simulation first');return;}
   const soc=st&&st.bEmax>0?st.bE/st.bEmax*100:0;
-  // Sample time-series (every 60 sim-seconds to keep JSON small)
-  const tsample=[];
-  for(let i=0;i<series.length;i+=Math.max(1,Math.round(60/(N('dt')||0.5)))){
-    const d=series[i];
-    tsample.push({t_h:+(d.t/3600).toFixed(3),Ppv:+d.Ppv.toFixed(2),Pwind:+d.Pwind.toFixed(2),Pdg:+d.Pdg.toFixed(2),Pbess:+d.bP.toFixed(2),Pgrid:+d.Pgrid.toFixed(2),Pload:+d.Pload.toFixed(2),f_Hz:+d.f.toFixed(4),df_Hz:+d.df.toFixed(4),soc_pct:+d.soc.toFixed(1),V_pu:+d.V.toFixed(4),Q_MVAr:+d.Q.toFixed(2)});
+  // Time-series: sample every 60 sim-seconds by simulation time (not array index)
+  const tsample=[];let nextSec=0;
+  for(const d of series){
+    if(d.t+1e-9<nextSec)continue;
+    tsample.push({t_s:+d.t.toFixed(1),t_h:+(d.t/3600).toFixed(4),Ppv:+d.Ppv.toFixed(2),Pwind:+d.Pwind.toFixed(2),Pdg:+d.Pdg.toFixed(2),Pbess:+d.bP.toFixed(2),Pgrid:+d.Pgrid.toFixed(2),Pload:+d.Pload.toFixed(2),f_Hz:+d.f.toFixed(4),df_Hz:+d.df.toFixed(4),soc_pct:+d.soc.toFixed(1),V_pu:+d.V.toFixed(4),Q_MVAr:+d.Q.toFixed(2),opState:d.opState||''});
+    nextSec+=60;
   }
   const obj={
-    modelVersion:'V5.0',
-    commit:'b71dce2',  // GitHub commit hash
+    modelVersion:'V5.2',
+    commit:'4c7eba48f1',
     generatedAt:new Date().toISOString(),
     simStartedAt:snapInputs.timestamp||'unknown',
     modelNote:'Conceptual single-bus dynamic model. NOT a substitute for load-flow, short-circuit, protection coordination, EMT, harmonic, arc-flash or detailed engineering studies. Results are indicative only.',
-    supportedN1Tests:['Generation adequacy (online DG − largest unit ≥ load)'],
+    supportedN1Tests:['Generation adequacy: (online DG − largest unit) + BESS(SOC>20%) + grid ≥ load + 10% reserve'],
+    n1Formula:'remainDG + bessNow + gridNow >= need + 0.10×Pload',
     unsupportedN1:'PCS N-1, Transformer N-1, Control N-1, Communication N-1 — not simulated',
     qConvention:'+Q = reactive power injection into bus, −Q = reactive power absorption',
     spinReserveDefinition:'Rotating (≤10 s): (online DG rated − dispatch) + BESS headroom. Startup (≤10 min): offline DG with cooldown=0.',
@@ -1196,8 +1238,9 @@ function downloadSnapshot(){
       Vmax_pu:+st.Vmax.toFixed(4),
       finalSOC_pct:+soc.toFixed(2),
       n1_gen_adequacy:st.n1,
-      spinReserveRotating_MW:+st.spinRes.toFixed(2),
-      startupReserve_MW:+st.startupRes.toFixed(2),
+      fastReserve10s_MW:+( st.fastReserve10s||0).toFixed(2),
+      spinReserve60s_MW:+(st.spinReserve60s||0).toFixed(2),
+      startupReserve10m_MW:+(st.startupReserve10m||0).toFixed(2),
       motorStarts:st.motorStarts,
     },
     events:snapEvents,
@@ -1214,6 +1257,7 @@ function downloadSnapshot(){
   if(!st.n1)obj.warnings.push('N-1 generation adequacy was not met during simulation');
   if(st.EENS>0.1)obj.warnings.push(`EENS ${st.EENS.toFixed(2)} MWh — load shedding occurred`);
   if(soc<20)obj.warnings.push(`Final BESS SOC ${soc.toFixed(1)}% — below recommended minimum`);
+  validateUFCoordination().forEach(w=>obj.warnings.push(w));
   const blob=new Blob([JSON.stringify(obj,null,2)],{type:'application/json'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);
   a.download=`energize-mine-sim-${new Date().toISOString().slice(0,19).replace(/:/g,'-')}.json`;
@@ -1235,7 +1279,15 @@ function loop(){
 /* ── Controls ────────────────────────────────────────────── */
 G('startBtn').onclick=()=>{
   if(running)return;
-  if(!started){initState();started=true;updateAllocBar();}
+  if(!started){
+    // UF/UFLS coordination check before first run
+    const ufWarns=validateUFCoordination();
+    if(ufWarns.length>0){
+      logLine('[Protection Check]');
+      ufWarns.forEach(w=>logLine('  '+w));
+    }
+    initState();started=true;updateAllocBar();
+  }
   running=true;updBtn('running');
   logLine(`${ts(st.t)} ▶ Start — Mode: ${simMode}`);
   requestAnimationFrame(loop);
