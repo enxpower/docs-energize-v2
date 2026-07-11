@@ -68,7 +68,7 @@ export class DieselGenerator {
   }
 
   get isCommitted() {
-    return [DIESEL_STATE.STARTING, DIESEL_STATE.WARMUP, DIESEL_STATE.RUNNING, DIESEL_STATE.COOLDOWN].includes(this.state);
+    return [DIESEL_STATE.STARTING, DIESEL_STATE.WARMUP, DIESEL_STATE.RUNNING].includes(this.state);
   }
 
   get isStarting() {
