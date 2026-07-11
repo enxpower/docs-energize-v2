@@ -88,13 +88,18 @@ export class ProductionCurtailmentController {
     }
 
     const restoreHeadroomMW = Math.min(surplusMW, Math.max(0, reserve60MW - this.minimumPostRestoreReserveMW));
+    let newlyStable = false;
     if (restoreHeadroomMW >= this.restoreSurplusMW) {
-      if (this.surplusStableSinceSeconds === null) this.surplusStableSinceSeconds = timeSeconds;
+      if (this.surplusStableSinceSeconds === null) {
+        this.surplusStableSinceSeconds = timeSeconds;
+        newlyStable = true;
+      }
     } else {
       this.surplusStableSinceSeconds = null;
     }
 
-    const restoreReady = this.surplusStableSinceSeconds !== null
+    const restoreReady = !newlyStable
+      && this.surplusStableSinceSeconds !== null
       && timeSeconds - this.surplusStableSinceSeconds + 1e-9 >= this.restoreDelaySeconds
       && actionAllowed;
 
