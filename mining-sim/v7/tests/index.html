@@ -25,6 +25,7 @@ import { testUncertaintyDrivesPreStart, testUncertaintyBlocksUnsafeStop } from '
 import { testFreshForecastAllowsNormalPolicy, testStaleForecastBlocksAutomaticStop, testLowQualityForecastAddsConservativeMargin } from './forecast-quality-test.js';
 import { testPrimaryFailsOverToSecondary, testPrimaryRecoveryUsesHysteresis, testEmergencyForecastFallback } from './forecast-failover-test.js';
 import { testStagedUflsResponse, testUflsDelayReset } from './ufls-test.js';
+import { testStagedLoadRestorationPriority, testColdLoadPickupDecay, testRestorationRollbackAndLockout } from './load-restoration-test.js';
 const results=runAllTests();
 for(const test of [
   testBessEnergyDurationDepletion,
@@ -45,6 +46,9 @@ for(const test of [
   testEmergencyForecastFallback,
   testStagedUflsResponse,
   testUflsDelayReset,
+  testStagedLoadRestorationPriority,
+  testColdLoadPickupDecay,
+  testRestorationRollbackAndLockout,
 ]){
   try{results.push(test());}catch(error){results.push({name:test.name,status:'FAIL',error:error.message});}
 }
