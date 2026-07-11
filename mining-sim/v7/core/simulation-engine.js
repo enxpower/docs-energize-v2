@@ -2,10 +2,25 @@ import { calculatePowerBalance } from '../physics/power-balance.js';
 import { stepIslandFrequency } from '../physics/frequency.js';
 import { dispatchIsland } from '../controls/ems.js';
 import { commandBessFastResponse } from '../controls/bess-fast-controller.js';
+import { evaluateGeneratorCommitment, applyGeneratorCommitmentAction } from '../controls/generator-commitment.js';
+import { assessReserve } from '../reliability/reserve-engine.js';
 import { deriveSystemState } from './state-machine.js';
 
 export class SimulationEngine {
-  constructor({ dtSeconds, nominalHz, systemBaseMW, load, dieselFleet, bess, emsIntervalSeconds = 20 }) {
+  constructor({
+    dtSeconds,
+    nominalHz,
+    systemBaseMW,
+    load,
+    dieselFleet,
+    bess,
+    emsIntervalSeconds = 20,
+    commitmentEnabled = true,
+    commitmentIntervalSeconds = 60,
+    commitmentAllowStop = false,
+    minimumOnlineUnits = 1,
+    commitmentReserveMarginMW = 0,
+  }) {
     this.dtSeconds = dtSeconds;
     this.nominalHz = nominalHz;
     this.systemBaseMW = systemBaseMW;
@@ -15,6 +30,13 @@ export class SimulationEngine {
     this.emsIntervalSeconds = emsIntervalSeconds;
     this.nextEmsDispatchSeconds = 0;
     this.lastEmsResult = null;
+    this.commitmentEnabled = commitmentEnabled;
+    this.commitmentIntervalSeconds = commitmentIntervalSeconds;
+    this.commitmentAllowStop = commitmentAllowStop;
+    this.minimumOnlineUnits = minimumOnlineUnits;
+    this.commitmentReserveMarginMW = commitmentReserveMarginMW;
+    this.nextCommitmentEvaluationSeconds = 0;
+    this.lastCommitmentDecision = null;
     this.timeSeconds = 0;
     this.frequencyHz = nominalHz;
     this.rocofHzPerS = 0;
@@ -35,6 +57,35 @@ export class SimulationEngine {
     return this.lastEmsResult;
   }
 
+  runCommitmentIfDue(loadMW) {
+    if (!this.commitmentEnabled) return this.lastCommitmentDecision;
+    if (this.timeSeconds + 1e-9 < this.nextCommitmentEvaluationSeconds) return this.lastCommitmentDecision;
+
+    const decision = evaluateGeneratorCommitment({
+      loadMW,
+      dieselFleet: this.dieselFleet,
+      bess: this.bess,
+      minimumOnlineUnits: this.minimumOnlineUnits,
+      reserveMarginMW: this.commitmentReserveMarginMW,
+      allowStop: this.commitmentAllowStop,
+    });
+    const actionResult = applyGeneratorCommitmentAction({ dieselFleet: this.dieselFleet, decision });
+    this.lastCommitmentDecision = { ...decision, actionResult };
+    this.nextCommitmentEvaluationSeconds = this.timeSeconds + this.commitmentIntervalSeconds;
+
+    if (actionResult?.accepted) {
+      this.events.push({
+        timeSeconds: this.timeSeconds,
+        type: `DG_${actionResult.type}_REQUEST`,
+        equipmentId: actionResult.equipmentId,
+        reason: actionResult.reason,
+      });
+      this.nextEmsDispatchSeconds = this.timeSeconds;
+    }
+
+    return this.lastCommitmentDecision;
+  }
+
   tripLargestDiesel() {
     const online = this.dieselFleet.filter((dg) => dg.isOnline);
     if (!online.length) return null;
@@ -44,6 +95,7 @@ export class SimulationEngine {
     const event = { timeSeconds: this.timeSeconds, type: 'DG_TRIP', equipmentId: target.id, ratedMW: target.ratedMW, preTripMW };
     this.events.push(event);
     this.nextEmsDispatchSeconds = this.timeSeconds;
+    this.nextCommitmentEvaluationSeconds = this.timeSeconds;
     return event;
   }
 
@@ -53,6 +105,7 @@ export class SimulationEngine {
     const event = { timeSeconds: this.timeSeconds, type: 'BESS_TRIP', preTripMW, soc: this.bess.soc };
     this.events.push(event);
     this.nextEmsDispatchSeconds = this.timeSeconds;
+    this.nextCommitmentEvaluationSeconds = this.timeSeconds;
     return event;
   }
 
@@ -60,6 +113,7 @@ export class SimulationEngine {
     if (!this.running) throw new Error('Simulation engine is not running');
 
     const loadMW = this.load.step(this.dtSeconds);
+    this.runCommitmentIfDue(loadMW);
     this.runEmsIfDue(loadMW);
 
     const dieselMW = this.dieselFleet.reduce(
@@ -113,6 +167,7 @@ export class SimulationEngine {
       powerResidualMW: balance.residualMW,
     });
 
+    const reserve = assessReserve({ dieselFleet: this.dieselFleet, bess: this.bess });
     this.timeSeconds += this.dtSeconds;
     const requestedSupportMW = Math.max(0, loadMW - dieselMW);
     const sample = {
@@ -123,6 +178,7 @@ export class SimulationEngine {
       dieselEmsSetpointMW,
       dieselMechanicalMW,
       dieselPrimaryResponseMW,
+      dieselStates: this.dieselFleet.map((dg) => ({ id: dg.id, state: dg.state, outputMW: dg.outputMW })),
       bessCommandMW,
       bessMW,
       bessSoc: this.bess.soc,
@@ -134,7 +190,15 @@ export class SimulationEngine {
       frequencyHz: this.frequencyHz,
       rocofHzPerS: this.rocofHzPerS,
       onlineDieselCount: onlineFleet.length,
+      startingDieselCount: this.dieselFleet.filter((dg) => dg.isStarting).length,
+      reserveFast10MW: reserve.fast10MW,
+      reserve60MW: reserve.reserve60MW,
+      reserve600MW: reserve.reserve600MW,
+      largestOnlineContingencyMW: reserve.largestOnlineContingencyMW,
+      n1Status: reserve.n1Status,
+      n1CoverageRatio: reserve.n1CoverageRatio,
       emsNextDispatchSeconds: this.nextEmsDispatchSeconds,
+      commitmentNextEvaluationSeconds: this.nextCommitmentEvaluationSeconds,
     };
     this.history.push(sample);
     return sample;
