@@ -58,6 +58,12 @@ import {
   testRepeatedMotorFailureLocksOut,
   testIntegratedMotorRecoveryEvidence,
 } from './motor-retry-governance-test.js';
+import {
+  testProcessSequenceRespectsExternalInterlocks,
+  testProcessSequenceOrdersAndParallelBranches,
+  testProcessPrerequisiteLossTripsDownstreamChain,
+  testProcessSequenceRejectsDependencyCycle,
+} from './process-sequence-test.js';
 import { testMinimumMiningAcceptanceChain } from './mining-acceptance-test.js';
 
 export const EXTENDED_TESTS = Object.freeze([
@@ -98,6 +104,10 @@ export const EXTENDED_TESTS = Object.freeze([
   testMotorProtectionTripRequiresConfirmation,
   testRepeatedMotorFailureLocksOut,
   testIntegratedMotorRecoveryEvidence,
+  testProcessSequenceRespectsExternalInterlocks,
+  testProcessSequenceOrdersAndParallelBranches,
+  testProcessPrerequisiteLossTripsDownstreamChain,
+  testProcessSequenceRejectsDependencyCycle,
   testMinimumMiningAcceptanceChain,
 ]);
 
