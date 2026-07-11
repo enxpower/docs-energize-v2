@@ -83,6 +83,11 @@ export class SimulationEngine {
       currentLoadMW: loadMW,
     }) ?? null;
 
+    const sourceSwitchEvent = this.lastLoadForecast?.switchEvent;
+    if (sourceSwitchEvent) {
+      this.events.push({ ...sourceSwitchEvent });
+    }
+
     this.lastForecastQuality = assessForecastQuality({
       forecast: this.lastLoadForecast,
       currentTimeSeconds: this.timeSeconds,
@@ -137,6 +142,9 @@ export class SimulationEngine {
         forecastStatus: this.lastForecastQuality.status,
         forecastQualityGrade: this.lastForecastQuality.grade,
         forecastSource: this.lastForecastQuality.source,
+        forecastActiveSourceId: this.lastLoadForecast?.activeSourceId ?? null,
+        forecastActiveSourceTier: this.lastLoadForecast?.activeSourceTier ?? null,
+        forecastSourceSelectionReason: this.lastLoadForecast?.sourceSelectionReason ?? null,
         forecastAgeSeconds: this.lastForecastQuality.ageSeconds,
         forecastHorizonSeconds,
         predictedReadyOnTime: actionResult.predictedReadyOnTime,
@@ -243,6 +251,10 @@ export class SimulationEngine {
       forecastStatus: this.lastForecastQuality?.status ?? 'MISSING',
       forecastQualityGrade: this.lastForecastQuality?.grade ?? 'UNKNOWN',
       forecastSource: this.lastForecastQuality?.source ?? 'NONE',
+      forecastActiveSourceId: this.lastLoadForecast?.activeSourceId ?? null,
+      forecastActiveSourceTier: this.lastLoadForecast?.activeSourceTier ?? null,
+      forecastSourceSelectionReason: this.lastLoadForecast?.sourceSelectionReason ?? null,
+      forecastSourceSwitchCount: this.lastLoadForecast?.sourceSwitchCount ?? 0,
       forecastAgeSeconds: this.lastForecastQuality?.ageSeconds ?? Infinity,
       forecastValidUntilSeconds: this.lastForecastQuality?.validUntilSeconds ?? null,
       forecastAutomaticStopAllowed: this.lastForecastQuality?.allowAutomaticStop ?? false,
