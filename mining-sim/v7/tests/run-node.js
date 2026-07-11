@@ -31,6 +31,12 @@ import {
   testColdLoadPickupDecay,
   testRestorationRollbackAndLockout,
 } from './load-restoration-test.js';
+import {
+  testMotorStartModePickupHierarchy,
+  testMotorStartPermissiveAndReserveGate,
+  testMotorLowFrequencyAbort,
+  testMotorDynamicLoadIntegration,
+} from './motor-start-test.js';
 
 const tests = [
   ...runAllTests().map((result) => () => result),
@@ -55,6 +61,10 @@ const tests = [
   testStagedLoadRestorationPriority,
   testColdLoadPickupDecay,
   testRestorationRollbackAndLockout,
+  testMotorStartModePickupHierarchy,
+  testMotorStartPermissiveAndReserveGate,
+  testMotorLowFrequencyAbort,
+  testMotorDynamicLoadIntegration,
 ];
 
 const results = [];
