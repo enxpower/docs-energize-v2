@@ -8,6 +8,8 @@ import { HoldCurrentLoadForecast } from '../forecast/load-forecast.js';
 import { assessForecastQuality } from '../forecast/forecast-quality.js';
 import { deriveSystemState } from './state-machine.js';
 
+const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+
 export class SimulationEngine {
   constructor({
     dtSeconds,
@@ -18,6 +20,8 @@ export class SimulationEngine {
     bess,
     loadForecast = new HoldCurrentLoadForecast(),
     emsIntervalSeconds = 20,
+    emsLoadChangeTriggerMW = 0.25,
+    bessSecondaryBalanceGainPerSecond = 0.35,
     commitmentEnabled = true,
     commitmentIntervalSeconds = 60,
     commitmentLookAheadSeconds = 300,
@@ -37,8 +41,12 @@ export class SimulationEngine {
     this.bess = bess;
     this.loadForecast = loadForecast;
     this.emsIntervalSeconds = emsIntervalSeconds;
+    this.emsLoadChangeTriggerMW = Math.max(0, emsLoadChangeTriggerMW);
+    this.bessSecondaryBalanceGainPerSecond = Math.max(0, bessSecondaryBalanceGainPerSecond);
     this.nextEmsDispatchSeconds = 0;
     this.lastEmsResult = null;
+    this.lastEmsLoadMW = null;
+    this.bessSecondaryBiasMW = 0;
     this.commitmentEnabled = commitmentEnabled;
     this.commitmentIntervalSeconds = commitmentIntervalSeconds;
     this.commitmentLookAheadSeconds = commitmentLookAheadSeconds;
@@ -67,8 +75,13 @@ export class SimulationEngine {
   stop() { this.running = false; }
 
   runEmsIfDue(loadMW) {
-    if (this.timeSeconds + 1e-9 < this.nextEmsDispatchSeconds) return this.lastEmsResult;
+    const intervalDue = this.timeSeconds + 1e-9 >= this.nextEmsDispatchSeconds;
+    const loadChangeDue = this.lastEmsLoadMW === null
+      || Math.abs(loadMW - this.lastEmsLoadMW) + 1e-9 >= this.emsLoadChangeTriggerMW;
+    if (!intervalDue && !loadChangeDue) return this.lastEmsResult;
+
     this.lastEmsResult = dispatchIsland({ loadMW, dieselFleet: this.dieselFleet, bess: this.bess });
+    this.lastEmsLoadMW = loadMW;
     this.nextEmsDispatchSeconds = this.timeSeconds + this.emsIntervalSeconds;
     return this.lastEmsResult;
   }
@@ -169,11 +182,25 @@ export class SimulationEngine {
   tripBess() {
     if (!this.bess.isAvailable) return null;
     const preTripMW = this.bess.trip();
+    this.bessSecondaryBiasMW = 0;
     const event = { timeSeconds: this.timeSeconds, type: 'BESS_TRIP', preTripMW, soc: this.bess.soc };
     this.events.push(event);
     this.nextEmsDispatchSeconds = this.timeSeconds;
     this.nextCommitmentEvaluationSeconds = this.timeSeconds;
     return event;
+  }
+
+  updateBessSecondaryBalance(residualMW) {
+    if (!this.bess.isAvailable || this.bess.powerMW <= 0) {
+      this.bessSecondaryBiasMW = 0;
+      return;
+    }
+    this.bessSecondaryBiasMW = clamp(
+      this.bessSecondaryBiasMW
+        - residualMW * this.bessSecondaryBalanceGainPerSecond * this.dtSeconds,
+      -this.bess.powerMW,
+      this.bess.powerMW,
+    );
   }
 
   step() {
@@ -206,10 +233,13 @@ export class SimulationEngine {
       frequencyHz: this.frequencyHz,
       nominalHz: this.nominalHz,
       rocofHzPerS: this.rocofHzPerS,
+      secondaryBiasMW: this.bessSecondaryBiasMW,
     });
     const bessMW = this.bess.step(this.dtSeconds);
 
     const balance = calculatePowerBalance({ loadMW, dieselMW, bessMW });
+    this.updateBessSecondaryBalance(balance.residualMW);
+
     const onlineFleet = this.dieselFleet.filter((dg) => dg.isOnline);
     const totalInertiaSeconds = Math.max(
       0.1,
@@ -270,6 +300,7 @@ export class SimulationEngine {
       dieselStates: this.dieselFleet.map((dg) => ({ id: dg.id, state: dg.state, outputMW: dg.outputMW })),
       bessCommandMW,
       bessMW,
+      bessSecondaryBiasMW: this.bessSecondaryBiasMW,
       bessSoc: this.bess.soc,
       bessAvailable: this.bess.isAvailable,
       bessAvailableDischargeMW: this.bess.availableDischargeMW(),

@@ -15,6 +15,9 @@ function runFor(engine, seconds) {
 export function testMultiTimescaleControl() {
   const c = ACCEPTANCE.multiTimescaleControl;
   const engine = createBaseOffgridScenario();
+  // This test validates the scheduled supervisory path only. Event-triggered EMS
+  // dispatch is covered separately by the predictive load-change regression.
+  engine.emsLoadChangeTriggerMW = Infinity;
   engine.start();
 
   runFor(engine, c.disturbanceAtSeconds);
@@ -37,7 +40,7 @@ export function testMultiTimescaleControl() {
   assert(
     Math.abs(maxEmsSetpointDuringFastWindow - baselineEmsSetpointMW) < 1e-6
       && Math.abs(minEmsSetpointDuringFastWindow - baselineEmsSetpointMW) < 1e-6,
-    'EMS changed supervisory setpoint inside the fast-response window',
+    'scheduled EMS changed supervisory setpoint inside the fast-response window',
   );
 
   runFor(engine, c.primaryWindowSeconds - c.fastWindowSeconds);

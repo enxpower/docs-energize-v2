@@ -24,4 +24,21 @@ jobs:
         with:
           node-version: '22'
       - name: Run V7 regression suite
-        run: npm test
+        shell: bash
+        run: |
+          set +e
+          npm test > v7-test-output.txt 2>&1
+          status=$?
+          cat v7-test-output.txt
+          echo "TEST_EXIT_CODE=$status" >> "$GITHUB_ENV"
+          exit 0
+      - name: Upload V7 test output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mining-sim-v7-test-output
+          path: mining-sim/v7/v7-test-output.txt
+          if-no-files-found: error
+      - name: Enforce regression result
+        shell: bash
+        run: exit "${TEST_EXIT_CODE:-1}"

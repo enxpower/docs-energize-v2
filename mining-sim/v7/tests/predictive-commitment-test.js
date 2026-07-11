@@ -16,9 +16,25 @@ function runFor(engine, seconds) {
   return last;
 }
 
+function dieselConfig(id) {
+  return {
+    id,
+    ratedMW: 3.3,
+    minLoadPU: 0.35,
+    rampUpMWPerS: 0.2,
+    rampDownMWPerS: 1.0,
+    inertiaSeconds: 4,
+    droopPU: 0.04,
+    governorTimeConstantSeconds: 0.25,
+    engineTimeConstantSeconds: 0.8,
+    frequencyDeadbandHz: 0.025,
+    nominalHz: 60,
+  };
+}
+
 function makeFleet({ offlineLeadSeconds = 90 } = {}) {
   const online = [1, 2].map((n) => {
-    const dg = new DieselGenerator({ id: `DG-${n}`, ratedMW: 3.3 });
+    const dg = new DieselGenerator(dieselConfig(`DG-${n}`));
     dg.emsSetpointMW = 2.75;
     dg.governorCommandMW = 2.75;
     dg.mechanicalMW = 2.75;
@@ -26,8 +42,7 @@ function makeFleet({ offlineLeadSeconds = 90 } = {}) {
     return dg;
   });
   online.push(new DieselGenerator({
-    id: 'DG-3',
-    ratedMW: 3.3,
+    ...dieselConfig('DG-3'),
     initialState: DIESEL_STATE.OFF,
     minDownSeconds: 0,
     startDelaySeconds: Math.max(0, offlineLeadSeconds - 60),
@@ -71,10 +86,41 @@ export function testPredictiveCommitmentStartsOnTime() {
   assert(fleet[2].state === DIESEL_STATE.RUNNING, `DG-3 should be RUNNING before load rise, received ${fleet[2].state}`);
 
   runFor(engine, 20);
+  const preRise = engine.history.at(-1);
   load.setDemandMW(8.5);
-  const afterRise = runFor(engine, 20);
+  const disturbanceTime = engine.timeSeconds;
+  const firstAfterRise = engine.step();
+  assert(
+    firstAfterRise.dieselEmsSetpointMW >= 8.49,
+    `event-triggered EMS did not assume load rise: pre=${preRise.dieselEmsSetpointMW}, first=${firstAfterRise.dieselEmsSetpointMW}`,
+  );
+
+  const afterRise = runFor(engine, 59.9);
+  const settledWindow = engine.history.filter(
+    (sample) => sample.timeSeconds >= disturbanceTime + 50
+      && sample.timeSeconds <= disturbanceTime + 60 + 1e-9,
+  );
+  const maxSettledResidualMW = Math.max(...settledWindow.map((sample) => Math.abs(sample.residualMW)));
+  const maxSettledFrequencyErrorHz = Math.max(...settledWindow.map((sample) => Math.abs(sample.frequencyHz - 60)));
+  const fleetDiagnostics = fleet.map((dg) => ({
+    id: dg.id,
+    state: dg.state,
+    emsSetpointMW: dg.emsSetpointMW,
+    governorCommandMW: dg.governorCommandMW,
+    mechanicalMW: dg.mechanicalMW,
+    outputMW: dg.outputMW,
+    runTimeSeconds: dg.runTimeSeconds,
+  }));
+
   assert(afterRise.onlineDieselCount === 3, `expected 3 online units, received ${afterRise.onlineDieselCount}`);
-  assert(Math.abs(afterRise.residualMW) < 0.25, `forecast-prepared system failed load rise: ${afterRise.residualMW}`);
+  assert(
+    maxSettledResidualMW < 0.25,
+    `forecast-prepared system did not settle power balance: maxResidual=${maxSettledResidualMW}, finalResidual=${afterRise.residualMW}, finalFrequency=${afterRise.frequencyHz}, fleet=${JSON.stringify(fleetDiagnostics)}`,
+  );
+  assert(
+    maxSettledFrequencyErrorHz < 0.15,
+    `forecast-prepared system did not settle frequency: maxError=${maxSettledFrequencyErrorHz}, finalFrequency=${afterRise.frequencyHz}`,
+  );
 
   return {
     name: 'Predictive commitment starts generator before load rise',
@@ -82,9 +128,15 @@ export function testPredictiveCommitmentStartsOnTime() {
     metrics: {
       startEvent,
       dg3StateBeforeRise: fleet[2].state,
+      preRiseEmsSetpointMW: preRise.dieselEmsSetpointMW,
+      firstAfterRiseEmsSetpointMW: firstAfterRise.dieselEmsSetpointMW,
       onlineDieselCountAfterRise: afterRise.onlineDieselCount,
+      maxSettledResidualMW,
+      maxSettledFrequencyErrorHz,
       residualMWAfterRise: afterRise.residualMW,
+      dieselMWAfterRise: afterRise.dieselMW,
       frequencyHzAfterRise: afterRise.frequencyHz,
+      fleetDiagnostics,
     },
   };
 }
