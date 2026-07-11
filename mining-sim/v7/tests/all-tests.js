@@ -42,6 +42,7 @@ import {
   testMotorDynamicLoadIntegration,
   testMotorReceivesSimulationFrequency,
 } from './motor-start-test.js';
+import { testMinimumMiningAcceptanceChain } from './mining-acceptance-test.js';
 
 export const EXTENDED_TESTS = Object.freeze([
   testBessEnergyDurationDepletion,
@@ -71,6 +72,7 @@ export const EXTENDED_TESTS = Object.freeze([
   testMotorLowFrequencyAbort,
   testMotorDynamicLoadIntegration,
   testMotorReceivesSimulationFrequency,
+  testMinimumMiningAcceptanceChain,
 ]);
 
 export function runFullRegressionSuite() {
