@@ -82,6 +82,12 @@ import {
   testBessEstimatedFuelDisplacementValue,
   testIntegratedProductionEconomicsEvidence,
 } from './production-economics-test.js';
+import {
+  testHardConstraintsOverrideCheapScenario,
+  testScenarioParetoFrontierPreservesTradeoffs,
+  testScenarioRankingIsDeterministic,
+  testScenarioBatchRunnerIsolationAndCommonActions,
+} from './scenario-comparison-test.js';
 import { testMinimumMiningAcceptanceChain } from './mining-acceptance-test.js';
 
 export const EXTENDED_TESTS = Object.freeze([
@@ -138,6 +144,10 @@ export const EXTENDED_TESTS = Object.freeze([
   testDieselFuelAndCostAccounting,
   testBessEstimatedFuelDisplacementValue,
   testIntegratedProductionEconomicsEvidence,
+  testHardConstraintsOverrideCheapScenario,
+  testScenarioParetoFrontierPreservesTradeoffs,
+  testScenarioRankingIsDeterministic,
+  testScenarioBatchRunnerIsolationAndCommonActions,
   testMinimumMiningAcceptanceChain,
 ]);
 
