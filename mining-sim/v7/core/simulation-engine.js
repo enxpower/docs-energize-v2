@@ -4,6 +4,7 @@ import { dispatchIsland } from '../controls/ems.js';
 import { commandBessFastResponse } from '../controls/bess-fast-controller.js';
 import { evaluateGeneratorCommitment, applyGeneratorCommitmentAction } from '../controls/generator-commitment.js';
 import { assessReserve } from '../reliability/reserve-engine.js';
+import { HoldCurrentLoadForecast } from '../forecast/load-forecast.js';
 import { deriveSystemState } from './state-machine.js';
 
 export class SimulationEngine {
@@ -14,12 +15,15 @@ export class SimulationEngine {
     load,
     dieselFleet,
     bess,
+    loadForecast = new HoldCurrentLoadForecast(),
     emsIntervalSeconds = 20,
     commitmentEnabled = true,
     commitmentIntervalSeconds = 60,
+    commitmentLookAheadSeconds = 300,
     commitmentAllowStop = false,
     minimumOnlineUnits = 1,
     commitmentReserveMarginMW = 0,
+    commitmentFirmSupportDurationMinutes = 15,
   }) {
     this.dtSeconds = dtSeconds;
     this.nominalHz = nominalHz;
@@ -27,16 +31,20 @@ export class SimulationEngine {
     this.load = load;
     this.dieselFleet = dieselFleet;
     this.bess = bess;
+    this.loadForecast = loadForecast;
     this.emsIntervalSeconds = emsIntervalSeconds;
     this.nextEmsDispatchSeconds = 0;
     this.lastEmsResult = null;
     this.commitmentEnabled = commitmentEnabled;
     this.commitmentIntervalSeconds = commitmentIntervalSeconds;
+    this.commitmentLookAheadSeconds = commitmentLookAheadSeconds;
     this.commitmentAllowStop = commitmentAllowStop;
     this.minimumOnlineUnits = minimumOnlineUnits;
     this.commitmentReserveMarginMW = commitmentReserveMarginMW;
+    this.commitmentFirmSupportDurationMinutes = commitmentFirmSupportDurationMinutes;
     this.nextCommitmentEvaluationSeconds = 0;
     this.lastCommitmentDecision = null;
+    this.lastLoadForecast = null;
     this.timeSeconds = 0;
     this.frequencyHz = nominalHz;
     this.rocofHzPerS = 0;
@@ -61,16 +69,25 @@ export class SimulationEngine {
     if (!this.commitmentEnabled) return this.lastCommitmentDecision;
     if (this.timeSeconds + 1e-9 < this.nextCommitmentEvaluationSeconds) return this.lastCommitmentDecision;
 
+    this.lastLoadForecast = this.loadForecast.getCommitmentForecast({
+      currentTimeSeconds: this.timeSeconds,
+      lookAheadSeconds: this.commitmentLookAheadSeconds,
+      currentLoadMW: loadMW,
+    });
+
     const decision = evaluateGeneratorCommitment({
       loadMW,
+      forecastLoadMW: this.lastLoadForecast.forecastPeakLoadMW,
+      forecastHorizonSeconds: this.lastLoadForecast.forecastHorizonSeconds,
       dieselFleet: this.dieselFleet,
       bess: this.bess,
       minimumOnlineUnits: this.minimumOnlineUnits,
       reserveMarginMW: this.commitmentReserveMarginMW,
+      firmSupportDurationMinutes: this.commitmentFirmSupportDurationMinutes,
       allowStop: this.commitmentAllowStop,
     });
     const actionResult = applyGeneratorCommitmentAction({ dieselFleet: this.dieselFleet, decision });
-    this.lastCommitmentDecision = { ...decision, actionResult };
+    this.lastCommitmentDecision = { ...decision, actionResult, forecast: this.lastLoadForecast };
     this.nextCommitmentEvaluationSeconds = this.timeSeconds + this.commitmentIntervalSeconds;
 
     if (actionResult?.accepted) {
@@ -79,6 +96,10 @@ export class SimulationEngine {
         type: `DG_${actionResult.type}_REQUEST`,
         equipmentId: actionResult.equipmentId,
         reason: actionResult.reason,
+        predictive: Boolean(actionResult.predictive),
+        forecastPeakLoadMW: this.lastLoadForecast.forecastPeakLoadMW,
+        forecastHorizonSeconds: this.lastLoadForecast.forecastHorizonSeconds,
+        predictedReadyOnTime: actionResult.predictedReadyOnTime,
       });
       this.nextEmsDispatchSeconds = this.timeSeconds;
     }
@@ -174,6 +195,8 @@ export class SimulationEngine {
       timeSeconds: this.timeSeconds,
       state: this.state,
       loadMW,
+      forecastPeakLoadMW: this.lastLoadForecast?.forecastPeakLoadMW ?? loadMW,
+      forecastHorizonSeconds: this.lastLoadForecast?.forecastHorizonSeconds ?? 0,
       dieselMW,
       dieselEmsSetpointMW,
       dieselMechanicalMW,
@@ -197,6 +220,8 @@ export class SimulationEngine {
       largestOnlineContingencyMW: reserve.largestOnlineContingencyMW,
       n1Status: reserve.n1Status,
       n1CoverageRatio: reserve.n1CoverageRatio,
+      commitmentRequiredForecastMW: this.lastCommitmentDecision?.requiredForecastMW ?? null,
+      commitmentForecastShortfallMW: this.lastCommitmentDecision?.forecastCapacityShortfallMW ?? null,
       emsNextDispatchSeconds: this.nextEmsDispatchSeconds,
       commitmentNextEvaluationSeconds: this.nextCommitmentEvaluationSeconds,
     };
