@@ -20,13 +20,12 @@ export class UflsEnabledSimulationEngine extends SimulationEngine {
   }
 
   step() {
-    const demandMW = this.load.demandMW ?? this.load.commandMW ?? 0;
     const sample = super.step();
-    const nominalShedBlockMW = this.load.shedMW ?? 0;
-    const explicitUnservedMW = this.load.explicitUnservedMW
-      ?? Math.max(0, Math.min(demandMW, demandMW - sample.loadMW));
 
-    this.eensMWh += explicitUnservedMW * this.dtSeconds / 3600;
+    const intervalElectricalLoadMW = sample.loadMW;
+    const intervalExplicitUnservedMW = this.load.explicitUnservedMW
+      ?? Math.max(0, (this.load.demandMW ?? intervalElectricalLoadMW) - intervalElectricalLoadMW);
+    this.eensMWh += intervalExplicitUnservedMW * this.dtSeconds / 3600;
 
     const uflsEvents = this.uflsController?.evaluate({
       frequencyHz: sample.frequencyHz,
@@ -68,12 +67,21 @@ export class UflsEnabledSimulationEngine extends SimulationEngine {
       this.nextCommitmentEvaluationSeconds = Math.min(this.nextCommitmentEvaluationSeconds, this.timeSeconds);
     }
 
+    const demandMW = this.load.demandMW ?? this.load.commandMW ?? intervalElectricalLoadMW;
+    const nominalShedBlockMW = this.load.shedMW ?? 0;
+    const explicitUnservedLoadMW = this.load.explicitUnservedMW
+      ?? Math.max(0, demandMW - (this.load.connectedMW ?? intervalElectricalLoadMW));
+    const connectedDemandMW = this.load.connectedMW ?? Math.max(0, demandMW - explicitUnservedLoadMW);
+
+    sample.intervalElectricalLoadMW = intervalElectricalLoadMW;
+    sample.intervalExplicitUnservedMW = intervalExplicitUnservedMW;
     sample.demandMW = demandMW;
-    sample.connectedLoadMW = sample.loadMW;
-    sample.servedLoadMW = sample.loadMW;
+    sample.connectedLoadMW = connectedDemandMW;
     sample.nominalShedBlockMW = nominalShedBlockMW;
-    sample.shedLoadMW = explicitUnservedMW;
-    sample.explicitUnservedMW = explicitUnservedMW;
+    sample.explicitUnservedLoadMW = explicitUnservedLoadMW;
+    sample.servedLoadMW = null;
+    sample.servedLoadAccountingMode = 'NOT_EXPLICITLY_MODELED';
+    sample.shedLoadMW = explicitUnservedLoadMW;
     sample.coldLoadPickupMW = this.load.coldLoadPickupMW ?? 0;
     sample.eensMWh = this.eensMWh;
     sample.uflsOperationCount = this.uflsOperationCount;
