@@ -3,17 +3,34 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Mining Sim V7 Engineering Core — EnergizeOS</title>
-<meta name="description" content="Mining Sim V7 governed engineering core development status."/>
+<title>Mining Sim V7 · EnergizeOS</title>
+<meta name="description" content="矿山微电网设计配置、事故仿真、生产连续性和多方案工程决策工具。"/>
+<link rel="icon" type="image/svg+xml" href="/vi/assets/favicon.svg"/>
+<meta property="og:type" content="website"/>
+<meta property="og:title" content="Mining Sim V7 · EnergizeOS"/>
+<meta property="og:description" content="从设备配置到事故仿真、生产影响和方案比较的一体化矿山微电网工程工作台。"/>
+<meta property="og:image" content="https://docs.energizeos.com/vi/assets/og-1200x630.png"/>
 <style>
-:root{--slate:#1A2B3C;--volt:#D4840A;--paper:#F8FAFC;--line:#E2E8F0;--muted:#64748B}*{box-sizing:border-box}body{margin:0;background:var(--paper);font-family:"Helvetica Neue",Arial,"PingFang SC",sans-serif;color:var(--slate)}header{background:var(--slate);color:white;border-bottom:5px solid var(--volt)}header div,main{max-width:1000px;margin:auto;padding:24px}.k{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#F6C16F}h1{font-weight:300;font-size:40px;margin:8px 0}.card{background:white;border:1px solid var(--line);padding:24px;margin:18px 0}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.ok{border-left:5px solid #15803D}.hold{border-left:5px solid var(--volt)}a{display:inline-block;background:var(--slate);color:white;text-decoration:none;padding:12px 18px;border-left:5px solid var(--volt);margin-top:12px}@media(max-width:700px){.grid{grid-template-columns:1fr}h1{font-size:32px}}</style>
+:root{--slate:#182A3A;--orange:#D4840A;--paper:#F5F7F9;--line:#D8DEE6;--muted:#667A8B;--ok:#167347}*{box-sizing:border-box}html,body{margin:0;overflow-x:hidden;background:var(--paper);font-family:"Helvetica Neue",Arial,"PingFang SC",sans-serif;color:var(--slate)}header{background:var(--slate);color:#fff;border-bottom:5px solid var(--orange)}.wrap{max-width:1120px;margin:auto;padding:34px 24px}.kicker{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#F2BD69}h1{font-weight:300;font-size:46px;line-height:1.08;margin:10px 0 14px}header p{max-width:760px;color:#C5D0D8;line-height:1.6}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:24px}.button{display:inline-block;text-decoration:none;padding:12px 18px;border-radius:6px;font-size:12px;font-weight:800}.primary{background:var(--orange);color:#fff}.secondary{border:1px solid #7890A2;color:#fff}.boundary{background:#FFF4E3;border-bottom:1px solid #EBC98E;color:#7E520B;font-size:11px}.boundary .wrap{padding-top:9px;padding-bottom:9px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.card{background:#fff;border:1px solid var(--line);border-radius:9px;padding:19px}.card h2{font-size:15px;margin:0 0 8px}.card p{font-size:11px;line-height:1.6;color:var(--muted);margin:0}.status{border-left:5px solid var(--ok)}.feature-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:20px}.feature{background:#fff;border:1px solid var(--line);padding:13px;border-radius:7px;font-size:11px}.feature strong{display:block;margin-bottom:4px}.feature span{color:var(--muted)}footer{border-top:1px solid var(--line);color:var(--muted);font-size:10px}.v6{display:inline-block;color:var(--slate);margin-top:15px}@media(max-width:800px){h1{font-size:36px}.grid{grid-template-columns:1fr}.feature-list{grid-template-columns:1fr}.wrap{padding-left:16px;padding-right:16px}}
+</style>
 </head>
 <body>
-<header><div><div class="k">Governed Engineering Core</div><h1>Mining Sim V7</h1><p>当前阶段：最小工程核心验证。V6线上版本保持独立，不受V7开发影响。</p></div></header>
-<main>
-<section class="card ok"><h2>Phase 1 已实现</h2><div class="grid"><div>Diesel Generator</div><div>BESS / PCS Active Power</div><div>Aggregate Load</div><div>Power Balance</div><div>Island Frequency</div><div>EMS Dispatch Layer</div><div>System State Machine</div><div>Deterministic Regression Tests</div></div></section>
-<section class="card hold"><h2>当前禁止加入</h2><p>PV、Wind、Utility Grid、Motor、Transformer、Optimization和生产UI暂不进入核心，直到最小系统回归测试稳定通过。</p></section>
-<section class="card"><h2>工程原则</h2><p>不为了让曲线看起来正确而调整代码。先保证工程模型正确，再让结果自然呈现。</p><a href="./tests/">打开V7自动测试</a></section>
+<header><div class="wrap"><div class="kicker">Governed Mining Microgrid Engineering</div><h1>Mining Sim V7</h1><p>从柴油机、BESS、大型电机和生产工艺配置，到事故仿真、可靠性、延期产量、燃油成本和多方案决策的一体化工程工作台。</p><div class="actions"><a class="button primary" href="./ui/">打开 Mine Design Configurator</a><a class="button secondary" href="./tests/">查看自动测试</a></div></div></header>
+<div class="boundary"><div class="wrap"><strong>模型边界：</strong>当前为概念设计与筛选级模型，不替代潮流、短路、保护配合、EMT、谐波、电弧闪光、厂家启动研究或施工图设计。</div></div>
+<main class="wrap">
+<section class="grid">
+  <article class="card status"><h2>Configuration</h2><p>使用结构化JSON和分步工程表单配置柴油机、BESS、大电机、生产负荷、工艺链和事故时间表。</p></article>
+  <article class="card status"><h2>Simulation</h2><p>运行频率、Governor、BESS、机组组合、预测、UFLS、恢复、电机启动和工艺联锁的确定性事故链。</p></article>
+  <article class="card status"><h2>Decision</h2><p>先执行频率、RoCoF、N-1、EENS和关键负荷硬约束，再对合格方案进行Pareto和多指标排序。</p></article>
+</section>
+<section class="feature-list">
+  <div class="feature"><strong>Mine production continuity</strong><span>主动生产降载、吨/小时、延期产量和恢复顺序。</span></div>
+  <div class="feature"><strong>Large motor governance</strong><span>DOL、软启动、VFD、排队、重试、联锁和工艺顺序。</span></div>
+  <div class="feature"><strong>Reliability evidence</strong><span>N-1、多时间尺度备用、UFLS、EENS和统一事件时间轴。</span></div>
+  <div class="feature"><strong>Operating economics</strong><span>显式燃油曲线、柴油成本和BESS燃油替代估算。</span></div>
+</section>
+<a class="v6" href="../">返回当前V6公开仿真页面</a>
 </main>
+<footer><div class="wrap">EnergizeOS · Engineering Integrity Model</div></footer>
 </body>
 </html>
