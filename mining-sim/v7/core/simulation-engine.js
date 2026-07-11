@@ -5,6 +5,7 @@ import { commandBessFastResponse } from '../controls/bess-fast-controller.js';
 import { evaluateGeneratorCommitment, applyGeneratorCommitmentAction } from '../controls/generator-commitment.js';
 import { assessReserve } from '../reliability/reserve-engine.js';
 import { HoldCurrentLoadForecast } from '../forecast/load-forecast.js';
+import { assessForecastQuality } from '../forecast/forecast-quality.js';
 import { deriveSystemState } from './state-machine.js';
 
 export class SimulationEngine {
@@ -24,6 +25,9 @@ export class SimulationEngine {
     minimumOnlineUnits = 1,
     commitmentReserveMarginMW = 0,
     commitmentFirmSupportDurationMinutes = 15,
+    forecastStaleFallbackMarginMW = 0.5,
+    forecastLowQualityMarginMW = 0.25,
+    forecastMissingFallbackMarginMW = 1.0,
   }) {
     this.dtSeconds = dtSeconds;
     this.nominalHz = nominalHz;
@@ -42,9 +46,13 @@ export class SimulationEngine {
     this.minimumOnlineUnits = minimumOnlineUnits;
     this.commitmentReserveMarginMW = commitmentReserveMarginMW;
     this.commitmentFirmSupportDurationMinutes = commitmentFirmSupportDurationMinutes;
+    this.forecastStaleFallbackMarginMW = forecastStaleFallbackMarginMW;
+    this.forecastLowQualityMarginMW = forecastLowQualityMarginMW;
+    this.forecastMissingFallbackMarginMW = forecastMissingFallbackMarginMW;
     this.nextCommitmentEvaluationSeconds = 0;
     this.lastCommitmentDecision = null;
     this.lastLoadForecast = null;
+    this.lastForecastQuality = null;
     this.timeSeconds = 0;
     this.frequencyHz = nominalHz;
     this.rocofHzPerS = 0;
@@ -69,28 +77,49 @@ export class SimulationEngine {
     if (!this.commitmentEnabled) return this.lastCommitmentDecision;
     if (this.timeSeconds + 1e-9 < this.nextCommitmentEvaluationSeconds) return this.lastCommitmentDecision;
 
-    this.lastLoadForecast = this.loadForecast.getCommitmentForecast({
+    this.lastLoadForecast = this.loadForecast?.getCommitmentForecast?.({
       currentTimeSeconds: this.timeSeconds,
       lookAheadSeconds: this.commitmentLookAheadSeconds,
       currentLoadMW: loadMW,
+    }) ?? null;
+
+    this.lastForecastQuality = assessForecastQuality({
+      forecast: this.lastLoadForecast,
+      currentTimeSeconds: this.timeSeconds,
+      currentLoadMW: loadMW,
+      staleFallbackMarginMW: this.forecastStaleFallbackMarginMW,
+      lowQualityMarginMW: this.forecastLowQualityMarginMW,
+      missingFallbackMarginMW: this.forecastMissingFallbackMarginMW,
     });
+
+    const allowStopByQuality = this.commitmentAllowStop && this.lastForecastQuality.allowAutomaticStop;
+    const forecastLoadMW = this.lastLoadForecast?.forecastPeakLoadMW ?? loadMW;
+    const forecastHorizonSeconds = this.lastLoadForecast?.forecastHorizonSeconds ?? 0;
+    const forecastRiskLevel = this.lastLoadForecast?.forecastRiskLevel ?? 'HIGH';
+    const forecastErrorMW = this.lastLoadForecast?.forecastErrorMW ?? this.lastForecastQuality.degradationMarginMW;
 
     const decision = evaluateGeneratorCommitment({
       loadMW,
-      forecastLoadMW: this.lastLoadForecast.forecastPeakLoadMW,
-      forecastPlanningLoadMW: this.lastLoadForecast.forecastPlanningLoadMW,
-      forecastHorizonSeconds: this.lastLoadForecast.forecastHorizonSeconds,
-      forecastRiskLevel: this.lastLoadForecast.forecastRiskLevel,
-      forecastErrorMW: this.lastLoadForecast.forecastErrorMW,
+      forecastLoadMW,
+      forecastPlanningLoadMW: this.lastForecastQuality.effectivePlanningLoadMW,
+      forecastHorizonSeconds,
+      forecastRiskLevel,
+      forecastErrorMW,
       dieselFleet: this.dieselFleet,
       bess: this.bess,
       minimumOnlineUnits: this.minimumOnlineUnits,
       reserveMarginMW: this.commitmentReserveMarginMW,
       firmSupportDurationMinutes: this.commitmentFirmSupportDurationMinutes,
-      allowStop: this.commitmentAllowStop,
+      allowStop: allowStopByQuality,
     });
     const actionResult = applyGeneratorCommitmentAction({ dieselFleet: this.dieselFleet, decision });
-    this.lastCommitmentDecision = { ...decision, actionResult, forecast: this.lastLoadForecast };
+    this.lastCommitmentDecision = {
+      ...decision,
+      actionResult,
+      forecast: this.lastLoadForecast,
+      forecastQuality: this.lastForecastQuality,
+      automaticStopBlockedByForecastQuality: this.commitmentAllowStop && !allowStopByQuality,
+    };
     this.nextCommitmentEvaluationSeconds = this.timeSeconds + this.commitmentIntervalSeconds;
 
     if (actionResult?.accepted) {
@@ -101,11 +130,15 @@ export class SimulationEngine {
         reason: actionResult.reason,
         predictive: Boolean(actionResult.predictive),
         uncertaintyDriven: Boolean(actionResult.uncertaintyDriven),
-        forecastPeakLoadMW: this.lastLoadForecast.forecastPeakLoadMW,
-        forecastPlanningLoadMW: this.lastLoadForecast.forecastPlanningLoadMW,
-        forecastErrorMW: this.lastLoadForecast.forecastErrorMW,
-        forecastRiskLevel: this.lastLoadForecast.forecastRiskLevel,
-        forecastHorizonSeconds: this.lastLoadForecast.forecastHorizonSeconds,
+        forecastPeakLoadMW: forecastLoadMW,
+        forecastPlanningLoadMW: this.lastForecastQuality.effectivePlanningLoadMW,
+        forecastErrorMW,
+        forecastRiskLevel,
+        forecastStatus: this.lastForecastQuality.status,
+        forecastQualityGrade: this.lastForecastQuality.grade,
+        forecastSource: this.lastForecastQuality.source,
+        forecastAgeSeconds: this.lastForecastQuality.ageSeconds,
+        forecastHorizonSeconds,
         predictedReadyOnTime: actionResult.predictedReadyOnTime,
       });
       this.nextEmsDispatchSeconds = this.timeSeconds;
@@ -204,9 +237,15 @@ export class SimulationEngine {
       loadMW,
       forecastPeakLoadMW: this.lastLoadForecast?.forecastPeakLoadMW ?? loadMW,
       forecastPeakUpperBoundMW: this.lastLoadForecast?.forecastPeakUpperBoundMW ?? loadMW,
-      forecastPlanningLoadMW: this.lastLoadForecast?.forecastPlanningLoadMW ?? loadMW,
+      forecastPlanningLoadMW: this.lastForecastQuality?.effectivePlanningLoadMW ?? loadMW,
       forecastErrorMW: this.lastLoadForecast?.forecastErrorMW ?? 0,
-      forecastRiskLevel: this.lastLoadForecast?.forecastRiskLevel ?? 'LOW',
+      forecastRiskLevel: this.lastLoadForecast?.forecastRiskLevel ?? 'HIGH',
+      forecastStatus: this.lastForecastQuality?.status ?? 'MISSING',
+      forecastQualityGrade: this.lastForecastQuality?.grade ?? 'UNKNOWN',
+      forecastSource: this.lastForecastQuality?.source ?? 'NONE',
+      forecastAgeSeconds: this.lastForecastQuality?.ageSeconds ?? Infinity,
+      forecastValidUntilSeconds: this.lastForecastQuality?.validUntilSeconds ?? null,
+      forecastAutomaticStopAllowed: this.lastForecastQuality?.allowAutomaticStop ?? false,
       forecastHorizonSeconds: this.lastLoadForecast?.forecastHorizonSeconds ?? 0,
       dieselMW,
       dieselEmsSetpointMW,
@@ -234,6 +273,7 @@ export class SimulationEngine {
       commitmentRequiredForecastMW: this.lastCommitmentDecision?.requiredForecastMW ?? null,
       commitmentForecastShortfallMW: this.lastCommitmentDecision?.forecastCapacityShortfallMW ?? null,
       commitmentUncertaintyExposureMW: this.lastCommitmentDecision?.uncertaintyExposureMW ?? null,
+      commitmentStopBlockedByForecastQuality: this.lastCommitmentDecision?.automaticStopBlockedByForecastQuality ?? false,
       emsNextDispatchSeconds: this.nextEmsDispatchSeconds,
       commitmentNextEvaluationSeconds: this.nextCommitmentEvaluationSeconds,
     };
