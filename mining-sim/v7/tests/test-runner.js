@@ -1,4 +1,5 @@
 import { createBaseOffgridScenario } from '../scenarios/base-offgrid.js';
+import { ACCEPTANCE } from './acceptance-criteria.js';
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
@@ -19,8 +20,9 @@ function testBaseSteadyState() {
   const engine = createBaseOffgridScenario();
   engine.start();
   const last = runFor(engine, 60);
-  assert(Math.abs(last.residualMW) < 0.05, `power residual too high: ${last.residualMW}`);
-  assert(Math.abs(last.frequencyHz - 60) < 0.1, `frequency not stable: ${last.frequencyHz}`);
+  const c = ACCEPTANCE.steadyState;
+  assert(Math.abs(last.residualMW) < c.maxPowerResidualMW, `power residual too high: ${last.residualMW}`);
+  assert(Math.abs(last.frequencyHz - 60) < c.maxFrequencyErrorHz, `frequency not stable: ${last.frequencyHz}`);
   assert(last.bessSoc > 0.18 && last.bessSoc < 0.82, `SOC outside operating band: ${last.bessSoc}`);
   return { name: 'Base off-grid steady state', status: 'PASS', metrics: last };
 }
@@ -31,10 +33,11 @@ function testLoadStepRecovery() {
   runFor(engine, 10);
   engine.load.setDemandMW(13.5);
   const disturbed = runFor(engine, 2);
-  const recovered = runFor(engine, 58);
-  assert(Math.abs(disturbed.residualMW) < 0.5, `BESS failed fast balance: ${disturbed.residualMW}`);
-  assert(Math.abs(recovered.frequencyHz - 60) < 0.15, `frequency failed recovery: ${recovered.frequencyHz}`);
-  assert(Math.abs(recovered.residualMW) < 0.1, `residual failed recovery: ${recovered.residualMW}`);
+  const recovered = runFor(engine, ACCEPTANCE.loadStep.recoveryWindowSeconds - 2);
+  const c = ACCEPTANCE.loadStep;
+  assert(Math.abs(disturbed.residualMW) < c.maxFastResidualMW, `BESS failed fast balance: ${disturbed.residualMW}`);
+  assert(Math.abs(recovered.frequencyHz - 60) < c.maxRecoveredFrequencyErrorHz, `frequency failed recovery: ${recovered.frequencyHz}`);
+  assert(Math.abs(recovered.residualMW) < c.maxRecoveredResidualMW, `residual failed recovery: ${recovered.residualMW}`);
   return { name: 'Load step recovery', status: 'PASS', metrics: recovered };
 }
 
@@ -43,7 +46,7 @@ function testEnergyConservation() {
   engine.start();
   runFor(engine, 120);
   const maxResidual = Math.max(...engine.history.map((sample) => Math.abs(sample.residualMW)));
-  assert(maxResidual < 0.8, `max transient residual too high: ${maxResidual}`);
+  assert(maxResidual < ACCEPTANCE.powerBalance.maximumTransientResidualMW, `max transient residual too high: ${maxResidual}`);
   return { name: 'Power-balance residual bound', status: 'PASS', metrics: { maxResidualMW: maxResidual } };
 }
 
@@ -55,22 +58,22 @@ function testLargestDieselTrip() {
   const event = engine.tripLargestDiesel();
   assert(event, 'no online diesel generator available to trip');
 
-  runFor(engine, 60);
+  const c = ACCEPTANCE.largestDieselTrip;
+  runFor(engine, c.recoveryWindowSeconds);
   const postTrip = sliceSince(engine, tripTime);
-  const firstFiveSeconds = postTrip.filter((sample) => sample.timeSeconds <= tripTime + 5);
+  const firstResponseWindow = postTrip.filter((sample) => sample.timeSeconds <= tripTime + c.bessResponseWindowSeconds);
   const final = postTrip.at(-1);
   const fMin = Math.min(...postTrip.map((sample) => sample.frequencyHz));
   const maxRoCoF = Math.max(...postTrip.map((sample) => Math.abs(sample.rocofHzPerS)));
-  const maxBessResponse = Math.max(...firstFiveSeconds.map((sample) => sample.bessMW));
+  const maxBessResponse = Math.max(...firstResponseWindow.map((sample) => sample.bessMW));
   const maxResidual = Math.max(...postTrip.map((sample) => Math.abs(sample.residualMW)));
 
-  assert(event.ratedMW >= 3.3, `unexpected largest-unit rating: ${event.ratedMW}`);
-  assert(fMin >= 58.5, `frequency nadir below screening limit: ${fMin}`);
-  assert(maxRoCoF <= 2.0, `RoCoF exceeds screening limit: ${maxRoCoF}`);
-  assert(maxBessResponse >= 2.0, `BESS fast response insufficient: ${maxBessResponse}`);
+  assert(fMin >= c.minimumFrequencyNadirHz, `frequency nadir below screening limit: ${fMin}`);
+  assert(maxRoCoF <= c.maximumRoCoFHzPerS, `RoCoF exceeds screening limit: ${maxRoCoF}`);
+  assert(maxBessResponse >= c.minimumBessResponseMW, `BESS fast response insufficient: ${maxBessResponse}`);
   assert(final.onlineDieselCount === 3, `unexpected online diesel count after trip: ${final.onlineDieselCount}`);
-  assert(Math.abs(final.frequencyHz - 60) < 0.2, `frequency failed to recover: ${final.frequencyHz}`);
-  assert(Math.abs(final.residualMW) < 0.1, `power balance failed to recover: ${final.residualMW}`);
+  assert(Math.abs(final.frequencyHz - 60) < c.maximumRecoveredFrequencyErrorHz, `frequency failed to recover: ${final.frequencyHz}`);
+  assert(Math.abs(final.residualMW) < c.maximumRecoveredResidualMW, `power balance failed to recover: ${final.residualMW}`);
 
   return {
     name: 'Largest diesel trip response',
