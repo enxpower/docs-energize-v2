@@ -2,6 +2,8 @@ export const RELIABILITY_RULE = Object.freeze({
   BESS_SINGLE_POINT_DEPENDENCY: 'BESS-SPOF-001',
   BESS_NONCRITICAL_AT_EVENT: 'BESS-NONCRITICAL-001',
   BESS_LOSS_RIDE_THROUGH: 'BESS-RIDETHROUGH-001',
+  BESS_LOW_SOC_POWER_LIMIT: 'BESS-LOW-SOC-001',
+  BESS_DURATION_SHORTFALL: 'BESS-DURATION-001',
 });
 
 export function evaluateBessAvailabilityRisk({
@@ -37,5 +39,48 @@ export function evaluateBessAvailabilityRisk({
     result: 'PASS',
     interpretation: 'The system rides through BESS loss without a persistent adequacy deficit.',
     recommendation: 'Verify the same conclusion across peak load, low SOC, largest generator outage, and renewable variability cases.',
+  };
+}
+
+export function evaluateBessEnergyAdequacy({
+  soc,
+  minSoc,
+  availableDischargeMW,
+  requiredSupportMW,
+  supportDurationMinutes,
+  requiredDurationMinutes = 15,
+  deficitThresholdMW = 0.1,
+}) {
+  const powerShortfallMW = Math.max(0, requiredSupportMW - availableDischargeMW);
+
+  if (powerShortfallMW > deficitThresholdMW) {
+    return {
+      id: RELIABILITY_RULE.BESS_LOW_SOC_POWER_LIMIT,
+      severity: 'HIGH',
+      result: 'FAIL_POWER_ADEQUACY',
+      interpretation: 'SOC-dependent BESS derating leaves insufficient instantaneous discharge capability for the required support.',
+      recommendation: 'Raise the minimum dispatch SOC, reserve more BESS power, add firm generation, reduce the credible load step, or add redundant PCS/BESS capacity.',
+      metrics: { soc, minSoc, availableDischargeMW, requiredSupportMW, powerShortfallMW },
+    };
+  }
+
+  if (requiredSupportMW > 0 && supportDurationMinutes < requiredDurationMinutes) {
+    return {
+      id: RELIABILITY_RULE.BESS_DURATION_SHORTFALL,
+      severity: 'MEDIUM',
+      result: 'FAIL_ENERGY_ADEQUACY',
+      interpretation: 'BESS can meet the instantaneous power requirement but cannot sustain it for the required duration.',
+      recommendation: 'Increase usable MWh, raise reserve SOC, shorten the required ride-through interval, or ensure another source can take over before BESS energy is exhausted.',
+      metrics: { soc, minSoc, availableDischargeMW, requiredSupportMW, supportDurationMinutes, requiredDurationMinutes },
+    };
+  }
+
+  return {
+    id: 'BESS-ADEQUATE-001',
+    severity: 'INFO',
+    result: 'PASS',
+    interpretation: 'BESS has sufficient instantaneous power and screening-duration energy for the requested support.',
+    recommendation: 'Continue to verify thermal limits, PCS current limits, degradation, and contingency reserve in higher-fidelity studies.',
+    metrics: { soc, minSoc, availableDischargeMW, requiredSupportMW, supportDurationMinutes, requiredDurationMinutes },
   };
 }
