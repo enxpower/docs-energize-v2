@@ -21,13 +21,8 @@ export class SimulationEngine {
     this.events = [];
   }
 
-  start() {
-    this.running = true;
-  }
-
-  stop() {
-    this.running = false;
-  }
+  start() { this.running = true; }
+  stop() { this.running = false; }
 
   tripLargestDiesel() {
     const online = this.dieselFleet.filter((dg) => dg.isOnline);
@@ -35,13 +30,7 @@ export class SimulationEngine {
     const target = online.reduce((largest, dg) => (dg.ratedMW > largest.ratedMW ? dg : largest), online[0]);
     const preTripMW = target.outputMW;
     target.trip();
-    const event = {
-      timeSeconds: this.timeSeconds,
-      type: 'DG_TRIP',
-      equipmentId: target.id,
-      ratedMW: target.ratedMW,
-      preTripMW,
-    };
+    const event = { timeSeconds: this.timeSeconds, type: 'DG_TRIP', equipmentId: target.id, ratedMW: target.ratedMW, preTripMW };
     this.events.push(event);
     return event;
   }
@@ -49,12 +38,7 @@ export class SimulationEngine {
   tripBess() {
     if (!this.bess.isAvailable) return null;
     const preTripMW = this.bess.trip();
-    const event = {
-      timeSeconds: this.timeSeconds,
-      type: 'BESS_TRIP',
-      preTripMW,
-      soc: this.bess.soc,
-    };
+    const event = { timeSeconds: this.timeSeconds, type: 'BESS_TRIP', preTripMW, soc: this.bess.soc };
     this.events.push(event);
     return event;
   }
@@ -101,6 +85,7 @@ export class SimulationEngine {
     });
 
     this.timeSeconds += this.dtSeconds;
+    const requestedSupportMW = Math.max(0, loadMW - dieselMW);
     const sample = {
       timeSeconds: this.timeSeconds,
       state: this.state,
@@ -109,6 +94,9 @@ export class SimulationEngine {
       bessMW,
       bessSoc: this.bess.soc,
       bessAvailable: this.bess.isAvailable,
+      bessAvailableDischargeMW: this.bess.availableDischargeMW(),
+      bessUsableEnergyMWh: this.bess.usableDischargeEnergyMWh(),
+      bessSupportDurationMinutes: this.bess.dischargeDurationMinutes(requestedSupportMW),
       residualMW: balance.residualMW,
       frequencyHz: this.frequencyHz,
       rocofHzPerS: this.rocofHzPerS,
