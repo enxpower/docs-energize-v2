@@ -71,10 +71,20 @@ export function testPredictiveCommitmentStartsOnTime() {
   assert(fleet[2].state === DIESEL_STATE.RUNNING, `DG-3 should be RUNNING before load rise, received ${fleet[2].state}`);
 
   runFor(engine, 20);
+  const preRise = engine.history.at(-1);
   load.setDemandMW(8.5);
-  const afterRise = runFor(engine, 20);
+  const firstAfterRise = engine.step();
+  assert(
+    firstAfterRise.dieselEmsSetpointMW >= 8.49,
+    `event-triggered EMS did not assume load rise: pre=${preRise.dieselEmsSetpointMW}, first=${firstAfterRise.dieselEmsSetpointMW}`,
+  );
+
+  const afterRise = runFor(engine, 19.9);
   assert(afterRise.onlineDieselCount === 3, `expected 3 online units, received ${afterRise.onlineDieselCount}`);
-  assert(Math.abs(afterRise.residualMW) < 0.25, `forecast-prepared system failed load rise: ${afterRise.residualMW}`);
+  assert(
+    Math.abs(afterRise.residualMW) < 0.25,
+    `forecast-prepared system failed load rise: residual=${afterRise.residualMW}, diesel=${afterRise.dieselMW}, setpoint=${afterRise.dieselEmsSetpointMW}, mechanical=${afterRise.dieselMechanicalMW}, frequency=${afterRise.frequencyHz}`,
+  );
 
   return {
     name: 'Predictive commitment starts generator before load rise',
@@ -82,8 +92,11 @@ export function testPredictiveCommitmentStartsOnTime() {
     metrics: {
       startEvent,
       dg3StateBeforeRise: fleet[2].state,
+      preRiseEmsSetpointMW: preRise.dieselEmsSetpointMW,
+      firstAfterRiseEmsSetpointMW: firstAfterRise.dieselEmsSetpointMW,
       onlineDieselCountAfterRise: afterRise.onlineDieselCount,
       residualMWAfterRise: afterRise.residualMW,
+      dieselMWAfterRise: afterRise.dieselMW,
       frequencyHzAfterRise: afterRise.frequencyHz,
     },
   };
