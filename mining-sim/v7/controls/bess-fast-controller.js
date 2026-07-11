@@ -6,6 +6,7 @@ export function commandBessFastResponse({
   frequencyHz,
   nominalHz,
   rocofHzPerS,
+  feedforwardShare = 0.65,
   frequencyDeadbandHz = 0.05,
   droopGainMWPerHz = null,
   inertiaGainMWPerHzPerS = null,
@@ -19,10 +20,13 @@ export function commandBessFastResponse({
   const activeDf = Math.abs(df) <= frequencyDeadbandHz
     ? 0
     : df - Math.sign(df) * frequencyDeadbandHz;
-  const droopGain = droopGainMWPerHz ?? 0.12 * bess.powerMW;
-  const inertiaGain = inertiaGainMWPerHzPerS ?? 0.04 * bess.powerMW;
+  const droopGain = droopGainMWPerHz ?? 0.35 * bess.powerMW;
+  const inertiaGain = inertiaGainMWPerHzPerS ?? 0.08 * bess.powerMW;
 
-  const balanceCommandMW = -residualBeforeBessMW;
+  // Fast feed-forward deliberately covers only part of the instantaneous mismatch.
+  // The remaining mismatch creates a bounded frequency error that the DG governor
+  // can detect and assume through primary frequency control.
+  const balanceCommandMW = -residualBeforeBessMW * clamp(feedforwardShare, 0, 1);
   const frequencySupportMW = -activeDf * droopGain;
   const inertialSupportMW = -rocofHzPerS * inertiaGain;
   const rawCommandMW = balanceCommandMW + frequencySupportMW + inertialSupportMW;
