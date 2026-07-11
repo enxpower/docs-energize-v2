@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Mining Sim V7 Test Runner</title>
 <style>
-:root{--s:#1A2B3C;--v:#D4840A;--bg:#F8FAFC;--ok:#15803D;--bad:#B91C1C}*{box-sizing:border-box}body{margin:0;font-family:Arial,"PingFang SC",sans-serif;background:var(--bg);color:var(--s)}main{max-width:900px;margin:0 auto;padding:40px 24px}h1{font-size:28px;margin:0 0 8px}p{color:#64748B}.bar{height:5px;background:var(--v);margin:24px 0}.result{background:#fff;border:1px solid #E2E8F0;padding:18px;margin:12px 0}.PASS{border-left:5px solid var(--ok)}.FAIL{border-left:5px solid var(--bad)}pre{white-space:pre-wrap;word-break:break-word;background:#F1F5F9;padding:12px;overflow:auto}</style>
+:root{--s:#1A2B3C;--v:#D4840A;--bg:#F8FAFC;--ok:#15803D;--bad:#B91C1C}*{box-sizing:border-box}body{margin:0;font-family:Arial,"PingFang SC",sans-serif;background:var(--bg);color:var(--s)}main{max-width:900px;margin:0 auto;padding:40px 24px}h1{font-size:28px;margin:0 0 8px}p{color:#64748B}.bar{height:5px;background:var(--v);margin:24px 0}.result{background:#fff;border:1px solid #E2E8F0;padding:18px;margin:12px 0}.PASS{border-left:5px solid var(--ok)}.FAIL{border-left:5px solid var(--bad)}pre{white-space:pre-wrap;word-break:break-word;background:#F1F5F9;padding:12px;overflow:auto}
+</style>
 </head>
 <body>
 <main>
@@ -16,47 +17,8 @@
 <div id="results"></div>
 </main>
 <script type="module">
-import { runAllTests } from './test-runner.js';
-import { testBessEnergyDurationDepletion } from './bess-duration-test.js';
-import { testMultiTimescaleControl } from './multi-timescale-control-test.js';
-import { testGeneratorStateMachine, testReserveN1Classification, testCommitmentStartDecision, testDurationAwareBessReserve } from './generator-commitment-test.js';
-import { testPredictiveCommitmentStartsOnTime, testPredictiveCommitmentFlagsLateReadiness } from './predictive-commitment-test.js';
-import { testUncertaintyDrivesPreStart, testUncertaintyBlocksUnsafeStop } from './forecast-uncertainty-test.js';
-import { testFreshForecastAllowsNormalPolicy, testStaleForecastBlocksAutomaticStop, testLowQualityForecastAddsConservativeMargin } from './forecast-quality-test.js';
-import { testPrimaryFailsOverToSecondary, testPrimaryRecoveryUsesHysteresis, testEmergencyForecastFallback } from './forecast-failover-test.js';
-import { testStagedUflsResponse, testUflsDelayReset } from './ufls-test.js';
-import { testStagedLoadRestorationPriority, testColdLoadPickupDecay, testRestorationRollbackAndLockout } from './load-restoration-test.js';
-import { testMotorStartModePickupHierarchy, testMotorStartPermissiveAndReserveGate, testMotorLowFrequencyAbort, testMotorDynamicLoadIntegration } from './motor-start-test.js';
-const results=runAllTests();
-for(const test of [
-  testBessEnergyDurationDepletion,
-  testMultiTimescaleControl,
-  testGeneratorStateMachine,
-  testReserveN1Classification,
-  testCommitmentStartDecision,
-  testDurationAwareBessReserve,
-  testPredictiveCommitmentStartsOnTime,
-  testPredictiveCommitmentFlagsLateReadiness,
-  testUncertaintyDrivesPreStart,
-  testUncertaintyBlocksUnsafeStop,
-  testFreshForecastAllowsNormalPolicy,
-  testStaleForecastBlocksAutomaticStop,
-  testLowQualityForecastAddsConservativeMargin,
-  testPrimaryFailsOverToSecondary,
-  testPrimaryRecoveryUsesHysteresis,
-  testEmergencyForecastFallback,
-  testStagedUflsResponse,
-  testUflsDelayReset,
-  testStagedLoadRestorationPriority,
-  testColdLoadPickupDecay,
-  testRestorationRollbackAndLockout,
-  testMotorStartModePickupHierarchy,
-  testMotorStartPermissiveAndReserveGate,
-  testMotorLowFrequencyAbort,
-  testMotorDynamicLoadIntegration,
-]){
-  try{results.push(test());}catch(error){results.push({name:test.name,status:'FAIL',error:error.message});}
-}
+import { runFullRegressionSuite } from './all-tests.js';
+const results=runFullRegressionSuite();
 const pass=results.filter(r=>r.status==='PASS').length;
 document.getElementById('summary').textContent=`${pass}/${results.length} tests passed`;
 document.getElementById('results').innerHTML=results.map(r=>`<section class="result ${r.status}"><strong>${r.status} — ${r.name}</strong><pre>${JSON.stringify(r.metrics||r.error,null,2)}</pre></section>`).join('');
