@@ -40,6 +40,7 @@ import {
   testMotorStartPermissiveAndReserveGate,
   testMotorLowFrequencyAbort,
   testMotorDynamicLoadIntegration,
+  testMotorReceivesSimulationFrequency,
 } from './motor-start-test.js';
 
 export const EXTENDED_TESTS = Object.freeze([
@@ -69,6 +70,7 @@ export const EXTENDED_TESTS = Object.freeze([
   testMotorStartPermissiveAndReserveGate,
   testMotorLowFrequencyAbort,
   testMotorDynamicLoadIntegration,
+  testMotorReceivesSimulationFrequency,
 ]);
 
 export function runFullRegressionSuite() {
