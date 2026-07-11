@@ -1,16 +1,20 @@
 import { calculatePowerBalance } from '../physics/power-balance.js';
 import { stepIslandFrequency } from '../physics/frequency.js';
 import { dispatchIsland } from '../controls/ems.js';
+import { commandBessFastResponse } from '../controls/bess-fast-controller.js';
 import { deriveSystemState } from './state-machine.js';
 
 export class SimulationEngine {
-  constructor({ dtSeconds, nominalHz, systemBaseMW, load, dieselFleet, bess }) {
+  constructor({ dtSeconds, nominalHz, systemBaseMW, load, dieselFleet, bess, emsIntervalSeconds = 20 }) {
     this.dtSeconds = dtSeconds;
     this.nominalHz = nominalHz;
     this.systemBaseMW = systemBaseMW;
     this.load = load;
     this.dieselFleet = dieselFleet;
     this.bess = bess;
+    this.emsIntervalSeconds = emsIntervalSeconds;
+    this.nextEmsDispatchSeconds = 0;
+    this.lastEmsResult = null;
     this.timeSeconds = 0;
     this.frequencyHz = nominalHz;
     this.rocofHzPerS = 0;
@@ -24,6 +28,13 @@ export class SimulationEngine {
   start() { this.running = true; }
   stop() { this.running = false; }
 
+  runEmsIfDue(loadMW) {
+    if (this.timeSeconds + 1e-9 < this.nextEmsDispatchSeconds) return this.lastEmsResult;
+    this.lastEmsResult = dispatchIsland({ loadMW, dieselFleet: this.dieselFleet, bess: this.bess });
+    this.nextEmsDispatchSeconds = this.timeSeconds + this.emsIntervalSeconds;
+    return this.lastEmsResult;
+  }
+
   tripLargestDiesel() {
     const online = this.dieselFleet.filter((dg) => dg.isOnline);
     if (!online.length) return null;
@@ -32,6 +43,7 @@ export class SimulationEngine {
     target.trip();
     const event = { timeSeconds: this.timeSeconds, type: 'DG_TRIP', equipmentId: target.id, ratedMW: target.ratedMW, preTripMW };
     this.events.push(event);
+    this.nextEmsDispatchSeconds = this.timeSeconds;
     return event;
   }
 
@@ -40,6 +52,7 @@ export class SimulationEngine {
     const preTripMW = this.bess.trip();
     const event = { timeSeconds: this.timeSeconds, type: 'BESS_TRIP', preTripMW, soc: this.bess.soc };
     this.events.push(event);
+    this.nextEmsDispatchSeconds = this.timeSeconds;
     return event;
   }
 
@@ -47,11 +60,27 @@ export class SimulationEngine {
     if (!this.running) throw new Error('Simulation engine is not running');
 
     const loadMW = this.load.step(this.dtSeconds);
-    dispatchIsland({ loadMW, dieselFleet: this.dieselFleet, bess: this.bess });
+    this.runEmsIfDue(loadMW);
 
-    const dieselMW = this.dieselFleet.reduce((sum, dg) => sum + dg.step(this.dtSeconds), 0);
+    const dieselMW = this.dieselFleet.reduce(
+      (sum, dg) => sum + dg.step(this.dtSeconds, { frequencyHz: this.frequencyHz }),
+      0,
+    );
+    const dieselEmsSetpointMW = this.dieselFleet.reduce((sum, dg) => sum + dg.emsSetpointMW, 0);
+    const dieselMechanicalMW = this.dieselFleet.reduce((sum, dg) => sum + dg.mechanicalMW, 0);
+    const dieselPrimaryResponseMW = this.dieselFleet.reduce(
+      (sum, dg) => sum + (dg.governorCommandMW - dg.emsSetpointMW),
+      0,
+    );
+
     const preBessResidualMW = dieselMW - loadMW;
-    this.bess.setCommandMW(-preBessResidualMW);
+    const bessCommandMW = commandBessFastResponse({
+      bess: this.bess,
+      residualBeforeBessMW: preBessResidualMW,
+      frequencyHz: this.frequencyHz,
+      nominalHz: this.nominalHz,
+      rocofHzPerS: this.rocofHzPerS,
+    });
     const bessMW = this.bess.step(this.dtSeconds);
 
     const balance = calculatePowerBalance({ loadMW, dieselMW, bessMW });
@@ -91,6 +120,10 @@ export class SimulationEngine {
       state: this.state,
       loadMW,
       dieselMW,
+      dieselEmsSetpointMW,
+      dieselMechanicalMW,
+      dieselPrimaryResponseMW,
+      bessCommandMW,
       bessMW,
       bessSoc: this.bess.soc,
       bessAvailable: this.bess.isAvailable,
@@ -101,6 +134,7 @@ export class SimulationEngine {
       frequencyHz: this.frequencyHz,
       rocofHzPerS: this.rocofHzPerS,
       onlineDieselCount: onlineFleet.length,
+      emsNextDispatchSeconds: this.nextEmsDispatchSeconds,
     };
     this.history.push(sample);
     return sample;
