@@ -12,6 +12,8 @@ export class ProductionLoad {
     curtailRampMWPerS = Infinity,
     restoreRampMWPerS = Infinity,
     productionUnitsPerMWh = 1,
+    normalThroughputTPH = 0,
+    throughputExponent = 1,
   } = {}) {
     if (!id) throw new Error('ProductionLoad requires id');
     this.id = String(id);
@@ -24,6 +26,8 @@ export class ProductionLoad {
     this.curtailRampMWPerS = Math.max(0, Number(curtailRampMWPerS) || Infinity);
     this.restoreRampMWPerS = Math.max(0, Number(restoreRampMWPerS) || Infinity);
     this.productionUnitsPerMWh = Math.max(0, Number(productionUnitsPerMWh) || 0);
+    this.normalThroughputTPH = Math.max(0, Number(normalThroughputTPH) || 0);
+    this.throughputExponent = Math.max(0.01, Number(throughputExponent) || 1);
     this.targetMW = this.normalMW;
     this.outputMW = this.normalMW;
     this.curtailmentReason = null;
@@ -41,6 +45,20 @@ export class ProductionLoad {
 
   get availableRestorationMW() {
     return Math.max(0, this.normalMW - this.outputMW);
+  }
+
+  get loadFraction() {
+    if (this.normalMW <= 0) return 0;
+    return clamp(this.outputMW / this.normalMW, 0, 1);
+  }
+
+  get throughputTPH() {
+    if (this.normalThroughputTPH <= 0) return 0;
+    return this.normalThroughputTPH * (this.loadFraction ** this.throughputExponent);
+  }
+
+  get deferredThroughputTPH() {
+    return Math.max(0, this.normalThroughputTPH - this.throughputTPH);
   }
 
   setTargetMW(targetMW, { timeSeconds = null, reason = null } = {}) {
@@ -81,6 +99,10 @@ export class ProductionLoad {
       priority: this.priority,
       safetyCritical: this.safetyCritical,
       curtailmentReason: this.curtailmentReason,
+      normalThroughputTPH: this.normalThroughputTPH,
+      throughputTPH: this.throughputTPH,
+      deferredThroughputTPH: this.deferredThroughputTPH,
+      throughputExponent: this.throughputExponent,
     };
   }
 }
@@ -106,6 +128,18 @@ export class ProductionLoadBank {
 
   get curtailedMW() {
     return this.loads.reduce((sum, load) => sum + load.curtailedMW, 0);
+  }
+
+  get throughputTPH() {
+    return this.loads.reduce((sum, load) => sum + load.throughputTPH, 0);
+  }
+
+  get normalThroughputTPH() {
+    return this.loads.reduce((sum, load) => sum + load.normalThroughputTPH, 0);
+  }
+
+  get deferredThroughputTPH() {
+    return this.loads.reduce((sum, load) => sum + load.deferredThroughputTPH, 0);
   }
 
   snapshot() {
