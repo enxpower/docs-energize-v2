@@ -18,6 +18,23 @@ export const ACCEPTANCE = Object.freeze({
     maximumRecoveredResidualMW: 0.10,
     recoveryWindowSeconds: 60,
   }),
+  bessTripIdle: Object.freeze({
+    minimumFrequencyNadirHz: 59.50,
+    maximumRoCoFHzPerS: 0.50,
+    maximumRecoveredFrequencyErrorHz: 0.10,
+    maximumRecoveredResidualMW: 0.10,
+    recoveryWindowSeconds: 30,
+  }),
+  bessTripSupporting: Object.freeze({
+    supportLoadMW: 13.50,
+    preTripSupportWindowSeconds: 0.50,
+    minimumPreTripBessMW: 0.80,
+    minimumFrequencyNadirHz: 58.00,
+    maximumRoCoFHzPerS: 2.50,
+    expectedMinimumPersistentDeficitMW: 0.20,
+    expectedState: 'DEGRADED',
+    observationWindowSeconds: 60,
+  }),
   powerBalance: Object.freeze({
     maximumTransientResidualMW: 0.80,
   }),
