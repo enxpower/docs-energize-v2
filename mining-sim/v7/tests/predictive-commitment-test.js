@@ -16,9 +16,25 @@ function runFor(engine, seconds) {
   return last;
 }
 
+function dieselConfig(id) {
+  return {
+    id,
+    ratedMW: 3.3,
+    minLoadPU: 0.35,
+    rampUpMWPerS: 0.2,
+    rampDownMWPerS: 1.0,
+    inertiaSeconds: 4,
+    droopPU: 0.04,
+    governorTimeConstantSeconds: 0.25,
+    engineTimeConstantSeconds: 0.8,
+    frequencyDeadbandHz: 0.025,
+    nominalHz: 60,
+  };
+}
+
 function makeFleet({ offlineLeadSeconds = 90 } = {}) {
   const online = [1, 2].map((n) => {
-    const dg = new DieselGenerator({ id: `DG-${n}`, ratedMW: 3.3 });
+    const dg = new DieselGenerator(dieselConfig(`DG-${n}`));
     dg.emsSetpointMW = 2.75;
     dg.governorCommandMW = 2.75;
     dg.mechanicalMW = 2.75;
@@ -26,8 +42,7 @@ function makeFleet({ offlineLeadSeconds = 90 } = {}) {
     return dg;
   });
   online.push(new DieselGenerator({
-    id: 'DG-3',
-    ratedMW: 3.3,
+    ...dieselConfig('DG-3'),
     initialState: DIESEL_STATE.OFF,
     minDownSeconds: 0,
     startDelaySeconds: Math.max(0, offlineLeadSeconds - 60),
