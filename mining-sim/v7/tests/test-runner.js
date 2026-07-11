@@ -1,5 +1,5 @@
 import { createBaseOffgridScenario } from '../scenarios/base-offgrid.js';
-import { evaluateBessAvailabilityRisk } from '../rules/reliability.js';
+import { evaluateBessAvailabilityRisk, evaluateBessEnergyAdequacy } from '../rules/reliability.js';
 import { ACCEPTANCE } from './acceptance-criteria.js';
 
 function assert(condition, message) {
@@ -177,6 +177,58 @@ function testBessTripWhileSupporting() {
   };
 }
 
+function testLowSocPowerDerating() {
+  const c = ACCEPTANCE.lowSocDerating;
+
+  const high = createBaseOffgridScenario();
+  high.bess.energyMWhStored = high.bess.energyMWh * c.highSoc;
+  const highAvailableMW = high.bess.availableDischargeMW();
+  high.start();
+  high.load.setDemandMW(c.stressLoadMW);
+  const highFinal = runFor(high, c.observationWindowSeconds);
+
+  const low = createBaseOffgridScenario();
+  low.bess.energyMWhStored = low.bess.energyMWh * c.lowSoc;
+  const lowAvailableMW = low.bess.availableDischargeMW();
+  const lowDurationMinutes = low.bess.dischargeDurationMinutes(c.requiredSupportMW);
+  const rule = evaluateBessEnergyAdequacy({
+    soc: low.bess.soc,
+    minSoc: low.bess.minSoc,
+    availableDischargeMW: lowAvailableMW,
+    requiredSupportMW: c.requiredSupportMW,
+    supportDurationMinutes: lowDurationMinutes,
+    requiredDurationMinutes: c.requiredDurationMinutes,
+  });
+  low.start();
+  low.load.setDemandMW(c.stressLoadMW);
+  const lowFinal = runFor(low, c.observationWindowSeconds);
+  const lowShortfallMW = Math.max(0, -lowFinal.residualMW);
+
+  assert(highAvailableMW >= c.minimumHighSocAvailableDischargeMW, `high-SOC BESS unexpectedly derated: ${highAvailableMW}`);
+  assert(Math.abs(highFinal.residualMW) < ACCEPTANCE.steadyState.maxPowerResidualMW, `high-SOC case failed to support load: ${highFinal.residualMW}`);
+  assert(lowAvailableMW <= c.maximumLowSocAvailableDischargeMW, `low-SOC BESS did not derate sufficiently: ${lowAvailableMW}`);
+  assert(lowShortfallMW >= c.minimumExpectedLowSocShortfallMW, `low-SOC capacity shortfall not detected: ${lowShortfallMW}`);
+  assert(lowFinal.state === c.expectedLowSocState, `expected ${c.expectedLowSocState}, received ${lowFinal.state}`);
+  assert(rule.id === 'BESS-LOW-SOC-001', `expected low-SOC power adequacy rule, received ${rule.id}`);
+
+  return {
+    name: 'Low-SOC BESS power derating',
+    status: 'PASS',
+    metrics: {
+      highSoc: c.highSoc,
+      highSocAvailableDischargeMW: highAvailableMW,
+      highSocFinalResidualMW: highFinal.residualMW,
+      lowSoc: c.lowSoc,
+      lowSocAvailableDischargeMW: lowAvailableMW,
+      lowSocSupportDurationMinutes: lowDurationMinutes,
+      lowSocPersistentShortfallMW: lowShortfallMW,
+      lowSocFinalFrequencyHz: lowFinal.frequencyHz,
+      lowSocFinalState: lowFinal.state,
+      engineeringRule: rule,
+    },
+  };
+}
+
 export function runAllTests() {
   const tests = [
     testBaseSteadyState,
@@ -185,6 +237,7 @@ export function runAllTests() {
     testLargestDieselTrip,
     testBessTripWhileIdle,
     testBessTripWhileSupporting,
+    testLowSocPowerDerating,
   ];
   const results = [];
   for (const test of tests) {
