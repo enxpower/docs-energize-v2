@@ -94,6 +94,12 @@ import {
   testScenarioJsonActionsCompileAndExecute,
   testScenarioBatchConfigIsolationAndCommonHorizon,
 } from './scenario-configurator-test.js';
+import {
+  testConfiguratorDuplicateIsDeeplyIsolated,
+  testConfiguratorNestedUpdateIsImmutable,
+  testConfiguratorRejectsMixedComparisonHorizon,
+  testConfiguratorRunsRealEngineAndComparison,
+} from './configurator-ui-test.js';
 import { testMinimumMiningAcceptanceChain } from './mining-acceptance-test.js';
 
 export const EXTENDED_TESTS = Object.freeze([
@@ -158,6 +164,10 @@ export const EXTENDED_TESTS = Object.freeze([
   testScenarioConfigRejectsInvalidReferences,
   testScenarioJsonActionsCompileAndExecute,
   testScenarioBatchConfigIsolationAndCommonHorizon,
+  testConfiguratorDuplicateIsDeeplyIsolated,
+  testConfiguratorNestedUpdateIsImmutable,
+  testConfiguratorRejectsMixedComparisonHorizon,
+  testConfiguratorRunsRealEngineAndComparison,
   testMinimumMiningAcceptanceChain,
 ]);
 
