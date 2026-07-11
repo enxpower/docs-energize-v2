@@ -48,12 +48,20 @@ export class PiecewiseLoadForecast {
     fallbackUncertaintyMW = 0,
     fallbackUncertaintyPU = 0,
     securityMarginMW = 0,
+    source = 'SCHEDULE',
+    generatedAtSeconds = 0,
+    validForSeconds = 900,
+    qualityGrade = 'B',
   } = {}) {
     this.points = normalizePoints(points);
     this.fallbackMW = Math.max(0, fallbackMW);
     this.fallbackUncertaintyMW = Math.max(0, fallbackUncertaintyMW);
     this.fallbackUncertaintyPU = clamp(fallbackUncertaintyPU, 0, 1);
     this.securityMarginMW = Math.max(0, securityMarginMW);
+    this.source = source;
+    this.generatedAtSeconds = Math.max(0, Number(generatedAtSeconds) || 0);
+    this.validForSeconds = Math.max(0, Number(validForSeconds) || 0);
+    this.qualityGrade = qualityGrade;
   }
 
   pointAt(timeSeconds) {
@@ -90,9 +98,7 @@ export class PiecewiseLoadForecast {
     const candidateTimes = new Set([start, end]);
 
     for (const point of this.points) {
-      if (point.timeSeconds >= start && point.timeSeconds <= end) {
-        candidateTimes.add(point.timeSeconds);
-      }
+      if (point.timeSeconds >= start && point.timeSeconds <= end) candidateTimes.add(point.timeSeconds);
     }
     if (sampleIntervalSeconds > 0) {
       for (let t = start; t <= end; t += sampleIntervalSeconds) candidateTimes.add(t);
@@ -112,10 +118,7 @@ export class PiecewiseLoadForecast {
 
   getCommitmentForecast({ currentTimeSeconds, lookAheadSeconds, currentLoadMW }) {
     const horizonSeconds = Math.max(0, lookAheadSeconds);
-    const peakEnvelope = this.peakEnvelopeBetween(
-      currentTimeSeconds,
-      currentTimeSeconds + horizonSeconds,
-    );
+    const peakEnvelope = this.peakEnvelopeBetween(currentTimeSeconds, currentTimeSeconds + horizonSeconds);
     const endEnvelope = this.envelopeAt(currentTimeSeconds + horizonSeconds);
     const currentEnvelope = buildForecastEnvelope({
       p50LoadMW: currentLoadMW,
@@ -133,18 +136,30 @@ export class PiecewiseLoadForecast {
       securityMarginMW: peakEnvelope.securityMarginMW,
       forecastRelativeUncertainty: peakEnvelope.relativeUncertainty,
       forecastRiskLevel: peakEnvelope.riskLevel,
+      source: this.source,
+      generatedAtSeconds: this.generatedAtSeconds,
+      validUntilSeconds: this.generatedAtSeconds + this.validForSeconds,
+      qualityGrade: this.qualityGrade,
     };
   }
 }
 
 export class HoldCurrentLoadForecast {
-  constructor({ uncertaintyMW = 0, uncertaintyPU = 0, securityMarginMW = 0 } = {}) {
+  constructor({
+    uncertaintyMW = 0,
+    uncertaintyPU = 0,
+    securityMarginMW = 0,
+    source = 'REALTIME_HOLD',
+    qualityGrade = 'A',
+  } = {}) {
     this.uncertaintyMW = Math.max(0, uncertaintyMW);
     this.uncertaintyPU = clamp(uncertaintyPU, 0, 1);
     this.securityMarginMW = Math.max(0, securityMarginMW);
+    this.source = source;
+    this.qualityGrade = qualityGrade;
   }
 
-  getCommitmentForecast({ lookAheadSeconds, currentLoadMW }) {
+  getCommitmentForecast({ currentTimeSeconds = 0, lookAheadSeconds, currentLoadMW }) {
     const envelope = buildForecastEnvelope({
       p50LoadMW: currentLoadMW,
       uncertaintyMW: this.uncertaintyMW,
@@ -162,6 +177,10 @@ export class HoldCurrentLoadForecast {
       securityMarginMW: envelope.securityMarginMW,
       forecastRelativeUncertainty: envelope.relativeUncertainty,
       forecastRiskLevel: envelope.riskLevel,
+      source: this.source,
+      generatedAtSeconds: Math.max(0, currentTimeSeconds),
+      validUntilSeconds: Infinity,
+      qualityGrade: this.qualityGrade,
     };
   }
 }
