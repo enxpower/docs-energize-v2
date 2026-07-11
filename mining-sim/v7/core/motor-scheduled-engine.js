@@ -2,12 +2,13 @@ import { SimulationEngine } from './simulation-engine.js';
 import { MOTOR_STATE } from '../equipment/motor-load.js';
 
 export class MotorScheduledSimulationEngine extends SimulationEngine {
-  constructor({ motorBank, motorStartScheduler, ...config }) {
+  constructor({ motorBank, motorStartScheduler, motorRetryGovernance = null, ...config }) {
     super(config);
     if (!motorBank) throw new Error('MotorScheduledSimulationEngine requires a motorBank');
     if (!motorStartScheduler) throw new Error('MotorScheduledSimulationEngine requires a motorStartScheduler');
     this.motorBank = motorBank;
     this.motorStartScheduler = motorStartScheduler;
+    this.motorRetryGovernance = motorRetryGovernance;
     this.motorEventCount = 0;
     this.lastMotorStates = new Map(
       this.motorBank.motors.map((motor) => [motor.id, motor.state]),
@@ -41,9 +42,50 @@ export class MotorScheduledSimulationEngine extends SimulationEngine {
       deadlineSeconds: request.deadlineSeconds,
       reason,
     };
-    this.events.push(event);
-    this.motorEventCount += 1;
+    this.recordMotorEvents([event]);
     return event;
+  }
+
+  confirmMotorRetry(motorId, priority = null) {
+    if (!this.motorRetryGovernance) return null;
+    const event = this.motorRetryGovernance.acknowledge({
+      motorId,
+      timeSeconds: this.timeSeconds,
+      scheduler: this.motorStartScheduler,
+      priority,
+    });
+    if (event) this.recordMotorEvents([event]);
+    return event;
+  }
+
+  resetMotorLockout(motorId) {
+    if (!this.motorRetryGovernance) return null;
+    const event = this.motorRetryGovernance.resetLockout({
+      motorId,
+      timeSeconds: this.timeSeconds,
+    });
+    if (event) this.recordMotorEvents([event]);
+    return event;
+  }
+
+  recordMotorEvents(events) {
+    for (const event of events) {
+      this.events.push(event);
+      this.motorEventCount += 1;
+      if (event.type === 'MOTOR_START_ACCEPTED') {
+        this.nextEmsDispatchSeconds = Math.min(this.nextEmsDispatchSeconds, this.timeSeconds);
+        this.nextCommitmentEvaluationSeconds = Math.min(
+          this.nextCommitmentEvaluationSeconds,
+          this.timeSeconds,
+        );
+      }
+    }
+  }
+
+  activeRequestPriority(motorId) {
+    const requests = this.motorStartScheduler.requests ?? [];
+    const matching = [...requests].reverse().find((request) => request.motor?.id === motorId);
+    return matching?.priority ?? 1;
   }
 
   detectMotorStateEvents(timeSeconds) {
@@ -51,7 +93,7 @@ export class MotorScheduledSimulationEngine extends SimulationEngine {
     for (const motor of this.motorBank.motors) {
       const previousState = this.lastMotorStates.get(motor.id) ?? motor.state;
       if (previousState === MOTOR_STATE.STARTING && motor.state === MOTOR_STATE.RUNNING) {
-        events.push({
+        const completed = {
           timeSeconds,
           type: 'MOTOR_START_COMPLETED',
           motorId: motor.id,
@@ -59,7 +101,10 @@ export class MotorScheduledSimulationEngine extends SimulationEngine {
           ratedMW: motor.ratedMW,
           startMode: motor.startMode,
           startDurationSeconds: motor.stateElapsedSeconds,
-        });
+        };
+        events.push(completed);
+        const cleared = this.motorRetryGovernance?.handleSuccess({ motor, timeSeconds });
+        if (cleared) events.push(cleared);
       }
       if (previousState === MOTOR_STATE.STARTING && motor.state === MOTOR_STATE.FAILED) {
         events.push({
@@ -71,6 +116,12 @@ export class MotorScheduledSimulationEngine extends SimulationEngine {
           startMode: motor.startMode,
           failureReason: motor.lastFailureReason,
         });
+        const recovery = this.motorRetryGovernance?.handleFailure({
+          motor,
+          timeSeconds,
+          requestPriority: this.activeRequestPriority(motor.id),
+        });
+        if (recovery) events.push(recovery);
       }
       this.lastMotorStates.set(motor.id, motor.state);
     }
@@ -80,6 +131,10 @@ export class MotorScheduledSimulationEngine extends SimulationEngine {
   step() {
     const sample = super.step();
     const stateEvents = this.detectMotorStateEvents(sample.timeSeconds);
+    const retryEvents = this.motorRetryGovernance?.evaluate({
+      timeSeconds: sample.timeSeconds,
+      scheduler: this.motorStartScheduler,
+    }) ?? [];
     const schedulingEvents = this.motorStartScheduler.evaluate({
       motorBank: this.motorBank,
       frequencyHz: sample.frequencyHz,
@@ -88,22 +143,13 @@ export class MotorScheduledSimulationEngine extends SimulationEngine {
       timeSeconds: sample.timeSeconds,
     });
 
-    const motorEvents = [...stateEvents, ...schedulingEvents];
-    for (const event of motorEvents) {
-      this.events.push(event);
-      this.motorEventCount += 1;
-      if (event.type === 'MOTOR_START_ACCEPTED') {
-        this.nextEmsDispatchSeconds = Math.min(this.nextEmsDispatchSeconds, this.timeSeconds);
-        this.nextCommitmentEvaluationSeconds = Math.min(
-          this.nextCommitmentEvaluationSeconds,
-          this.timeSeconds,
-        );
-      }
-    }
+    const motorEvents = [...stateEvents, ...retryEvents, ...schedulingEvents];
+    this.recordMotorEvents(motorEvents);
 
     sample.motorStartEvents = motorEvents;
     sample.motorEventCount = this.motorEventCount;
     sample.motorStartQueue = this.motorStartScheduler.snapshot();
+    sample.motorRecovery = this.motorRetryGovernance?.snapshot() ?? [];
     sample.motorStates = this.motorBank.motors.map((motor) => ({
       id: motor.id,
       name: motor.name,
