@@ -62,10 +62,24 @@ export class Bess {
     return Math.max(0, this.energyMWhStored - this.energyMWh * this.minSoc) * this.eta;
   }
 
+  minimumSocForSupportMW(requestedMW) {
+    if (requestedMW <= 0) return this.minSoc;
+    if (requestedMW > this.powerMW) return Infinity;
+    const requiredPowerFactor = requestedMW / Math.max(this.powerMW, 1e-9);
+    return this.minSoc + this.lowSocDeratingBand * requiredPowerFactor;
+  }
+
+  supportDurationMinutes(requestedMW) {
+    if (!this.isAvailable || requestedMW <= 0 || this.energyMWh <= 0) return 0;
+    if (requestedMW > this.availableDischargeMW()) return 0;
+    const terminalSoc = Math.max(this.minSoc, this.minimumSocForSupportMW(requestedMW));
+    const usableStoredMWh = Math.max(0, this.energyMWhStored - this.energyMWh * terminalSoc);
+    const usableDeliveredMWh = usableStoredMWh * this.eta;
+    return (usableDeliveredMWh / requestedMW) * 60;
+  }
+
   dischargeDurationMinutes(requestedMW = this.availableDischargeMW()) {
-    const supportedMW = Math.min(Math.max(0, requestedMW), this.availableDischargeMW());
-    if (supportedMW <= 0) return 0;
-    return (this.usableDischargeEnergyMWh() / supportedMW) * 60;
+    return this.supportDurationMinutes(requestedMW);
   }
 
   setCommandMW(commandMW) {
