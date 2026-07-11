@@ -47,6 +47,11 @@ import {
   testMotorSchedulerReserveDelayAndRetry,
   testMotorSchedulerExpiry,
 } from './motor-start-scheduler-test.js';
+import {
+  testIntegratedMotorStartsAreStaggered,
+  testIntegratedMotorStartFailureIsTraceable,
+  testMotorQueueStateIsExposedInSamples,
+} from './motor-scheduler-integration-test.js';
 import { testMinimumMiningAcceptanceChain } from './mining-acceptance-test.js';
 
 export const EXTENDED_TESTS = Object.freeze([
@@ -80,6 +85,9 @@ export const EXTENDED_TESTS = Object.freeze([
   testMotorSchedulerPriorityAndDeadline,
   testMotorSchedulerReserveDelayAndRetry,
   testMotorSchedulerExpiry,
+  testIntegratedMotorStartsAreStaggered,
+  testIntegratedMotorStartFailureIsTraceable,
+  testMotorQueueStateIsExposedInSamples,
   testMinimumMiningAcceptanceChain,
 ]);
 
