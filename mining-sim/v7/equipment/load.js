@@ -12,8 +12,12 @@ export class AggregateLoad {
         mw: Math.max(0, Number(block.mw) || 0),
         priority: Math.max(1, Number(block.priority) || index + 1),
         critical: Boolean(block.critical),
+        coldLoadPickupPU: Math.max(0, Number(block.coldLoadPickupPU) || 0),
+        coldLoadPickupSeconds: Math.max(0, Number(block.coldLoadPickupSeconds) || 0),
         shed: false,
         shedAtSeconds: null,
+        restoredAtSeconds: null,
+        pickupElapsedSeconds: Infinity,
       }))
       .sort((a, b) => a.priority - b.priority);
   }
@@ -32,12 +36,29 @@ export class AggregateLoad {
       .reduce((sum, block) => sum + block.mw, 0);
   }
 
+  coldPickupForBlockMW(block) {
+    if (block.shed || block.coldLoadPickupPU <= 0 || block.coldLoadPickupSeconds <= 0) return 0;
+    if (block.pickupElapsedSeconds >= block.coldLoadPickupSeconds) return 0;
+    const remainingPU = 1 - block.pickupElapsedSeconds / block.coldLoadPickupSeconds;
+    return block.mw * block.coldLoadPickupPU * clamp(remainingPU, 0, 1);
+  }
+
+  get coldLoadPickupMW() {
+    return this.shedBlocks.reduce((sum, block) => sum + this.coldPickupForBlockMW(block), 0);
+  }
+
   get connectedMW() {
-    return Math.max(0, this.commandMW - this.shedMW);
+    return Math.max(0, this.commandMW - this.shedMW + this.coldLoadPickupMW);
   }
 
   get availableShedBlocks() {
     return this.shedBlocks.filter((block) => !block.shed);
+  }
+
+  get restorableBlocks() {
+    return this.shedBlocks
+      .filter((block) => block.shed)
+      .sort((a, b) => b.priority - a.priority || a.mw - b.mw);
   }
 
   shedBlock(blockId, timeSeconds = null) {
@@ -45,6 +66,8 @@ export class AggregateLoad {
     if (!block || block.shed) return null;
     block.shed = true;
     block.shedAtSeconds = timeSeconds;
+    block.restoredAtSeconds = null;
+    block.pickupElapsedSeconds = Infinity;
     return { ...block };
   }
 
@@ -53,23 +76,37 @@ export class AggregateLoad {
     return candidate ? this.shedBlock(candidate.id, timeSeconds) : null;
   }
 
-  restoreBlock(blockId) {
+  restoreBlock(blockId, timeSeconds = null) {
     const block = this.shedBlocks.find((candidate) => candidate.id === blockId);
-    if (!block || !block.shed) return false;
+    if (!block || !block.shed) return null;
     block.shed = false;
-    block.shedAtSeconds = null;
-    return true;
+    block.restoredAtSeconds = timeSeconds;
+    block.pickupElapsedSeconds = 0;
+    return {
+      ...block,
+      coldPickupInitialMW: block.mw * block.coldLoadPickupPU,
+      expectedPickupTotalMW: block.mw * (1 + block.coldLoadPickupPU),
+    };
   }
 
-  restoreAll() {
+  restoreAll(timeSeconds = null) {
+    const restored = [];
     for (const block of this.shedBlocks) {
-      block.shed = false;
-      block.shedAtSeconds = null;
+      if (!block.shed) continue;
+      const result = this.restoreBlock(block.id, timeSeconds);
+      if (result) restored.push(result);
     }
+    return restored;
   }
 
-  step() {
-    this.actualMW = clamp(this.connectedMW, 0, this.commandMW);
+  step(dtSeconds = 0) {
+    const dt = Math.max(0, Number(dtSeconds) || 0);
+    for (const block of this.shedBlocks) {
+      if (!block.shed && Number.isFinite(block.pickupElapsedSeconds)) {
+        block.pickupElapsedSeconds += dt;
+      }
+    }
+    this.actualMW = clamp(this.connectedMW, 0, this.commandMW + this.coldLoadPickupMW);
     return this.actualMW;
   }
 }
