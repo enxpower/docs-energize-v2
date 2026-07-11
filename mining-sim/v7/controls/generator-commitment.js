@@ -18,13 +18,16 @@ export function evaluateGeneratorCommitment({
   bess,
   minimumOnlineUnits = 1,
   reserveMarginMW = 0,
+  firmSupportDurationMinutes = 15,
   allowStop = true,
 }) {
   const reserve = assessReserve({ dieselFleet, bess });
   const committedRatedMW = dieselFleet
     .filter((dg) => dg.isCommitted)
     .reduce((sum, dg) => sum + dg.ratedMW, 0);
-  const bessFirmSupportMW = bess?.isAvailable ? Math.min(bess.availableDischargeMW(), bess.powerMW) : 0;
+  const bessFirmSupportMW = bess?.isAvailable
+    ? bess.sustainableDischargeMW(firmSupportDurationMinutes)
+    : 0;
   const requiredCommittedMW = Math.max(0, loadMW + reserveMarginMW - bessFirmSupportMW);
 
   let action = null;
@@ -36,7 +39,7 @@ export function evaluateGeneratorCommitment({
         type: 'START',
         equipmentId: candidate.id,
         reason: committedRatedMW < requiredCommittedMW
-          ? 'Committed firm capacity is below requirement.'
+          ? 'Committed duration-qualified firm capacity is below requirement.'
           : 'N-1 reserve assessment failed.',
       };
     }
@@ -51,7 +54,7 @@ export function evaluateGeneratorCommitment({
           action = {
             type: 'STOP',
             equipmentId: candidate.id,
-            reason: 'Excess committed capacity can be removed while preserving the configured firm-capacity margin.',
+            reason: 'Excess committed capacity can be removed while preserving the duration-qualified firm-capacity margin.',
           };
           break;
         }
@@ -64,6 +67,7 @@ export function evaluateGeneratorCommitment({
     reserve,
     committedRatedMW,
     bessFirmSupportMW,
+    firmSupportDurationMinutes,
     requiredCommittedMW,
   };
 }
