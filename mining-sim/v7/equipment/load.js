@@ -1,10 +1,12 @@
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
 export class AggregateLoad {
-  constructor({ baseMW, shedBlocks = [] }) {
+  constructor({ baseMW, shedBlocks = [], dynamicLoads = [] }) {
     this.baseMW = Math.max(0, baseMW);
     this.commandMW = this.baseMW;
     this.actualMW = this.baseMW;
+    this.dynamicLoads = [...dynamicLoads];
+    this.dynamicLoadMW = 0;
     this.shedBlocks = [...shedBlocks]
       .map((block, index) => ({
         id: block.id ?? `LOAD-BLOCK-${index + 1}`,
@@ -22,12 +24,20 @@ export class AggregateLoad {
       .sort((a, b) => a.priority - b.priority);
   }
 
+  attachDynamicLoad(dynamicLoad) {
+    if (!dynamicLoad || typeof dynamicLoad.step !== 'function') {
+      throw new Error('Dynamic load must expose step(dtSeconds, context)');
+    }
+    this.dynamicLoads.push(dynamicLoad);
+    return dynamicLoad;
+  }
+
   setDemandMW(mw) {
     this.commandMW = Math.max(0, mw);
   }
 
   get demandMW() {
-    return this.commandMW;
+    return this.commandMW + this.dynamicLoadMW;
   }
 
   get shedMW() {
@@ -48,7 +58,7 @@ export class AggregateLoad {
   }
 
   get connectedMW() {
-    return Math.max(0, this.commandMW - this.shedMW + this.coldLoadPickupMW);
+    return Math.max(0, this.commandMW - this.shedMW + this.coldLoadPickupMW + this.dynamicLoadMW);
   }
 
   get availableShedBlocks() {
@@ -99,14 +109,22 @@ export class AggregateLoad {
     return restored;
   }
 
-  step(dtSeconds = 0) {
+  step(dtSeconds = 0, context = {}) {
     const dt = Math.max(0, Number(dtSeconds) || 0);
     for (const block of this.shedBlocks) {
       if (!block.shed && Number.isFinite(block.pickupElapsedSeconds)) {
         block.pickupElapsedSeconds += dt;
       }
     }
-    this.actualMW = clamp(this.connectedMW, 0, this.commandMW + this.coldLoadPickupMW);
+    this.dynamicLoadMW = this.dynamicLoads.reduce(
+      (sum, dynamicLoad) => sum + Math.max(0, Number(dynamicLoad.step(dt, context)) || 0),
+      0,
+    );
+    this.actualMW = clamp(
+      this.connectedMW,
+      0,
+      this.commandMW + this.coldLoadPickupMW + this.dynamicLoadMW,
+    );
     return this.actualMW;
   }
 }
