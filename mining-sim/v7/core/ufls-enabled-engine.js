@@ -22,9 +22,11 @@ export class UflsEnabledSimulationEngine extends SimulationEngine {
   step() {
     const demandMW = this.load.demandMW ?? this.load.commandMW ?? 0;
     const sample = super.step();
-    const shedLoadMW = this.load.shedMW ?? Math.max(0, demandMW - sample.loadMW);
+    const nominalShedBlockMW = this.load.shedMW ?? 0;
+    const explicitUnservedMW = this.load.explicitUnservedMW
+      ?? Math.max(0, Math.min(demandMW, demandMW - sample.loadMW));
 
-    this.eensMWh += shedLoadMW * this.dtSeconds / 3600;
+    this.eensMWh += explicitUnservedMW * this.dtSeconds / 3600;
 
     const uflsEvents = this.uflsController?.evaluate({
       frequencyHz: sample.frequencyHz,
@@ -69,7 +71,9 @@ export class UflsEnabledSimulationEngine extends SimulationEngine {
     sample.demandMW = demandMW;
     sample.connectedLoadMW = sample.loadMW;
     sample.servedLoadMW = sample.loadMW;
-    sample.shedLoadMW = shedLoadMW;
+    sample.nominalShedBlockMW = nominalShedBlockMW;
+    sample.shedLoadMW = explicitUnservedMW;
+    sample.explicitUnservedMW = explicitUnservedMW;
     sample.coldLoadPickupMW = this.load.coldLoadPickupMW ?? 0;
     sample.eensMWh = this.eensMWh;
     sample.uflsOperationCount = this.uflsOperationCount;
