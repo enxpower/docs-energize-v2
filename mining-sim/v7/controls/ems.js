@@ -4,7 +4,7 @@ export function dispatchIsland({ loadMW, dieselFleet, bess, socTarget = 0.55, so
   const onlineMinMW = onlineFleet.reduce((sum, dg) => sum + dg.minimumMW, 0);
 
   const socError = socTarget - bess.soc;
-  const socBiasMW = Math.abs(socError) <= socDeadband
+  const socBiasMW = !bess.isAvailable || Math.abs(socError) <= socDeadband
     ? 0
     : Math.max(-0.2 * bess.powerMW, Math.min(0.2 * bess.powerMW, socError * bess.energyMWh / 4));
 
@@ -17,5 +17,5 @@ export function dispatchIsland({ loadMW, dieselFleet, bess, socTarget = 0.55, so
     dg.setCommandMW(dg.isOnline ? dg.ratedMW * share : 0);
   }
 
-  return { dieselTargetMW, socBiasMW, onlineRatedMW };
+  return { dieselTargetMW, socBiasMW, onlineRatedMW, bessAvailable: bess.isAvailable };
 }
