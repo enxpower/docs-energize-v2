@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Mining Sim V7 Engineering Core — EnergizeOS</title>
+<meta name="description" content="Mining Sim V7 governed engineering core development status."/>
+<style>
+:root{--slate:#1A2B3C;--volt:#D4840A;--paper:#F8FAFC;--line:#E2E8F0;--muted:#64748B}*{box-sizing:border-box}body{margin:0;background:var(--paper);font-family:"Helvetica Neue",Arial,"PingFang SC",sans-serif;color:var(--slate)}header{background:var(--slate);color:white;border-bottom:5px solid var(--volt)}header div,main{max-width:1000px;margin:auto;padding:24px}.k{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#F6C16F}h1{font-weight:300;font-size:40px;margin:8px 0}.card{background:white;border:1px solid var(--line);padding:24px;margin:18px 0}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.ok{border-left:5px solid #15803D}.hold{border-left:5px solid var(--volt)}a{display:inline-block;background:var(--slate);color:white;text-decoration:none;padding:12px 18px;border-left:5px solid var(--volt);margin-top:12px}@media(max-width:700px){.grid{grid-template-columns:1fr}h1{font-size:32px}}</style>
+</head>
+<body>
+<header><div><div class="k">Governed Engineering Core</div><h1>Mining Sim V7</h1><p>当前阶段：最小工程核心验证。V6线上版本保持独立，不受V7开发影响。</p></div></header>
+<main>
+<section class="card ok"><h2>Phase 1 已实现</h2><div class="grid"><div>Diesel Generator</div><div>BESS / PCS Active Power</div><div>Aggregate Load</div><div>Power Balance</div><div>Island Frequency</div><div>EMS Dispatch Layer</div><div>System State Machine</div><div>Deterministic Regression Tests</div></div></section>
+<section class="card hold"><h2>当前禁止加入</h2><p>PV、Wind、Utility Grid、Motor、Transformer、Optimization和生产UI暂不进入核心，直到最小系统回归测试稳定通过。</p></section>
+<section class="card"><h2>工程原则</h2><p>不为了让曲线看起来正确而调整代码。先保证工程模型正确，再让结果自然呈现。</p><a href="./tests/">打开V7自动测试</a></section>
+</main>
+</body>
+</html>
