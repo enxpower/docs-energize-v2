@@ -47,6 +47,17 @@ export const ACCEPTANCE = Object.freeze({
     expectedLowSocState: 'DEGRADED',
     observationWindowSeconds: 30,
   }),
+  bessDuration: Object.freeze({
+    initialSoc: 0.40,
+    supportLoadMW: 15.0,
+    requiredSupportMW: 1.80,
+    requiredDurationMinutes: 120,
+    predictionToleranceMinutes: 3,
+    observationMarginMinutes: 2,
+    minimumPostDepletionShortfallMW: 0.10,
+    expectedRuleId: 'BESS-DURATION-001',
+    expectedPostDepletionState: 'DEGRADED',
+  }),
   powerBalance: Object.freeze({
     maximumTransientResidualMW: 0.80,
   }),
