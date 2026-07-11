@@ -76,6 +76,12 @@ import {
   testProductionLossIsSeparateFromEens,
   testIntegratedProductionCurtailmentEvidence,
 } from './production-curtailment-test.js';
+import {
+  testProductionThroughputPowerLaw,
+  testDieselFuelAndCostAccounting,
+  testBessEstimatedFuelDisplacementValue,
+  testIntegratedProductionEconomicsEvidence,
+} from './production-economics-test.js';
 import { testMinimumMiningAcceptanceChain } from './mining-acceptance-test.js';
 
 export const EXTENDED_TESTS = Object.freeze([
@@ -128,6 +134,10 @@ export const EXTENDED_TESTS = Object.freeze([
   testProductionRestorationUsesPriorityAndReserve,
   testProductionLossIsSeparateFromEens,
   testIntegratedProductionCurtailmentEvidence,
+  testProductionThroughputPowerLaw,
+  testDieselFuelAndCostAccounting,
+  testBessEstimatedFuelDisplacementValue,
+  testIntegratedProductionEconomicsEvidence,
   testMinimumMiningAcceptanceChain,
 ]);
 
