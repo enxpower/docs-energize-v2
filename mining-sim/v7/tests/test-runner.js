@@ -1,4 +1,5 @@
 import { createBaseOffgridScenario } from '../scenarios/base-offgrid.js';
+import { evaluateBessAvailabilityRisk } from '../rules/reliability.js';
 import { ACCEPTANCE } from './acceptance-criteria.js';
 
 function assert(condition, message) {
@@ -107,6 +108,8 @@ function testBessTripWhileIdle() {
   const final = postTrip.at(-1);
   const fMin = Math.min(...postTrip.map((sample) => sample.frequencyHz));
   const maxRoCoF = Math.max(...postTrip.map((sample) => Math.abs(sample.rocofHzPerS)));
+  const persistentDeficitMW = Math.max(0, -final.residualMW);
+  const rule = evaluateBessAvailabilityRisk({ preTripBessMW: event.preTripMW, persistentDeficitMW, finalState: final.state });
 
   assert(Math.abs(event.preTripMW) < 0.1, `BESS was not idle before trip: ${event.preTripMW}`);
   assert(fMin >= c.minimumFrequencyNadirHz, `idle BESS trip caused excessive frequency dip: ${fMin}`);
@@ -124,6 +127,7 @@ function testBessTripWhileIdle() {
       peakRoCoFHzPerS: maxRoCoF,
       finalFrequencyHz: final.frequencyHz,
       finalResidualMW: final.residualMW,
+      engineeringRule: rule,
     },
   };
 }
@@ -149,12 +153,14 @@ function testBessTripWhileSupporting() {
   const fMin = Math.min(...postTrip.map((sample) => sample.frequencyHz));
   const maxRoCoF = Math.max(...postTrip.map((sample) => Math.abs(sample.rocofHzPerS)));
   const persistentDeficitMW = Math.max(0, -final.residualMW);
+  const rule = evaluateBessAvailabilityRisk({ preTripBessMW, persistentDeficitMW, finalState: final.state });
 
   assert(fMin >= c.minimumFrequencyNadirHz, `BESS trip frequency nadir below emergency screening limit: ${fMin}`);
   assert(maxRoCoF <= c.maximumRoCoFHzPerS, `BESS trip RoCoF exceeds emergency screening limit: ${maxRoCoF}`);
   assert(final.bessAvailable === false, 'BESS availability did not remain false after trip');
   assert(persistentDeficitMW >= c.expectedMinimumPersistentDeficitMW, `expected generation adequacy shortfall not detected: ${persistentDeficitMW}`);
   assert(final.state === c.expectedState, `expected ${c.expectedState} state, received ${final.state}`);
+  assert(rule.id === 'BESS-SPOF-001', `expected BESS dependency rule, received ${rule.id}`);
 
   return {
     name: 'BESS trip during active support',
@@ -166,7 +172,7 @@ function testBessTripWhileSupporting() {
       persistentDeficitMW,
       finalFrequencyHz: final.frequencyHz,
       finalState: final.state,
-      interpretation: 'Controlled degradation detected: installed synchronous generation is insufficient for the imposed 13.5 MW load without BESS support.',
+      engineeringRule: rule,
     },
   };
 }
