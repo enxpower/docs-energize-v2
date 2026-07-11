@@ -48,7 +48,7 @@ export const ACCEPTANCE = Object.freeze({
     observationWindowSeconds: 30,
   }),
   bessDuration: Object.freeze({
-    initialSoc: 0.40,
+    initialSoc: 0.38,
     supportLoadMW: 15.0,
     requiredSupportMW: 1.80,
     requiredDurationMinutes: 120,
