@@ -1,9 +1,15 @@
 import { assessReserve } from '../reliability/reserve-engine.js';
 
-function sortStartCandidates(fleet) {
+function sortStartCandidates(fleet, requiredBySeconds = Infinity) {
   return [...fleet]
     .filter((dg) => dg.isStartable)
-    .sort((a, b) => a.secondsUntilRunning - b.secondsUntilRunning || b.ratedMW - a.ratedMW);
+    .sort((a, b) => {
+      const aOnTime = a.secondsUntilRunning <= requiredBySeconds ? 0 : 1;
+      const bOnTime = b.secondsUntilRunning <= requiredBySeconds ? 0 : 1;
+      return aOnTime - bOnTime
+        || a.secondsUntilRunning - b.secondsUntilRunning
+        || b.ratedMW - a.ratedMW;
+    });
 }
 
 function sortStopCandidates(fleet) {
@@ -12,8 +18,16 @@ function sortStopCandidates(fleet) {
     .sort((a, b) => a.outputMW - b.outputMW || a.ratedMW - b.ratedMW);
 }
 
+function capacityAvailableBy(dieselFleet, horizonSeconds) {
+  return dieselFleet
+    .filter((dg) => dg.isOnline || (dg.isStarting && dg.secondsUntilRunning <= horizonSeconds))
+    .reduce((sum, dg) => sum + dg.ratedMW, 0);
+}
+
 export function evaluateGeneratorCommitment({
   loadMW,
+  forecastLoadMW = loadMW,
+  forecastHorizonSeconds = 0,
   dieselFleet,
   bess,
   minimumOnlineUnits = 1,
@@ -25,22 +39,50 @@ export function evaluateGeneratorCommitment({
   const committedRatedMW = dieselFleet
     .filter((dg) => dg.isCommitted)
     .reduce((sum, dg) => sum + dg.ratedMW, 0);
+  const availableByForecastMW = capacityAvailableBy(dieselFleet, forecastHorizonSeconds);
+
+  const forecastSupportDurationMinutes = Math.max(
+    firmSupportDurationMinutes,
+    forecastHorizonSeconds / 60,
+  );
   const bessFirmSupportMW = bess?.isAvailable
     ? bess.sustainableDischargeMW(firmSupportDurationMinutes)
     : 0;
+  const bessForecastSupportMW = bess?.isAvailable
+    ? bess.sustainableDischargeMW(forecastSupportDurationMinutes)
+    : 0;
+
   const requiredCommittedMW = Math.max(0, loadMW + reserveMarginMW - bessFirmSupportMW);
+  const requiredForecastMW = Math.max(0, forecastLoadMW + reserveMarginMW - bessForecastSupportMW);
+  const immediateCapacityShortfallMW = Math.max(0, requiredCommittedMW - committedRatedMW);
+  const forecastCapacityShortfallMW = Math.max(0, requiredForecastMW - availableByForecastMW);
 
   let action = null;
 
-  if (committedRatedMW + 1e-9 < requiredCommittedMW || reserve.n1Status === 'FAIL') {
-    const candidate = sortStartCandidates(dieselFleet)[0];
+  if (
+    immediateCapacityShortfallMW > 1e-9
+    || forecastCapacityShortfallMW > 1e-9
+    || reserve.n1Status === 'FAIL'
+  ) {
+    const candidate = sortStartCandidates(dieselFleet, forecastHorizonSeconds)[0];
     if (candidate) {
+      const predictedReadyOnTime = candidate.secondsUntilRunning <= forecastHorizonSeconds;
+      let reason = 'N-1 reserve assessment failed.';
+      if (immediateCapacityShortfallMW > 1e-9) {
+        reason = 'Committed duration-qualified firm capacity is below the current requirement.';
+      } else if (forecastCapacityShortfallMW > 1e-9) {
+        reason = predictedReadyOnTime
+          ? 'Forecast firm-capacity shortfall requires pre-start before the projected load increase.'
+          : 'Forecast firm-capacity shortfall detected; selected unit cannot be ready on time and must start immediately.';
+      }
       action = {
         type: 'START',
         equipmentId: candidate.id,
-        reason: committedRatedMW < requiredCommittedMW
-          ? 'Committed duration-qualified firm capacity is below requirement.'
-          : 'N-1 reserve assessment failed.',
+        reason,
+        predictive: forecastCapacityShortfallMW > 1e-9 && immediateCapacityShortfallMW <= 1e-9,
+        requiredBySeconds: forecastHorizonSeconds,
+        secondsUntilRunning: candidate.secondsUntilRunning,
+        predictedReadyOnTime,
       };
     }
   } else if (allowStop) {
@@ -50,11 +92,14 @@ export function evaluateGeneratorCommitment({
         const remainingRatedMW = committedRatedMW - candidate.ratedMW;
         const remainingOnlineUnits = online.length - 1;
         if (remainingOnlineUnits < minimumOnlineUnits) continue;
-        if (remainingRatedMW + bessFirmSupportMW + 1e-9 >= loadMW + reserveMarginMW) {
+        const currentSecure = remainingRatedMW + bessFirmSupportMW + 1e-9 >= loadMW + reserveMarginMW;
+        const forecastSecure = remainingRatedMW + bessForecastSupportMW + 1e-9 >= forecastLoadMW + reserveMarginMW;
+        if (currentSecure && forecastSecure) {
           action = {
             type: 'STOP',
             equipmentId: candidate.id,
-            reason: 'Excess committed capacity can be removed while preserving the duration-qualified firm-capacity margin.',
+            reason: 'Excess committed capacity can be removed while preserving current and forecast duration-qualified margins.',
+            predictive: true,
           };
           break;
         }
@@ -66,9 +111,17 @@ export function evaluateGeneratorCommitment({
     action,
     reserve,
     committedRatedMW,
+    availableByForecastMW,
     bessFirmSupportMW,
+    bessForecastSupportMW,
     firmSupportDurationMinutes,
+    forecastSupportDurationMinutes,
     requiredCommittedMW,
+    requiredForecastMW,
+    immediateCapacityShortfallMW,
+    forecastCapacityShortfallMW,
+    forecastLoadMW,
+    forecastHorizonSeconds,
   };
 }
 
