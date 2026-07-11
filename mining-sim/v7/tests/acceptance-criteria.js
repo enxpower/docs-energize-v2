@@ -35,6 +35,18 @@ export const ACCEPTANCE = Object.freeze({
     expectedState: 'DEGRADED',
     observationWindowSeconds: 60,
   }),
+  lowSocDerating: Object.freeze({
+    highSoc: 0.60,
+    lowSoc: 0.20,
+    stressLoadMW: 15.0,
+    requiredSupportMW: 1.80,
+    maximumLowSocAvailableDischargeMW: 1.40,
+    minimumHighSocAvailableDischargeMW: 7.90,
+    minimumExpectedLowSocShortfallMW: 0.30,
+    requiredDurationMinutes: 15,
+    expectedLowSocState: 'DEGRADED',
+    observationWindowSeconds: 30,
+  }),
   powerBalance: Object.freeze({
     maximumTransientResidualMW: 0.80,
   }),
