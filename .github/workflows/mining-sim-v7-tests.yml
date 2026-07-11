@@ -1,0 +1,27 @@
+name: Mining Sim V7 Tests
+
+on:
+  push:
+    paths:
+      - 'mining-sim/v7/**'
+      - '.github/workflows/mining-sim-v7-tests.yml'
+  pull_request:
+    paths:
+      - 'mining-sim/v7/**'
+      - '.github/workflows/mining-sim-v7-tests.yml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mining-sim/v7
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run V7 regression suite
+        run: npm test
