@@ -23,6 +23,7 @@ import { testGeneratorStateMachine, testReserveN1Classification, testCommitmentS
 import { testPredictiveCommitmentStartsOnTime, testPredictiveCommitmentFlagsLateReadiness } from './predictive-commitment-test.js';
 import { testUncertaintyDrivesPreStart, testUncertaintyBlocksUnsafeStop } from './forecast-uncertainty-test.js';
 import { testFreshForecastAllowsNormalPolicy, testStaleForecastBlocksAutomaticStop, testLowQualityForecastAddsConservativeMargin } from './forecast-quality-test.js';
+import { testPrimaryFailsOverToSecondary, testPrimaryRecoveryUsesHysteresis, testEmergencyForecastFallback } from './forecast-failover-test.js';
 const results=runAllTests();
 for(const test of [
   testBessEnergyDurationDepletion,
@@ -38,6 +39,9 @@ for(const test of [
   testFreshForecastAllowsNormalPolicy,
   testStaleForecastBlocksAutomaticStop,
   testLowQualityForecastAddsConservativeMargin,
+  testPrimaryFailsOverToSecondary,
+  testPrimaryRecoveryUsesHysteresis,
+  testEmergencyForecastFallback,
 ]){
   try{results.push(test());}catch(error){results.push({name:test.name,status:'FAIL',error:error.message});}
 }
