@@ -121,6 +121,7 @@ export function evaluateGeneratorCommitment({
     firmSupportDurationMinutes,
     forecastSupportDurationMinutes,
     requiredOnlineMW,
+    requiredCommittedMW: requiredOnlineMW,
     requiredForecastMW,
     immediateCapacityShortfallMW,
     forecastCapacityShortfallMW,
