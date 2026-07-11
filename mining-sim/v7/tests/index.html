@@ -17,7 +17,9 @@
 </main>
 <script type="module">
 import { runAllTests } from './test-runner.js';
+import { testBessEnergyDurationDepletion } from './bess-duration-test.js';
 const results=runAllTests();
+try{results.push(testBessEnergyDurationDepletion());}catch(error){results.push({name:'BESS energy-duration depletion',status:'FAIL',error:error.message});}
 const pass=results.filter(r=>r.status==='PASS').length;
 document.getElementById('summary').textContent=`${pass}/${results.length} tests passed`;
 document.getElementById('results').innerHTML=results.map(r=>`<section class="result ${r.status}"><strong>${r.status} — ${r.name}</strong><pre>${JSON.stringify(r.metrics||r.error,null,2)}</pre></section>`).join('');
