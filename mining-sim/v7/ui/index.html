@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Mine Design Configurator · EnergizeOS V7</title>
+<meta name="description" content="用于矿山微电网柴油机、BESS、大型电机、生产负荷、工艺联锁和事故场景的结构化配置、仿真与方案比较。"/>
+<link rel="icon" type="image/svg+xml" href="/vi/assets/favicon.svg"/>
+<meta property="og:type" content="website"/>
+<meta property="og:title" content="Mine Design Configurator · EnergizeOS V7"/>
+<meta property="og:description" content="结构化配置矿山微电网方案，运行事故场景，并基于安全约束、可靠性、产量和运行成本比较设计方案。"/>
+<meta property="og:image" content="https://docs.energizeos.com/vi/assets/og-1200x630.png"/>
+<link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+<div class="app-shell">
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      <span><strong>EnergizeOS</strong><small>Mine Design Configurator · V7</small></span>
+    </div>
+    <div class="top-status">
+      <span id="modelMaturity" class="status-chip">SCREENING</span>
+      <span id="workspaceStatus" class="status-chip neutral">Loading</span>
+      <a class="test-link" href="../tests/">Tests</a>
+    </div>
+  </header>
+
+  <div class="engineering-boundary">
+    <strong>工程边界：</strong>本页面用于概念设计与筛选级方案比较，不替代潮流、短路、保护配合、EMT、谐波、电弧闪光、厂家启动研究或施工图设计。
+  </div>
+
+  <main class="workspace">
+    <aside class="rail" aria-label="Configuration sections">
+      <div class="rail-title">Configuration</div>
+      <nav id="sectionNav" class="section-nav"></nav>
+      <div class="rail-separator"></div>
+      <div class="rail-title">Scenarios</div>
+      <div id="scenarioList" class="scenario-list"></div>
+      <button id="duplicateScenario" class="button secondary full" type="button">Duplicate scenario</button>
+      <button id="deleteScenario" class="button ghost full" type="button">Delete scenario</button>
+    </aside>
+
+    <section class="editor-column">
+      <div class="editor-toolbar">
+        <div>
+          <p class="eyebrow" id="sectionEyebrow">SITE</p>
+          <h1 id="sectionTitle">Site & simulation</h1>
+          <p id="sectionDescription" class="section-description"></p>
+        </div>
+        <div class="toolbar-actions">
+          <label class="file-button">Import JSON<input id="importJson" type="file" accept="application/json"/></label>
+          <button id="exportJson" class="button secondary" type="button">Export JSON</button>
+        </div>
+      </div>
+
+      <section id="validationPanel" class="validation-panel" aria-live="polite"></section>
+      <section id="formPanel" class="form-panel"></section>
+
+      <section class="run-panel">
+        <div>
+          <h2>Run engineering study</h2>
+          <p>Single scenario generates KPI evidence. Compare runs every scenario with the same horizon and applies hard constraints before scoring.</p>
+        </div>
+        <div class="run-actions">
+          <button id="runScenario" class="button primary" type="button">Run active scenario</button>
+          <button id="compareScenarios" class="button dark" type="button">Compare scenarios</button>
+        </div>
+      </section>
+
+      <section id="resultsPanel" class="results-panel" aria-live="polite">
+        <div class="empty-state">
+          <strong>No study result yet</strong>
+          <span>Validate the configuration, then run one scenario or compare multiple alternatives.</span>
+        </div>
+      </section>
+    </section>
+
+    <aside class="summary-column">
+      <section class="summary-card">
+        <p class="eyebrow">ACTIVE SCENARIO</p>
+        <h2 id="summaryName">Loading</h2>
+        <dl id="scenarioSummary" class="summary-grid"></dl>
+      </section>
+      <section class="summary-card">
+        <p class="eyebrow">DECISION POLICY</p>
+        <div id="decisionSummary" class="decision-summary"></div>
+      </section>
+      <section class="summary-card evidence-card">
+        <p class="eyebrow">EVIDENCE STANDARD</p>
+        <ul>
+          <li>Fresh engine instance per scenario</li>
+          <li>Common duration and disturbance schedule</li>
+          <li>Hard constraints before weighted scoring</li>
+          <li>All assumptions retained with results</li>
+        </ul>
+      </section>
+    </aside>
+  </main>
+
+  <footer class="mobile-actions">
+    <button id="mobileRun" class="button primary" type="button">Run</button>
+    <button id="mobileCompare" class="button dark" type="button">Compare</button>
+  </footer>
+</div>
+<script type="module" src="app.js"></script>
+</body>
+</html>
