@@ -18,6 +18,7 @@ export class SimulationEngine {
     this.faulted = false;
     this.state = 'OFF';
     this.history = [];
+    this.events = [];
   }
 
   start() {
@@ -26,6 +27,23 @@ export class SimulationEngine {
 
   stop() {
     this.running = false;
+  }
+
+  tripLargestDiesel() {
+    const online = this.dieselFleet.filter((dg) => dg.isOnline);
+    if (!online.length) return null;
+    const target = online.reduce((largest, dg) => (dg.ratedMW > largest.ratedMW ? dg : largest), online[0]);
+    const preTripMW = target.outputMW;
+    target.trip();
+    const event = {
+      timeSeconds: this.timeSeconds,
+      type: 'DG_TRIP',
+      equipmentId: target.id,
+      ratedMW: target.ratedMW,
+      preTripMW,
+    };
+    this.events.push(event);
+    return event;
   }
 
   step() {
@@ -40,9 +58,10 @@ export class SimulationEngine {
     const bessMW = this.bess.step(this.dtSeconds);
 
     const balance = calculatePowerBalance({ loadMW, dieselMW, bessMW });
+    const onlineFleet = this.dieselFleet.filter((dg) => dg.isOnline);
     const totalInertiaSeconds = Math.max(
       0.1,
-      this.dieselFleet.reduce((sum, dg) => sum + dg.inertiaSeconds * dg.ratedMW, 0) / Math.max(this.systemBaseMW, 0.1),
+      onlineFleet.reduce((sum, dg) => sum + dg.inertiaSeconds * dg.ratedMW, 0) / Math.max(this.systemBaseMW, 0.1),
     );
 
     const frequency = stepIslandFrequency(
@@ -79,6 +98,7 @@ export class SimulationEngine {
       residualMW: balance.residualMW,
       frequencyHz: this.frequencyHz,
       rocofHzPerS: this.rocofHzPerS,
+      onlineDieselCount: onlineFleet.length,
     };
     this.history.push(sample);
     return sample;
