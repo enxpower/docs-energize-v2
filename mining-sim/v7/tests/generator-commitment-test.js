@@ -134,3 +134,42 @@ export function testCommitmentStartDecision() {
     },
   };
 }
+
+export function testDurationAwareBessReserve() {
+  const fleet = [1, 2].map((n) => {
+    const dg = new DieselGenerator({ id: `DG-${n}`, ratedMW: 3.3, rampUpMWPerS: 0.05 });
+    dg.emsSetpointMW = 3.2;
+    dg.governorCommandMW = 3.2;
+    dg.mechanicalMW = 3.2;
+    dg.outputMW = 3.2;
+    return dg;
+  });
+
+  const bess = new Bess({
+    powerMW: 8,
+    energyMWh: 2,
+    initialSoc: 0.35,
+    minSoc: 0.18,
+    maxSoc: 0.82,
+    lowSocDeratingBand: 0.12,
+  });
+  const reserve = assessReserve({ dieselFleet: fleet, bess });
+
+  assert(reserve.bessFastReserveMW > reserve.bessReserve600MW + 0.1,
+    `expected 10-second BESS reserve to exceed 10-minute reserve: ${reserve.bessFastReserveMW} vs ${reserve.bessReserve600MW}`);
+  assert(reserve.bessReserve60MW >= reserve.bessReserve600MW,
+    `expected 60-second BESS reserve >= 10-minute reserve: ${reserve.bessReserve60MW} vs ${reserve.bessReserve600MW}`);
+
+  return {
+    name: 'Duration-aware BESS reserve horizons',
+    status: 'PASS',
+    metrics: {
+      bessFastReserveMW: reserve.bessFastReserveMW,
+      bessReserve60MW: reserve.bessReserve60MW,
+      bessReserve600MW: reserve.bessReserve600MW,
+      fast10MW: reserve.fast10MW,
+      reserve60MW: reserve.reserve60MW,
+      reserve600MW: reserve.reserve600MW,
+    },
+  };
+}
