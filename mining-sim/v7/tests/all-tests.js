@@ -52,6 +52,12 @@ import {
   testIntegratedMotorStartFailureIsTraceable,
   testMotorQueueStateIsExposedInSamples,
 } from './motor-scheduler-integration-test.js';
+import {
+  testAutomaticMotorRetryIsRequeued,
+  testMotorProtectionTripRequiresConfirmation,
+  testRepeatedMotorFailureLocksOut,
+  testIntegratedMotorRecoveryEvidence,
+} from './motor-retry-governance-test.js';
 import { testMinimumMiningAcceptanceChain } from './mining-acceptance-test.js';
 
 export const EXTENDED_TESTS = Object.freeze([
@@ -88,6 +94,10 @@ export const EXTENDED_TESTS = Object.freeze([
   testIntegratedMotorStartsAreStaggered,
   testIntegratedMotorStartFailureIsTraceable,
   testMotorQueueStateIsExposedInSamples,
+  testAutomaticMotorRetryIsRequeued,
+  testMotorProtectionTripRequiresConfirmation,
+  testRepeatedMotorFailureLocksOut,
+  testIntegratedMotorRecoveryEvidence,
   testMinimumMiningAcceptanceChain,
 ]);
 
