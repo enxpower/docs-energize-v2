@@ -25,7 +25,11 @@ import {
   testPrimaryRecoveryUsesHysteresis,
   testEmergencyForecastFallback,
 } from './forecast-failover-test.js';
-import { testStagedUflsResponse, testUflsDelayReset } from './ufls-test.js';
+import {
+  testStagedUflsResponse,
+  testUflsDelayReset,
+  testEensCappedByCurrentDemand,
+} from './ufls-test.js';
 import {
   testStagedLoadRestorationPriority,
   testColdLoadPickupDecay,
@@ -57,6 +61,7 @@ export const EXTENDED_TESTS = Object.freeze([
   testEmergencyForecastFallback,
   testStagedUflsResponse,
   testUflsDelayReset,
+  testEensCappedByCurrentDemand,
   testStagedLoadRestorationPriority,
   testColdLoadPickupDecay,
   testRestorationRollbackAndLockout,
