@@ -46,6 +46,10 @@ export class AggregateLoad {
       .reduce((sum, block) => sum + block.mw, 0);
   }
 
+  get explicitUnservedMW() {
+    return Math.min(this.commandMW, this.shedMW);
+  }
+
   coldPickupForBlockMW(block) {
     if (block.shed || block.coldLoadPickupPU <= 0 || block.coldLoadPickupSeconds <= 0) return 0;
     if (block.pickupElapsedSeconds >= block.coldLoadPickupSeconds) return 0;
@@ -58,7 +62,10 @@ export class AggregateLoad {
   }
 
   get connectedMW() {
-    return Math.max(0, this.commandMW - this.shedMW + this.coldLoadPickupMW + this.dynamicLoadMW);
+    return Math.max(
+      0,
+      this.commandMW - this.explicitUnservedMW + this.coldLoadPickupMW + this.dynamicLoadMW,
+    );
   }
 
   get availableShedBlocks() {
