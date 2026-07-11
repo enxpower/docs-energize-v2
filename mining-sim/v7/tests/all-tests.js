@@ -88,6 +88,12 @@ import {
   testScenarioRankingIsDeterministic,
   testScenarioBatchRunnerIsolationAndCommonActions,
 } from './scenario-comparison-test.js';
+import {
+  testScenarioConfigCreatesRunnableEngine,
+  testScenarioConfigRejectsInvalidReferences,
+  testScenarioJsonActionsCompileAndExecute,
+  testScenarioBatchConfigIsolationAndCommonHorizon,
+} from './scenario-configurator-test.js';
 import { testMinimumMiningAcceptanceChain } from './mining-acceptance-test.js';
 
 export const EXTENDED_TESTS = Object.freeze([
@@ -148,6 +154,10 @@ export const EXTENDED_TESTS = Object.freeze([
   testScenarioParetoFrontierPreservesTradeoffs,
   testScenarioRankingIsDeterministic,
   testScenarioBatchRunnerIsolationAndCommonActions,
+  testScenarioConfigCreatesRunnableEngine,
+  testScenarioConfigRejectsInvalidReferences,
+  testScenarioJsonActionsCompileAndExecute,
+  testScenarioBatchConfigIsolationAndCommonHorizon,
   testMinimumMiningAcceptanceChain,
 ]);
 

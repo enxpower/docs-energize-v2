@@ -1,0 +1,95 @@
+{
+  "version": "1.0",
+  "id": "MINE-SCREENING-BASE",
+  "name": "12 MW Mine Screening Base",
+  "metadata": {
+    "modelMaturity": "SCREENING"
+  },
+  "simulation": {
+    "dtSeconds": 0.1,
+    "durationSeconds": 300
+  },
+  "site": {
+    "nominalHz": 60,
+    "systemBaseMW": 12,
+    "baseLoadMW": 6,
+    "shedBlocks": [
+      { "id": "AUXILIARY", "name": "Non-critical auxiliary", "mw": 1, "priority": 1, "critical": false },
+      { "id": "PROCESS", "name": "Process load", "mw": 2, "priority": 5, "critical": false },
+      { "id": "SAFETY", "name": "Safety services", "mw": 1, "priority": 10, "critical": true }
+    ]
+  },
+  "equipment": {
+    "diesel": [
+      { "id": "DG-1", "ratedMW": 3.3, "minLoadPU": 0.35, "rampUpMWPerS": 0.2, "rampDownMWPerS": 1, "droopPU": 0.04, "inertiaSeconds": 4 },
+      { "id": "DG-2", "ratedMW": 3.3, "minLoadPU": 0.35, "rampUpMWPerS": 0.2, "rampDownMWPerS": 1, "droopPU": 0.04, "inertiaSeconds": 4 },
+      { "id": "DG-3", "ratedMW": 3.3, "minLoadPU": 0.35, "rampUpMWPerS": 0.2, "rampDownMWPerS": 1, "droopPU": 0.04, "inertiaSeconds": 4 },
+      { "id": "DG-4", "ratedMW": 3.3, "minLoadPU": 0.35, "rampUpMWPerS": 0.2, "rampDownMWPerS": 1, "droopPU": 0.04, "inertiaSeconds": 4 }
+    ],
+    "bess": {
+      "powerMW": 8,
+      "energyMWh": 20,
+      "initialSoc": 0.6,
+      "minSoc": 0.18,
+      "maxSoc": 0.82,
+      "roundTripEfficiency": 0.965,
+      "rampMWPerS": 8
+    },
+    "motors": [
+      { "id": "LUBE-PUMP", "name": "Lubrication Pump", "ratedMW": 0.2, "startMode": "VFD", "minimumOffSeconds": 0 },
+      { "id": "COOLING-PUMP", "name": "Cooling Water Pump", "ratedMW": 0.3, "startMode": "VFD", "minimumOffSeconds": 0 },
+      { "id": "CONVEYOR", "name": "Primary Conveyor", "ratedMW": 0.8, "startMode": "SOFT_STARTER", "minimumOffSeconds": 0 },
+      { "id": "CRUSHER-MOTOR", "name": "Primary Crusher", "ratedMW": 1.8, "startMode": "VFD", "minimumOffSeconds": 0 },
+      { "id": "SLURRY-PUMP", "name": "Slurry Pump", "ratedMW": 1.2, "startMode": "VFD", "minimumOffSeconds": 0 }
+    ],
+    "productionLoads": [
+      { "id": "AUX-PROCESS", "normalMW": 0.8, "minimumMW": 0.2, "priority": 1, "normalThroughputTPH": 20 },
+      { "id": "CRUSHING", "normalMW": 2, "minimumMW": 1, "priority": 8, "normalThroughputTPH": 250, "throughputExponent": 0.9 },
+      { "id": "DEWATERING", "normalMW": 0.7, "minimumMW": 0.7, "priority": 10, "safetyCritical": true, "normalThroughputTPH": 0 }
+    ]
+  },
+  "process": {
+    "id": "PRIMARY-PROCESS",
+    "conditions": [
+      { "id": "SAFETY-PERMIT", "ready": true }
+    ],
+    "steps": [
+      { "id": "lube", "motorId": "LUBE-PUMP", "prerequisites": ["condition:SAFETY-PERMIT"], "priority": 10 },
+      { "id": "cooling", "motorId": "COOLING-PUMP", "prerequisites": ["step:lube"], "priority": 9 },
+      { "id": "conveyor", "motorId": "CONVEYOR", "prerequisites": ["step:cooling"], "priority": 8 },
+      { "id": "crusher", "motorId": "CRUSHER-MOTOR", "prerequisites": ["step:conveyor"], "priority": 7 },
+      { "id": "slurry", "motorId": "SLURRY-PUMP", "prerequisites": ["step:crusher"], "priority": 6 }
+    ]
+  },
+  "controls": {
+    "emsIntervalSeconds": 20,
+    "commitmentIntervalSeconds": 30,
+    "motorStart": { "minimumStartIntervalSeconds": 30 },
+    "productionCurtailment": {
+      "triggerDeficitMW": 0.25,
+      "restoreSurplusMW": 1,
+      "minimumPostRestoreReserveMW": 0.5,
+      "restoreDelaySeconds": 30,
+      "maximumStepMW": 1
+    }
+  },
+  "economics": {
+    "fuelPricePerLiter": 1.5,
+    "productValuePerTon": 35,
+    "bessMarginalFuelLitersPerMWh": 220,
+    "dieselFuelCurves": {
+      "default": { "idleLitersPerHour": 60, "incrementalLitersPerMWh": 220 }
+    },
+    "capitalCostEstimate": 0
+  },
+  "disturbances": [
+    { "id": "START-PROCESS", "type": "PROCESS_START", "timeSeconds": 1 },
+    { "id": "TRIP-DG-1", "type": "DIESEL_TRIP", "targetId": "DG-1", "timeSeconds": 120 },
+    { "id": "TRIP-BESS", "type": "BESS_TRIP", "timeSeconds": 180 },
+    { "id": "RESTORE-BESS", "type": "BESS_RESTORE", "timeSeconds": 240 }
+  ],
+  "assumptions": {
+    "voltageModel": "NOT_MODELED",
+    "protectionSettings": "SCREENING_ASSUMPTIONS_ONLY"
+  }
+}
