@@ -84,9 +84,7 @@ export class SimulationEngine {
     }) ?? null;
 
     const sourceSwitchEvent = this.lastLoadForecast?.switchEvent;
-    if (sourceSwitchEvent) {
-      this.events.push({ ...sourceSwitchEvent });
-    }
+    if (sourceSwitchEvent) this.events.push({ ...sourceSwitchEvent });
 
     this.lastForecastQuality = assessForecastQuality({
       forecast: this.lastLoadForecast,
@@ -181,7 +179,12 @@ export class SimulationEngine {
   step() {
     if (!this.running) throw new Error('Simulation engine is not running');
 
-    const loadMW = this.load.step(this.dtSeconds);
+    const loadStepContextFrequencyHz = this.frequencyHz;
+    const loadMW = this.load.step(this.dtSeconds, {
+      frequencyHz: loadStepContextFrequencyHz,
+      rocofHzPerS: this.rocofHzPerS,
+      timeSeconds: this.timeSeconds,
+    });
     this.runCommitmentIfDue(loadMW);
     this.runEmsIfDue(loadMW);
 
@@ -243,6 +246,7 @@ export class SimulationEngine {
       timeSeconds: this.timeSeconds,
       state: this.state,
       loadMW,
+      loadStepContextFrequencyHz,
       forecastPeakLoadMW: this.lastLoadForecast?.forecastPeakLoadMW ?? loadMW,
       forecastPeakUpperBoundMW: this.lastLoadForecast?.forecastPeakUpperBoundMW ?? loadMW,
       forecastPlanningLoadMW: this.lastForecastQuality?.effectivePlanningLoadMW ?? loadMW,
