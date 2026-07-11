@@ -11,13 +11,27 @@ Debt cleanup is complete only when all items below are satisfied:
 5. Every protective or supervisory action creates traceable evidence.
 6. The minimum mining acceptance scenario passes without hidden assumptions.
 
-## Current status
+## Final status
 
 - Unified test registry: complete.
 - Node test entry point: complete.
-- Pull-request CI observability: in progress.
-- Dynamic-load frequency propagation: complete.
-- Explicit-unserved and EENS semantics: corrected; regression verification pending.
-- Minimum mining acceptance scenario: pending.
+- Browser harness uses the same registry: complete.
+- Pull-request CI observability: complete.
+- Test-output artifact retention: complete.
+- Dynamic-load frequency and time propagation: complete.
+- Explicit-unserved, nominal shed-block, connected-demand, transient-residual, and EENS separation: complete.
+- Persistent BESS balance error: corrected with secondary balance bias.
+- Event-triggered EMS dispatch for material load changes: complete.
+- Predictive commitment scenario uses explicit diesel dynamic parameters: complete.
+- Minimum mining acceptance scenario: complete.
+- Final regression result: 35/35 passed.
 
-No new feature work is permitted until the exit criteria are met.
+## Minimum mining acceptance chain
+
+The accepted chain is:
+
+`12 MW stable operation → largest DG trip → BESS fast support → BESS trip → staged noncritical UFLS → frequency recovery → BESS restoration → staged load restoration → retained EENS evidence`.
+
+## Governance
+
+Debt cleanup is closed for the current V7 scope. New feature work may resume only through the same test-first pull-request workflow. Any change to equipment physics, control authority, protection behavior, reserve accounting, or reliability metrics must add or update deterministic regression evidence.
