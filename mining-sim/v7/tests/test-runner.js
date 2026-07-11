@@ -11,6 +11,10 @@ function runFor(engine, seconds) {
   return last;
 }
 
+function sliceSince(engine, timeSeconds) {
+  return engine.history.filter((sample) => sample.timeSeconds >= timeSeconds);
+}
+
 function testBaseSteadyState() {
   const engine = createBaseOffgridScenario();
   engine.start();
@@ -43,8 +47,55 @@ function testEnergyConservation() {
   return { name: 'Power-balance residual bound', status: 'PASS', metrics: { maxResidualMW: maxResidual } };
 }
 
+function testLargestDieselTrip() {
+  const engine = createBaseOffgridScenario();
+  engine.start();
+  runFor(engine, 20);
+  const tripTime = engine.timeSeconds;
+  const event = engine.tripLargestDiesel();
+  assert(event, 'no online diesel generator available to trip');
+
+  runFor(engine, 60);
+  const postTrip = sliceSince(engine, tripTime);
+  const firstFiveSeconds = postTrip.filter((sample) => sample.timeSeconds <= tripTime + 5);
+  const final = postTrip.at(-1);
+  const fMin = Math.min(...postTrip.map((sample) => sample.frequencyHz));
+  const maxRoCoF = Math.max(...postTrip.map((sample) => Math.abs(sample.rocofHzPerS)));
+  const maxBessResponse = Math.max(...firstFiveSeconds.map((sample) => sample.bessMW));
+  const maxResidual = Math.max(...postTrip.map((sample) => Math.abs(sample.residualMW)));
+
+  assert(event.ratedMW >= 3.3, `unexpected largest-unit rating: ${event.ratedMW}`);
+  assert(fMin >= 58.5, `frequency nadir below screening limit: ${fMin}`);
+  assert(maxRoCoF <= 2.0, `RoCoF exceeds screening limit: ${maxRoCoF}`);
+  assert(maxBessResponse >= 2.0, `BESS fast response insufficient: ${maxBessResponse}`);
+  assert(final.onlineDieselCount === 3, `unexpected online diesel count after trip: ${final.onlineDieselCount}`);
+  assert(Math.abs(final.frequencyHz - 60) < 0.2, `frequency failed to recover: ${final.frequencyHz}`);
+  assert(Math.abs(final.residualMW) < 0.1, `power balance failed to recover: ${final.residualMW}`);
+
+  return {
+    name: 'Largest diesel trip response',
+    status: 'PASS',
+    metrics: {
+      trippedUnit: event.equipmentId,
+      trippedRatedMW: event.ratedMW,
+      preTripMW: event.preTripMW,
+      frequencyNadirHz: fMin,
+      peakRoCoFHzPerS: maxRoCoF,
+      maxBessResponseMW: maxBessResponse,
+      maxResidualMW: maxResidual,
+      finalFrequencyHz: final.frequencyHz,
+      finalResidualMW: final.residualMW,
+    },
+  };
+}
+
 export function runAllTests() {
-  const tests = [testBaseSteadyState, testLoadStepRecovery, testEnergyConservation];
+  const tests = [
+    testBaseSteadyState,
+    testLoadStepRecovery,
+    testEnergyConservation,
+    testLargestDieselTrip,
+  ];
   const results = [];
   for (const test of tests) {
     try {
