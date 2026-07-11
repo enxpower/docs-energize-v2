@@ -46,6 +46,19 @@ export class SimulationEngine {
     return event;
   }
 
+  tripBess() {
+    if (!this.bess.isAvailable) return null;
+    const preTripMW = this.bess.trip();
+    const event = {
+      timeSeconds: this.timeSeconds,
+      type: 'BESS_TRIP',
+      preTripMW,
+      soc: this.bess.soc,
+    };
+    this.events.push(event);
+    return event;
+  }
+
   step() {
     if (!this.running) throw new Error('Simulation engine is not running');
 
@@ -95,6 +108,7 @@ export class SimulationEngine {
       dieselMW,
       bessMW,
       bessSoc: this.bess.soc,
+      bessAvailable: this.bess.isAvailable,
       residualMW: balance.residualMW,
       frequencyHz: this.frequencyHz,
       rocofHzPerS: this.rocofHzPerS,
