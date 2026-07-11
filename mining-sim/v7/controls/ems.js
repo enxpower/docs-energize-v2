@@ -14,8 +14,13 @@ export function dispatchIsland({ loadMW, dieselFleet, bess, socTarget = 0.55, so
   const share = onlineRatedMW > 0 ? dieselTargetMW / onlineRatedMW : 0;
 
   for (const dg of dieselFleet) {
-    dg.setCommandMW(dg.isOnline ? dg.ratedMW * share : 0);
+    dg.setEmsSetpointMW(dg.isOnline ? dg.ratedMW * share : 0);
   }
 
-  return { dieselTargetMW, socBiasMW, onlineRatedMW, bessAvailable: bess.isAvailable };
+  return {
+    dieselTargetMW,
+    socBiasMW,
+    onlineRatedMW,
+    bessAvailable: bess.isAvailable,
+  };
 }
