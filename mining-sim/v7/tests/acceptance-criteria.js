@@ -58,6 +58,16 @@ export const ACCEPTANCE = Object.freeze({
     expectedRuleId: 'BESS-DURATION-001',
     expectedPostDepletionState: 'DEGRADED',
   }),
+  multiTimescaleControl: Object.freeze({
+    disturbanceLoadMW: 13.2,
+    disturbanceAtSeconds: 5,
+    emsIntervalSeconds: 20,
+    fastWindowSeconds: 1,
+    primaryWindowSeconds: 10,
+    minimumFastBessResponseMW: 0.25,
+    minimumGovernorPrimaryResponseMW: 0.05,
+    minimumEmsSetpointChangeAfterDispatchMW: 0.50,
+  }),
   powerBalance: Object.freeze({
     maximumTransientResidualMW: 0.80,
   }),
