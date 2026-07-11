@@ -3,14 +3,28 @@ export const BESS_STATE = Object.freeze({
   TRIPPED: 'TRIPPED',
 });
 
+const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+
 export class Bess {
-  constructor({ powerMW, energyMWh, initialSoc = 0.6, minSoc = 0.18, maxSoc = 0.82, roundTripEfficiency = 0.965, rampMWPerS = null }) {
+  constructor({
+    powerMW,
+    energyMWh,
+    initialSoc = 0.6,
+    minSoc = 0.18,
+    maxSoc = 0.82,
+    roundTripEfficiency = 0.965,
+    rampMWPerS = null,
+    lowSocDeratingBand = 0.12,
+    highSocDeratingBand = 0.12,
+  }) {
     this.powerMW = powerMW;
     this.energyMWh = energyMWh;
     this.minSoc = minSoc;
     this.maxSoc = maxSoc;
     this.eta = Math.sqrt(roundTripEfficiency);
     this.rampMWPerS = rampMWPerS ?? powerMW;
+    this.lowSocDeratingBand = Math.max(0.01, lowSocDeratingBand);
+    this.highSocDeratingBand = Math.max(0.01, highSocDeratingBand);
     this.energyMWhStored = energyMWh * initialSoc;
     this.commandMW = 0;
     this.outputMW = 0;
@@ -25,14 +39,33 @@ export class Bess {
     return this.state === BESS_STATE.AVAILABLE;
   }
 
-  availableDischargeMW() {
+  dischargePowerFactor() {
     if (!this.isAvailable || this.energyMWh <= 0 || this.soc <= this.minSoc) return 0;
-    return this.powerMW;
+    return clamp((this.soc - this.minSoc) / this.lowSocDeratingBand, 0, 1);
+  }
+
+  chargePowerFactor() {
+    if (!this.isAvailable || this.energyMWh <= 0 || this.soc >= this.maxSoc) return 0;
+    return clamp((this.maxSoc - this.soc) / this.highSocDeratingBand, 0, 1);
+  }
+
+  availableDischargeMW() {
+    return this.powerMW * this.dischargePowerFactor();
   }
 
   availableChargeMW() {
-    if (!this.isAvailable || this.energyMWh <= 0 || this.soc >= this.maxSoc) return 0;
-    return this.powerMW;
+    return this.powerMW * this.chargePowerFactor();
+  }
+
+  usableDischargeEnergyMWh() {
+    if (!this.isAvailable || this.energyMWh <= 0) return 0;
+    return Math.max(0, this.energyMWhStored - this.energyMWh * this.minSoc) * this.eta;
+  }
+
+  dischargeDurationMinutes(requestedMW = this.availableDischargeMW()) {
+    const supportedMW = Math.min(Math.max(0, requestedMW), this.availableDischargeMW());
+    if (supportedMW <= 0) return 0;
+    return (this.usableDischargeEnergyMWh() / supportedMW) * 60;
   }
 
   setCommandMW(commandMW) {
@@ -40,7 +73,7 @@ export class Bess {
       this.commandMW = 0;
       return;
     }
-    this.commandMW = Math.max(-this.availableChargeMW(), Math.min(this.availableDischargeMW(), commandMW));
+    this.commandMW = clamp(commandMW, -this.availableChargeMW(), this.availableDischargeMW());
   }
 
   trip() {
@@ -64,9 +97,10 @@ export class Bess {
       return 0;
     }
 
+    this.commandMW = clamp(this.commandMW, -this.availableChargeMW(), this.availableDischargeMW());
     const delta = this.commandMW - this.outputMW;
     const limit = this.rampMWPerS * dtSeconds;
-    this.outputMW += Math.max(-limit, Math.min(limit, delta));
+    this.outputMW += clamp(delta, -limit, limit);
 
     const deltaHours = dtSeconds / 3600;
     if (this.outputMW >= 0) {
@@ -75,7 +109,11 @@ export class Bess {
       this.energyMWhStored -= (this.outputMW * this.eta) * deltaHours;
     }
 
-    this.energyMWhStored = Math.max(0, Math.min(this.energyMWh, this.energyMWhStored));
+    this.energyMWhStored = clamp(
+      this.energyMWhStored,
+      this.energyMWh * this.minSoc,
+      this.energyMWh * this.maxSoc,
+    );
     return this.outputMW;
   }
 }
