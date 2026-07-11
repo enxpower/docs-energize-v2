@@ -6,9 +6,14 @@ function dieselResponseWithin(dg, horizonSeconds) {
   return Math.min(headroomMW, dg.rampUpMWPerS * horizonSeconds);
 }
 
-function bessFastReserveMW(bess) {
+function bessReserveWithin(bess, horizonSeconds) {
   if (!bess?.isAvailable) return 0;
-  return Math.max(0, bess.availableDischargeMW() - Math.max(0, bess.outputMW));
+  const durationMinutes = horizonSeconds / 60;
+  const sustainableTotalMW = bess.sustainableDischargeMW(durationMinutes);
+  const currentDischargeMW = Math.max(0, bess.outputMW);
+  const energyLimitedHeadroomMW = Math.max(0, sustainableTotalMW - currentDischargeMW);
+  const rampLimitedHeadroomMW = Math.max(0, bess.rampMWPerS * horizonSeconds);
+  return Math.min(energyLimitedHeadroomMW, rampLimitedHeadroomMW);
 }
 
 export function assessReserve({ dieselFleet, bess, horizonsSeconds = [10, 60, 600] }) {
@@ -25,19 +30,19 @@ export function assessReserve({ dieselFleet, bess, horizonsSeconds = [10, 60, 60
   const largestOnlineRatedMW = online.length
     ? Math.max(...online.map((dg) => dg.ratedMW))
     : 0;
-  const bessFastMW = bessFastReserveMW(bess);
 
   const responseByHorizonMW = {};
   for (const horizon of horizonsSeconds) {
     const dieselMW = online.reduce((sum, dg) => sum + dieselResponseWithin(dg, horizon), 0);
+    const bessMW = bessReserveWithin(bess, horizon);
     const startableMW = [...starting, ...offline]
       .filter((dg) => dg.secondsUntilRunning <= horizon)
       .reduce((sum, dg) => sum + dg.ratedMW, 0);
     responseByHorizonMW[horizon] = {
       dieselSpinningMW: dieselMW,
-      bessFastMW,
+      bessMW,
       startableMW,
-      totalMW: dieselMW + bessFastMW + startableMW,
+      totalMW: dieselMW + bessMW + startableMW,
     };
   }
 
@@ -46,11 +51,11 @@ export function assessReserve({ dieselFleet, bess, horizonsSeconds = [10, 60, 60
   const reserve600MW = responseByHorizonMW[600]?.totalMW ?? reserve60MW;
 
   let n1Status = 'PASS';
-  let n1Reason = 'Fast reserve covers the largest online contingency.';
+  let n1Reason = '10-second reserve covers the largest online contingency.';
   if (fast10MW + 1e-9 < largestOnlineContingencyMW) {
     if (reserve60MW + 1e-9 >= largestOnlineContingencyMW) {
       n1Status = 'CONDITIONAL';
-      n1Reason = 'Fast reserve is insufficient, but 60-second reserve can cover the largest online contingency.';
+      n1Reason = '10-second reserve is insufficient, but 60-second reserve can cover the largest online contingency.';
     } else {
       n1Status = 'FAIL';
       n1Reason = 'Available reserve cannot cover the largest online contingency within 60 seconds.';
@@ -66,7 +71,9 @@ export function assessReserve({ dieselFleet, bess, horizonsSeconds = [10, 60, 60
     spinningHeadroomMW,
     largestOnlineContingencyMW,
     largestOnlineRatedMW,
-    bessFastReserveMW: bessFastMW,
+    bessFastReserveMW: responseByHorizonMW[10]?.bessMW ?? 0,
+    bessReserve60MW: responseByHorizonMW[60]?.bessMW ?? 0,
+    bessReserve600MW: responseByHorizonMW[600]?.bessMW ?? 0,
     fast10MW,
     reserve60MW,
     reserve600MW,
