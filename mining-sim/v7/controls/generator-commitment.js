@@ -27,7 +27,10 @@ function capacityAvailableBy(dieselFleet, horizonSeconds) {
 export function evaluateGeneratorCommitment({
   loadMW,
   forecastLoadMW = loadMW,
+  forecastPlanningLoadMW = forecastLoadMW,
   forecastHorizonSeconds = 0,
+  forecastRiskLevel = 'LOW',
+  forecastErrorMW = Math.max(0, forecastPlanningLoadMW - forecastLoadMW),
   dieselFleet,
   bess,
   minimumOnlineUnits = 1,
@@ -55,10 +58,12 @@ export function evaluateGeneratorCommitment({
     ? bess.sustainableDischargeMW(forecastSupportDurationMinutes)
     : 0;
 
+  const securedForecastLoadMW = Math.max(forecastLoadMW, forecastPlanningLoadMW);
   const requiredOnlineMW = Math.max(0, loadMW + reserveMarginMW - bessFirmSupportMW);
-  const requiredForecastMW = Math.max(0, forecastLoadMW + reserveMarginMW - bessForecastSupportMW);
+  const requiredForecastMW = Math.max(0, securedForecastLoadMW + reserveMarginMW - bessForecastSupportMW);
   const immediateCapacityShortfallMW = Math.max(0, requiredOnlineMW - onlineRatedMW);
   const forecastCapacityShortfallMW = Math.max(0, requiredForecastMW - availableByForecastMW);
+  const uncertaintyExposureMW = Math.max(0, securedForecastLoadMW - forecastLoadMW);
 
   let action = null;
 
@@ -75,17 +80,19 @@ export function evaluateGeneratorCommitment({
         reason = 'Online duration-qualified firm capacity is below the current requirement.';
       } else if (forecastCapacityShortfallMW > 1e-9) {
         reason = predictedReadyOnTime
-          ? 'Forecast firm-capacity shortfall requires pre-start before the projected load increase.'
-          : 'Forecast firm-capacity shortfall detected; selected unit cannot be ready on time and must start immediately.';
+          ? 'Forecast upper-bound capacity shortfall requires pre-start before the projected load increase.'
+          : 'Forecast upper-bound capacity shortfall detected; selected unit cannot be ready on time and must start immediately.';
       }
       action = {
         type: 'START',
         equipmentId: candidate.id,
         reason,
         predictive: forecastCapacityShortfallMW > 1e-9 && immediateCapacityShortfallMW <= 1e-9,
+        uncertaintyDriven: uncertaintyExposureMW > 1e-9 && forecastLoadMW <= availableByForecastMW + bessForecastSupportMW,
         requiredBySeconds: forecastHorizonSeconds,
         secondsUntilRunning: candidate.secondsUntilRunning,
         predictedReadyOnTime,
+        forecastRiskLevel,
       };
     }
   } else if (allowStop) {
@@ -96,13 +103,15 @@ export function evaluateGeneratorCommitment({
         const remainingOnlineUnits = online.length - 1;
         if (remainingOnlineUnits < minimumOnlineUnits) continue;
         const currentSecure = remainingOnlineRatedMW + bessFirmSupportMW + 1e-9 >= loadMW + reserveMarginMW;
-        const forecastSecure = remainingOnlineRatedMW + bessForecastSupportMW + 1e-9 >= forecastLoadMW + reserveMarginMW;
+        const forecastSecure = remainingOnlineRatedMW + bessForecastSupportMW + 1e-9 >= securedForecastLoadMW + reserveMarginMW;
         if (currentSecure && forecastSecure) {
           action = {
             type: 'STOP',
             equipmentId: candidate.id,
-            reason: 'Excess online capacity can be removed while preserving current and forecast duration-qualified margins.',
+            reason: 'Excess online capacity can be removed while preserving current and forecast upper-bound margins.',
             predictive: true,
+            uncertaintyDriven: false,
+            forecastRiskLevel,
           };
           break;
         }
@@ -126,6 +135,10 @@ export function evaluateGeneratorCommitment({
     immediateCapacityShortfallMW,
     forecastCapacityShortfallMW,
     forecastLoadMW,
+    forecastPlanningLoadMW: securedForecastLoadMW,
+    forecastErrorMW,
+    forecastRiskLevel,
+    uncertaintyExposureMW,
     forecastHorizonSeconds,
   };
 }
