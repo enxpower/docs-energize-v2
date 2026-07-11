@@ -73,13 +73,20 @@ export function testPredictiveCommitmentStartsOnTime() {
   runFor(engine, 20);
   const preRise = engine.history.at(-1);
   load.setDemandMW(8.5);
+  const disturbanceTime = engine.timeSeconds;
   const firstAfterRise = engine.step();
   assert(
     firstAfterRise.dieselEmsSetpointMW >= 8.49,
     `event-triggered EMS did not assume load rise: pre=${preRise.dieselEmsSetpointMW}, first=${firstAfterRise.dieselEmsSetpointMW}`,
   );
 
-  const afterRise = runFor(engine, 19.9);
+  const afterRise = runFor(engine, 59.9);
+  const settledWindow = engine.history.filter(
+    (sample) => sample.timeSeconds >= disturbanceTime + 50
+      && sample.timeSeconds <= disturbanceTime + 60 + 1e-9,
+  );
+  const maxSettledResidualMW = Math.max(...settledWindow.map((sample) => Math.abs(sample.residualMW)));
+  const maxSettledFrequencyErrorHz = Math.max(...settledWindow.map((sample) => Math.abs(sample.frequencyHz - 60)));
   const fleetDiagnostics = fleet.map((dg) => ({
     id: dg.id,
     state: dg.state,
@@ -89,10 +96,15 @@ export function testPredictiveCommitmentStartsOnTime() {
     outputMW: dg.outputMW,
     runTimeSeconds: dg.runTimeSeconds,
   }));
+
   assert(afterRise.onlineDieselCount === 3, `expected 3 online units, received ${afterRise.onlineDieselCount}`);
   assert(
-    Math.abs(afterRise.residualMW) < 0.25,
-    `forecast-prepared system failed load rise: residual=${afterRise.residualMW}, diesel=${afterRise.dieselMW}, setpoint=${afterRise.dieselEmsSetpointMW}, mechanical=${afterRise.dieselMechanicalMW}, frequency=${afterRise.frequencyHz}, fleet=${JSON.stringify(fleetDiagnostics)}`,
+    maxSettledResidualMW < 0.25,
+    `forecast-prepared system did not settle power balance: maxResidual=${maxSettledResidualMW}, finalResidual=${afterRise.residualMW}, finalFrequency=${afterRise.frequencyHz}, fleet=${JSON.stringify(fleetDiagnostics)}`,
+  );
+  assert(
+    maxSettledFrequencyErrorHz < 0.15,
+    `forecast-prepared system did not settle frequency: maxError=${maxSettledFrequencyErrorHz}, finalFrequency=${afterRise.frequencyHz}`,
   );
 
   return {
@@ -104,6 +116,8 @@ export function testPredictiveCommitmentStartsOnTime() {
       preRiseEmsSetpointMW: preRise.dieselEmsSetpointMW,
       firstAfterRiseEmsSetpointMW: firstAfterRise.dieselEmsSetpointMW,
       onlineDieselCountAfterRise: afterRise.onlineDieselCount,
+      maxSettledResidualMW,
+      maxSettledFrequencyErrorHz,
       residualMWAfterRise: afterRise.residualMW,
       dieselMWAfterRise: afterRise.dieselMW,
       frequencyHzAfterRise: afterRise.frequencyHz,
