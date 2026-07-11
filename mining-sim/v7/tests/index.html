@@ -19,8 +19,15 @@
 import { runAllTests } from './test-runner.js';
 import { testBessEnergyDurationDepletion } from './bess-duration-test.js';
 import { testMultiTimescaleControl } from './multi-timescale-control-test.js';
+import { testGeneratorStateMachine, testReserveN1Classification, testCommitmentStartDecision } from './generator-commitment-test.js';
 const results=runAllTests();
-for(const test of [testBessEnergyDurationDepletion,testMultiTimescaleControl]){
+for(const test of [
+  testBessEnergyDurationDepletion,
+  testMultiTimescaleControl,
+  testGeneratorStateMachine,
+  testReserveN1Classification,
+  testCommitmentStartDecision,
+]){
   try{results.push(test());}catch(error){results.push({name:test.name,status:'FAIL',error:error.message});}
 }
 const pass=results.filter(r=>r.status==='PASS').length;
