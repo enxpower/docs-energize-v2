@@ -82,6 +82,18 @@ export class Bess {
     return this.supportDurationMinutes(requestedMW);
   }
 
+  sustainableDischargeMW(durationMinutes) {
+    if (!this.isAvailable || durationMinutes <= 0) return this.availableDischargeMW();
+    let low = 0;
+    let high = this.availableDischargeMW();
+    for (let i = 0; i < 40; i += 1) {
+      const mid = (low + high) / 2;
+      if (mid <= 1e-9 || this.supportDurationMinutes(mid) + 1e-9 >= durationMinutes) low = mid;
+      else high = mid;
+    }
+    return low;
+  }
+
   setCommandMW(commandMW) {
     if (!this.isAvailable) {
       this.commandMW = 0;
