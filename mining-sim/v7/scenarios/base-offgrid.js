@@ -11,6 +11,13 @@ export function createBaseOffgridScenario() {
     { ratedMW: 3.3, minLoadPU: 0.35, rampUpMWPerS: 0.2, rampDownMWPerS: 1.0, inertiaSeconds: 4 },
     { ratedMW: 3.3, minLoadPU: 0.35, rampUpMWPerS: 0.2, rampDownMWPerS: 1.0, inertiaSeconds: 4 },
   ]);
+
+  const steadyShareMW = load.baseMW / dieselFleet.length;
+  for (const dg of dieselFleet) {
+    dg.commandMW = steadyShareMW;
+    dg.outputMW = steadyShareMW;
+  }
+
   const bess = new Bess({
     powerMW: 8,
     energyMWh: 20,
