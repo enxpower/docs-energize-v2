@@ -64,6 +64,12 @@ import {
   testProcessPrerequisiteLossTripsDownstreamChain,
   testProcessSequenceRejectsDependencyCycle,
 } from './process-sequence-test.js';
+import {
+  testConditionHoldAutomaticallyRestartsProcess,
+  testProtectionTripRequiresOperatorConfirmation,
+  testEmergencyStopRequiresLockoutReset,
+  testAutomaticRestartLimitEscalatesToOperator,
+} from './process-restart-governance-test.js';
 import { testMinimumMiningAcceptanceChain } from './mining-acceptance-test.js';
 
 export const EXTENDED_TESTS = Object.freeze([
@@ -108,6 +114,10 @@ export const EXTENDED_TESTS = Object.freeze([
   testProcessSequenceOrdersAndParallelBranches,
   testProcessPrerequisiteLossTripsDownstreamChain,
   testProcessSequenceRejectsDependencyCycle,
+  testConditionHoldAutomaticallyRestartsProcess,
+  testProtectionTripRequiresOperatorConfirmation,
+  testEmergencyStopRequiresLockoutReset,
+  testAutomaticRestartLimitEscalatesToOperator,
   testMinimumMiningAcceptanceChain,
 ]);
 
