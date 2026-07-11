@@ -80,10 +80,19 @@ export function testPredictiveCommitmentStartsOnTime() {
   );
 
   const afterRise = runFor(engine, 19.9);
+  const fleetDiagnostics = fleet.map((dg) => ({
+    id: dg.id,
+    state: dg.state,
+    emsSetpointMW: dg.emsSetpointMW,
+    governorCommandMW: dg.governorCommandMW,
+    mechanicalMW: dg.mechanicalMW,
+    outputMW: dg.outputMW,
+    runTimeSeconds: dg.runTimeSeconds,
+  }));
   assert(afterRise.onlineDieselCount === 3, `expected 3 online units, received ${afterRise.onlineDieselCount}`);
   assert(
     Math.abs(afterRise.residualMW) < 0.25,
-    `forecast-prepared system failed load rise: residual=${afterRise.residualMW}, diesel=${afterRise.dieselMW}, setpoint=${afterRise.dieselEmsSetpointMW}, mechanical=${afterRise.dieselMechanicalMW}, frequency=${afterRise.frequencyHz}`,
+    `forecast-prepared system failed load rise: residual=${afterRise.residualMW}, diesel=${afterRise.dieselMW}, setpoint=${afterRise.dieselEmsSetpointMW}, mechanical=${afterRise.dieselMechanicalMW}, frequency=${afterRise.frequencyHz}, fleet=${JSON.stringify(fleetDiagnostics)}`,
   );
 
   return {
@@ -98,6 +107,7 @@ export function testPredictiveCommitmentStartsOnTime() {
       residualMWAfterRise: afterRise.residualMW,
       dieselMWAfterRise: afterRise.dieselMW,
       frequencyHzAfterRise: afterRise.frequencyHz,
+      fleetDiagnostics,
     },
   };
 }
