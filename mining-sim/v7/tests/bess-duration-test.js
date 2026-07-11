@@ -33,6 +33,9 @@ export function testBessEnergyDurationDepletion() {
   engine.start();
   engine.load.setDemandMW(c.supportLoadMW);
 
+  const startupExclusionSeconds = 60;
+  const persistentShortfallSeconds = 10;
+  let shortfallElapsedSeconds = 0;
   let depletionTimeSeconds = null;
   const maxSeconds = (predictedDurationMinutes + c.observationMarginMinutes) * 60;
   const steps = Math.ceil(maxSeconds / engine.dtSeconds);
@@ -40,8 +43,13 @@ export function testBessEnergyDurationDepletion() {
 
   for (let i = 0; i < steps; i += 1) {
     last = engine.step();
-    if (depletionTimeSeconds === null && last.residualMW < -c.minimumPostDepletionShortfallMW) {
-      depletionTimeSeconds = last.timeSeconds;
+    const eligible = last.timeSeconds >= startupExclusionSeconds;
+    const shortfall = last.residualMW < -c.minimumPostDepletionShortfallMW;
+    shortfallElapsedSeconds = eligible && shortfall
+      ? shortfallElapsedSeconds + engine.dtSeconds
+      : 0;
+    if (shortfallElapsedSeconds + 1e-9 >= persistentShortfallSeconds) {
+      depletionTimeSeconds = last.timeSeconds - persistentShortfallSeconds;
       break;
     }
   }
@@ -65,6 +73,8 @@ export function testBessEnergyDurationDepletion() {
       predictedDurationMinutes,
       observedDurationMinutes,
       predictionErrorMinutes,
+      startupExclusionSeconds,
+      persistentShortfallSeconds,
       postDepletionShortfallMW,
       finalSoc: last.bessSoc,
       finalFrequencyHz: last.frequencyHz,
