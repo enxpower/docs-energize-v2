@@ -22,6 +22,7 @@ import { testMultiTimescaleControl } from './multi-timescale-control-test.js';
 import { testGeneratorStateMachine, testReserveN1Classification, testCommitmentStartDecision, testDurationAwareBessReserve } from './generator-commitment-test.js';
 import { testPredictiveCommitmentStartsOnTime, testPredictiveCommitmentFlagsLateReadiness } from './predictive-commitment-test.js';
 import { testUncertaintyDrivesPreStart, testUncertaintyBlocksUnsafeStop } from './forecast-uncertainty-test.js';
+import { testFreshForecastAllowsNormalPolicy, testStaleForecastBlocksAutomaticStop, testLowQualityForecastAddsConservativeMargin } from './forecast-quality-test.js';
 const results=runAllTests();
 for(const test of [
   testBessEnergyDurationDepletion,
@@ -34,6 +35,9 @@ for(const test of [
   testPredictiveCommitmentFlagsLateReadiness,
   testUncertaintyDrivesPreStart,
   testUncertaintyBlocksUnsafeStop,
+  testFreshForecastAllowsNormalPolicy,
+  testStaleForecastBlocksAutomaticStop,
+  testLowQualityForecastAddsConservativeMargin,
 ]){
   try{results.push(test());}catch(error){results.push({name:test.name,status:'FAIL',error:error.message});}
 }
