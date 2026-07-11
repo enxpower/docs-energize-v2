@@ -36,6 +36,9 @@ export function evaluateGeneratorCommitment({
   allowStop = true,
 }) {
   const reserve = assessReserve({ dieselFleet, bess });
+  const onlineRatedMW = dieselFleet
+    .filter((dg) => dg.isOnline)
+    .reduce((sum, dg) => sum + dg.ratedMW, 0);
   const committedRatedMW = dieselFleet
     .filter((dg) => dg.isCommitted)
     .reduce((sum, dg) => sum + dg.ratedMW, 0);
@@ -52,9 +55,9 @@ export function evaluateGeneratorCommitment({
     ? bess.sustainableDischargeMW(forecastSupportDurationMinutes)
     : 0;
 
-  const requiredCommittedMW = Math.max(0, loadMW + reserveMarginMW - bessFirmSupportMW);
+  const requiredOnlineMW = Math.max(0, loadMW + reserveMarginMW - bessFirmSupportMW);
   const requiredForecastMW = Math.max(0, forecastLoadMW + reserveMarginMW - bessForecastSupportMW);
-  const immediateCapacityShortfallMW = Math.max(0, requiredCommittedMW - committedRatedMW);
+  const immediateCapacityShortfallMW = Math.max(0, requiredOnlineMW - onlineRatedMW);
   const forecastCapacityShortfallMW = Math.max(0, requiredForecastMW - availableByForecastMW);
 
   let action = null;
@@ -69,7 +72,7 @@ export function evaluateGeneratorCommitment({
       const predictedReadyOnTime = candidate.secondsUntilRunning <= forecastHorizonSeconds;
       let reason = 'N-1 reserve assessment failed.';
       if (immediateCapacityShortfallMW > 1e-9) {
-        reason = 'Committed duration-qualified firm capacity is below the current requirement.';
+        reason = 'Online duration-qualified firm capacity is below the current requirement.';
       } else if (forecastCapacityShortfallMW > 1e-9) {
         reason = predictedReadyOnTime
           ? 'Forecast firm-capacity shortfall requires pre-start before the projected load increase.'
@@ -89,16 +92,16 @@ export function evaluateGeneratorCommitment({
     const online = dieselFleet.filter((dg) => dg.isOnline);
     if (online.length > minimumOnlineUnits) {
       for (const candidate of sortStopCandidates(dieselFleet)) {
-        const remainingRatedMW = committedRatedMW - candidate.ratedMW;
+        const remainingOnlineRatedMW = onlineRatedMW - candidate.ratedMW;
         const remainingOnlineUnits = online.length - 1;
         if (remainingOnlineUnits < minimumOnlineUnits) continue;
-        const currentSecure = remainingRatedMW + bessFirmSupportMW + 1e-9 >= loadMW + reserveMarginMW;
-        const forecastSecure = remainingRatedMW + bessForecastSupportMW + 1e-9 >= forecastLoadMW + reserveMarginMW;
+        const currentSecure = remainingOnlineRatedMW + bessFirmSupportMW + 1e-9 >= loadMW + reserveMarginMW;
+        const forecastSecure = remainingOnlineRatedMW + bessForecastSupportMW + 1e-9 >= forecastLoadMW + reserveMarginMW;
         if (currentSecure && forecastSecure) {
           action = {
             type: 'STOP',
             equipmentId: candidate.id,
-            reason: 'Excess committed capacity can be removed while preserving current and forecast duration-qualified margins.',
+            reason: 'Excess online capacity can be removed while preserving current and forecast duration-qualified margins.',
             predictive: true,
           };
           break;
@@ -110,13 +113,14 @@ export function evaluateGeneratorCommitment({
   return {
     action,
     reserve,
+    onlineRatedMW,
     committedRatedMW,
     availableByForecastMW,
     bessFirmSupportMW,
     bessForecastSupportMW,
     firmSupportDurationMinutes,
     forecastSupportDurationMinutes,
-    requiredCommittedMW,
+    requiredOnlineMW,
     requiredForecastMW,
     immediateCapacityShortfallMW,
     forecastCapacityShortfallMW,
