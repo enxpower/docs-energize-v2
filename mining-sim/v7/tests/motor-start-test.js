@@ -1,6 +1,7 @@
 import { AggregateLoad } from '../equipment/load.js';
 import { MotorLoad, MotorLoadBank, MOTOR_START_MODE, MOTOR_STATE } from '../equipment/motor-load.js';
 import { MotorStartController } from '../controls/motor-start.js';
+import { createBaseOffgridScenario } from '../scenarios/base-offgrid.js';
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
@@ -123,5 +124,43 @@ export function testMotorDynamicLoadIntegration() {
     name: 'Motor dynamic-load integration',
     status: 'PASS',
     metrics: { firstLoadMW, finalLoadMW, motorState: motor.state },
+  };
+}
+
+export function testMotorReceivesSimulationFrequency() {
+  const engine = createBaseOffgridScenario();
+  const motor = new MotorLoad({
+    id: 'SYSTEM-PUMP',
+    ratedMW: 0.5,
+    startMode: MOTOR_START_MODE.VFD,
+    minimumOffSeconds: 0,
+    abortFrequencyHz: 58.5,
+    abortDelaySeconds: 0.3,
+    accelerationSeconds: 5,
+  });
+  const bank = new MotorLoadBank({ motors: [motor] });
+  engine.load.attachDynamicLoad(bank);
+  assert(motor.requestStart(0), 'system motor start request failed');
+
+  engine.frequencyHz = 58.0;
+  engine.start();
+  let final;
+  for (let i = 0; i < 3; i += 1) {
+    engine.frequencyHz = 58.0;
+    final = engine.step();
+  }
+
+  assert(final.loadStepContextFrequencyHz === 58.0, `load step did not receive system frequency: ${final.loadStepContextFrequencyHz}`);
+  assert(motor.state === MOTOR_STATE.FAILED, `system-integrated motor did not abort at low frequency: ${motor.state}`);
+  assert(motor.lastFailureReason === 'LOW_FREQUENCY_DURING_START', `unexpected system failure reason: ${motor.lastFailureReason}`);
+
+  return {
+    name: 'Motor receives simulation frequency context',
+    status: 'PASS',
+    metrics: {
+      loadStepContextFrequencyHz: final.loadStepContextFrequencyHz,
+      motorState: motor.state,
+      failureReason: motor.lastFailureReason,
+    },
   };
 }
