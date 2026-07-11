@@ -70,6 +70,12 @@ import {
   testEmergencyStopRequiresLockoutReset,
   testAutomaticRestartLimitEscalatesToOperator,
 } from './process-restart-governance-test.js';
+import {
+  testProductionCurtailmentProtectsSafetyLoads,
+  testProductionRestorationUsesPriorityAndReserve,
+  testProductionLossIsSeparateFromEens,
+  testIntegratedProductionCurtailmentEvidence,
+} from './production-curtailment-test.js';
 import { testMinimumMiningAcceptanceChain } from './mining-acceptance-test.js';
 
 export const EXTENDED_TESTS = Object.freeze([
@@ -118,6 +124,10 @@ export const EXTENDED_TESTS = Object.freeze([
   testProtectionTripRequiresOperatorConfirmation,
   testEmergencyStopRequiresLockoutReset,
   testAutomaticRestartLimitEscalatesToOperator,
+  testProductionCurtailmentProtectsSafetyLoads,
+  testProductionRestorationUsesPriorityAndReserve,
+  testProductionLossIsSeparateFromEens,
+  testIntegratedProductionCurtailmentEvidence,
   testMinimumMiningAcceptanceChain,
 ]);
 
