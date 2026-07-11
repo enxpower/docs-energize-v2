@@ -111,3 +111,29 @@ export function testUflsDelayReset() {
     metrics: { shedLoadMW: load.shedMW, events: events.length },
   };
 }
+
+export function testEensCappedByCurrentDemand() {
+  const load = new AggregateLoad({
+    baseMW: 1,
+    shedBlocks: [{ id: 'OVERSIZED-BLOCK', mw: 3, priority: 1, critical: false }],
+  });
+  load.shedBlock('OVERSIZED-BLOCK', 0);
+
+  assert(load.shedMW === 3, `nominal shed block should remain traceable: ${load.shedMW}`);
+  assert(load.explicitUnservedMW === 1, `explicit unserved load should be capped by demand: ${load.explicitUnservedMW}`);
+  assert(load.connectedMW === 0, `connected load should not become negative: ${load.connectedMW}`);
+
+  load.setDemandMW(0.4);
+  assert(load.explicitUnservedMW === 0.4, `unserved load did not follow reduced demand: ${load.explicitUnservedMW}`);
+
+  return {
+    name: 'EENS input capped by current explicit demand',
+    status: 'PASS',
+    metrics: {
+      nominalShedBlockMW: load.shedMW,
+      currentDemandMW: load.commandMW,
+      explicitUnservedMW: load.explicitUnservedMW,
+      connectedMW: load.connectedMW,
+    },
+  };
+}
