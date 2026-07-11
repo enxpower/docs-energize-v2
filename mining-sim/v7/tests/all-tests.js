@@ -42,6 +42,11 @@ import {
   testMotorDynamicLoadIntegration,
   testMotorReceivesSimulationFrequency,
 } from './motor-start-test.js';
+import {
+  testMotorSchedulerPriorityAndDeadline,
+  testMotorSchedulerReserveDelayAndRetry,
+  testMotorSchedulerExpiry,
+} from './motor-start-scheduler-test.js';
 import { testMinimumMiningAcceptanceChain } from './mining-acceptance-test.js';
 
 export const EXTENDED_TESTS = Object.freeze([
@@ -72,6 +77,9 @@ export const EXTENDED_TESTS = Object.freeze([
   testMotorLowFrequencyAbort,
   testMotorDynamicLoadIntegration,
   testMotorReceivesSimulationFrequency,
+  testMotorSchedulerPriorityAndDeadline,
+  testMotorSchedulerReserveDelayAndRetry,
+  testMotorSchedulerExpiry,
   testMinimumMiningAcceptanceChain,
 ]);
 
