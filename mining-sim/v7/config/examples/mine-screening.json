@@ -1,9 +1,10 @@
 {
-  "version": "1.0",
-  "id": "MINE-SCREENING-BASE",
-  "name": "12 MW Mine Screening Base",
+  "version": "1.1",
+  "id": "MINE-REFERENCE-COMPLIANT",
+  "name": "12 MW Mine Reference Compliant Baseline",
   "metadata": {
-    "modelMaturity": "SCREENING"
+    "modelMaturity": "SCREENING",
+    "purpose": "REFERENCE_COMPLIANT_BASELINE"
   },
   "simulation": {
     "dtSeconds": 0.1,
@@ -11,41 +12,43 @@
   },
   "site": {
     "nominalHz": 60,
-    "systemBaseMW": 12,
-    "baseLoadMW": 6,
+    "systemBaseMW": 16,
+    "baseLoadMW": 4,
     "shedBlocks": [
-      { "id": "AUXILIARY", "name": "Non-critical auxiliary", "mw": 1, "priority": 1, "critical": false },
-      { "id": "PROCESS", "name": "Process load", "mw": 2, "priority": 5, "critical": false },
+      { "id": "AUXILIARY", "name": "Non-critical auxiliary", "mw": 0.8, "priority": 1, "critical": false },
+      { "id": "PROCESS", "name": "Process load", "mw": 1.5, "priority": 5, "critical": false },
       { "id": "SAFETY", "name": "Safety services", "mw": 1, "priority": 10, "critical": true }
     ]
   },
   "equipment": {
     "diesel": [
-      { "id": "DG-1", "ratedMW": 3.3, "minLoadPU": 0.35, "rampUpMWPerS": 0.2, "rampDownMWPerS": 1, "droopPU": 0.04, "inertiaSeconds": 4 },
-      { "id": "DG-2", "ratedMW": 3.3, "minLoadPU": 0.35, "rampUpMWPerS": 0.2, "rampDownMWPerS": 1, "droopPU": 0.04, "inertiaSeconds": 4 },
-      { "id": "DG-3", "ratedMW": 3.3, "minLoadPU": 0.35, "rampUpMWPerS": 0.2, "rampDownMWPerS": 1, "droopPU": 0.04, "inertiaSeconds": 4 },
-      { "id": "DG-4", "ratedMW": 3.3, "minLoadPU": 0.35, "rampUpMWPerS": 0.2, "rampDownMWPerS": 1, "droopPU": 0.04, "inertiaSeconds": 4 }
+      { "id": "DG-1", "ratedMW": 3.3, "minLoadPU": 0.35, "rampUpMWPerS": 0.3, "rampDownMWPerS": 1, "droopPU": 0.04, "inertiaSeconds": 5 },
+      { "id": "DG-2", "ratedMW": 3.3, "minLoadPU": 0.35, "rampUpMWPerS": 0.3, "rampDownMWPerS": 1, "droopPU": 0.04, "inertiaSeconds": 5 },
+      { "id": "DG-3", "ratedMW": 3.3, "minLoadPU": 0.35, "rampUpMWPerS": 0.3, "rampDownMWPerS": 1, "droopPU": 0.04, "inertiaSeconds": 5 },
+      { "id": "DG-4", "ratedMW": 3.3, "minLoadPU": 0.35, "rampUpMWPerS": 0.3, "rampDownMWPerS": 1, "droopPU": 0.04, "inertiaSeconds": 5 },
+      { "id": "DG-5", "ratedMW": 3.3, "minLoadPU": 0.35, "rampUpMWPerS": 0.3, "rampDownMWPerS": 1, "droopPU": 0.04, "inertiaSeconds": 5 },
+      { "id": "DG-6", "ratedMW": 3.3, "minLoadPU": 0.35, "rampUpMWPerS": 0.3, "rampDownMWPerS": 1, "droopPU": 0.04, "inertiaSeconds": 5 }
     ],
     "bess": {
-      "powerMW": 8,
-      "energyMWh": 20,
-      "initialSoc": 0.6,
-      "minSoc": 0.18,
-      "maxSoc": 0.82,
+      "powerMW": 12,
+      "energyMWh": 24,
+      "initialSoc": 0.65,
+      "minSoc": 0.2,
+      "maxSoc": 0.85,
       "roundTripEfficiency": 0.965,
-      "rampMWPerS": 8
+      "rampMWPerS": 20
     },
     "motors": [
       { "id": "LUBE-PUMP", "name": "Lubrication Pump", "ratedMW": 0.2, "startMode": "VFD", "minimumOffSeconds": 0 },
       { "id": "COOLING-PUMP", "name": "Cooling Water Pump", "ratedMW": 0.3, "startMode": "VFD", "minimumOffSeconds": 0 },
-      { "id": "CONVEYOR", "name": "Primary Conveyor", "ratedMW": 0.8, "startMode": "SOFT_STARTER", "minimumOffSeconds": 0 },
+      { "id": "CONVEYOR", "name": "Primary Conveyor", "ratedMW": 0.8, "startMode": "VFD", "minimumOffSeconds": 0 },
       { "id": "CRUSHER-MOTOR", "name": "Primary Crusher", "ratedMW": 1.8, "startMode": "VFD", "minimumOffSeconds": 0 },
       { "id": "SLURRY-PUMP", "name": "Slurry Pump", "ratedMW": 1.2, "startMode": "VFD", "minimumOffSeconds": 0 }
     ],
     "productionLoads": [
-      { "id": "AUX-PROCESS", "normalMW": 0.8, "minimumMW": 0.2, "priority": 1, "normalThroughputTPH": 20 },
-      { "id": "CRUSHING", "normalMW": 2, "minimumMW": 1, "priority": 8, "normalThroughputTPH": 250, "throughputExponent": 0.9 },
-      { "id": "DEWATERING", "normalMW": 0.7, "minimumMW": 0.7, "priority": 10, "safetyCritical": true, "normalThroughputTPH": 0 }
+      { "id": "AUX-PROCESS", "name": "Auxiliary Process", "normalMW": 0.8, "minimumMW": 0.2, "priority": 1, "normalThroughputTPH": 20 },
+      { "id": "CRUSHING", "name": "Crushing Process", "normalMW": 2, "minimumMW": 1, "priority": 8, "normalThroughputTPH": 250, "throughputExponent": 0.9 },
+      { "id": "DEWATERING", "name": "Dewatering", "normalMW": 0.7, "minimumMW": 0.7, "priority": 10, "safetyCritical": true, "normalThroughputTPH": 0 }
     ]
   },
   "process": {
@@ -62,15 +65,15 @@
     ]
   },
   "controls": {
-    "emsIntervalSeconds": 20,
-    "commitmentIntervalSeconds": 30,
-    "motorStart": { "minimumStartIntervalSeconds": 30 },
+    "emsIntervalSeconds": 10,
+    "commitmentIntervalSeconds": 20,
+    "motorStart": { "minimumStartIntervalSeconds": 45 },
     "productionCurtailment": {
-      "triggerDeficitMW": 0.25,
-      "restoreSurplusMW": 1,
-      "minimumPostRestoreReserveMW": 0.5,
-      "restoreDelaySeconds": 30,
-      "maximumStepMW": 1
+      "triggerDeficitMW": 0.2,
+      "restoreSurplusMW": 1.5,
+      "minimumPostRestoreReserveMW": 1,
+      "restoreDelaySeconds": 45,
+      "maximumStepMW": 0.8
     }
   },
   "economics": {
@@ -83,13 +86,15 @@
     "capitalCostEstimate": 0
   },
   "disturbances": [
-    { "id": "START-PROCESS", "type": "PROCESS_START", "timeSeconds": 1 },
-    { "id": "TRIP-DG-1", "type": "DIESEL_TRIP", "targetId": "DG-1", "timeSeconds": 120 },
-    { "id": "TRIP-BESS", "type": "BESS_TRIP", "timeSeconds": 180 },
-    { "id": "RESTORE-BESS", "type": "BESS_RESTORE", "timeSeconds": 240 }
+    { "id": "START-PROCESS", "type": "PROCESS_START", "timeSeconds": 5 },
+    { "id": "TRIP-DG-1", "type": "DIESEL_TRIP", "targetId": "DG-1", "timeSeconds": 150 },
+    { "id": "TRIP-BESS", "type": "BESS_TRIP", "timeSeconds": 220 },
+    { "id": "RESTORE-BESS", "type": "BESS_RESTORE", "timeSeconds": 260 }
   ],
   "assumptions": {
     "voltageModel": "NOT_MODELED",
-    "protectionSettings": "SCREENING_ASSUMPTIONS_ONLY"
+    "protectionSettings": "SCREENING_ASSUMPTIONS_ONLY",
+    "referenceBaseline": true,
+    "designIntent": "Demonstrate a compliant screening baseline under the declared disturbance schedule; replace assumptions with project and vendor data before design use."
   }
 }
