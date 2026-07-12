@@ -39,6 +39,29 @@ export function testScenarioConfigCreatesRunnableEngine() {
   return { name: 'Structured scenario config creates runnable full-stack engine', status: 'PASS' };
 }
 
+export function testScenarioConfigStartsFromBalancedSteadyState() {
+  const config = baseConfig('STEADY');
+  config.site.baseLoadMW = 2.5;
+  config.equipment.productionLoads[0].normalMW = 0.5;
+  config.equipment.productionLoads[0].minimumMW = 0.2;
+  const engine = createEngineFromScenarioConfig(config);
+  const initial = engine.initialSteadyState;
+  assert(initial, 'initial steady-state evidence missing');
+  assert(initial.balanced, `initial residual was ${initial.residualMW} MW`);
+  assert(Math.abs(initial.loadMW - 3) < 1e-9, `unexpected initial load ${initial.loadMW}`);
+  assert(Math.abs(initial.dieselMW + initial.bessMW - initial.loadMW) < 1e-9, 'initial generation did not equal load');
+  assert(engine.dieselFleet.every((dg) => Math.abs(dg.outputMW - dg.mechanicalMW) < 1e-9), 'diesel electrical and mechanical initial states differ');
+  engine.start();
+  const sample = engine.step();
+  assert(Math.abs(sample.frequencyHz - 60) < 0.02, `first-step frequency drifted to ${sample.frequencyHz}`);
+  assert(Math.abs(sample.residualMW) < 0.05, `first-step residual was ${sample.residualMW}`);
+  return {
+    name: 'Scenario config establishes a balanced initial island steady state',
+    status: 'PASS',
+    metrics: { loadMW: initial.loadMW, dieselMW: initial.dieselMW, bessMW: initial.bessMW },
+  };
+}
+
 export function testScenarioConfigRejectsInvalidReferences() {
   const duplicate = baseConfig('DUPLICATE');
   duplicate.equipment.motors.push({ ...duplicate.equipment.motors[0] });
