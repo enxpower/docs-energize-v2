@@ -15,11 +15,19 @@ import {
   summarizeConfig,
   updateGuidedConfig,
 } from './workspace-model.js';
+import {
+  CONFIG_GUIDANCE,
+  buildConfigurationChecklist,
+  diagnoseLiveSample,
+  explainRevision,
+} from './engineering-guidance.js';
 
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
 const fmt = (value, digits = 2) => Number.isFinite(Number(value)) ? Number(value).toFixed(digits) : '—';
-const escapeHtml = (value) => String(value ?? '').replace(/[&<>'"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char]));
+const escapeHtml = (value) => String(value ?? '').replace(/[&<>'"]/g, (char) => ({
+  '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;',
+}[char]));
 
 const state = {
   config: null,
@@ -35,6 +43,7 @@ const state = {
   replayIndex: 0,
   replayTimer: null,
   replaySpeed: 1,
+  live: null,
 };
 
 const VIEW_IDS = Object.fromEntries(WORKSPACE_STEPS.map((step) => [step.id, `${step.id}View`]));
@@ -70,6 +79,27 @@ const VIOLATION_LABELS = {
   CRITICAL_LOAD_SHED: '关键负荷被切除',
 };
 
+function installProductStyles() {
+  const style = document.createElement('style');
+  style.textContent = `
+    .input-help-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px 0}
+    .input-help{background:#fff;border:1px solid #d8e0e6;border-left:4px solid #d4840a;border-radius:7px;padding:12px}
+    .input-help strong{display:block;font-size:12px;margin-bottom:5px}.input-help p{margin:3px 0;font-size:10px;line-height:1.55;color:#526879}
+    .checklist{background:#f8fafb;border:1px solid #d8e0e6;border-radius:8px;padding:13px;margin:12px 0}
+    .checklist h3{margin:0 0 8px;font-size:13px}.check-item{display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-top:1px solid #e7ecef;font-size:11px}
+    .check-item:first-of-type{border-top:0}.check-mark{font-weight:800;color:#167347}.check-mark.fail{color:#b42318}
+    .live-guide{margin-top:12px;border-top:1px solid #d9e1e6;padding-top:10px}.live-guide strong{display:block;font-size:12px}
+    .live-guide p{margin:4px 0;font-size:10px;line-height:1.5}.live-guide.bad{color:#9b1c1c}.live-guide.warning{color:#8a5a00}.live-guide.good{color:#166534}
+    .live-progress{height:5px;background:#e4e9ed;border-radius:10px;overflow:hidden;margin:8px 0}.live-progress i{display:block;height:100%;background:#d4840a;width:0}
+    .revision-guide{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0}
+    .revision-guide div{background:#f5f8fa;border-radius:6px;padding:9px}.revision-guide span{display:block;color:#6a7d8b;font-size:9px;text-transform:uppercase}.revision-guide strong{font-size:11px}
+    .revision-steps{margin:8px 0;padding-left:18px;color:#435b6b;font-size:10px;line-height:1.6}
+    .action-flash{animation:flash .65s ease}@keyframes flash{0%{filter:drop-shadow(0 0 8px #d4840a)}100%{filter:none}}
+    @media(max-width:800px){.input-help-grid,.revision-guide{grid-template-columns:1fr}}
+  `;
+  document.head.append(style);
+}
+
 function go(view) {
   if (!VIEW_IDS[view]) return;
   state.activeView = view;
@@ -79,12 +109,21 @@ function go(view) {
 }
 
 function renderNav() {
-  $('#workflowNav').innerHTML = WORKSPACE_STEPS.map((step, index) => `<button data-view="${step.id}" data-index="${index + 1}">${step.label}</button>`).join('');
+  $('#workflowNav').innerHTML = WORKSPACE_STEPS
+    .map((step, index) => `<button data-view="${step.id}" data-index="${index + 1}">${step.label}</button>`)
+    .join('');
   $$('#workflowNav button').forEach((button) => button.addEventListener('click', () => go(button.dataset.view)));
   go(state.activeView);
 }
 
+function stopTimers() {
+  clearInterval(state.replayTimer);
+  if (state.live?.timer) clearInterval(state.live.timer);
+  if (state.live) state.live.timer = null;
+}
+
 function invalidateRun() {
+  stopTimers();
   state.result = null;
   state.kpis = null;
   state.compliance = null;
@@ -92,14 +131,60 @@ function invalidateRun() {
   state.selectedRevision = null;
   state.revisionConfig = null;
   state.comparison = null;
+  state.live = null;
   $('#runBadge').textContent = 'NOT RUN';
   $('#runBadge').className = 'badge neutral';
   $('#openVerdict').disabled = true;
   $('#compareRevision').disabled = true;
 }
 
+function ensureGuidancePanels() {
+  if (!$('#inputGuidance')) {
+    const node = document.createElement('section');
+    node.id = 'inputGuidance';
+    node.className = 'input-help-grid';
+    $('.form-card')?.insertAdjacentElement('afterend', node);
+  }
+  if (!$('#configChecklist')) {
+    const node = document.createElement('section');
+    node.id = 'configChecklist';
+    node.className = 'checklist';
+    $('#inputGuidance')?.insertAdjacentElement('afterend', node);
+  }
+  if (!$('#liveGuide')) {
+    const node = document.createElement('div');
+    node.id = 'liveGuide';
+    node.className = 'live-guide';
+    $('.verdict-live')?.append(node);
+  }
+  if (!$('#liveProgress')) {
+    const node = document.createElement('div');
+    node.id = 'liveProgress';
+    node.className = 'live-progress';
+    node.innerHTML = '<i></i>';
+    $('.verdict-live .card-head')?.insertAdjacentElement('afterend', node);
+  }
+}
+
+function renderInputGuidance() {
+  ensureGuidancePanels();
+  $('#inputGuidance').innerHTML = Object.values(CONFIG_GUIDANCE).map((item) => `
+    <article class="input-help">
+      <strong>${escapeHtml(item.label)}</strong>
+      <p><b>含义：</b>${escapeHtml(item.meaning)}</p>
+      <p><b>数据来源：</b>${escapeHtml(item.source)}</p>
+      <p><b>检查：</b>${escapeHtml(item.check)}</p>
+    </article>
+  `).join('');
+  const checklist = buildConfigurationChecklist(state.config);
+  $('#configChecklist').innerHTML = `<h3>运行前工程检查</h3>${checklist.map((item) => `
+    <div class="check-item"><span class="check-mark ${item.pass ? '' : 'fail'}">${item.pass ? 'PASS' : 'CHECK'}</span><span>${escapeHtml(item.label)}</span></div>
+  `).join('')}`;
+}
+
 function renderConfig() {
   if (!state.config) return;
+  ensureGuidancePanels();
   const summary = summarizeConfig(state.config);
   const readiness = guidedReadiness(state.config);
   $('#railProjectName').textContent = summary.name;
@@ -122,16 +207,23 @@ function renderConfig() {
     validateScenarioConfig(state.config);
     $('#configState').textContent = 'CONFIG VALID';
     $('#configState').className = 'state-chip good';
-  } catch (error) {
+  } catch {
     $('#configState').textContent = 'CONFIG INVALID';
     $('#configState').className = 'state-chip bad';
   }
   renderScenario();
+  renderInputGuidance();
 }
 
 function renderScenario() {
   const actions = state.config?.disturbances ?? [];
-  $('#scenarioTimeline').innerHTML = actions.map((action) => `<article class="scenario-item"><div class="scenario-time">${fmt(action.timeSeconds, 0)} s</div><div><strong>${escapeHtml(ACTION_LABELS[action.type] ?? action.type)}</strong><p>${escapeHtml(action.targetId ? `目标：${action.targetId}` : action.id)}</p></div><span class="scenario-tag">${escapeHtml(action.type)}</span></article>`).join('') || '<div class="scenario-help">尚未配置事故场景。</div>';
+  $('#scenarioTimeline').innerHTML = actions.map((action) => `
+    <article class="scenario-item">
+      <div class="scenario-time">${fmt(action.timeSeconds, 0)} s</div>
+      <div><strong>${escapeHtml(ACTION_LABELS[action.type] ?? action.type)}</strong><p>${escapeHtml(action.targetId ? `目标：${action.targetId}` : action.id)}</p></div>
+      <span class="scenario-tag">${escapeHtml(action.type)}</span>
+    </article>
+  `).join('') || '<div class="scenario-help">尚未配置事故场景。</div>';
 }
 
 function applyGuidedInputs() {
@@ -154,38 +246,150 @@ function runConfig(config) {
   return runner.runScenario(createScenarioDefinition(config));
 }
 
-function runStudy() {
+function createLiveRun() {
+  validateScenarioConfig(state.config);
+  const definition = createScenarioDefinition(state.config);
+  const engine = definition.createEngine();
+  const actions = [...(definition.actions ?? [])].sort((a, b) => a.timeSeconds - b.timeSeconds);
+  if (typeof engine.start === 'function') engine.start();
+  return {
+    definition,
+    engine,
+    actions,
+    actionIndex: 0,
+    executedActions: [],
+    samples: [],
+    timer: null,
+    holdUntil: 0,
+    complete: false,
+  };
+}
+
+function applyDueActions(live) {
+  const now = Number(live.engine.timeSeconds) || 0;
+  let applied = false;
+  while (live.actionIndex < live.actions.length && live.actions[live.actionIndex].timeSeconds <= now + 1e-9) {
+    const action = live.actions[live.actionIndex];
+    const result = action.apply(live.engine, {
+      scenarioId: live.definition.id,
+      scheduledTimeSeconds: action.timeSeconds,
+      actualTimeSeconds: now,
+    });
+    live.executedActions.push({
+      id: action.id,
+      scheduledTimeSeconds: action.timeSeconds,
+      actualTimeSeconds: now,
+      result: result ?? null,
+    });
+    live.actionIndex += 1;
+    applied = true;
+  }
+  if (applied) {
+    live.holdUntil = Date.now() + 500;
+    $('#topology')?.classList.remove('action-flash');
+    requestAnimationFrame(() => $('#topology')?.classList.add('action-flash'));
+  }
+}
+
+function liveStepsPerTick() {
+  return Math.max(1, Math.round((state.replaySpeed || 1) * 10));
+}
+
+function startLiveStudy() {
+  stopTimers();
+  $('#runStudy').disabled = true;
   $('#runBadge').textContent = 'RUNNING';
   $('#runBadge').className = 'badge';
-  $('#runStudy').disabled = true;
+  go('simulation');
   try {
-    state.result = runConfig(state.config);
-    state.kpis = extractScenarioKpis(state.result);
-    state.compliance = evaluateHardConstraints(state.kpis, DEFAULT_HARD_CONSTRAINTS);
-    state.guidance = buildRevisionGuidance({ config: state.config, kpis: state.kpis, compliance: state.compliance });
-    state.replayIndex = state.result.samples.length - 1;
-    renderReplayFrame(state.replayIndex);
+    state.live = createLiveRun();
+    state.result = null;
+    state.replayIndex = 0;
     renderEventTimeline();
-    renderVerdict();
-    renderRevisions();
-    $('#runBadge').textContent = state.compliance.feasible ? 'COMPLIANT' : 'REJECTED';
-    $('#runBadge').className = `badge ${state.compliance.feasible ? 'good' : 'bad'}`;
-    $('#openVerdict').disabled = false;
-    $('#playReplay').disabled = false;
-    $('#pauseReplay').disabled = false;
-    $('#resetReplay').disabled = false;
-    $('#simTitle').textContent = `${state.config.name} · ${state.result.execution.sampleCount} samples`;
+    state.live.timer = setInterval(tickLiveStudy, 50);
   } catch (error) {
     $('#runBadge').textContent = 'RUN FAILED';
     $('#runBadge').className = 'badge bad';
-    alert(error instanceof Error ? error.message : String(error));
-  } finally {
     $('#runStudy').disabled = false;
+    alert(error instanceof Error ? error.message : String(error));
   }
+}
+
+function tickLiveStudy() {
+  const live = state.live;
+  if (!live || live.complete) return;
+  if (Date.now() < live.holdUntil) return;
+  const duration = Number(state.config.simulation.durationSeconds);
+  for (let index = 0; index < liveStepsPerTick(); index += 1) {
+    if ((live.engine.timeSeconds ?? 0) >= duration - 1e-12) break;
+    applyDueActions(live);
+    live.samples.push(live.engine.step());
+  }
+  const latest = live.samples[live.samples.length - 1];
+  if (latest) {
+    state.result = {
+      id: String(live.definition.id),
+      name: live.definition.name ?? live.definition.id,
+      samples: live.samples,
+      events: [...(live.engine.events ?? [])],
+      assumptions: { ...(live.definition.assumptions ?? {}) },
+      capitalCostEstimate: live.definition.capitalCostEstimate ?? null,
+      execution: {
+        durationSeconds: duration,
+        dtSeconds: Number(live.engine.dtSeconds),
+        sampleCount: live.samples.length,
+        executedActions: [...live.executedActions],
+        unexecutedActionIds: live.actions.slice(live.actionIndex).map((item) => item.id),
+      },
+    };
+    renderReplayFrame(live.samples.length - 1);
+    renderEventTimeline(latest.timeSeconds);
+    $('#simTitle').textContent = `${state.config.name} · LIVE ${fmt(latest.timeSeconds, 1)} / ${fmt(duration, 0)} s`;
+    $('#liveProgress i').style.width = `${Math.min(100, latest.timeSeconds / duration * 100)}%`;
+  }
+  if ((live.engine.timeSeconds ?? 0) >= duration - 1e-12) finishLiveStudy();
+}
+
+function finishLiveStudy() {
+  const live = state.live;
+  if (!live || live.complete) return;
+  clearInterval(live.timer);
+  live.timer = null;
+  live.complete = true;
+  state.kpis = extractScenarioKpis(state.result);
+  state.compliance = evaluateHardConstraints(state.kpis, DEFAULT_HARD_CONSTRAINTS);
+  state.guidance = buildRevisionGuidance({
+    config: state.config,
+    kpis: state.kpis,
+    compliance: state.compliance,
+  });
+  renderVerdict();
+  renderRevisions();
+  $('#runBadge').textContent = state.compliance.feasible ? 'COMPLIANT' : 'REJECTED';
+  $('#runBadge').className = `badge ${state.compliance.feasible ? 'good' : 'bad'}`;
+  $('#openVerdict').disabled = false;
+  $('#playReplay').disabled = false;
+  $('#pauseReplay').disabled = false;
+  $('#resetReplay').disabled = false;
+  $('#runStudy').disabled = false;
+  $('#simTitle').textContent = `${state.config.name} · ${state.result.execution.sampleCount} samples`;
 }
 
 function sampleAt(index) {
   return state.result?.samples?.[Math.max(0, Math.min(index, state.result.samples.length - 1))] ?? null;
+}
+
+function renderLiveDiagnosis(sample) {
+  ensureGuidancePanels();
+  const diagnosis = diagnoseLiveSample(sample, DEFAULT_HARD_CONSTRAINTS);
+  $('#liveVerdict').textContent = diagnosis.status.replaceAll('_', ' ');
+  $('#liveVerdict').className = `state-chip ${diagnosis.severity}`;
+  $('#liveGuide').className = `live-guide ${diagnosis.severity}`;
+  $('#liveGuide').innerHTML = `<strong>${escapeHtml(diagnosis.title)}</strong>${
+    diagnosis.actions.length
+      ? diagnosis.actions.map((item) => `<p>${escapeHtml(item.action)}</p>`).join('')
+      : '<p>继续运行，系统将在事故发生时解释超限原因和下一步动作。</p>'
+  }`;
 }
 
 function renderReplayFrame(index) {
@@ -195,31 +399,34 @@ function renderReplayFrame(index) {
   $('#clockBadge').textContent = `${fmt(sample.timeSeconds, 1)} s`;
   $('#systemState').textContent = sample.state ?? 'RUNNING';
   $('#topoDiesel').textContent = `${fmt(sample.dieselMW)} MW`;
-  $('#topoBess').textContent = `${fmt(sample.bessMW)} MW · ${fmt((sample.soc ?? 0) * 100, 1)}%`;
+  $('#topoBess').textContent = `${fmt(sample.bessMW)} MW · ${fmt((sample.bessSoc ?? 0) * 100, 1)}%`;
   $('#topoReserve').textContent = `${fmt(sample.reserve60MW)} MW`;
   $('#topoLoad').textContent = `${fmt(sample.loadMW)} MW`;
   $('#topoProduction').textContent = `${fmt(sample.productionThroughputTPH, 1)} t/h`;
   $('#busText').textContent = `${fmt(sample.frequencyHz, 3)} Hz`;
-  const partial = state.result.samples.slice(0, index + 1);
-  const currentKpis = partial.length ? extractScenarioKpis({ ...state.result, samples: partial, id: state.result.id }) : null;
-  const currentCompliance = currentKpis ? evaluateHardConstraints(currentKpis, DEFAULT_HARD_CONSTRAINTS) : null;
-  $('#liveVerdict').textContent = currentCompliance?.feasible ? 'WITHIN LIMITS' : 'LIMIT VIOLATION';
-  $('#liveVerdict').className = `state-chip ${currentCompliance?.feasible ? 'good' : 'bad'}`;
   $('#liveKpis').innerHTML = [
     ['Frequency', `${fmt(sample.frequencyHz, 3)} Hz`],
     ['RoCoF', `${fmt(sample.rocofHzPerS, 3)} Hz/s`],
     ['N-1 coverage', fmt(sample.n1CoverageRatio, 3)],
     ['Residual', `${fmt(sample.residualMW, 3)} MW`],
-    ['BESS SOC', `${fmt((sample.soc ?? 0) * 100, 1)}%`],
+    ['BESS SOC', `${fmt((sample.bessSoc ?? 0) * 100, 1)}%`],
     ['EENS', `${fmt(sample.eensMWh, 5)} MWh`],
   ].map(([label, value]) => `<div><span>${label}</span><strong>${value}</strong></div>`).join('');
+  renderLiveDiagnosis(sample);
   const upcoming = (state.config.disturbances ?? []).find((action) => action.timeSeconds > sample.timeSeconds + 1e-9);
-  $('#nextEvent').textContent = upcoming ? `下一事件：${fmt(upcoming.timeSeconds, 0)} s · ${ACTION_LABELS[upcoming.type] ?? upcoming.type}` : '事故时间表已执行完成';
+  $('#nextEvent').textContent = upcoming
+    ? `下一事件：${fmt(upcoming.timeSeconds, 0)} s · ${ACTION_LABELS[upcoming.type] ?? upcoming.type}`
+    : '事故时间表已执行完成';
   drawAllCharts(index);
 }
 
 function replay() {
   if (!state.result) return;
+  if (state.live && !state.live.complete && !state.live.timer) {
+    state.live.timer = setInterval(tickLiveStudy, 50);
+    $('#runBadge').textContent = 'RUNNING';
+    return;
+  }
   clearInterval(state.replayTimer);
   const step = Math.max(1, Math.round(state.replaySpeed * 5));
   state.replayTimer = setInterval(() => {
@@ -229,6 +436,15 @@ function replay() {
     }
     renderReplayFrame(Math.min(state.result.samples.length - 1, state.replayIndex + step));
   }, 80);
+}
+
+function pause() {
+  clearInterval(state.replayTimer);
+  if (state.live?.timer) {
+    clearInterval(state.live.timer);
+    state.live.timer = null;
+    $('#runBadge').textContent = 'PAUSED';
+  }
 }
 
 function drawChart(canvas, series, { min = null, max = null, eventTimes = [] } = {}) {
@@ -250,43 +466,106 @@ function drawChart(canvas, series, { min = null, max = null, eventTimes = [] } =
   const span = Math.max(1e-9, yMax - yMin);
   const x = (value) => pad.left + value / xMax * (width - pad.left - pad.right);
   const y = (value) => pad.top + (yMax - value) / span * (height - pad.top - pad.bottom);
-  ctx.strokeStyle = '#d9e1e6';ctx.lineWidth = 1;
-  for (let i = 0; i <= 4; i += 1) { const yy = pad.top + i / 4 * (height - pad.top - pad.bottom);ctx.beginPath();ctx.moveTo(pad.left, yy);ctx.lineTo(width - pad.right, yy);ctx.stroke(); }
-  ctx.fillStyle = '#6b7f8d';ctx.font = '9px Arial';ctx.fillText(yMax.toFixed(2), 3, pad.top + 4);ctx.fillText(yMin.toFixed(2), 3, height - pad.bottom);
-  for (const time of eventTimes) {ctx.strokeStyle = '#d4840a';ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(x(time), pad.top);ctx.lineTo(x(time), height-pad.bottom);ctx.stroke();ctx.setLineDash([]);}
-  const palette = ['#173f5f','#d4840a','#167347','#8a4f9e','#b42318','#5f7280'];
-  series.forEach((item, index) => {ctx.strokeStyle = palette[index % palette.length];ctx.lineWidth = 1.7;ctx.beginPath();item.values.forEach((point, pointIndex) => {const xx=x(point.x), yy=y(point.y);if(pointIndex===0)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy);});ctx.stroke();ctx.fillStyle=palette[index%palette.length];ctx.fillRect(pad.left+index*100,height-12,8,2);ctx.fillStyle='#425b6c';ctx.fillText(item.label,pad.left+12+index*100,height-8);});
+  ctx.strokeStyle = '#d9e1e6';
+  ctx.lineWidth = 1;
+  for (let index = 0; index <= 4; index += 1) {
+    const yy = pad.top + index / 4 * (height - pad.top - pad.bottom);
+    ctx.beginPath();
+    ctx.moveTo(pad.left, yy);
+    ctx.lineTo(width - pad.right, yy);
+    ctx.stroke();
+  }
+  ctx.fillStyle = '#6b7f8d';
+  ctx.font = '9px Arial';
+  ctx.fillText(yMax.toFixed(2), 3, pad.top + 4);
+  ctx.fillText(yMin.toFixed(2), 3, height - pad.bottom);
+  for (const time of eventTimes) {
+    ctx.strokeStyle = '#d4840a';
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(x(time), pad.top);
+    ctx.lineTo(x(time), height - pad.bottom);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+  const palette = ['#173f5f', '#d4840a', '#167347', '#8a4f9e', '#b42318', '#5f7280'];
+  series.forEach((item, index) => {
+    ctx.strokeStyle = palette[index % palette.length];
+    ctx.lineWidth = 1.7;
+    ctx.beginPath();
+    item.values.forEach((point, pointIndex) => {
+      const xx = x(point.x);
+      const yy = y(point.y);
+      if (pointIndex === 0) ctx.moveTo(xx, yy);
+      else ctx.lineTo(xx, yy);
+    });
+    ctx.stroke();
+    ctx.fillStyle = palette[index % palette.length];
+    ctx.fillRect(pad.left + index * 100, height - 12, 8, 2);
+    ctx.fillStyle = '#425b6c';
+    ctx.fillText(item.label, pad.left + 12 + index * 100, height - 8);
+  });
 }
 
 function drawAllCharts(index) {
   if (!state.result) return;
   const samples = selectChartSamples(state.result.samples.slice(0, index + 1), 500);
-  const points = (key, transform = (v) => v) => samples.map((sample) => ({ x: sample.timeSeconds, y: transform(Number(sample[key]) || 0) }));
+  const points = (key, transform = (value) => value) => samples.map((sample) => ({
+    x: sample.timeSeconds,
+    y: transform(Number(sample[key]) || 0),
+  }));
   const events = (state.config.disturbances ?? []).map((action) => action.timeSeconds);
   drawChart($('#powerChart'), [
     { label: 'Load', values: points('loadMW') },
     { label: 'Diesel', values: points('dieselMW') },
     { label: 'BESS', values: points('bessMW') },
   ], { eventTimes: events });
-  drawChart($('#frequencyChart'), [{ label: 'Frequency', values: points('frequencyHz') }], { min: Math.min(58, ...samples.map((sample) => sample.frequencyHz)), max: Math.max(60.5, ...samples.map((sample) => sample.frequencyHz)), eventTimes: events });
+  drawChart($('#frequencyChart'), [{ label: 'Frequency', values: points('frequencyHz') }], {
+    min: Math.min(58, ...samples.map((sample) => sample.frequencyHz)),
+    max: Math.max(60.5, ...samples.map((sample) => sample.frequencyHz)),
+    eventTimes: events,
+  });
   drawChart($('#bessChart'), [
     { label: 'BESS MW', values: points('bessMW') },
-    { label: 'SOC ×10', values: points('soc', (value) => value * 10) },
+    { label: 'SOC ×10', values: points('bessSoc', (value) => value * 10) },
   ], { eventTimes: events });
 }
 
-function renderEventTimeline() {
-  const events = [...(state.result?.events ?? [])].sort((a, b) => (a.timeSeconds ?? 0) - (b.timeSeconds ?? 0));
+function renderEventTimeline(throughTime = Infinity) {
+  const events = [...(state.result?.events ?? [])]
+    .filter((event) => (event.timeSeconds ?? 0) <= throughTime + 1e-9)
+    .sort((a, b) => (a.timeSeconds ?? 0) - (b.timeSeconds ?? 0));
   $('#eventCount').textContent = `${events.length} events`;
-  $('#eventTimeline').innerHTML = events.slice(-250).map((event) => `<div class="event-row"><span>${fmt(event.timeSeconds, 1)} s</span><strong>${escapeHtml(EVENT_LABELS[event.type] ?? event.type)}</strong><span>${escapeHtml(event.equipmentId ?? event.reason ?? event.processId ?? '')}</span></div>`).join('') || '<div class="event-row"><span>—</span><strong>无事件</strong><span></span></div>';
+  $('#eventTimeline').innerHTML = events.slice(-250).map((event) => `
+    <div class="event-row">
+      <span>${fmt(event.timeSeconds, 1)} s</span>
+      <strong>${escapeHtml(EVENT_LABELS[event.type] ?? event.type)}</strong>
+      <span>${escapeHtml(event.equipmentId ?? event.reason ?? event.processId ?? '')}</span>
+    </div>
+  `).join('') || '<div class="event-row"><span>—</span><strong>等待事件</strong><span>运行后按时间出现</span></div>';
 }
 
 function renderVerdict() {
   if (!state.kpis || !state.compliance) return;
   const hero = $('#verdictHero');
   hero.className = `verdict-hero ${state.compliance.feasible ? 'pass' : 'fail'}`;
-  hero.innerHTML = `<p class="eyebrow">ENGINEERING VERDICT</p><h1>${state.compliance.feasible ? '工程判定：合格' : '工程判定：不合格'}</h1><p>${state.compliance.feasible ? '当前方案满足已配置的硬性工程约束。' : `发现${state.compliance.violations.length}项硬性工程约束违规，必须修订后重新验证。`}</p>`;
-  $('#findingList').innerHTML = state.compliance.violations.map((violation, index) => `<article class="finding"><div class="finding-head"><strong>P${index === 0 ? 0 : 1} · ${escapeHtml(VIOLATION_LABELS[violation.code] ?? violation.code)}</strong><code>${violation.code}</code></div><dl><div><dt>实际值</dt><dd>${typeof violation.actual === 'number' ? fmt(violation.actual, 3) : String(violation.actual)}</dd></div><div><dt>要求值</dt><dd>${typeof violation.limit === 'number' ? fmt(violation.limit, 3) : String(violation.limit)}</dd></div><div><dt>判断</dt><dd class="bad">FAILED</dd></div></dl></article>`).join('') || '<article class="finding" style="border-left-color:#167347"><strong>全部硬性约束通过</strong></article>';
+  hero.innerHTML = `<p class="eyebrow">ENGINEERING VERDICT</p><h1>${
+    state.compliance.feasible ? '工程判定：合格' : '工程判定：不合格'
+  }</h1><p>${
+    state.compliance.feasible
+      ? '当前方案满足已配置的硬性工程约束。'
+      : `发现${state.compliance.violations.length}项硬性工程约束违规。下一页会告诉你改哪个参数、为什么改、代价是什么。`
+  }</p>`;
+  $('#findingList').innerHTML = state.compliance.violations.map((violation, index) => `
+    <article class="finding">
+      <div class="finding-head"><strong>P${index === 0 ? 0 : 1} · ${escapeHtml(VIOLATION_LABELS[violation.code] ?? violation.code)}</strong><code>${violation.code}</code></div>
+      <dl>
+        <div><dt>实际值</dt><dd>${typeof violation.actual === 'number' ? fmt(violation.actual, 3) : String(violation.actual)}</dd></div>
+        <div><dt>要求值</dt><dd>${typeof violation.limit === 'number' ? fmt(violation.limit, 3) : String(violation.limit)}</dd></div>
+        <div><dt>判断</dt><dd class="bad">FAILED</dd></div>
+      </dl>
+    </article>
+  `).join('') || '<article class="finding" style="border-left-color:#167347"><strong>全部硬性约束通过</strong></article>';
   const values = [
     ['Frequency nadir', `${fmt(state.kpis.frequencyNadirHz, 3)} Hz`],
     ['Maximum RoCoF', `${fmt(state.kpis.maximumAbsoluteRoCoFHzPerS, 3)} Hz/s`],
@@ -302,7 +581,28 @@ function renderVerdict() {
 
 function renderRevisions() {
   const suggestions = state.guidance?.suggestions ?? [];
-  $('#revisionList').innerHTML = suggestions.map((suggestion, index) => `<article class="revision"><div class="revision-head"><strong>${suggestion.priority} · ${escapeHtml(suggestion.title)}</strong><span>${escapeHtml(suggestion.code)}</span></div><p>${escapeHtml(suggestion.rationale)}</p><div class="revision-meta">${suggestion.change ? `<span>${escapeHtml(String(suggestion.change.from))} → ${escapeHtml(String(suggestion.change.to))}</span>` : '<span>需要工程师补充设备级设计</span>'}<span>${escapeHtml(suggestion.expectedEffect)}</span></div><button class="button ${index === 0 ? 'primary' : 'secondary'}" data-revision-index="${index}" ${suggestion.change ? '' : 'disabled'}>创建修订方案</button></article>`).join('') || '<div class="scenario-help">当前方案无硬性违规，暂无强制修订建议。</div>';
+  $('#revisionList').innerHTML = suggestions.map((suggestion, index) => {
+    const explanation = explainRevision(suggestion);
+    const changeText = suggestion.change
+      ? `${escapeHtml(String(suggestion.change.from))} → ${escapeHtml(String(suggestion.change.to))}`
+      : '需要补充设备级工程数据';
+    return `<article class="revision">
+      <div class="revision-head"><strong>${suggestion.priority} · ${escapeHtml(suggestion.title)}</strong><span>${escapeHtml(suggestion.code)}</span></div>
+      <p>${escapeHtml(suggestion.rationale)}</p>
+      <div class="revision-guide">
+        <div><span>在哪里改</span><strong>${escapeHtml(explanation.parameter)}</strong></div>
+        <div><span>建议修改</span><strong>${changeText}</strong></div>
+        <div><span>为什么</span><strong>${escapeHtml(explanation.why)}</strong></div>
+        <div><span>代价与权衡</span><strong>${escapeHtml(explanation.tradeoff)}</strong></div>
+      </div>
+      <ol class="revision-steps">
+        <li>点击创建修订方案，原方案不会被覆盖。</li>
+        <li>系统自动修改明确参数，并保持相同事故时间表。</li>
+        <li>${escapeHtml(explanation.verify)}</li>
+      </ol>
+      <button class="button ${index === 0 ? 'primary' : 'secondary'}" data-revision-index="${index}" ${suggestion.change ? '' : 'disabled'}>${suggestion.change ? '一键创建并准备验证' : '需要补充工程数据'}</button>
+    </article>`;
+  }).join('') || '<div class="scenario-help">当前方案无硬性违规，暂无强制修订建议。</div>';
   $$('[data-revision-index]').forEach((button) => button.addEventListener('click', () => selectRevision(Number(button.dataset.revisionIndex))));
 }
 
@@ -310,7 +610,9 @@ function selectRevision(index) {
   state.selectedRevision = state.guidance.suggestions[index];
   state.revisionConfig = applyRevision(state.config, state.selectedRevision, { idSuffix: 'ALT' });
   $('#compareRevision').disabled = false;
-  $$('[data-revision-index]').forEach((button, buttonIndex) => {button.textContent = buttonIndex === index ? '已选择' : '创建修订方案';});
+  $$('[data-revision-index]').forEach((button, buttonIndex) => {
+    button.textContent = buttonIndex === index ? '已创建修订方案，可开始比较' : '一键创建并准备验证';
+  });
 }
 
 function compareRevision() {
@@ -336,33 +638,53 @@ function renderComparison() {
   $('#compareStatus').textContent = comparison.recommendation.status;
   $('#compareStatus').className = `state-chip ${comparison.recommendation.status === 'RECOMMENDED' ? 'good' : 'bad'}`;
   $('#compareSummary').innerHTML = comparison.recommendation.status === 'RECOMMENDED'
-    ? `<strong>推荐方案：${escapeHtml(comparison.recommendation.scenarioId)}</strong><p>推荐原因：${comparison.recommendation.reasons.map(escapeHtml).join(' · ')}</p>`
-    : '<strong>没有合格方案</strong><p>原方案和当前修订方案仍违反硬性工程约束，需要继续修订。</p>';
-  const rows = comparison.rankedScenarios.map((item) => `<tr><td>${escapeHtml(item.name)}</td><td class="${item.compliance.feasible ? 'good' : 'bad'}">${item.compliance.feasible ? 'COMPLIANT' : 'REJECTED'}</td><td>${fmt(item.kpis.frequencyNadirHz, 3)}</td><td>${fmt(item.kpis.maximumAbsoluteRoCoFHzPerS, 3)}</td><td>${fmt(item.kpis.minimumN1CoverageRatio, 3)}</td><td>${fmt(item.kpis.eensMWh, 5)}</td><td>${fmt(item.kpis.deferredProductionTons, 2)}</td><td>${fmt(item.kpis.dieselFuelCost, 2)}</td><td>${item.compliance.violations.map((violation) => escapeHtml(VIOLATION_LABELS[violation.code] ?? violation.code)).join('<br>') || '—'}</td></tr>`).join('');
+    ? `<strong>推荐方案：${escapeHtml(comparison.recommendation.scenarioId)}</strong><span>该方案先通过硬性约束，再进入评分。</span>`
+    : '<strong>没有合格方案</strong><span>当前修订仍未通过全部硬性约束，请返回修订建议继续选择下一项措施。</span>';
+  const rows = comparison.rankedScenarios.map((item) => `<tr>
+    <td><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.id)}</small></td>
+    <td class="${item.compliance.feasible ? 'pass-text' : 'fail-text'}">${item.compliance.feasible ? 'COMPLIANT' : 'REJECTED'}</td>
+    <td>${fmt(item.kpis.frequencyNadirHz, 3)}</td>
+    <td>${fmt(item.kpis.maximumAbsoluteRoCoFHzPerS, 3)}</td>
+    <td>${fmt(item.kpis.minimumN1CoverageRatio, 3)}</td>
+    <td>${fmt(item.kpis.eensMWh, 5)}</td>
+    <td>${fmt(item.kpis.deferredProductionTons, 2)}</td>
+    <td>${fmt(item.kpis.dieselFuelCost, 2)}</td>
+    <td>${item.compliance.violations.map((violation) => escapeHtml(VIOLATION_LABELS[violation.code] ?? violation.code)).join('<br>') || '—'}</td>
+  </tr>`).join('');
   $('#compareTable').innerHTML = `<table class="compare-table"><thead><tr><th>方案</th><th>结论</th><th>Freq nadir</th><th>RoCoF</th><th>N-1</th><th>EENS</th><th>Deferred t</th><th>Fuel cost</th><th>违规原因</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 
 function bind() {
+  installProductStyles();
+  ensureGuidancePanels();
   renderNav();
-  $$('.task-card').forEach((button) => button.addEventListener('click', () => {$$('.task-card').forEach((node) => node.classList.remove('active'));button.classList.add('active');state.task = button.dataset.task;}));
+  $$('.task-card').forEach((button) => button.addEventListener('click', () => {
+    $$('.task-card').forEach((node) => node.classList.remove('active'));
+    button.classList.add('active');
+    state.task = button.dataset.task;
+  }));
   $('#startGuided').addEventListener('click', () => go(state.task === 'COMPARE' ? 'compare' : 'inputs'));
   $('#loadExample').addEventListener('click', initialize);
   $$('[data-go]').forEach((button) => button.addEventListener('click', () => go(button.dataset.go)));
-  $$('[data-jump="advanced"]').forEach((button) => button.addEventListener('click', () => {window.location.href = '../ui/';}));
-  ['projectName','systemBaseMW','baseLoadMW','bessPowerMW','bessEnergyMWh','initialSocPercent','durationSeconds'].forEach((id) => $(`#${id}`).addEventListener('change', applyGuidedInputs));
+  $$('[data-jump="advanced"]').forEach((button) => button.addEventListener('click', () => { window.location.href = '../ui/'; }));
+  ['projectName', 'systemBaseMW', 'baseLoadMW', 'bessPowerMW', 'bessEnergyMWh', 'initialSocPercent', 'durationSeconds']
+    .forEach((id) => $(`#${id}`).addEventListener('change', applyGuidedInputs));
   $('#prepareRun').addEventListener('click', () => go('simulation'));
-  $('#runStudy').addEventListener('click', runStudy);
+  $('#runStudy').addEventListener('click', startLiveStudy);
   $('#openVerdict').addEventListener('click', () => go('verdict'));
   $('#playReplay').addEventListener('click', replay);
-  $('#pauseReplay').addEventListener('click', () => clearInterval(state.replayTimer));
-  $('#resetReplay').addEventListener('click', () => {clearInterval(state.replayTimer);renderReplayFrame(0);});
-  $('#speedSelect').addEventListener('change', (event) => {state.replaySpeed = Number(event.target.value) || 1;});
+  $('#pauseReplay').addEventListener('click', pause);
+  $('#resetReplay').addEventListener('click', () => {
+    pause();
+    if (state.result) renderReplayFrame(0);
+  });
+  $('#speedSelect').addEventListener('change', (event) => { state.replaySpeed = Number(event.target.value) || 1; });
   $('#compareRevision').addEventListener('click', compareRevision);
-  window.addEventListener('resize', () => {if (state.result) drawAllCharts(state.replayIndex);});
+  window.addEventListener('resize', () => { if (state.result) drawAllCharts(state.replayIndex); });
 }
 
 async function initialize() {
-  clearInterval(state.replayTimer);
+  stopTimers();
   try {
     const response = await fetch('../config/examples/mine-screening.json', { cache: 'no-store' });
     if (!response.ok) throw new Error(`Example configuration returned HTTP ${response.status}`);
