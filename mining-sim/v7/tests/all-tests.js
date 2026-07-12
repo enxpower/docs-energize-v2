@@ -106,6 +106,8 @@ import {
   testGuidedWorkspaceUpdatesAreIsolated,
   testRevisionGuidanceCreatesExecutableAlternative,
   testWorkspaceChartSamplingPreservesEndState,
+  testLiveWorkspaceExplainsCurrentViolation,
+  testConfigurationChecklistFindsMissingRecoveryWindow,
 } from './product-workspace-test.js';
 import { testMinimumMiningAcceptanceChain } from './mining-acceptance-test.js';
 
@@ -180,6 +182,8 @@ export const EXTENDED_TESTS = Object.freeze([
   testGuidedWorkspaceUpdatesAreIsolated,
   testRevisionGuidanceCreatesExecutableAlternative,
   testWorkspaceChartSamplingPreservesEndState,
+  testLiveWorkspaceExplainsCurrentViolation,
+  testConfigurationChecklistFindsMissingRecoveryWindow,
   testMinimumMiningAcceptanceChain,
 ]);
 
