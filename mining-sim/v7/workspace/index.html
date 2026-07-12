@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Mining Sim V7 · 工程仿真工作台</title>
+<meta name="description" content="从引导式配置、动态仿真、工程判定到修订建议和方案比较的一体化矿山微电网工作台。"/>
+<link rel="icon" type="image/svg+xml" href="/vi/assets/favicon.svg"/>
+<link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+<div class="app-shell">
+  <header class="topbar">
+    <a class="brand" href="../"><span class="brand-mark"><i></i><i></i><i></i><i></i></span><span><strong>EnergizeOS</strong><small>Mining Sim V7 · Engineering Workspace</small></span></a>
+    <div class="top-status"><span id="maturityBadge" class="badge">SCREENING</span><span id="runBadge" class="badge neutral">NOT RUN</span><span id="clockBadge" class="badge">0.0 s</span><a class="advanced-link" href="../ui/">Advanced Mode</a></div>
+  </header>
+  <div class="boundary"><strong>工程边界：</strong>用于概念设计与筛选级判断，不替代潮流、短路、保护配合、EMT、谐波、电弧闪光、厂家启动研究或施工图设计。</div>
+
+  <main class="page">
+    <aside class="workflow-rail">
+      <div class="rail-head"><span>当前项目</span><strong id="railProjectName">加载中</strong><small id="railProjectMeta">—</small></div>
+      <nav id="workflowNav" class="workflow-nav"></nav>
+      <div class="readiness-card"><div class="readiness-top"><span>配置完成度</span><strong id="readinessPercent">0%</strong></div><div class="progress"><i id="readinessBar"></i></div><p id="nextAction">正在读取配置</p></div>
+      <a class="rail-link" href="../ui/">打开全部高级参数</a>
+    </aside>
+
+    <section class="content">
+      <section id="startView" class="view active">
+        <div class="hero-card">
+          <p class="eyebrow">START HERE</p>
+          <h1>你要完成哪项工程任务？</h1>
+          <p>先选任务，再由系统带你完成配置、事故仿真、工程判定和方案修订。</p>
+          <div class="task-grid">
+            <button class="task-card active" data-task="ASSESS"><strong>评估现有矿山方案</strong><span>检查频率、RoCoF、N-1、EENS和生产连续性。</span></button>
+            <button class="task-card" data-task="DESIGN"><strong>新建矿山微电网方案</strong><span>从柴油机、BESS、大型电机和工艺负荷开始。</span></button>
+            <button class="task-card" data-task="COMPARE"><strong>比较设计替代方案</strong><span>把原方案和修订方案放在同一事故条件下比较。</span></button>
+          </div>
+          <div class="hero-actions"><button id="startGuided" class="button primary">开始引导</button><button id="loadExample" class="button secondary">恢复12 MW示例</button></div>
+        </div>
+        <div class="how-grid">
+          <article><span>01</span><strong>确认输入</strong><p>只先填写决定结果的关键数据。</p></article>
+          <article><span>02</span><strong>选择事故</strong><p>明确要验证的跳闸、启动和恢复场景。</p></article>
+          <article><span>03</span><strong>运行仿真</strong><p>动态查看功率流、频率、SOC和备用。</p></article>
+          <article><span>04</span><strong>得到结论</strong><p>明确行不行、为什么以及怎么改。</p></article>
+        </div>
+      </section>
+
+      <section id="inputsView" class="view">
+        <div class="section-head"><div><p class="eyebrow">GUIDED DESIGN</p><h1>先确认六个关键输入</h1><p>高级动态参数沿用当前模板，后续可在Advanced Mode精调。</p></div><span id="configState" class="state-chip">CHECKING</span></div>
+        <div class="form-card">
+          <div class="field-grid">
+            <label><span>项目名称</span><input id="projectName" type="text"/></label>
+            <label><span>系统基准容量</span><input id="systemBaseMW" type="number" step="0.1"/><small>MW · 用于频率和惯量基准</small></label>
+            <label><span>基础连续负荷</span><input id="baseLoadMW" type="number" step="0.1"/><small>MW · 不含生产负荷和大型电机</small></label>
+            <label><span>BESS功率</span><input id="bessPowerMW" type="number" step="0.5"/><small>MW · 决定快速支撑能力</small></label>
+            <label><span>BESS容量</span><input id="bessEnergyMWh" type="number" step="1"/><small>MWh · 决定支撑持续时间</small></label>
+            <label><span>初始SOC</span><input id="initialSocPercent" type="number" step="1"/><small>%</small></label>
+            <label><span>仿真时长</span><input id="durationSeconds" type="number" step="10"/><small>秒</small></label>
+          </div>
+        </div>
+        <div class="inventory-grid">
+          <article><span>柴油机组</span><strong id="dieselSummary">—</strong><button data-jump="advanced">查看高级配置</button></article>
+          <article><span>大型电机</span><strong id="motorSummary">—</strong><button data-jump="advanced">查看高级配置</button></article>
+          <article><span>生产负荷</span><strong id="productionSummary">—</strong><button data-jump="advanced">查看高级配置</button></article>
+        </div>
+        <div class="footer-actions"><button class="button secondary" data-go="start">返回</button><button class="button primary" data-go="scenario">下一步：测试场景</button></div>
+      </section>
+
+      <section id="scenarioView" class="view">
+        <div class="section-head"><div><p class="eyebrow">DISTURBANCE SCENARIO</p><h1>这次要验证什么？</h1><p>事故时间表会对所有比较方案保持一致。</p></div></div>
+        <div id="scenarioTimeline" class="scenario-timeline"></div>
+        <div class="scenario-help"><strong>如何理解：</strong><span>系统先建立初始稳态，再按时间执行工艺启动、柴油机跳闸、BESS跳闸与恢复。每个动作都会在仿真图和事件时间轴中标出。</span></div>
+        <div class="footer-actions"><button class="button secondary" data-go="inputs">返回配置</button><button id="prepareRun" class="button primary">进入仿真工作台</button></div>
+      </section>
+
+      <section id="simulationView" class="view simulation-view">
+        <div class="sim-toolbar"><div><p class="eyebrow">SIMULATION</p><h1 id="simTitle">等待运行</h1></div><div class="sim-controls"><button id="runStudy" class="button primary">运行研究</button><button id="playReplay" class="button secondary" disabled>回放</button><button id="pauseReplay" class="button secondary" disabled>暂停</button><select id="speedSelect"><option value="1">1×</option><option value="5">5×</option><option value="20">20×</option></select><button id="resetReplay" class="button ghost" disabled>重置</button></div></div>
+        <div class="sim-grid">
+          <section class="topology-card card">
+            <div class="card-head"><h2>系统拓扑与实时功率流</h2><span id="systemState">IDLE</span></div>
+            <svg id="topology" viewBox="0 0 900 330" aria-label="矿山微电网拓扑">
+              <line class="bus" x1="120" y1="160" x2="780" y2="160"/>
+              <g class="node" id="nodeDiesel"><rect x="80" y="35" width="165" height="64" rx="8"/><text x="162" y="62">DIESEL FLEET</text><text class="value" id="topoDiesel" x="162" y="84">— MW</text><line x1="162" y1="99" x2="162" y2="160"/></g>
+              <g class="node" id="nodeBess"><rect x="365" y="35" width="165" height="64" rx="8"/><text x="447" y="62">BESS</text><text class="value" id="topoBess" x="447" y="84">— MW · —%</text><line x1="447" y1="99" x2="447" y2="160"/></g>
+              <g class="node" id="nodeReserve"><rect x="650" y="35" width="165" height="64" rx="8"/><text x="732" y="62">60 s RESERVE</text><text class="value" id="topoReserve" x="732" y="84">— MW</text><line x1="732" y1="99" x2="732" y2="160"/></g>
+              <g class="node load-node"><rect x="225" y="220" width="165" height="64" rx="8"/><text x="307" y="247">SITE LOAD</text><text class="value" id="topoLoad" x="307" y="269">— MW</text><line x1="307" y1="160" x2="307" y2="220"/></g>
+              <g class="node load-node"><rect x="515" y="220" width="165" height="64" rx="8"/><text x="597" y="247">PRODUCTION</text><text class="value" id="topoProduction" x="597" y="269">— t/h</text><line x1="597" y1="160" x2="597" y2="220"/></g>
+              <text id="busText" x="450" y="150" text-anchor="middle">60.000 Hz</text>
+            </svg>
+          </section>
+          <section class="verdict-live card"><div class="card-head"><h2>实时工程状态</h2><span id="liveVerdict" class="state-chip neutral">NOT ASSESSED</span></div><div id="liveKpis" class="live-kpis"></div><div id="nextEvent" class="next-event">运行后显示下一事件</div></section>
+          <section class="chart-card card wide"><div class="card-head"><h2>有功功率平衡</h2><span>MW</span></div><canvas id="powerChart"></canvas></section>
+          <section class="chart-card card"><div class="card-head"><h2>系统频率</h2><span>Hz</span></div><canvas id="frequencyChart"></canvas></section>
+          <section class="chart-card card"><div class="card-head"><h2>BESS功率与SOC</h2><span>MW / %</span></div><canvas id="bessChart"></canvas></section>
+        </div>
+        <section class="event-card card"><div class="card-head"><h2>统一事件时间轴</h2><span id="eventCount">0 events</span></div><div id="eventTimeline" class="event-timeline"></div></section>
+        <div class="footer-actions"><button class="button secondary" data-go="scenario">修改场景</button><button id="openVerdict" class="button dark" disabled>查看工程结论</button></div>
+      </section>
+
+      <section id="verdictView" class="view">
+        <div id="verdictHero" class="verdict-hero neutral"><p class="eyebrow">ENGINEERING VERDICT</p><h1>尚未运行</h1><p>完成仿真后生成工程结论。</p></div>
+        <div id="findingList" class="finding-list"></div>
+        <div class="kpi-grid" id="finalKpis"></div>
+        <div class="footer-actions"><button class="button secondary" data-go="simulation">返回仿真</button><button class="button primary" data-go="revisions">查看修订建议</button></div>
+      </section>
+
+      <section id="revisionsView" class="view">
+        <div class="section-head"><div><p class="eyebrow">RECOMMENDED REVISIONS</p><h1>怎么改，改完再验证</h1><p>建议来自确定性规则，只修改明确参数，不自动越过工程师确认。</p></div></div>
+        <div id="revisionList" class="revision-list"></div>
+        <div class="footer-actions"><button class="button secondary" data-go="verdict">返回结论</button><button id="compareRevision" class="button dark" disabled>比较原方案与修订方案</button></div>
+      </section>
+
+      <section id="compareView" class="view">
+        <div class="section-head"><div><p class="eyebrow">COMPARE ALTERNATIVES</p><h1>原方案与修订方案</h1><p>相同仿真时长、相同事故时间表、独立Engine实例。</p></div><span id="compareStatus" class="state-chip neutral">NOT RUN</span></div>
+        <div id="compareSummary" class="compare-summary"></div>
+        <div id="compareTable" class="compare-table-wrap"></div>
+        <div class="footer-actions"><button class="button secondary" data-go="revisions">返回建议</button><button class="button primary" data-go="simulation">返回仿真</button></div>
+      </section>
+    </section>
+  </main>
+</div>
+<script type="module" src="app.js"></script>
+</body>
+</html>
