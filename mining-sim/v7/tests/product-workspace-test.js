@@ -5,6 +5,11 @@ import {
   updateGuidedConfig,
 } from '../workspace/workspace-model.js';
 import { applyRevision, buildRevisionGuidance } from '../decision/revision-guidance.js';
+import {
+  buildConfigurationChecklist,
+  diagnoseLiveSample,
+  explainRevision,
+} from '../workspace/engineering-guidance.js';
 
 const assert = (condition, message) => { if (!condition) throw new Error(message); };
 
@@ -61,6 +66,9 @@ export function testRevisionGuidanceCreatesExecutableAlternative() {
   const suggestion = guidance.suggestions.find((item) => item.code === 'INCREASE_BESS_POWER');
   assert(guidance.verdict === 'REJECTED', 'unsafe scenario verdict missing');
   assert(suggestion?.change?.to > 8, 'BESS power revision missing');
+  const explanation = explainRevision(suggestion);
+  assert(/BESS功率/.test(explanation.parameter), 'revision did not explain where to change the parameter');
+  assert(/PCS/.test(explanation.tradeoff), 'revision did not explain engineering tradeoff');
   const alternative = applyRevision(base, suggestion);
   assert(alternative.id !== base.id, 'revision did not create a new scenario id');
   assert(alternative.equipment.bess.powerMW > base.equipment.bess.powerMW, 'revision was not applied');
@@ -75,4 +83,29 @@ export function testWorkspaceChartSamplingPreservesEndState() {
   assert(selected[0] === samples[0], 'chart sampling lost first sample');
   assert(selected[selected.length - 1] === samples[samples.length - 1], 'chart sampling lost final sample');
   return { name: 'Simulation workspace chart sampling preserves end state', status: 'PASS' };
+}
+
+export function testLiveWorkspaceExplainsCurrentViolation() {
+  const diagnosis = diagnoseLiveSample({
+    frequencyHz: 58.2,
+    rocofHzPerS: -1.4,
+    n1CoverageRatio: 0.72,
+    eensMWh: 0,
+  });
+  assert(diagnosis.status === 'CRITICAL', 'unsafe live sample was not classified critical');
+  assert(diagnosis.actions.some((item) => /BESS功率/.test(item.action)), 'live diagnosis did not give an actionable frequency response');
+  assert(diagnosis.actions.some((item) => /在线可用容量/.test(item.action)), 'live diagnosis did not explain N-1 response');
+  return { name: 'Live workspace explains violations while simulation advances', status: 'PASS' };
+}
+
+export function testConfigurationChecklistFindsMissingRecoveryWindow() {
+  const base = config();
+  base.simulation.durationSeconds = 130;
+  const checklist = buildConfigurationChecklist(base);
+  const horizon = checklist.find((item) => item.id === 'HORIZON');
+  assert(horizon && !horizon.pass, 'short recovery horizon was not identified');
+  base.simulation.durationSeconds = 180;
+  const fixed = buildConfigurationChecklist(base).find((item) => item.id === 'HORIZON');
+  assert(fixed?.pass, 'valid recovery horizon remained blocked');
+  return { name: 'Guided configuration checks disturbance recovery horizon', status: 'PASS' };
 }
