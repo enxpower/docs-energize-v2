@@ -109,6 +109,7 @@ import {
   testLiveWorkspaceExplainsCurrentViolation,
   testConfigurationChecklistFindsMissingRecoveryWindow,
 } from './product-workspace-test.js';
+import { testReferenceBaselinePassesDeclaredHardConstraints } from './reference-baseline-test.js';
 import { testMinimumMiningAcceptanceChain } from './mining-acceptance-test.js';
 
 export const EXTENDED_TESTS = Object.freeze([
@@ -184,6 +185,7 @@ export const EXTENDED_TESTS = Object.freeze([
   testWorkspaceChartSamplingPreservesEndState,
   testLiveWorkspaceExplainsCurrentViolation,
   testConfigurationChecklistFindsMissingRecoveryWindow,
+  testReferenceBaselinePassesDeclaredHardConstraints,
   testMinimumMiningAcceptanceChain,
 ]);
 
