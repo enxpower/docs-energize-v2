@@ -101,6 +101,12 @@ import {
   testConfiguratorRejectsMixedComparisonHorizon,
   testConfiguratorRunsRealEngineAndComparison,
 } from './configurator-ui-test.js';
+import {
+  testGuidedWorkspaceExplainsReadiness,
+  testGuidedWorkspaceUpdatesAreIsolated,
+  testRevisionGuidanceCreatesExecutableAlternative,
+  testWorkspaceChartSamplingPreservesEndState,
+} from './product-workspace-test.js';
 import { testMinimumMiningAcceptanceChain } from './mining-acceptance-test.js';
 
 export const EXTENDED_TESTS = Object.freeze([
@@ -170,6 +176,10 @@ export const EXTENDED_TESTS = Object.freeze([
   testConfiguratorNestedUpdateIsImmutable,
   testConfiguratorRejectsMixedComparisonHorizon,
   testConfiguratorRunsRealEngineAndComparison,
+  testGuidedWorkspaceExplainsReadiness,
+  testGuidedWorkspaceUpdatesAreIsolated,
+  testRevisionGuidanceCreatesExecutableAlternative,
+  testWorkspaceChartSamplingPreservesEndState,
   testMinimumMiningAcceptanceChain,
 ]);
 
