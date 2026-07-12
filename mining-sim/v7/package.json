@@ -3,8 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "check:v6-preset": "node --check ../app-v63-reference.js && node --check ../app-v67-renewable-dispatch.js",
-    "check:ui": "node --check ui/app.js && node --check ui/configurator-model.js && node --check workspace/app.js && node --check workspace/workspace-model.js && node --check workspace/engineering-guidance.js && node --check decision/revision-guidance.js && npm run check:v6-preset",
+    "check:v6-runtime": "node --check ../app-v63-reference.js && node --check ../app-v67-renewable-dispatch.js",
+    "check:ui": "node --check ui/app.js && node --check ui/configurator-model.js && node --check workspace/app.js && node --check workspace/workspace-model.js && node --check workspace/engineering-guidance.js && node --check decision/revision-guidance.js && npm run check:v6-runtime",
     "test": "npm run check:ui && node tests/run-node.js"
   }
 }
