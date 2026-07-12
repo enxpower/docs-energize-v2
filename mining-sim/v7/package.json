@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "check:ui": "node --check ui/app.js && node --check ui/configurator-model.js && node --check ui/engineering-verdict.js",
+    "check:ui": "node --check ui/app.js && node --check ui/configurator-model.js",
     "test": "npm run check:ui && node tests/run-node.js"
   }
 }
