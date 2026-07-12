@@ -90,6 +90,7 @@ import {
 } from './scenario-comparison-test.js';
 import {
   testScenarioConfigCreatesRunnableEngine,
+  testScenarioConfigStartsFromBalancedSteadyState,
   testScenarioConfigRejectsInvalidReferences,
   testScenarioJsonActionsCompileAndExecute,
   testScenarioBatchConfigIsolationAndCommonHorizon,
@@ -161,6 +162,7 @@ export const EXTENDED_TESTS = Object.freeze([
   testScenarioRankingIsDeterministic,
   testScenarioBatchRunnerIsolationAndCommonActions,
   testScenarioConfigCreatesRunnableEngine,
+  testScenarioConfigStartsFromBalancedSteadyState,
   testScenarioConfigRejectsInvalidReferences,
   testScenarioJsonActionsCompileAndExecute,
   testScenarioBatchConfigIsolationAndCommonHorizon,
