@@ -44,9 +44,9 @@
     const title=document.querySelector('.brand small');
     if(title) title.textContent='V6.3 · Reference Compliant Baseline';
     const start=document.getElementById('start');
-    if(start) start.textContent='运行缺省基准';
+    if(start&&start.textContent==='启动') start.textContent='运行缺省基准';
     const log=document.getElementById('log');
-    if(log) log.textContent='[Reference Baseline] 12 MW负荷 · 6×3.3 MW柴油机 · 12 MW / 24 MWh BESS。点击“运行缺省基准”开始。';
+    if(log&&!window.started) log.textContent='[Reference Baseline] 12 MW负荷 · 6×3.3 MW柴油机 · 12 MW / 24 MWh BESS。点击“运行缺省基准”开始。';
     const badges=document.querySelector('.badges');
     if(badges&&!document.getElementById('bPreset')){
       const badge=document.createElement('span');
@@ -59,4 +59,5 @@
 
   window.applyV6ReferenceDefaults=applyReferenceDefaults;
   applyReferenceDefaults();
+  document.addEventListener('DOMContentLoaded',()=>setTimeout(applyReferenceDefaults,0),{once:true});
 })();
