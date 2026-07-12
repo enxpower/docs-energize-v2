@@ -9,6 +9,7 @@ import { ProcessSequenceController } from '../controls/process-sequence.js';
 import { ProductionCurtailmentController } from '../controls/production-curtailment.js';
 import { ProductionEconomicsTracker } from '../economics/production-economics.js';
 import { EconomicProductionSimulationEngine } from '../core/economic-production-engine.js';
+import { initializeIslandSteadyState } from '../core/initial-steady-state.js';
 import { compileScenarioActions, validateScenarioConfig } from './scenario-config.js';
 
 export function createEngineFromScenarioConfig(config) {
@@ -17,7 +18,7 @@ export function createEngineFromScenarioConfig(config) {
   const bess = new Bess(config.equipment.bess ?? { powerMW: 0, energyMWh: 0 });
   const motorBank = new MotorLoadBank({ motors: config.equipment.motors });
   const productionLoadBank = new ProductionLoadBank({
-    loads: config.equipment.productionLoads.map((load) => new ProductionLoad(load)),
+    loads: config.equipment.productionLoads.map((loadConfig) => new ProductionLoad(loadConfig)),
   });
   const load = new AggregateLoad({
     baseMW: Number(config.site.baseLoadMW),
@@ -48,6 +49,13 @@ export function createEngineFromScenarioConfig(config) {
     bessMarginalFuelLitersPerMWh: config.economics?.bessMarginalFuelLitersPerMWh ?? 0,
   });
 
+  const initialSteadyState = initializeIslandSteadyState({
+    load,
+    dieselFleet,
+    bess,
+    nominalHz: Number(config.site.nominalHz ?? 60),
+  });
+
   const engine = new EconomicProductionSimulationEngine({
     dtSeconds: Number(config.simulation.dtSeconds),
     nominalHz: Number(config.site.nominalHz ?? 60),
@@ -63,6 +71,12 @@ export function createEngineFromScenarioConfig(config) {
     productionEconomicsTracker,
     emsIntervalSeconds: Number(config.controls?.emsIntervalSeconds ?? 20),
     commitmentIntervalSeconds: Number(config.controls?.commitmentIntervalSeconds ?? 30),
+  });
+  engine.initialSteadyState = initialSteadyState;
+  engine.events.push({
+    timeSeconds: 0,
+    type: 'INITIAL_STEADY_STATE_ESTABLISHED',
+    ...initialSteadyState,
   });
   engine.scenarioConfig = structuredClone(config);
   return engine;
