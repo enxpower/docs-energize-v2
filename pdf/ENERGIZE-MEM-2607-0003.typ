@@ -12,7 +12,7 @@
         stroke: (bottom: 0.5pt + rgb("e1e4e9")),
         inset: (bottom: 5pt),
       )[
-        #set text(font: ("Arial", "Noto Sans CJK SC"), size: 7.5pt)
+        #set text(font: ("Liberation Sans",  "Arial",           "Noto Sans CJK SC"), size: 7.5pt)
         #grid(
           columns: (1fr, auto),
           align: (left + bottom, right + bottom),
@@ -28,7 +28,7 @@
       stroke: (top: 0.5pt + rgb("e1e4e9")),
       inset: (top: 5pt),
     )[
-      #set text(font: ("Arial", "Noto Sans CJK SC"), size: 7pt, fill: rgb("9aa1aa"))
+      #set text(font: ("Liberation Sans",  "Arial",           "Noto Sans CJK SC"), size: 7pt, fill: rgb("9aa1aa"))
       #grid(
         columns: (1fr, auto),
         align: (left + top, right + top),
@@ -41,7 +41,7 @@
 
 // ── Base typography ───────────────────────────────────────────────────────────
 // lang: "zh" enables CJK line-break:strict — no mid-word breaks in Chinese.
-#set text(font: ("Times New Roman", "Noto Serif CJK SC"), size: 11pt, fill: rgb("1a1c20"), lang: "zh")
+#set text(font: ("Liberation Serif", "Times New Roman", "Noto Serif CJK SC"), size: 11pt, fill: rgb("1a1c20"), lang: "zh")
 #set par(leading: 0.85em, spacing: 14pt, justify: true, first-line-indent: 0pt)
 
 // ── List settings ─────────────────────────────────────────────────────────────
@@ -65,24 +65,24 @@
     stroke: (top: 0.5pt + rgb("e1e4e9")),
     inset: (top: 10pt, bottom: 0pt),
   )[
-    #set text(font: ("Arial", "Noto Sans CJK SC"), size: 15pt, weight: "semibold", fill: rgb("1a1c20"))
+    #set text(font: ("Liberation Sans",  "Arial",           "Noto Sans CJK SC"), size: 15pt, weight: "semibold", fill: rgb("1a1c20"))
     #it.body
   ]
   v(16pt, weak: true)
 }
 #show heading.where(level: 2): it => {
   v(20pt, weak: true)
-  text(font: ("Arial", "Noto Sans CJK SC"), size: 13pt, weight: "semibold", fill: rgb("1a1c20"))[#it.body]
+  text(font: ("Liberation Sans",  "Arial",           "Noto Sans CJK SC"), size: 13pt, weight: "semibold", fill: rgb("1a1c20"))[#it.body]
   v(12pt, weak: true)
 }
 #show heading.where(level: 3): it => {
   v(16pt, weak: true)
-  text(font: ("Arial", "Noto Sans CJK SC"), size: 11pt, weight: "semibold", fill: rgb("1a1c20"))[#it.body]
+  text(font: ("Liberation Sans",  "Arial",           "Noto Sans CJK SC"), size: 11pt, weight: "semibold", fill: rgb("1a1c20"))[#it.body]
   v(9pt, weak: true)
 }
 #show heading.where(level: 4): it => {
   v(12pt, weak: true)
-  text(font: ("Arial", "Noto Sans CJK SC"), size: 10pt, weight: "semibold", fill: rgb("1a1c20"))[#it.body]
+  text(font: ("Liberation Sans",  "Arial",           "Noto Sans CJK SC"), size: 10pt, weight: "semibold", fill: rgb("1a1c20"))[#it.body]
   v(7pt, weak: true)
 }
 
@@ -93,7 +93,7 @@
   stroke: 0.5pt + rgb("e1e4e9"),
   inset: (x: 3pt, y: 1.5pt),
   radius: 3pt,
-)[#text(font: ("Courier New", "Noto Sans Mono CJK SC"), size: 9.5pt, fill: rgb("1d232b"))[#it]]
+)[#text(font: ("Liberation Mono",  "Courier New",     "Noto Sans Mono CJK SC"), size: 9.5pt, fill: rgb("1d232b"))[#it]]
 
 #show raw.where(block: true): it => block(
   width: 100%,
@@ -102,26 +102,26 @@
   radius: 3pt,
   inset: (left: 14pt, top: 11pt, bottom: 11pt, right: 12pt),
 )[#set text(lang: "en")
-#text(font: ("Courier New", "Noto Sans Mono CJK SC"), size: 9pt, fill: rgb("1d232b"))[#it]]
+#text(font: ("Liberation Mono",  "Courier New",     "Noto Sans Mono CJK SC"), size: 9pt, fill: rgb("1d232b"))[#it]]
 
-#text(font: ("Arial", "Noto Sans CJK SC"), size: 9pt, weight: "bold", fill: rgb("1a1c20"), tracking: 0.08em)[ENERGIZE]
+#text(font: ("Liberation Sans",  "Arial",           "Noto Sans CJK SC"), size: 9pt, weight: "bold", fill: rgb("1a1c20"), tracking: 0.08em)[ENERGIZE]
 #v(8pt)
 #line(length: 100%, stroke: 1pt + rgb("1a1c20"))
 #v(8pt)
-#text(font: ("Arial", "Noto Sans CJK SC"), size: 7pt, weight: "bold", fill: rgb("6a717b"), tracking: 0.08em)[MEMO]
+#text(font: ("Liberation Sans",  "Arial",           "Noto Sans CJK SC"), size: 7pt, weight: "bold", fill: rgb("6a717b"), tracking: 0.08em)[MEMO]
 #v(6pt)
-#text(font: ("Arial", "Noto Sans CJK SC"), size: 22pt, weight: "semibold", fill: rgb("1a1c20"), hyphenate: false, lang: "zh")[CA-PEP01 Scope & Commercial Position Record — July 20 Discussion Prep]
+#text(font: ("Liberation Sans",  "Arial",           "Noto Sans CJK SC"), size: 22pt, weight: "semibold", fill: rgb("1a1c20"), hyphenate: false, lang: "zh")[CA-PEP01 Scope & Commercial Position Record — July 20 Discussion Prep]
 #v(10pt)
 #line(length: 100%, stroke: 0.5pt + rgb("e1e4e9"))
 #v(7pt)
-#text(font: ("Arial", "Noto Sans CJK SC"), size: 8pt, fill: rgb("6a717b"))[#text(weight: "bold")[ENERGIZE-MEM-2607-0003] #text(fill: rgb("9aa1aa"))[ · ]MEMO #text(fill: rgb("9aa1aa"))[ · ]v2.0]
+#text(font: ("Liberation Sans",  "Arial",           "Noto Sans CJK SC"), size: 8pt, fill: rgb("6a717b"))[#text(weight: "bold")[ENERGIZE-MEM-2607-0003] #text(fill: rgb("9aa1aa"))[ · ]MEMO #text(fill: rgb("9aa1aa"))[ · ]v2.0]
 #v(10pt)
 #grid(
   columns: (1.3in, 1fr),
   row-gutter: 6pt,
-  [#text(font: ("Arial", "Noto Sans CJK SC"), size: 6.8pt, weight: "bold", fill: rgb("9aa1aa"), tracking: 0.08em)[CLIENT]],  [#text(font: ("Arial", "Noto Sans CJK SC"), size: 9pt, fill: rgb("1a1c20"))[Internal]],
-  [#text(font: ("Arial", "Noto Sans CJK SC"), size: 6.8pt, weight: "bold", fill: rgb("9aa1aa"), tracking: 0.08em)[PROJECT]], [#text(font: ("Arial", "Noto Sans CJK SC"), size: 9pt, fill: rgb("1a1c20"))[Battery Integration]],
-  [#text(font: ("Arial", "Noto Sans CJK SC"), size: 6.8pt, weight: "bold", fill: rgb("9aa1aa"), tracking: 0.08em)[STATUS]],  [#text(font: ("Arial", "Noto Sans CJK SC"), size: 9pt, fill: rgb("1a1c20"))[Final]],
+  [#text(font: ("Liberation Sans",  "Arial",           "Noto Sans CJK SC"), size: 6.8pt, weight: "bold", fill: rgb("9aa1aa"), tracking: 0.08em)[CLIENT]],  [#text(font: ("Liberation Sans",  "Arial",           "Noto Sans CJK SC"), size: 9pt, fill: rgb("1a1c20"))[Internal]],
+  [#text(font: ("Liberation Sans",  "Arial",           "Noto Sans CJK SC"), size: 6.8pt, weight: "bold", fill: rgb("9aa1aa"), tracking: 0.08em)[PROJECT]], [#text(font: ("Liberation Sans",  "Arial",           "Noto Sans CJK SC"), size: 9pt, fill: rgb("1a1c20"))[PepsiCo/SDG&E]],
+  [#text(font: ("Liberation Sans",  "Arial",           "Noto Sans CJK SC"), size: 6.8pt, weight: "bold", fill: rgb("9aa1aa"), tracking: 0.08em)[STATUS]],  [#text(font: ("Liberation Sans",  "Arial",           "Noto Sans CJK SC"), size: 9pt, fill: rgb("1a1c20"))[Final]],
 )
 #v(12pt)
 #line(length: 100%, stroke: 0.5pt + rgb("e1e4e9"))
@@ -158,10 +158,10 @@ Prepared by: Energize Solutions Inc. · Date: July 17, 2026 · Project ID: PJ250
   stroke: none,
   table.hline(stroke: 0.8pt + rgb("1a1c20")),
   table.header(
-    [#text(font: ("Arial", "Noto Sans CJK SC"), size: 7.5pt, weight: "bold", fill: rgb("6a717b"), tracking: 0.06em)[#upper[Activity]]],
-    [#text(font: ("Arial", "Noto Sans CJK SC"), size: 7.5pt, weight: "bold", fill: rgb("6a717b"), tracking: 0.06em)[#upper[Source (Proposal Ref.)]]],
-    [#text(font: ("Arial", "Noto Sans CJK SC"), size: 7.5pt, weight: "bold", fill: rgb("6a717b"), tracking: 0.06em)[#upper[What the Original Document Actually Says]]],
-    [#text(font: ("Arial", "Noto Sans CJK SC"), size: 7.5pt, weight: "bold", fill: rgb("6a717b"), tracking: 0.06em)[#upper[Responsibility]]],
+    [#text(font: ("Liberation Sans",  "Arial",           "Noto Sans CJK SC"), size: 7.5pt, weight: "bold", fill: rgb("6a717b"), tracking: 0.06em)[#upper[Activity]]],
+    [#text(font: ("Liberation Sans",  "Arial",           "Noto Sans CJK SC"), size: 7.5pt, weight: "bold", fill: rgb("6a717b"), tracking: 0.06em)[#upper[Source (Proposal Ref.)]]],
+    [#text(font: ("Liberation Sans",  "Arial",           "Noto Sans CJK SC"), size: 7.5pt, weight: "bold", fill: rgb("6a717b"), tracking: 0.06em)[#upper[What the Original Document Actually Says]]],
+    [#text(font: ("Liberation Sans",  "Arial",           "Noto Sans CJK SC"), size: 7.5pt, weight: "bold", fill: rgb("6a717b"), tracking: 0.06em)[#upper[Responsibility]]],
     table.hline(stroke: 0.7pt + rgb("c2c7ce")),
   ),
   [SEL-700G relay procurement, installation & commissioning],
