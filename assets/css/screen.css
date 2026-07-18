@@ -935,3 +935,26 @@ hr {
     display: none;
   }
 }
+
+/* ============================================================
+   Print overrides — ensure the browser print dialog and
+   Save-as-PDF produce a clean white page with no card shadow.
+   print.css handles page size / margins / typography; this
+   block only strips the screen-specific card chrome that
+   Chrome's print preview renders even when print.css is loaded.
+   ============================================================ */
+@media print {
+  body {
+    background: #ffffff !important;
+  }
+
+  .document,
+  .site-index {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+}

@@ -40,9 +40,10 @@
 )
 
 // ── Base typography ───────────────────────────────────────────────────────────
-// lang: "zh" enables CJK line-break:strict — no mid-word breaks in Chinese.
+// justify: true for body prose only. Headings and cover elements override
+// this with their own #set par or are wrapped in non-justified blocks.
 #set text(font: ("Liberation Serif", "Times New Roman", "Noto Serif CJK SC"), size: 11pt, fill: rgb("1a1c20"), lang: "zh")
-#set par(leading: 0.85em, spacing: 14pt, justify: true, first-line-indent: 0pt)
+#set par(leading: 0.85em, spacing: 14pt, justify: false, first-line-indent: 0pt)
 
 // ── List settings ─────────────────────────────────────────────────────────────
 #set list(indent: 0.8em, body-indent: 0.5em)
@@ -56,7 +57,7 @@
 )]
 
 // ── Heading show rules ────────────────────────────────────────────────────────
-// bookmarked: true adds PDF navigation bookmarks for each heading.
+// Each heading sets justify: false so words are not stretched across the line.
 #set heading(bookmarked: true)
 #show heading.where(level: 1): it => {
   v(26pt, weak: true)
@@ -65,6 +66,7 @@
     stroke: (top: 0.5pt + rgb("e1e4e9")),
     inset: (top: 10pt, bottom: 0pt),
   )[
+    #set par(justify: false)
     #set text(font: ("Liberation Sans",  "Arial",           "Noto Sans CJK SC"), size: 15pt, weight: "semibold", fill: rgb("1a1c20"))
     #it.body
   ]
@@ -72,22 +74,30 @@
 }
 #show heading.where(level: 2): it => {
   v(20pt, weak: true)
-  text(font: ("Liberation Sans",  "Arial",           "Noto Sans CJK SC"), size: 13pt, weight: "semibold", fill: rgb("1a1c20"))[#it.body]
+  block(width: 100%)[
+    #set par(justify: false)
+    #text(font: ("Liberation Sans",  "Arial",           "Noto Sans CJK SC"), size: 13pt, weight: "semibold", fill: rgb("1a1c20"))[#it.body]
+  ]
   v(12pt, weak: true)
 }
 #show heading.where(level: 3): it => {
   v(16pt, weak: true)
-  text(font: ("Liberation Sans",  "Arial",           "Noto Sans CJK SC"), size: 11pt, weight: "semibold", fill: rgb("1a1c20"))[#it.body]
+  block(width: 100%)[
+    #set par(justify: false)
+    #text(font: ("Liberation Sans",  "Arial",           "Noto Sans CJK SC"), size: 11pt, weight: "semibold", fill: rgb("1a1c20"))[#it.body]
+  ]
   v(9pt, weak: true)
 }
 #show heading.where(level: 4): it => {
   v(12pt, weak: true)
-  text(font: ("Liberation Sans",  "Arial",           "Noto Sans CJK SC"), size: 10pt, weight: "semibold", fill: rgb("1a1c20"))[#it.body]
+  block(width: 100%)[
+    #set par(justify: false)
+    #text(font: ("Liberation Sans",  "Arial",           "Noto Sans CJK SC"), size: 10pt, weight: "semibold", fill: rgb("1a1c20"))[#it.body]
+  ]
   v(7pt, weak: true)
 }
 
 // ── Code show rules ───────────────────────────────────────────────────────────
-// Inline and block code: uniform border, light neutral bg, NO left bar.
 #show raw.where(block: false): it => box(
   fill: rgb("f6f7f8"),
   stroke: 0.5pt + rgb("e1e4e9"),
@@ -110,7 +120,10 @@
 #v(8pt)
 #text(font: ("Liberation Sans",  "Arial",           "Noto Sans CJK SC"), size: 7pt, weight: "bold", fill: rgb("6a717b"), tracking: 0.08em)[MEMO]
 #v(6pt)
-#text(font: ("Liberation Sans",  "Arial",           "Noto Sans CJK SC"), size: 22pt, weight: "semibold", fill: rgb("1a1c20"), hyphenate: false, lang: "zh")[CA-PEP01 Scope & Commercial Position Record — July 20 Discussion Prep]
+#block(width: 100%)[
+  #set par(justify: false)
+  #text(font: ("Liberation Sans",  "Arial",           "Noto Sans CJK SC"), size: 22pt, weight: "semibold", fill: rgb("1a1c20"), hyphenate: false, lang: "zh")[CA-PEP01 Scope & Commercial Position Record — July 20 Discussion Prep]
+]
 #v(10pt)
 #line(length: 100%, stroke: 0.5pt + rgb("e1e4e9"))
 #v(7pt)
@@ -152,7 +165,7 @@ Prepared by: Energize Solutions Inc. · Date: July 17, 2026 · Project ID: PJ250
 #text(style: "italic")[The table below is sourced directly from Energize's original Phase 1, 2, and 3 proposals (Project ID PJ25060008). This is the scope baseline both parties agreed to reference.]
 
 #table(
-  columns: (25fr, 15fr, 35fr, 25fr),
+  columns: (2.20in, 0.80in, 2.50in, 1.40in),
   inset: (x: 8pt, y: 5.5pt),
   align: top + left,
   stroke: none,
