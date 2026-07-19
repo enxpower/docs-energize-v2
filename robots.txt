@@ -1,2 +1,7 @@
 User-agent: *
-Disallow:
+Disallow: /clients/
+Disallow: /partners/
+Disallow: /internal/
+Disallow: /document-register/
+Disallow: /search-index.json/
+Disallow: /register/
