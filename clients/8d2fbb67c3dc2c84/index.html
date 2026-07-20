@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <title>CA-PEP01 Technical Position Memorandum — PepsiCo/SDG&amp;E BESS EMS — ENERGIZE-MEM-2607-0034</title>
+    <link rel="icon" type="image/svg+xml" href="../../assets/energizeos-favicon.svg">
+    <meta name="description" content="CA-PEP01 · PepsiCo / SDG&amp;E BESS Microgrid EMS · Energize Solutions Inc.">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="CA-PEP01 Technical Position Memorandum — PepsiCo/SDG&amp;E BESS…">
+    <meta property="og:description" content="CA-PEP01 · PepsiCo / SDG&amp;E BESS Microgrid EMS · Energize Solutions Inc.">
+    <meta property="og:image" content="https://docs.energizeos.com/assets/energizeos-share-preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="CA-PEP01 Technical Position Memorandum — PepsiCo/SDG&amp;E BESS…">
+    <meta name="twitter:description" content="CA-PEP01 · PepsiCo / SDG&amp;E BESS Microgrid EMS · Energize Solutions Inc.">
+    <meta name="twitter:image" content="https://docs.energizeos.com/assets/energizeos-share-preview.png">
+    <link rel="stylesheet" href="../../assets/css/screen.css">
+    <link rel="stylesheet" href="../../assets/css/print.css" media="print">
+  </head>
+  <body>
+    <header class="site-topbar no-print"><span class="topbar-brand">ENERGIZE</span></header>
+    <main class="document">
+      <header class="document-masthead">
+        <div class="masthead-row">
+          <div class="masthead-brand">ENERGIZE</div>
+          
+        </div>
+      </header>
+      <section class="document-title-block">
+        <p class="document-kicker">Memo</p>
+        <h1>CA-PEP01 Technical Position Memorandum — PepsiCo/SDG&amp;E BESS EMS</h1>
+      </section>
+      <div class="document-meta-grid" aria-label="Document metadata"><div class="meta-item"><span class="meta-label">Document ID</span><span class="meta-value meta-value--id">ENERGIZE-MEM-2607-0034</span></div><div class="meta-item"><span class="meta-label">Type</span><span class="meta-value">Memo</span></div><div class="meta-item"><span class="meta-label">Version</span><span class="meta-value">v1.0</span></div><div class="meta-item"><span class="meta-label">Status</span><span class="tag status-final">Final</span></div><div class="meta-item"><span class="meta-label">Client</span><span class="meta-value">EVESCO</span></div><div class="meta-item"><span class="meta-label">Project</span><span class="meta-value">PepsiCo/SDG&amp;E</span></div><div class="meta-item"><span class="meta-label">Updated</span><span class="meta-value">2026-07-20</span></div><div class="meta-item"><span class="meta-label">Access</span><span class="tag is-client-link">Client Link</span></div></div>
+      <div class="document-actions no-print">
+        <button type="button" class="action-btn" onclick="window.print()" title="Print this document using your browser" aria-label="Print this document">Print</button><a href="../../pdf/ENERGIZE-MEM-2607-0034.pdf" class="action-btn action-btn--download-pdf" title="Download pre-generated PDF" aria-label="Download PDF" download>Download PDF</a>
+      </div>
+      <nav class="document-toc no-print" aria-label="Contents">
+        <details class="toc-details" open>
+          <summary class="toc-title">Contents<span class="toc-count">11 sections</span></summary>
+          <ol class="toc-list"><li class="toc-d0"><a href="#sec-1-technical-position-memorandum">TECHNICAL POSITION MEMORANDUM</a></li><li class="toc-d1"><a href="#sec-2-purpose-of-this-memorandum">PURPOSE OF THIS MEMORANDUM</a></li><li class="toc-d1"><a href="#sec-3-background">BACKGROUND</a></li><li class="toc-d1"><a href="#sec-4-section-1-key-dates-on-record">SECTION 1 — KEY DATES ON RECORD</a></li><li class="toc-d1"><a href="#sec-5-section-2-position-by-item">SECTION 2 — POSITION BY ITEM</a></li><li class="toc-d1"><a href="#sec-11-section-3-required-confirmations">SECTION 3 — Required Confirmations</a></li><li class="toc-d1"><a href="#sec-12-section-4-ems-panel-device-ip-address-ta">SECTION 4 — EMS Panel Device IP Address Table</a></li><li class="toc-d1"><a href="#sec-13-section-5-fat-verification">SECTION 5 — FAT Verification</a></li><li class="toc-d1"><a href="#sec-14-commercial-note">COMMERCIAL NOTE</a></li><li class="toc-d1"><a href="#sec-15-implementation-limitation">IMPLEMENTATION LIMITATION</a></li><li class="toc-d1"><a href="#sec-16-document-control">DOCUMENT CONTROL</a></li></ol>
+        </details>
+      </nav>
+      <section class="document-content">
+        <h2 id="sec-1-technical-position-memorandum">TECHNICAL POSITION MEMORANDUM</h2>
+<p><strong>CA-PEP01 · PepsiCo / SDG&amp;E BESS Microgrid EMS · Energize Solutions Inc.</strong></p>
+<p>Prepared by: Energize Solutions Inc. · Date: July 16, 2026 · Doc Ref: PUB-2607-0002-MEM</p>
+<hr>
+<h3 id="sec-2-purpose-of-this-memorandum">PURPOSE OF THIS MEMORANDUM</h3>
+<p>This memorandum sets out Energize Solutions&#39; conditional acceptance of the control architecture proposed by B&amp;V&#39;s formal ECO response of July 7, 2026, for the CA-PEP01 SWBD#1 SEL-700G / EMS interface. <strong>This acceptance is limited to the conceptual division of control responsibility. It does not constitute approval of final RavenVolt drawings, final SEL settings/SELogic equations, field wiring, final RDB implementation, FAT results, or EOR/utility acceptance</strong> — those remain subject to design release, testing, and the responsible EOR&#39;s approval. The remaining open items are the confirmations requested in Section 3 and the IP address assignments in Section 4.</p>
+<h3 id="sec-3-background">BACKGROUND</h3>
+<p>Since the original ECO request dated May 4, 2026 (PUB-2605-0011-PROP), five technical items on SWBD#1 have been under review between Energize, B&amp;V, and Ravenvolt. Section 1 below records the key dates and positions exchanged on these items, for reference and to avoid any ambiguity about what has already been agreed.</p>
+<p>Energize accepts B&amp;V&#39;s proposed architecture as final for Items 2 and 3 at the conceptual level, subject to the confirmations in Section 3. Detailed implementation — including the final SELogic equations, communication watchdog behavior, and FAT verification — remains open, as set out below.</p>
+<hr>
+<h3 id="sec-4-section-1-key-dates-on-record">SECTION 1 — KEY DATES ON RECORD</h3>
+<p><em>The table below summarizes the dates and positions exchanged on this scope, for reference.</em></p>
+<div class="table-wrap"><table><tbody><tr><td>Date</td><td>Party</td><td>Position / Action</td></tr><tr><td>Feb 3, 2026</td><td>B&amp;V (V. Shukla)</td><td>Approves Ravenvolt SWBD#1 Rev. B &quot;as commented&quot; — including OUT302 tied to CR-UC close circuit.</td></tr><tr><td>Mar 11, 2026</td><td>B&amp;V (V. Shukla)</td><td>States ANSI 27/59/81 protection functions &quot;may not be required&quot; on SEL-700G given charge-only operating mode.</td></tr><tr><td>May 4, 2026</td><td>Energize</td><td>Issues formal ECO request (PUB-2605-0011-PROP): flags OUT301/OUT302 label discrepancy, requests EMS-sole close authority, dual-path 52a/52b, written ANSI 27/59/81 confirmation, and IP assignment.</td></tr><tr><td>May 26, 2026</td><td>B&amp;V (Utkarsh Kumar)</td><td>Provides item-by-item review table cross-referencing Energize&#39;s ECO against items previously addressed by Vatsal Shukla.</td></tr><tr><td>May 28, 2026</td><td>Energize</td><td>Issues full technical response defending Items 1b/1c and 2 as compliance requirements; clarifies DO2/RL-02 terminology.</td></tr><tr><td>May 29, 2026</td><td>B&amp;V (Utkarsh Kumar)</td><td>Formally responds that B&amp;V does not agree with the proposed EMS-sole-authority close architecture.</td></tr><tr><td>Jun–Jul, 2026</td><td>Ravenvolt / B&amp;V</td><td>Ravenvolt confirms feasibility of an SEL-700G-resident permissive-logic alternative for the close path, and confirms 52a/52b wiring to SEL-700G.</td></tr><tr><td>Jul 7, 2026</td><td>B&amp;V (Utkarsh Kumar, EOR-reviewed)</td><td>Issues formal written response to all four ECO items: confirms ANSI 27/59/81 ARE required; proposes CLX permissive-bit logic for the OUT301/302 close path; proposes single-path 52a/52b wiring via SEL-700G Modbus; IP assignment not yet addressed.</td></tr><tr><td>Jul 16, 2026</td><td>Energize</td><td>Issues this memorandum, conditionally accepting B&amp;V&#39;s July 7 proposed architecture for Items 2 and 3, subject to the confirmations in Section 3.</td></tr></tbody></table></div>
+<hr>
+<h3 id="sec-5-section-2-position-by-item">SECTION 2 — POSITION BY ITEM</h3>
+<h4 id="sec-6-item-1-sel-700g-protection-functions-ans">Item 1 — SEL-700G Protection Functions (ANSI 27/59/81/32/25)</h4>
+<p><strong>Status: ARCHITECTURE CONFIRMED — B&amp;V APPROVAL PENDING</strong></p>
+<p><strong>Position:</strong> B&amp;V EOR confirmed (Jul 7) that ANSI 27/59/81 are required. Energize&#39;s architectural position on required protection functions is closed. Final setpoint selection, coordination, field-loading authorization, calibration, trip verification, and SDG&amp;E submission remain open B&amp;V/EOR responsibilities.</p>
+<p><strong>Remaining action:</strong> B&amp;V/EOR to confirm whether ANSI 81R (ROCOF) is required and, if so, provide the approved setpoint and implementation basis; complete final settings package and submit to SDG&amp;E.</p>
+<hr>
+<h4 id="sec-7-item-2-out301-out302-cr-uc-close-path-ar">Item 2 — OUT301/OUT302 — CR-UC Close Path Architecture</h4>
+<p><strong>Status: CONCEPTUALLY ACCEPTED — FINAL LOGIC PENDING</strong></p>
+<p><strong>Position:</strong> B&amp;V&#39;s proposed architecture is accepted at the conceptual level: the EMS provides the system-level operational close permissive; the SEL-700G retains final protective supervision and the physical close output. Absence or loss of the EMS permissive shall block all automatic and remote close commands.</p>
+<p><strong>Remaining action:</strong> B&amp;V/Ravenvolt to confirm the communication-health logic in Section 3, and to provide the final SELogic (CLX) equation for review prior to FAT.</p>
+<hr>
+<h4 id="sec-8-item-3-52a-52b-auxiliary-contacts-signal">Item 3 — 52a/52b Auxiliary Contacts — Signal Path Architecture</h4>
+<p><strong>Status: CONCEPTUALLY ACCEPTED — VALIDATION PENDING</strong></p>
+<p><strong>Position:</strong> B&amp;V&#39;s single-path architecture — 52a/52b wired only to SEL-700G, with EMS reading breaker status via Modbus TCP — is accepted at the conceptual level, subject to the stale-data handling described in Section 3.</p>
+<p><strong>Remaining action:</strong> B&amp;V/Ravenvolt to confirm EMS fail-safe behavior on communication loss (Section 3). Communication-loss and stale-data conditions to be verified during FAT.</p>
+<hr>
+<h4 id="sec-9-item-4-sdg-e-final-approval-submission">Item 4 — SDG&amp;E Final Approval Submission</h4>
+<p><strong>Status: B&amp;V/EOR LEAD — FINAL ACCEPTANCE PENDING</strong></p>
+<p><strong>Position:</strong> SDG&amp;E has conditionally pre-approved the non-export relay scheme. B&amp;V/EOR retains overall responsibility for the final protection package, setting basis, coordination, certification, and SDG&amp;E submission.</p>
+<p><strong>Remaining action:</strong> Energize will provide EMS-specific configuration records and test evidence as expressly identified in the approved scope or under a separately authorized support arrangement.</p>
+<hr>
+<h4 id="sec-10-item-5-static-ip-address-allocation">Item 5 — Static IP Address Allocation</h4>
+<p><strong>Status: ENERGIZE INTERNAL ADDRESSES DEFINED</strong></p>
+<p><strong>Position:</strong> Energize&#39;s internal EMS panel addressing uses subnet 192.168.111.0/24. Full table provided in Section 4.</p>
+<p><strong>Remaining action:</strong> B&amp;V/GC to confirm whether SEL-700G, SEL-735, and the management switch will join this subnet or be assigned under the site OT addressing/VLAN plan, and update drawing COM-01 accordingly.</p>
+<hr>
+<h3 id="sec-11-section-3-required-confirmations">SECTION 3 — Required Confirmations</h3>
+<p><strong>1. Communication-loss behavior (Item 2):</strong> Please confirm that loss, timeout, invalidation, or restart of the EMS–SEL communication path will force the SEL close equation to a non-permissive state, irrespective of the last transmitted RBxx value. Please identify the communication-health operand, timeout value, relay/EMS restart behavior, and reauthorization sequence used in the final SELogic equation.</p>
+<p><strong>2. Stale-data handling (Item 3):</strong> When breaker-status data becomes stale or unavailable, the EMS shall inhibit all close-command issuance and identify breaker status as invalid/unknown. The HMI may retain the last-known value for diagnostic display only, clearly marked as stale, but this value shall not be used as a valid input to any close permissive logic. Please confirm this behavior is implemented.</p>
+<p><em>Written confirmation of these two points is required to close the design-review stage of Items 2 and 3. Final closure of both items also requires successful FAT verification of communication-loss and stale-data conditions — see Section 5.</em></p>
+<hr>
+<h3 id="sec-12-section-4-ems-panel-device-ip-address-ta">SECTION 4 — EMS Panel Device IP Address Table</h3>
+<p>Energize&#39;s internal panel addressing currently uses subnet 192.168.111.0/24. The three TBD rows below remain open. Please confirm whether SEL-700G, SEL-735, and the managed switch will join this subnet or be assigned under the site OT addressing/VLAN plan; reflect any required routing, firewall, or VLAN changes on drawing COM-01 before FAT.</p>
+<div class="table-wrap"><table><tbody><tr><td>Tag</td><td>Device</td><td>IP Address</td><td>Notes / Status</td></tr><tr><td>-ENS0331</td><td>OnCell G4302-LTE4-US</td><td>192.168.111.1</td><td>LTE Gateway / Remote Access</td></tr><tr><td>-PC0300</td><td>Industrial PC (EMS)</td><td>192.168.111.123</td><td>EMS Main Controller</td></tr><tr><td>-PLC0336</td><td>ioLogik E1212</td><td>192.168.111.109</td><td>Digital I/O Module</td></tr><tr><td>-ENS0320</td><td>MGate 5121</td><td>192.168.111.101</td><td>Modbus ↔ EtherNet/IP Gateway</td></tr><tr><td>-ENS0326</td><td>MGate 5121</td><td>192.168.111.104</td><td>Modbus ↔ EtherNet/IP Gateway</td></tr><tr><td>-ENS0312</td><td>NPort 5650-8-DT</td><td>192.168.111.130</td><td>Serial-to-Ethernet (SEL comms)</td></tr><tr><td>[TBD]</td><td>SEL-700G Relay</td><td>192.168.111.___</td><td>To be confirmed by B&amp;V/GC (see Item 5)</td></tr><tr><td>[TBD]</td><td>SEL-735 Meter</td><td>192.168.111.___</td><td>To be confirmed by B&amp;V/GC (see Item 5)</td></tr><tr><td>[TBD]</td><td>Network Switch (Mgmt)</td><td>192.168.111.___</td><td>To be confirmed by B&amp;V/GC (see Item 5)</td></tr></tbody></table></div>
+<hr>
+<h3 id="sec-13-section-5-fat-verification">SECTION 5 — FAT Verification</h3>
+<p>The written confirmations in Section 3 close the design-review stage of Items 2 and 3. Full closure additionally requires FAT demonstration that: (a) the close permissive is denied when the EMS–SEL communication path is lost, timed out, or invalid; and (b) the EMS correctly inhibits close commands and flags breaker status as invalid when 52a/52b data is stale or unavailable. A detailed FAT test procedure for these conditions will be issued ahead of the scheduled FAT date.</p>
+<hr>
+<h3 id="sec-14-commercial-note">COMMERCIAL NOTE</h3>
+<p>Energize has completed the engineering and hardware deliverables presently achievable prior to final B&amp;V design release and site readiness. Any remaining implementation, FAT, SAT, commissioning, or revised-design support is subject to the applicable original scope and additional written authorization. A structured support arrangement was proposed on June 10, 2026, with a requested commencement date of June 16, 2026 (Option 1: EMS-side support USD 7,500/month · Option 2: Full microgrid scope USD 13,000/month). Active support will resume only upon receipt of written commercial authorization from Energize&#39;s contracting customer, including an approved PO or change order, applicable scope, effective date, and payment terms.</p>
+<hr>
+<h3 id="sec-15-implementation-limitation">IMPLEMENTATION LIMITATION</h3>
+<p>Energize&#39;s acceptance in this memorandum is limited to the conceptual division of control responsibility described in Section 2. It does not constitute approval of any final schematic, wiring diagram, terminal schedule, SELogic equation, relay settings file, protection study, field installation, or as-built condition. Those items remain subject to document review, FAT/SAT verification, and the responsible EOR&#39;s approval.</p>
+<hr>
+<h3 id="sec-16-document-control">DOCUMENT CONTROL</h3>
+<div class="table-wrap"><table><tbody><tr><td>Prepared By</td><td>Reviewed By</td><td>Accepted By</td></tr><tr><td>Andy Gong, Founder &amp; Chief Systems Architect, Energize Solutions Inc., July 16, 2026</td><td>— / Pending</td><td>— / Pending, EVESCO / B&amp;V</td></tr></tbody></table></div>
+      </section>
+      <footer class="document-footer">
+        <div class="footer-row">
+          <span class="footer-brand">ENERGIZE</span>
+          <span class="footer-ref">ENERGIZE-MEM-2607-0034 · Version v1.0</span>
+        </div>
+      </footer>
+    </main>
+  </body>
+</html>
